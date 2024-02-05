@@ -20,6 +20,7 @@ Acceptance Tests
 2. User can add academic details to their profile.
 3. User can update their academic details in the profile.
 4. User cannot create a profile with invalid information.
+5. Users can successfully delete their profile.
 
 1.03 - User Profiles
 As an admin, I want to include additional information in my profile like innovation center role, so it can be visible on my profile.
