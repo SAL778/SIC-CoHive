@@ -22,7 +22,7 @@ Acceptance Tests
 5. User cannot create a profile with incomplete or invalid information.
 
 1.03 - User Profiles
-As an admin, I want to include additional information in my profile like the innovation center role so it can be visible on my profile.
+As an admin, I want to include additional information in my profile like innovation center role, so it can be visible on my profile.
 
 Acceptance Tests
 
@@ -32,17 +32,17 @@ Acceptance Tests
 4. Admin's profile displays the innovation center role.
 
 1.04 - User Profiles
-As a user, I want to upload text and files to a portfolio in my profile so that prospective employers will see my capabilities.
+As a user, I want to upload text and link to a portfolio in my profile, so that prospective employers will see my capabilities.
 
 Acceptance Tests
 
 1. User can successfully upload text to their portfolio.
-2. User can successfully upload files (e.g., documents, images) to their portfolio.
+2. User can successfully upload links to their portfolio.
 3. User can organize and manage items in their portfolio.
 4. User cannot upload files with invalid formats to their portfolio.
 
 1.05 - User Profiles
-As an admin, I want to have the ability to assign an "organization" role to an account, so that it can have access to extra features.
+As an admin, I want to have the ability to assign an "organization" role to an account, so that can have access to extra features.
 
 Acceptance Tests
 
@@ -50,7 +50,7 @@ Acceptance Tests
 2. Users with the "organization" role gain access to additional features.
 
 1.06 - User Profiles
-As a user, I want to be able to change the visibility of my portfolio, so that I can control if everyone/organizations/only I can see it.
+As a user, I want to be able to change the visibility of my portfolio, so that I can control if everyone/organizations/only me can see it.
 
 Acceptance Tests
 
@@ -60,7 +60,7 @@ Acceptance Tests
 4. Portfolio is displayed according to the selected visibility settings.
 
 1.07 - User Profiles
-As an admin, I want to approve UserType Labels for users like "podcast studio," so that they can access restricted resources/rooms.
+As a admin, I want to approve UserType Labels for users like "podcast studio", so that they can access restricted resources/rooms.
 
 Acceptance Tests
 
@@ -69,7 +69,7 @@ Acceptance Tests
 3. Admin can reject UserType Labels and deny access to associated resources/rooms.
 
 1.08 - User Profiles
-As an admin, I want to be able to delete users or change their roles, so that I can prevent abuse of the system.
+As an admin, I want to be able to disable/delete users or change their roles, so that I can prevent abuse of the system.
 
 Acceptance Tests
 
@@ -88,7 +88,7 @@ Acceptance Tests
 3. User can cancel a booking successfully.
 
 2.02 - Booking
-As an admin, I want to provide the "name" of the resource, "room number," and "details" description, so that resources follow a format and provide a description.
+As an admin, I want to provide the "name" of the resource, "room number", "details", "image" and "room code" description, so that resources follow a format.
 
 Acceptance Tests
 
