@@ -97,7 +97,7 @@ Acceptance Tests
 3. Resources must display the specified name, room number, and details consistently.
 
 2.03 - Booking
-As an admin, I want to have the ability to manage assets or meeting rooms, so that assets and rooms can be added, deleted, or put on maintenance.
+As an admin, I want to have the ability to manage assets or meeting rooms, so that assets and rooms can be added, deleted or put on maintenance.
 
 Acceptance Tests
 
@@ -107,7 +107,7 @@ Acceptance Tests
 4. Deleted assets or rooms no longer appear in the booking system.
 
 2.04 - Booking
-As an admin, I want to restrict certain assets to users with special UserType Labels, so that important assets are protected.
+As an admin, I want to restrict certain assets to users with special AccessType Labels, so that important assets are protected.
 
 Acceptance Tests
 
@@ -115,16 +115,7 @@ Acceptance Tests
 2. Users with the required UserType Label can book and access restricted assets.
 3. Users without the required UserType Label cannot book or access restricted assets.
 
-2.05 - Booking
-As an admin, I want to provide door access codes to users with special UserType Labels, so that they can have access to locked rooms.
-
-Acceptance Tests
-
-1. Admin can generate door access codes for users with specific UserType Labels.
-2. Users with the assigned UserType Label can access locked rooms using the provided door access codes.
-3. Door access codes are unique and changeable for security reasons.
-
-2.06 - Booking
+2.05 - Booking (CHECKED ABOVE THIS ALREADY)
 As an admin, I want to be able to delete the bookings of users, so that I can prevent abuse of the system.
 
 Acceptance Tests
@@ -133,7 +124,7 @@ Acceptance Tests
 2. Admin can delete a specific booking successfully.
 3. Deleted bookings no longer appear in the user's booking history.
 
-2.07 - Booking
+2.06 - Booking
 As a user, I want to book a room or a resource, so that I can reserve it for myself on the website.
 
 Acceptance Tests
@@ -142,7 +133,7 @@ Acceptance Tests
 2. User can select a specific time slot for the booking.
 3. User receives confirmation of the successful booking.
 
-2.08 - Booking
+2.07 - Booking
 As a user, I want to see the visibility of room bookings, so I know whether they're available or not at a glance.
 
 Acceptance Tests
@@ -150,7 +141,7 @@ Acceptance Tests
 1. User can view a calendar or schedule displaying the availability of rooms.
 2. Booked rooms are clearly marked on the calendar.
 
-2.09 - Booking
+2.08 - Booking
 As a user, I want to book a room at recurring times to ensure I always have a consistent schedule.
 
 Acceptance Tests
