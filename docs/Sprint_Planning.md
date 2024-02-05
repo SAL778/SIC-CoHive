@@ -28,6 +28,7 @@ Tasks
 
 Sprint 2
 Due: February 26, 2024
+Estimated Sprint Velocity: 19
 
 Tasks
 | Task                           | Related US      | Assigned To      | Due Date |
@@ -81,6 +82,8 @@ Tasks
 
 Sprint 3
 Due: March 11, 2024
+Estimated Sprint Velocity: 19
+
 |-------------------------------------|--------------|
 | US 10.01 - Bookings Page UI/UX      | 3            |
 | US 2.01 - View My Bookings          | 2            |
@@ -94,6 +97,8 @@ Due: March 11, 2024
 
 Sprint 4
 Due: March 25, 2024
+Estimated Sprint Velocity: 19
+
 |-------------------------------------|--------------|
 | US 10.02 - Mobile Responsive        | 5            |
 | US 2.08 - Recurring Bookings        | 2            |
@@ -106,6 +111,8 @@ Due: March 25, 2024
 
 Sprint 5
 Due: April 8, 2024
+Estimated Sprint Velocity: 17
+
 |-------------------------------------|--------------|
 | US 3.01 - Approve Events            | 2            |
 | US 4.01 - Analytics Tab             | 5            |
@@ -117,6 +124,8 @@ Due: April 8, 2024
 
 
 Won't Do List
+Estimated Sprint Velocity: 24
+
 |-------------------------------------|--------------|
 | US 5.01 - Web Notifications         | 5            |
 | US 5.04 - Toggle Notifications      | 3            |
