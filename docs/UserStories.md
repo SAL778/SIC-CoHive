@@ -42,12 +42,12 @@ Acceptance Tests
 4. User cannot upload files with invalid formats to their portfolio.
 
 1.05 - User Profiles
-As an admin, I want to have the ability to assign an "organization" role to an account, so that can have access to extra features.
+As a user, I want to look up other users by using the search bar, so that I can find information about my friends, organizations, and admins.
 
 Acceptance Tests
-
-1. Admin can assign an "organization" role to a user account successfully.
-2. Users with the "organization" role gain access to additional features.
+1. User can successfully search other user.
+2. User can successfully search organization.
+3. User can successfully search admins. 
 
 1.06 - User Profiles
 As a user, I want to be able to change the visibility of my portfolio, so that I can control if everyone/organizations/only me can see it.
@@ -60,7 +60,7 @@ Acceptance Tests
 4. Portfolio is displayed according to the selected visibility settings.
 
 1.07 - User Profiles
-As a admin, I want to approve UserType Labels for users like "podcast studio", so that they can access restricted resources/rooms.
+As a admin, I want to approve AccessType Labels for users like "podcast studio", so that they can access restricted resources/rooms.
 
 Acceptance Tests
 
@@ -115,7 +115,7 @@ Acceptance Tests
 2. Users with the required UserType Label can book and access restricted assets.
 3. Users without the required UserType Label cannot book or access restricted assets.
 
-2.05 - Booking (CHECKED ABOVE THIS ALREADY)
+2.05 - Booking 
 As an admin, I want to be able to delete the bookings of users, so that I can prevent abuse of the system.
 
 Acceptance Tests
@@ -142,7 +142,7 @@ Acceptance Tests
 2. Booked rooms are clearly marked on the calendar.
 
 2.08 - Booking
-As a user, I want to book a room at recurring times to ensure I always have a consistent schedule.
+As a user, I want to book a room at reoccurring times (daily, weekly, monthly, yearly), so that I can ensure I always has a consistent schedule.
 
 Acceptance Tests
 
@@ -197,7 +197,7 @@ Acceptance Tests
 3. Changes made in Google Calendar are reflected in the Events Calendar on the website.
 
 3.06 - Events Calendar
-As an admin, I want to provide the "name" of the event, "room number," "date(s)," "organization," and "details," so that events follow a consistent format.
+As an admin, I want to provide the "name" of the event, "room number", "date(s)", "organization" and "details", so that events follow a consistent format.
 
 Acceptance Tests
 
@@ -206,7 +206,7 @@ Acceptance Tests
 3. Validation ensures that all required details are provided before an event is added.
 
 4.01 - Analytics
-As a user, I want to access an "Insights" tab, so that I can view usage hours, peak times, and the popularity of different technologies and resources.
+As a user, I want to access an "Insights" tab, so that I can view usage hours, peak times, and the popularity of different technologies and rooms.
 
 Acceptance Tests
 
@@ -271,7 +271,7 @@ Acceptance Tests
 3. Feedback entries are organized and presented in a clear format.
 
 6.02 - Feedback
-As a user, I want to have access to a Feedback Form, so that I can provide feedback, report issues, or seek support related to the center or the application.
+As a user, I want to have access to a Feedback Form, so that I can provide feedback, report issues or seek support related to the center or the application.
 
 Acceptance Tests
 
@@ -289,7 +289,7 @@ Acceptance Tests
 3. Changes to the Feedback Form are applied successfully, and users see the updated form.
 
 7.01 - Integration
-As an admin, I want to ensure that the application can integrate with Google Suite so that it can streamline management.
+As an admin, I want to ensure that the application can integrate with Google Suite, so that it can streamline management.
 
 Acceptance Tests
 
@@ -298,7 +298,7 @@ Acceptance Tests
 3. Admin can manage user accounts and permissions through the integrated Google Suite.
 
 7.02 - Integration
-As a user, I want to sign up/in using my @ualberta.ca account so that accessing SIC does not require extra credentials.
+As a user, I want to sign up/in using my @ualberta.ca account, so that accessing SIC does not require extra credentials.
 
 Acceptance Tests
 
@@ -337,7 +337,7 @@ Acceptance Tests
 4. The website can support user growth without a decrease in performance.
 
 9.01 - Application Portal
-As a user, I want to apply for/upload entrepreneurial thinking placements, so that other users can view the opportunities available.
+As a user, I want to submit entrepreneurial thinking placements, so that other users can view the opportunities available.
 
 Acceptance Tests
 
@@ -347,7 +347,7 @@ Acceptance Tests
 4. Users can upload relevant documents, such as a CV, during the application process.
 
 9.02 - Application Portal
-As an admin, I want to be able to manage the application portal placements, so that I can approve which placements are appropriate.
+As an admin, I want to be able to manage the application/job portal placements, so that I can approve which placements are appropriate.
 
 Acceptance Tests
 
@@ -356,7 +356,7 @@ Acceptance Tests
 3. Approved placements are displayed on the application portal for users.
 
 9.03 - Application Portal
-As a user, I want to upload a CV document to my profile, so that it can be used when I apply for placements on the application portal.
+As a user, I want to upload a CV document to my profile, so that it can be used when I apply for placements on the application/job portal.
 
 Acceptance Tests
 
@@ -374,7 +374,7 @@ Acceptance Tests
 3. Users can make informed decisions based on applicant profiles and CVs.
 
 9.05 - Application Portal
-As a user, I want to view and manage my current applications/placements, so that I can review my applications, withdraw them, or delete my placements.
+As a user, I want to view and manage my current applications/placements, so that I can review my applications, withdraw them or delete my placements.
 
 Acceptance Tests
 
@@ -383,44 +383,14 @@ Acceptance Tests
 3. Users can withdraw an application or delete a placement if needed.
 4. The application portal accurately reflects the status of user applications and placements.
 
-10.01 - Job Board
-As an organization, I want to submit an internship to the "Job Board", so that my internship listing is available for users to apply to.
+9.06 - Application Portal
+As a user, I want to apply to internships on the application/job portal, so that my information and resume are sent to the company that is hosting the internship.
 
 Acceptance Tests
+{Newly added}
 
-1. Organizations can access the "Job Board" section on the website.
-2. Organizations can submit internship details, including job description and requirements.
-3. Submitted internships are reviewed and approved by the admin before being displayed on the "Job Board".
 
-10.02 - Job Board
-As an admin, I want to manage "Job Board" internships, so that I can approve internships that are appropriate for the center.
-
-Acceptance Tests
-
-1. Admin can access and review submitted internships in the admin dashboard.
-2. Admin can approve or reject internships based on appropriateness.
-3. Approved internships are displayed on the "Job Board" for users to view and apply.
-
-10.03 - Job Board
-As a user, I want to apply to internships on the "Job Board", so that my information and resume are sent to the company that is hosting the internship.
-
-Acceptance Tests
-
-1. Users can access the "Job Board" section on the website.
-2. Users can browse and view available internship listings.
-3. Users can submit applications for specific internships, including uploading their resume.
-4. Application details and resumes are forwarded to the organization hosting the internship.
-
-10.04 - Job Board
-As an organization, I want to view the profiles and resumes of applicants, so that I can select candidates for my placement.
-
-Acceptance Tests
-
-1. Organizations can access a list of applicants for a specific internship.
-2. Organizations can view the profiles and resumes of applicants.
-3. Organizations can make informed decisions based on applicant profiles and resumes.
-
-11.01 - System Design
+10.01 - System Design
 As an admin, I want the "Schedule" page to look similar to a previous tool, so that users can transition to the website easily.
 
 Acceptance Tests
@@ -429,7 +399,7 @@ Acceptance Tests
 2. The transition from the previous tool to the website is seamless for users.
 3. Key functionalities of the "Schedule" page from the previous tool are retained on the website.
 
-11.02 - System Design
+10.02 - System Design
 As a user, I want to access the website on smaller devices, so that I can easily use it on my mobile phone.
 
 Acceptance Tests
