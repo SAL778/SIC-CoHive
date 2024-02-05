@@ -420,3 +420,4 @@ Acceptance Tests
 1. Users can access the website using smaller devices, such as mobile phones or tablets.
 2. The website design is responsive and adjusts appropriately to different screen sizes.
 3. All features and functionalities are accessible and user-friendly on smaller devices.
+4. Make navigation intuitive and easy on smaller screens.
