@@ -111,11 +111,15 @@ Easy!Appointments is a customizable web application that makes booking online me
 
 ## Low-Fidelity User interface Diagrams
 
-![admin](img/UML.png)
-![user](img/UML.png)
+![admin](img/lo-fi/sic-add-booking-admin-lofi.jpg)
+![org](img/lo-fi/sic-add-event-org-admin-lofi.jpg)
 
-Here are some broken down Lo-Fi UI images for better clarity
+Here are some broken down Lo-Fi UI images for better clarity:
 
+![analytics](img/lo-fi/sic-analytics-lofi.jpg)
+![bookings](img/lo-fi/sic-booking-lofi.jpg)
+![events](img/lo-fi/sic-events-lofi.jpg)
+![feedback](img/lo-fi/sic-profile-feedback-lofi.jpg)
 
 ## Tech Stack Documentation
 
