@@ -49,7 +49,7 @@ There are a few issues with Skeeda:
 - No place to manage resource/asset booking and no place to upload images for either rooms or resources.
 - The SIC currently has about 15-20 rooms and a lot of users to manage, and as you can see from this image, that can get expensive!
 
-![](RackMultipart20240206-1-nwqcid_html_b6c22229f80a76a6.png)
+![Skedda pricing](img/skedda_price.png)
 
 (taken from [https://www.skedda.com/home/pricing](https://www.skedda.com/home/pricing))
 
@@ -67,7 +67,7 @@ Robin is a software that focuses on Desk Booking, Room Management, and Office An
 
 The one benefit of using Robin would be the advanced analytics insights it offers. It wouldn't be too practical to keep using it in the long term, check out the cost:
 
-![](RackMultipart20240206-1-nwqcid_html_5c2afc23fd9acecc.png)
+![Robin Pricing](img/robin_price.png)
 
 Starts at a base price of $399 USD per month!
 
@@ -99,15 +99,15 @@ Easy!Appointments is a customizable web application that makes booking online me
 
 ## High-Level System Architecture
 
-\<img\>
+![architecture](img/Architecture.png)
 
 ## UML Class Diagram
 
-\<img\>
+![UML Class Diagram](img/UML.png)
 
 ## UML Sequence Diagram
 
-\<img\>
+![UML Sequence Diagram](img/sequence.png)
 
 ## Tech Stack Documentation
 
