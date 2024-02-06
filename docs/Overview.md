@@ -109,6 +109,14 @@ Easy!Appointments is a customizable web application that makes booking online me
 
 ![UML Sequence Diagram](img/sequence.png)
 
+## Low-Fidelity User interface Diagrams
+
+![admin](img/UML.png)
+![user](img/UML.png)
+
+Here are some broken down Lo-Fi UI images for better clarity
+
+
 ## Tech Stack Documentation
 
 ## Back End
