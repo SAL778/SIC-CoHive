@@ -121,7 +121,7 @@ Estimated Sprint Velocity: 17
 | US 4.01 - Analytics Tab             | 5            |
 | US 4.02 - Admin Download Analytics  | 2            |
 | US 5.02 - Send Email Notifications  | 5            |
-| US 5.03 - Optinal Notification      | 1            |
+| US 5.03 - Optional Notification     | 1            |
 | US 7.01 - Google Suit Integrated    | 1            |
 | US 8.02 - Scalable Booking Space    | 1            |
 
