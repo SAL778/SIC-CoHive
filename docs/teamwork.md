@@ -2,6 +2,8 @@
 
 ## Team Canvas
 
+
+
 ### Scrum Roles
 
 - **Scrum Master:** Yevhen Kaznovskyi
@@ -18,48 +20,137 @@
 | Ruiyu Yuan       | IMP, CF, SP     | ME, TW, PL       | RI, CO, SH            |
 | Yevhen Kaznovskyi| IMP, CO, SH     | RI, CF, SP       | ME, TW, PL            |
 
-### Thinking Roles
+## Thinking Roles
 
-- **PL (Plant):** Highly creative, good at solving problems unconventionally. Preferred by Jonathan Lo, Kannan Khosla.
-1. Saahil Rachh
+#### **PL (Plant)**
 
-...
+_Tends to be highly creative and good at solving problems in unconventional ways._
 
-### Action Roles
+1. Jonathan Lo (preferred)
+2. Kannan Khosla (preferred)
+3. Kenji Chiang (manageable)
+4. Ruiyu Yuan (manageable)
+5. Saahil Rachh (least preferred)
+6. Yevhen Kaznovskyi (least preferred)
 
-- **SH (Shaper):** Provides drive, ensures the team keeps moving. Preferred by Yevhen Kaznovskyi.
+#### **ME (Monitor Evaluator)**
 
-...
+_Provides a logical eye, making impartial judgements where required and weighs up the team's options in a dispassionate way._
 
-### People Roles
+1. Saahil Rachh (preferred)
+2. Kenji Chiang (preferred)
+3. Jonathan Lo (manageable)
+4. Kannan Khosla (manageable)
+5. Ruiyu Yuan (manageable)
+6. Yevhen Kaznovskyi (least preferred)
 
-- **RI (Resource Investigator):** Uses inquisitiveness to find ideas. Manageable by Yevhen Kaznovskyi, Saahil Rachh.
+#### **SP (Specialist)**
 
-...
+_Brings in-depth knowledge of a key area to the team._
 
-### Thinking Roles
+1. Ruiyu Yuan (preferred)
+2. Yevhen Kaznovskyi (manageable)
+3. Jonathan Lo (manageable)
+4. Saahil Rachh (least preferred)
+5. Kannan Khosla (least preferred)
+6. Kenji Chiang (least preferred)
 
-1. **Plant (PL):** Highly creative, good at solving problems in unconventional ways. Prefers working with ideas over people.
-2. **Monitor Evaluator (ME):** Provides logical analysis, judges options objectively. Slower in decision-making but thorough.
-3. **Specialist (SP):** Brings in-depth knowledge of a key area to the team. Their contribution is limited to their specialty.
+## Action Roles
 
-### Action Roles
+#### **SH (Shaper)**
 
-1. **Shaper (SH):** Provides drive and courage to overcome obstacles. Leads the team to action and often challenges inertia.
-2. **Implementer (IMP):** Turns ideas into actions and organizes work that needs to be done. Relies on practical skills and hard work.
-3. **Completer Finisher (CF):** Ensures thorough, error-free outcomes. Focuses on completing tasks and meeting deadlines with high standards.
+_Provides the necessary drive to ensure that the team keeps moving and does not lose focus or momentum._
 
-### People Roles
+1. Yevhen Kaznovskyi (preferred)
 
-1. **Coordinator (CO):** Guides the team to what they perceive as objectives. Often serves as a chairperson, clarifying goals and delegating tasks.
-2. **Team Worker (TW):** Helps the team to gel, using their versatility to identify the work required and complete tasks on behalf of the team.
-3. **Resource Investigator (RI):** Uses their inquisitiveness to find ideas, contacts, and resources outside the group. Brings enthusiasm and network to the team.
+2. Saahil Rachh (manageable)
 
+3. Kannan Khosla (manageable)
 
+4. Kenji Chiang (manageable)
 
-### Image Placeholder
+5. Ruiyu Yuan (least preferred)
 
-To add an image later, you can use the following Markdown format, placing the image in the `/img` folder:
+6. Jonathan Lo (least preferred)
 
-```markdown
-![Optional Image Description](/img/'SIC TEAM CANVAS.png')
+#### **IMP (Implementer)**
+
+_Needed to plan a workable strategy and carry it out as efficiently as possible._
+
+1. Yevhen Kaznovskyi (preferred)
+
+2. Saahil Rachh (preferred)
+
+3. Kannan Khosla (preferred)
+
+4. Kenji Chiang (preferred)
+
+5. Ruiyu Yuan (preferred)
+
+6. Jonathan Lo (manageable)
+
+#### **CF (Completer Finisher)**
+
+_Most effectively used at the end of tasks to polish and scrutinize the work for errors, subjecting it to the highest standards of quality control._
+
+1. Jonathan Lo (preferred)
+
+2. Kannan Khosla (least preferred)
+
+3. Kenji Chiang (preferred)
+
+4. Ruiyu Yuan (preferred)
+
+5. Saahil Rachh (manageable)
+
+6. Yevhen Kaznovskyi (manageable)
+
+## People Roles
+
+#### **RI (Resource Investigator)**
+
+_Uses their inquisitive nature to find ideas to bring back to the team._
+
+1. Yevhen Kaznovskyi (manageable)
+
+2. Saahil Rachh (manageable)
+
+3. Jonathan Lo (least preferred)
+
+4. Kannan Khosla (least preferred)
+
+5. Kenji Chiang (least preferred)
+
+6. Ruiyu Yuan (least preferred)
+
+#### **TW (Teamworker)**
+
+_Helps the team to gel, using their versatility to identify the work required and complete it on behalf of the team._
+
+1. Saahil Rachh (preferred)
+
+2. Jonathan Lo (preferred)
+
+3. Ruiyu Yuan (manageable)
+
+4. Kenji Chiang (least preferred)
+
+5. Yevhen Kaznovskyi (least preferred)
+
+6. Kannan Khosla (least preferred)
+
+#### **CO (Co-ordinator)**
+
+_Needed to focus on the team's objectives, draw out team members and delegate work appropriately._
+
+1. Yevhen Kaznovskyi (preferred)
+
+2. Kannan Khosla (preferred)
+
+3. Kenji Chiang (manageable)
+
+4. Ruiyu Yuan (least preferred)
+
+5. Saahil Rachh (least preferred)
+
+6. Jonathan Lo (least preferred)
