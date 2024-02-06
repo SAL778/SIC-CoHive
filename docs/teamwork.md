@@ -2,7 +2,7 @@
 
 ## Team Canvas
 
-
+![Teamwork Canvas](img/canvas.png)
 
 ### Scrum Roles
 
