@@ -15,9 +15,7 @@ function App() {
 	return (
 		<Router>
 			<div className="flex h-screen w-screen flex-col md:flex-row md:overflow-hidden bg-gray-200">
-				<div className="flex-none md:w-60">
-					<Navigation />
-				</div>
+				<Navigation />
 				<Routes>
 					<Route path="/bookings" element={<Bookings />} />
 					<Route path="/events" element={<Events />} />
