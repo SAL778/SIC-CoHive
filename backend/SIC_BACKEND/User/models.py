@@ -4,12 +4,34 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+class PortfolioItem(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    icon = models.URLField(max_length=100, blank=True, null=True)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    link = models.URLField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Portfolio(models.Model):
+    id = models.AutoField(primary_key=True)
+    description = models.TextField()
+    portfolioItem = models.ForeignKey(PortfolioItem, on_delete=models.CASCADE, blank=True, null=True)
+    def __str__(self):
+        return str(self.id)
+
 
 class CustomUser(AbstractUser):
     # name = models.CharField(max_length=100)
     # uid = models.CharField(max_length=100, unique=True)
     # # You can add other fields as needed
     role = models.CharField(max_length=100, blank=True, null=True)
+    profileImage = models.URLField(max_length=100, blank=True, null=True)
+    portfolioVisibility = models.BooleanField(default=True)
+    portfolio = models.OneToOneField(Portfolio, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.username
@@ -19,17 +41,13 @@ class CustomUser(AbstractUser):
         # Only return the role for staff members
         return self.role if self.is_staff or self.is_superuser else None
 
+    def save(self, *args, **kwargs):
+        # Call the "real" save() method.
+        super().save(*args, **kwargs)
 
-class Portfolio(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name="user")
-    name = models.CharField(
-        max_length=100)  ## like python portfolio, or web development portfolio if a user has 2 or more portfolios
-    description = models.TextField()
-    major = models.CharField(max_length=100)
-    portfolio_link = models.URLField(blank=True, null=True)  # Optional link to portfolio
-    document = models.FileField(upload_to='portfolio_documents/', blank=True, null=True)  # Optional document
-    visibility = models.BooleanField(
-        default=True)  # True if the portfolio is visible to everyone, False if it is private
-
-    def __str__(self):
-        return self.user.username
+        # Check if the user already has a portfolio.
+        if not self.portfolio:
+            # Create a new portfolio and assign it to the user.
+            portfolio = Portfolio.objects.create()
+            self.portfolio = portfolio
+            super().save(update_fields=['portfolio'])
