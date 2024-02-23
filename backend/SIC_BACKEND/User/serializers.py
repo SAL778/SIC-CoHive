@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Complete_Portfolio, PortfolioItem, Role
+from .models import CustomUser, Complete_Portfolio, PortfolioItem
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

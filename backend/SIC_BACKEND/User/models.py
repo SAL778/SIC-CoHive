@@ -28,18 +28,24 @@ class PortfolioItem(models.Model):
         return self.title
     
     
-class Role(models.Model):
-    name = models.CharField(max_length=100)
+# class Role(models.Model):
+#     name = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
     
     
 class CustomUser(AbstractUser):
     # name = models.CharField(max_length=100)
     # uid = models.CharField(max_length=100, unique=True)
     # # You can add other fields as needed
-    roles = models.ManyToManyField(Role, related_name='users')
+    ROLES_CHOICES = [
+        (0, 'User'),
+        (1, 'Organization'),
+        (2, 'Admin'),
+    ]
+
+    roles = models.CharField(max_length=100, choices=ROLES_CHOICES, default='User')
     profileImage = models.URLField(max_length=100, blank=True, null=True)
     portfolioVisibility = models.BooleanField(default=True)
     portfolio = models.OneToOneField(Complete_Portfolio, on_delete=models.CASCADE, blank=True, null=True)
@@ -47,10 +53,10 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-    @property
-    def display_role(self):
-        # Only return the role for staff members
-        return self.role if self.is_staff or self.is_superuser else None
+    # @property
+    # def display_role(self):
+    #     # Only return the role for staff members
+    #     return self.role if self.is_staff or self.is_superuser else None
 
     def save(self, *args, **kwargs):
         # Call the "real" save() method.

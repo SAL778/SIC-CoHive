@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.shortcuts import render, HttpResponse
 from rest_framework import generics
-from .models import CustomUser, Complete_Portfolio, PortfolioItem, Role
+from .models import CustomUser, Complete_Portfolio, PortfolioItem
 from .serializers import CustomUserSerializer, PortfolioItemSerializer
 
 

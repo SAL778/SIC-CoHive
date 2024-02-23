@@ -12,5 +12,5 @@ admin.site.register(PortfolioItem)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     fieldsets = UserAdmin.fieldsets + (
-        ('Basic Information', {'fields': ('role','profileImage','portfolioVisibility','portfolio')}),
+        ('Basic Information', {'fields': ('roles','profileImage','portfolioVisibility','portfolio')}),
     )
