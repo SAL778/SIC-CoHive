@@ -1,7 +1,10 @@
-import React from "react";
+import React, {useState } from "react";
+import Modal from "react-modal";
 import Carousel from "./components/Carousel/Carousel.jsx";
 
-import { Info } from "@phosphor-icons/react"
+import { Info } from "@phosphor-icons/react";
+
+Modal.setAppElement("#root");
 
 /**
  * getContextUser function returns the current session user
@@ -59,7 +62,6 @@ function FieldOfStudy({fieldName, minormajor}) {
 	)
 }
 
-
 /**
  * Renders Educational Background as a list of field studies.
  * @param {string} props.education - list containing field of study and major, minor
@@ -89,10 +91,13 @@ function EducationBackground({education}) {
  */
 function ProfileHeading({user}) {
 	return (
-		<div className = "profileHead gap-7 flex flex-row w-2/3 h-fit">
-
+		// Profile head container
+		<div className = "profileHead gap-7 flex flex-row w-2/3 h-fit"> 
+		{/* <div className = "profileHead gap-7 flex flex-row w-2/3 h-fit">  */}
 			<div className = "nameSection flex flex-row gap-8 p-8 bg-neutral-100 w-2/3 rounded-3xl">
-				<img src = {user.profile} className = "w-64 h-64 object-cover rounded-3xl"/>
+			{/* <div className = "nameSection flex flex-row gap-8 p-8 bg-neutral-100 w-2/3 rounded-3xl"> */}
+				<img src = {user.profile} className = "w-64 h-64 object-cover rounded-3xl"/> 
+				{/* Figma img size 256 by 256 */}
 				<div className="username flex flex-col">
 					<span className="first text-blue-950 text-3xl font-semibold">{user.first}</span>
 					<span className="last text-orange-600 text-3xl font-light">{user.last}</span>
@@ -130,24 +135,50 @@ function Portfolio({user}) {
 
 	const isContextUser = getContextUser().id == user.id
 
+	//Modal Stuff
+	//==============
+
+	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [clickedObject, setClickedObject] = useState(null); //clickedObject is an object containing content, and the index of its position in the list
+	const [portfolioList, setPortfolioList] = useState(user.portfolio.items); //The individual portfolio pieces
+
+	const openModal = (content, index) => {
+		setClickedObject({content, index})
+		setModalIsOpen(true)
+	}
+
+	const closeModal = () => {
+		setClickedObject(null)
+		setModalIsOpen(false)
+	}
+
+	const deletePortfolioItem = (clickedObject) => {
+		if (clickedObject) {
+			console.log(clickedObject)
+			//TODO:
+			//Send this change to backend, do NOT update the filter list on error.
+			setPortfolioList(portfolioList.filter((item, index) => index !== clickedObject.index))
+			closeModal()
+		}
+	}
+
 	//The rendered representation of the data.
-	const PortfolioCard = ({portfolioItem}) => {
+	const PortfolioCard = ({portfolioItem, index}) => {
 		return (
 			<div className = 
-				"text-orange-600 hover:text-white bg-white hover:bg-orange-600 neutral-50 \
+				"group text-orange-600 hover:text-white bg-white hover:bg-orange-600 neutral-50 \
 				p-5 rounded-md h-60 w-56 group flex flex-col place-content-between \
 				ease-out duration-500 delay-100">
 				<span>Icon Here</span>
 				<div>
 					<h1 className = "text-xl font-bold first-letter:uppercase">{portfolioItem.title}</h1>
-					<h2 className = "text-l text-neutral-800 font-normal ease-out duration-500 delay-100 group-hover:text-neutral-950">{portfolioItem.desc}</h2>
+					<h2 className = "text-l text-neutral-800 font-normal ease-out duration-500 group-hover:text-neutral-950">{portfolioItem.desc}</h2>
 				</div>
-				<div className = "buttonFooter flex flex-row place-content-between">
-					<div className = "modifyButtons space-x-2">
-						<button>Del</button>
-						<button>Edit</button>
+				<div className = "buttonFooter flex flex-row place-content-between ease-in-out ">
+					<div className = "modifyButtons space-x-4 opacity-0 group-hover:opacity-100 duration-500">
+						<button type = "button" className = "hover:text-neutral-300" onClick={() => openModal(portfolioItem, index)}>Del</button>
+						<button type = "button" className = "hover:text-neutral-300">Edit</button>
 					</div>
-
 					<a href = {portfolioItem.url} className = "self-end">→</a>
 				</div>
 			</div>
@@ -155,8 +186,8 @@ function Portfolio({user}) {
 	}
 
 	//Map information to a JSX component
-	const slides = user.portfolio.items.map((item, index) =>
-		<PortfolioCard key = {index} portfolioItem = {item}/>
+	let slides = portfolioList.map((item, index) =>
+		<PortfolioCard key = {index} portfolioItem = {item} index = {index}/>
 	)
 
 	//Feed slides as array of JSX components
@@ -169,6 +200,20 @@ function Portfolio({user}) {
 					slides = {slides}
 					options = {{ align: 'start'}}
 				/>
+				<Modal
+					className = "delModal h-screen flex justify-center items-center flex-col backdrop-brightness-50 backdrop-blur-sm"
+					isOpen={modalIsOpen}
+					onRequestClose={closeModal}
+					contentLabel="Delete Confirmation Modal"
+				>
+					<div className = "modalContainer flex flex-col space-y-4 bg-white rounded-lg p-5">
+						<h2 className = "text-xl font-medium text-blue-950">Are you sure that you want to delete <span className="text-orange-600 font-bold">{clickedObject?.content.title}?</span></h2>
+						<div className="footer-buttons flex flex-row justify-end gap-3">
+							<button type = "button" className = "text-neutral-600" onClick= {closeModal}>Nevermind</button>
+							<button type = "button" className = "bg-orange-600 p-3 rounded-md text-white" onClick= {() => deletePortfolioItem(clickedObject)}>Yes, Delete it</button>
+						</div>
+					</div>
+				</Modal>
 			</div>
 		)
 	}
@@ -210,25 +255,25 @@ function Profile() {
 					icon: "tailwind",
 				},
 				{
-					title: "working with A",
+					title: "working with B",
 					desc: "working with B",
 					url: "https://tailwindcss.com/",
 					icon: "tailwind",
 				},
 				{
-					title: "working with A",
+					title: "working with C",
 					desc: "working with B",
 					url: "https://tailwindcss.com/",
 					icon: "tailwind",
 				},
 				{
-					title: "working with A",
+					title: "working with D",
 					desc: "working with B",
 					url: "https://tailwindcss.com/",
 					icon: "tailwind",
 				},
 				{
-					title: "working with A",
+					title: "working with E",
 					desc: "working with B",
 					url: "https://tailwindcss.com/",
 					icon: "tailwind",
