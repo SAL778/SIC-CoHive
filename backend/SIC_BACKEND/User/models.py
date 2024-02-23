@@ -28,11 +28,7 @@ class PortfolioItem(models.Model):
         return self.title
     
     
-# class Role(models.Model):
-#     name = models.CharField(max_length=100)
 
-#     def __str__(self):
-#         return self.name
     
     
 class CustomUser(AbstractUser):
@@ -53,10 +49,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-    # @property
-    # def display_role(self):
-    #     # Only return the role for staff members
-    #     return self.role if self.is_staff or self.is_superuser else None
 
     def save(self, *args, **kwargs):
         # Call the "real" save() method.
