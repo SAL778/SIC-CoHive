@@ -3,6 +3,10 @@ import Carousel from "./components/Carousel/Carousel.jsx";
 
 import { Info } from "@phosphor-icons/react"
 
+/**
+ * getContextUser function returns the current session user
+ * @returns {Object} - Returns a object represeenting the current session user 
+ */
 function getContextUser() {
 	//TODO: Return user from context
 	const mockContextUser = {
@@ -22,10 +26,13 @@ function getContextUser() {
 	return mockContextUser
 }
 
+
+/**
+ * UserRoles component renders a list of user roles.
+ * @param {Array} props.roles - An array containing role strings
+ * @returns {JSX.Element} - Returns a JSX element representing the user roles.
+ */
 function UserRoles({roles}) {
-	/**
-	 * roles: string[]
-	 */
 	if (roles?.length) {
 		return (
 			<ul className = "flex flex-wrap gap-2">
@@ -36,6 +43,12 @@ function UserRoles({roles}) {
 	return (<p className = "text-neutral-500 text-xs font-light">"No roles assigned yet."</p>)
 }
 
+/**
+ * FieldOfStudy component represents a field of study, including its name and whether it is a major or minor.
+ * @param {string} props.fieldName - The name of the field of study.
+ * @param {string} props.minormajor - Indicates whether the field of study is a major or minor.
+ * @returns {JSX.Element} - Returns a JSX element representing the field of study.
+ */
 function FieldOfStudy({fieldName, minormajor}) {
 	return (
 		<li key = {fieldName} className = "flex justify-between p-3 border-4 rounded-md relative">
@@ -46,11 +59,16 @@ function FieldOfStudy({fieldName, minormajor}) {
 	)
 }
 
+
+/**
+ * Renders Educational Background as a list of field studies.
+ * @param {string} props.education - list containing field of study and major, minor
+ * @returns {JSX.Element} - Returns a JSX element representing the educational background
+ * @see {FieldOfStudy} - as child component
+ */
 function EducationBackground({education}) {
-	/**
-	 * education: Not sure the shape of this yet
-	 * TODO: Replace this with the proper object retrieved from backend
-	 */
+	//Unsure of education shape for now
+	//TODO: Replace the education shape with proper backend shape.
 	return (
 		<>
 			<ul>
@@ -61,11 +79,15 @@ function EducationBackground({education}) {
 	)
 }
 
-function ProfileHeading({user}) {
-	/**
-	 * user: User object (defer to UML for shape)
-	 */
 
+/**
+ * Renders The biographic information of the user.
+ * @param {string} props.user - user object
+ * @returns {JSX.Element} - Returns a JSX element representing the user's biographic information
+ * @see {EducationBackground} - as child component
+ * @see {UserRoles} - as child component
+ */
+function ProfileHeading({user}) {
 	return (
 		<div className = "profileHead gap-7 flex flex-row w-2/3 h-fit">
 
@@ -85,7 +107,6 @@ function ProfileHeading({user}) {
 					</h6>
 					<UserRoles roles = {user.userRoles}/>
 				</>
-
 				<>
 					<h6>
 						Education Background
@@ -97,9 +118,19 @@ function ProfileHeading({user}) {
 	)
 }
 
+
+/**
+ * Renders The portfolion information of a user
+ * @param {string} props.user - user object
+ * @returns {JSX.Element} - Returns a JSX element representing the user's biographic information
+ * @see {Carousel} - as child component
+ */
 function Portfolio({user}) {
+	//TODO: Replace icons
+
 	const isContextUser = getContextUser().id == user.id
 
+	//The rendered representation of the data.
 	const PortfolioCard = ({portfolioItem}) => {
 		return (
 			<div className = 
@@ -123,10 +154,12 @@ function Portfolio({user}) {
 		)
 	}
 
+	//Map information to a JSX component
 	const slides = user.portfolio.items.map((item, index) =>
 		<PortfolioCard key = {index} portfolioItem = {item}/>
 	)
 
+	//Feed slides as array of JSX components
 	if (isContextUser || user.isVisible) {
 		return (
 			<div className = "align-items-start w-auto">
@@ -144,8 +177,7 @@ function Portfolio({user}) {
 }
 
 function Profile() {
-
-	// This tells use who's currently using the app (from the context)
+	// This tells us who's currently using the app (from the context)
 	const currentInstanceUser = getContextUser()
 
 	// This is who the profile belongs to
@@ -158,7 +190,8 @@ function Profile() {
 		userType: "Admin",
 		education: [
 			["computing science", "major"],
-			["economics", "minor"]
+			["economics", "minor"],
+			["business", "minor"]
 		],
 		isVisible: false,
 		portfolio: {

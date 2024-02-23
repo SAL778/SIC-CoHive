@@ -3,8 +3,8 @@ import { DotButton, useDotButton } from './CarouselDotButton'
 import useEmblaCarousel from 'embla-carousel-react'
 
 /**
- * @param { slides, options }
- * @returns 
+ * @param {array} props.slides - An array of JSX components to render
+ * @returns {JSX.Element} - Returns a carousel with buttons
  * 
  * slides is an array of React Components
  * options
@@ -21,6 +21,7 @@ const EmblaCarousel = (props) => {
   const baseButtonStyles = "border-orange-600 w-6 h-6 border-4 rounded-lg ease-out duration-500"
 
   return (
+    //A "slide" is each individual JSX component
     <section className="embla max-w-5xl space-y-4">
       <div className="embla__viewport overflow-hidden" ref={emblaRef}>
         <div className="embla__container flex gap-4">
@@ -39,6 +40,7 @@ const EmblaCarousel = (props) => {
               key={index}
               onClick={() => onDotButtonClick(index)}
               //TODO: Replace this with a better solution
+              //Provides the styling for the buttons based on active class
               className = {index === selectedIndex ?  
                 baseButtonStyles +  " bg-orange-600" : baseButtonStyles + " hover:bg-orange-200"}
             />
