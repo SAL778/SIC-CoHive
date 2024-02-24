@@ -1,10 +1,9 @@
-from django.urls import path,re_path
-
-from . import views # . referes to the current module we are in
+from django.urls import path
+from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("users/", views.UserList.as_view(), name="user-list"),
-    path("users/<int:pk>", views.UserDetail.as_view(), name="user-detail"),
-    path("users/<int:pk>/create_portfolio", views.CompletePortfolioDetail.as_view(), name="complete-portfolio-detail"),
+    path("users/", views.user_list, name="user_list"),
+    path("users/<int:pk>/", views.user_detail, name="user_detail"),
+    path("users/<int:user_id>/create_portfolio/<int:pk>/", views.complete_portfolio_detail, name="complete_portfolio_detail"),
 ]
