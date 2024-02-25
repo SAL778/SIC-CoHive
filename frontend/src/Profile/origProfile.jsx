@@ -79,7 +79,7 @@ function EducationBackground({education}) {
 			<ul>
 				{education.map((field) => <FieldOfStudy fieldName = {field[0]} minormajor = {field[1]}  />)}
 			</ul>
-			<button><span className = "text-orange-600 bold">Edit</span> fields of study</button>
+			<button><span className = "text-orange-500 bold">Edit</span> fields of study</button>
 		</>
 	)
 }
@@ -103,7 +103,7 @@ function ProfileHeading({user}) {
 				{/* Figma img size 256 by 256 */}
 				<div className="username flex flex-col">
 					<span className="first text-blue-950 text-3xl font-semibold">{user.first}</span>
-					<span className="last text-orange-600 text-3xl font-light">{user.last}</span>
+					<span className="last text-orange-500 text-3xl font-light">{user.last}</span>
 				</div>
 			</div>
 
@@ -169,7 +169,7 @@ function Portfolio({user}) {
 	const PortfolioCard = ({portfolioItem, index}) => {
 		return (
 			<div className = 
-				"group text-orange-600 hover:text-white bg-white hover:bg-orange-600 neutral-50 \
+				"group text-orange-500 hover:text-white bg-white hover:bg-orange-600 neutral-50 \
 				p-5 rounded-md h-60 w-56 group flex flex-col place-content-between \
 				ease-out duration-500 delay-100">
 				<span>Icon Here</span>
@@ -210,7 +210,7 @@ function Portfolio({user}) {
 					contentLabel="Delete Confirmation Modal"
 				>
 					<div className = "modalContainer flex flex-col space-y-4 bg-white rounded-lg p-5">
-						<h2 className = "text-xl font-medium text-blue-950">Are you sure that you want to delete <span className="text-orange-600 font-bold">{clickedObject?.content.title}?</span></h2>
+						<h2 className = "text-xl font-medium text-blue-950">Are you sure that you want to delete <span className="text-orange-500 font-bold">{clickedObject?.content.title}?</span></h2>
 						<div className="footer-buttons flex flex-row justify-end gap-3">
 							<button type = "button" className = "text-neutral-600" onClick= {closeModal}>Nevermind</button>
 							<button type = "button" className = "bg-orange-600 p-3 rounded-md text-white" onClick= {() => deletePortfolioItem(clickedObject)}>Yes, Delete it</button>
