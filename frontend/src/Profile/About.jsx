@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import useAutosizeTextArea from "./useAutosizeTextArea";
 
-/**The rendered representation of the portfolio 
+/**The rendered representation of the portfolio
  * @param {string} portfolioDescription -- A string to describe the portolio (About Me section)
  * @param {Boolean} isCurrentUser -- Whether or not the viewer of the profile is the owner of the profile
  * @param {Boolean} isEditing -- Whether or not the user is editing the bio
@@ -98,5 +98,4 @@ function ButtonStack({isEditing, onEditInit, onEditCancel, onEditSubmit}) {
     )
 }
 
-export default AboutMe
-
+export default AboutMe;

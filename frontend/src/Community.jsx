@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import CommunityCard from "./components/CommunityCard";
 import image from "./assets/community-person.jpg";
+import Filter from "./components/Filter";
 
 function Community() {
 	const [users, setUsers] = useState([]);
 	const [searchText, setSearchText] = useState("");
 
-	// Set up a timeout to delay the execution of fetchData
 	useEffect(() => {
 		const delayDebounceFn = setTimeout(() => {
 			fetchData();
-		}, 600);
+		}, 600); // Set up a timeout to delay the execution of fetchData. Not too many frequent requests to the server.
 
 		return () => clearTimeout(delayDebounceFn);
 	}, [searchText]);
@@ -24,21 +24,13 @@ function Community() {
 			});
 	};
 
-	const handleInputChange = (event) => {
-		const { value } = event.target;
-		setSearchText(value);
+	const handleSearch = (searchText) => {
+		setSearchText(searchText);
 	};
 
 	return (
 		<div className="container mx-auto p-4">
-			<div className="mb-8">
-				<input
-					type="text"
-					placeholder="Search users..."
-					className="w-full p-2 border border-gray-300 rounded-md"
-					onChange={handleInputChange}
-				/>
-			</div>
+			<Filter onSearch={handleSearch} />
 			<div className="flex flex-wrap justify-flex-start gap-[32px] py-[30px]">
 				{users.map((user, index) => (
 					<CommunityCard
