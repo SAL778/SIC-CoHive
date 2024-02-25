@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Bookings from "./Bookings.jsx";
 import Events from "./Events.jsx";
 import Statistics from "./Statistics.jsx";
-import Profile from "./Profile.jsx";
+import Profile from "./Profile/Profile.jsx";
 import Signout from "./Signout.jsx";
 import Community from "./Community.jsx";
 import Feedback from "./Feedback.jsx";

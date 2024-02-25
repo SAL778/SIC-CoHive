@@ -22,7 +22,7 @@ const EmblaCarousel = (props) => {
 
   return (
     //A "slide" is each individual JSX component
-    <section className="embla max-w-5xl space-y-4">
+    <section className="embla space-y-4">
       <div className="embla__viewport overflow-hidden" ref={emblaRef}>
         <div className="embla__container flex gap-4">
           {slides.map((slide, index) => (

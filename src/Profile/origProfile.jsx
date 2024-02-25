@@ -1,6 +1,9 @@
+//Messy -- needs to be refactored
+
+
 import React, {useState } from "react";
 import Modal from "react-modal";
-import Carousel from "./components/Carousel/Carousel.jsx";
+import Carousel from "../components/Carousel/Carousel.jsx";
 
 import { Info } from "@phosphor-icons/react";
 
@@ -291,4 +294,4 @@ function Profile() {
 	);
 }
 
-export default Profile;
+//export default Profile;
