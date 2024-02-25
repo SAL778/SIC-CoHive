@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logo from "../assets/sic.png";
 import Underlay from "../assets/Underlay.svg";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 // -----------------------------------------------------------------------------
 /**
@@ -35,13 +35,11 @@ function NavItem({ content, href, icon }) {
 			// Styling for the active navigation item and hovers are in the css file
 			onClick={(e) => handleClick(e.currentTarget.getBoundingClientRect())}
 		>
-			{React.createElement("i", {
-				className: `fa ${icon}`,
-				style: { fontSize: "20px", width: "30px", textAlign: "center"},
-			})}
-			<p className="md:block">
-				{content}
-			</p>
+			<i
+				className={`fa ${icon}`}
+				style={{ fontSize: "20px", width: "30px", textAlign: "center" }}
+			></i>
+			<p className="md:block">{content}</p>
 		</NavLink>
 	);
 }
@@ -53,14 +51,17 @@ function NavItem({ content, href, icon }) {
  * @returns {JSX.Element} The navigation component.
  */
 function Navigation() {
-
 	// The navigation items to display in the component at the top.
 	// Pass the font awesome icon class name as a string, without the "fa" class.
 	const objects = [
 		{ content: "Bookings", href: "/bookings", icon: "fa-calendar-week" },
 		{ content: "Events", href: "/events", icon: "fa-handshake-simple" },
 		{ content: "Community", href: "/community", icon: "fa-user-group" },
-		{ content: "Statistics", href: "/statistics", icon: "fa-square-poll-vertical" },
+		{
+			content: "Statistics",
+			href: "/statistics",
+			icon: "fa-square-poll-vertical",
+		},
 	];
 
 	// Component at the bottom.
@@ -81,22 +82,25 @@ function Navigation() {
 		const underlay = document.querySelector(".nav-underlay");
 		const activeNavItem = document.querySelector(".nav-item.active");
 		if (underlay && activeNavItem) {
-		  underlay.style.top = `${activeNavItem.getBoundingClientRect().y}px`;
+			underlay.style.top = `${activeNavItem.getBoundingClientRect().y}px`;
 		}
-	  }, []); // Empty dependency array means this effect runs once on mount (load)
+	}, []); // Empty dependency array means this effect runs once on mount (load)
 
 	return (
 		<div className="flex-none md:w-[282px] py-[30px]">
 			<div className="flex h-full flex-col bg-white rounded-[10px] shadow-custom">
-				<a href="/" className="mb-2 flex h-30 items-end rounded-[10px] bg-white p-4 justify-center" >	
+				<Link
+					href="/"
+					className="mb-2 flex h-30 items-end rounded-[10px] bg-white p-4 justify-center"
+				>
 					<img
 						className="object-center"
 						src={logo}
 						alt="SIC logo"
 						width={250}
 						height={40}
-					/>	
-				</a>
+					/>
+				</Link>
 				<div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0">
 					<img src={Underlay} className="nav-underlay" />
 					<div className="nav-container">
