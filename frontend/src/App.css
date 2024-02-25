@@ -1,0 +1,151 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter:wght@100..900&family=Oswald:wght@200..700&display=swap");
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
+:root {
+	--roboto-font: "Inter", sans-serif;
+	/* primary colors */
+	--primary-orange: #ea580c;
+	--hover-orange: #f97316;
+	--tail-nav: #a44f00;
+
+	/* background colors */
+	--bg-white: #f1f2f4;
+	--digital-white: #f5f5f5;
+	--egg-white: #f5f5f5;
+	--white: #ffffff;
+
+	/* text colors */
+	--subdued: #a3a3a3;
+	--slate: #262626;
+	--navy-blue: #172554;
+
+	--border-radius: 10px;
+}
+
+body {
+	font-family: var(--roboto-font);
+	font-weight: 400;
+}
+
+.text-navy-blue {
+	color: #172554; /* Replace with the exact color code you want */
+}
+
+.text-orange-500 {
+	--tw-text-opacity: 1;
+	color: rgba(
+		255,
+		165,
+		0,
+		var(--tw-text-opacity)
+	); /* Replace with the exact color code you want */
+}
+
+.bg-dark-orange {
+	background-color: #f47a20; /* or any dark orange color you prefer */
+}
+
+.text-white {
+	color: #ffffff;
+}
+
+.nav-container {
+	background: none;
+}
+
+.nav-container .nav-item {
+	position: relative;
+	height: 65px;
+	gap: 16px;
+	z-index: 1;
+	background: none;
+	color: var(--slate);
+	border-radius: var(--border-radius) 0 0 var(--border-radius);
+	transition: color 0.4s ease;
+}
+
+.nav-container .nav-item.active {
+	color: #fff;
+}
+
+.nav-container .nav-item:hover,
+.nav-container .nav-item:focus {
+	background: rgb(249 115 22 / 80%);
+}
+
+.nav-container .nav-item.active:hover,
+.nav-container .nav-item.active:focus {
+	color: #fff;
+	background: none;
+}
+
+.nav-container p {
+	font-weight: 500;
+	letter-spacing: 0.5px;
+}
+
+.nav-underlay {
+	position: absolute;
+	width: calc(282px + 14px);
+	object-fit: cover;
+	z-index: 0;
+	transition: top 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.community-card {
+	position: relative;
+	width: 174px;
+	height: 232px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	row-gap: 20px;
+	column-gap: 40px;
+	background: #fafafa;
+	color: var(--slate);
+	box-shadow: 4px 4px 10px 0px #0000000d;
+}
+
+.community-card img {
+	position: absolute;
+	top: -28px;
+	width: 128px;
+	height: 128px;
+	object-fit: cover;
+	border-radius: 20px;
+}
+
+.community-card .card-info {
+	width: 100%;
+	padding: 23px 23px 46px;
+}
+
+.community-card .card-info p {
+	width: 100%;
+	text-wrap: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	line-height: 1.2;
+}
+
+.community-card .card-info p.info-first {
+	font-size: 24px;
+	font-weight: 700;
+	color: #172554;
+}
+
+.community-card .card-info p.info-last {
+	font-size: 24px;
+	font-weight: 500;
+	color: var(--primary-orange);
+	margin: 4px 0 0;
+}
+
+.community-card .card-info p.info-email {
+	font-size: 12px;
+	font-weight: 400;
+}
