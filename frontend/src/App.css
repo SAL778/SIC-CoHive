@@ -31,7 +31,7 @@ body {
 }
 
 .text-navy-blue {
-	color: #172554; /* Replace with the exact color code you want */
+	color: #172554;
 }
 
 .text-orange-500 {
@@ -41,11 +41,11 @@ body {
 		165,
 		0,
 		var(--tw-text-opacity)
-	); /* Replace with the exact color code you want */
+	);
 }
 
 .bg-dark-orange {
-	background-color: #f47a20; /* or any dark orange color you prefer */
+	background-color: #f47a20;
 }
 
 .text-white {
@@ -148,4 +148,13 @@ body {
 .community-card .card-info p.info-email {
 	font-size: 12px;
 	font-weight: 400;
+}
+
+.delete-modal {
+	top: 50%;
+    position: relative;
+    transform: translateY(-50%);
+    max-width: 80%;
+    border: 1px solid #000;
+    min-height: 400px;
 }
