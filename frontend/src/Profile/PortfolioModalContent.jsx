@@ -43,6 +43,7 @@ export function PortfolioItemEdit({ onEditSubmit, onEditCancel, portfolioItem })
                 />
                 <input
                     type="text"
+                    name="description"
                     value={formData.description}
                     onChange={handleInput}
                     placeholder="Enter a brief project description"
@@ -51,7 +52,7 @@ export function PortfolioItemEdit({ onEditSubmit, onEditCancel, portfolioItem })
                 />
                 <input
                     type="text"
-                    name="url"
+                    name="link"
                     value={formData.link}
                     onChange={handleInput}
                     placeholder="Link your project via URL"
