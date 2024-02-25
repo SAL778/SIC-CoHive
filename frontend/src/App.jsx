@@ -14,7 +14,7 @@ import Feedback from "./Feedback.jsx";
 function App() {
 	return (
 		<Router>
-			<div className="flex h-screen w-screen flex-col md:flex-row md:overflow-hidden bg-gray-200">
+			<div className="flex h-screen w-screen flex-col md:flex-row md:overflow-hidden body-white py-0 px-[30px] gap-[40px]">
 				<Navigation />
 				<Routes>
 					<Route path="/bookings" element={<Bookings />} />

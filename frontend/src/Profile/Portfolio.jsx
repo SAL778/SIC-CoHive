@@ -62,7 +62,7 @@ function Portfolio({isCurrentUser, portfolio}) {
     return (    
         <div className="flex flex-col py-[16px] px-3 gap-[100px] grow-[1] overflow-hidden">
             <section>
-                <h1>About</h1>
+                <h2 className="text-navy-blue font-medium">About</h2>
                 {/* <AboutMe 
                     isEditing = {aboutIsEdit} 
                     portfolioDescriptionProp = {aboutText}
@@ -76,13 +76,13 @@ function Portfolio({isCurrentUser, portfolio}) {
             </section>
 
             <section>
-                <h1>Portfolio</h1>
+                <h2 className="text-navy-blue font-medium mb-[16px]">Portfolio</h2>
                 <Carousel
                 slides = {renderPortfolio}
                 options = {{ align: 'start'}}
                 />
 
-                <button className="p-3 bg-orange-600 text-white rounded-md "
+                <button className="button-orange"
                     type = "button" 
                     onClick = {() => {
                         setClicked(null)
@@ -99,7 +99,7 @@ function Portfolio({isCurrentUser, portfolio}) {
                 isDel = {modeIsDel}
                 clickedItem = {clicked}
                 isOpen={modalIsOpen}
-                className = "delete-modal flex justify-center items-center flex-col backdrop-brightness-50 backdrop-blur-sm w-[100%] max-w-[660px] max-h-[60vh] bg-white mx-auto shadow-lg rounded-lg"
+                className = "delete-modal flex justify-center items-center flex-col backdrop-brightness-50 backdrop-blur-sm w-[100%] max-w-[660px] max-h-[60vh] bg-white mx-auto shadow-custom rounded-lg"
 				onRequestClose={() => setModalIsOpen(false)}
                 contentLabel="Modification Modal"
             />
