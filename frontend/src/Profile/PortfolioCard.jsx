@@ -7,21 +7,21 @@
 function PortfolioCard({title, description, link, onClickEdit, onClickDelete}) {
     return (
         //Card container
-        <div className="Card group text-orange-600 bg-neutral-50 hover:text-white hover:bg-orange-600 p-5 rounded-md h-64 w-56 flex flex-col place-content-between ease-out duration-500 delay-100">
-            <i className="fa fa-lightbulb text-xl" aria-label="Portfolio icon"/>
+        <div className="portfolio-card p-5 rounded-3xl h-64 w-56 flex flex-col place-content-between ease-out duration-200 shadow-custom hover:cursor-pointer">
+            <i className="card-icon fa fa-lightbulb" aria-label="Portfolio icon"/>
             <section>
-                <h3>{title}</h3>
+                <h3 className="text-[18px">{title}</h3>
                 <p>{description}</p>
             </section>
-            <div className = "button-footer flex flex-row place-content-between">
-                <span className = "Edit-buttons flex flex-row justify-between gap-[20px]">
+            <div className = "portfolio-button-wrap flex flex-row place-content-between text-[20px]">
+                <div className = "edit-buttons flex flex-row justify-between gap-[26px]">
                     <button type = "button" aria-label="Delete button" onClick = {onClickDelete}>
-                        <i className="fa fa-trash hover:text-neutral-300" aria-hidden="true"/>
+                        <i className="fa fa-trash" aria-hidden="true"/>
                     </button>
                     <button type = "button" aria-label="Edit button" onClick = {onClickEdit}>
-                        <i className="fa fa-pen hover:text-neutral-300"/>
+                        <i className="fa fa-pen"/>
                     </button>
-                </span>
+                </div>
                 <a href = {link}>
                     <i className="fa fa-arrow-right"/>
                 </a>

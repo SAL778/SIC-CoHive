@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 /**
  * UserRoles component renders a list of user roles.
  * @param {Array} props.roles - An array containing role strings
@@ -7,7 +9,7 @@ function UserRoles({roles}) {
 	if (roles?.length) {
 		return (
 			<ul className = "flex flex-wrap gap-2">
-				{roles.map((role) => <li key = {role} className="border-4 p-3 border-sky-700 rounded-md">{role}</li>)}
+				{roles.map((role) => <li key = {role} className="roleTag flex flex-row items-center justify-center py-[6px] px-[8px]">{role}</li>)}
 			</ul>
 		)
 	}
@@ -22,16 +24,72 @@ function UserRoles({roles}) {
  * @see {FieldOfStudy} - as child component
  */
 function EducationBackground({education}) {
-	//Unsure of education shape for now
-	//TODO: Replace the education shape with proper backend shape.
+
+	const [major, setMajor] = useState(education.major);
+	const [minor, setMinor] = useState(education.minor);
+
+	const handleMajorChange = (event) => {
+		setMajor(event.target.value);
+	};
+
+	const handleMinorChange = (event) => {
+		setMinor(event.target.value);
+	};
+
+	const majorButtonClass = major !== education.major ? 'changed-education' : '';
+	const minorButtonClass = minor !== education.minor ? 'changed-education' : '';
+
+	const isMajorButtonDisabled = !majorButtonClass;
+	const isMinorButtonDisabled = !minorButtonClass;
+
 	return (
 		<>
-			<p>{education.major} <span>Major</span></p>
-            <p>{education.minor} <span>Minor</span></p>
-
-			<button><span className = "text-orange-600 bold">Edit</span> fields of study</button>
+			<div className="education-input flex flex-row justify-between items-center gap-4">
+				<div className="education-cap">
+					<i className="fa-solid fa-graduation-cap"></i>
+					<span>Major</span>
+				</div>
+				<input
+					type="text"
+					value={major}
+					placeholder="Major"
+					className="rounded-lg border-3 gap-2"
+					onChange={handleMajorChange}
+				/>
+				<button
+					id="edit-major"
+					aria-label="Edit Major"
+					role="button"
+					className={`square-button ${majorButtonClass}`}
+					disabled={isMajorButtonDisabled}
+				>
+					<i class="fa-solid fa-arrow-right"></i>
+				</button>
+			</div>
+			<div className="education-input flex flex-row justify-between items-center gap-4">
+				<div className="education-cap">
+					<i className="fa-solid fa-graduation-cap"></i>
+					<span>Minor</span>
+				</div>
+				<input
+					type="text"
+					value={minor}
+					placeholder="Minor"
+					className="rounded-lg border-3 gap-2"
+					onChange={handleMinorChange}
+				/>
+				<button
+					id="edit-minor"
+					aria-label="Edit Minor"
+					role="button"
+					className={`square-button ${minorButtonClass}`}
+					disabled={isMinorButtonDisabled}
+				>
+					<i class="fa-solid fa-arrow-right"></i>
+				</button>
+			</div>
 		</>
-	)
+	);
 }
 
 /**
@@ -45,39 +103,39 @@ function ProfileHeading({user}) {
 	return (
 		// Profile head container
 		<div className = "profileHead gap-7 flex flex-row h-fit"> 
-			<div className = "nameSection flex flex-row gap-8 p-8 bg-neutral-100 w-2/3 rounded-3xl">
-                <div className = "flex flex-col">
-                    <img src = {user.profileImage} className = "w-64 h-64 object-cover rounded-3xl"/> 
-                    { user.is_staff && 
-                        <div>
-                            <i className="fa fa-shield"/>
-                            <p>Student Innovation Center Admin</p>
-                        </div>
-                    }
+			<div className = "nameSection relative flex flex-row gap-6 p-0 bg-white w-2/3 border-custom shadow-custom max-h-[315px] pr-[40px]">
+				<img src = {user.profileImage} className = "profileImg w-[315px] h-[315px] object-cover"/> 
+                <div className="username flex flex-col py-[40px]">
+                    <span className="first text-blue-950 text-[38px] leading-[46px] font-bold">{user.first_name}</span>
+                    <span className="last text-orange-500 text-[38px] leading-[46px] font-light">{user.last_name}</span>
                 </div>
-                <div className="username flex flex-col">
-                    <span className="first text-blue-950 text-3xl font-semibold">{user.first_name}</span>
-                    <span className="last text-orange-600 text-3xl font-light">{user.last_name}</span>
-                </div>
+				{ user.is_staff && 
+					<div className="absolute bottom-[40px] right-[40px] inline-flex items-center gap-[8px] text-[22px] text-orange-500">
+						<i class="fa-solid fa-shield-halved"></i>
+						<p>Student Innovation Center Admin</p>
+					</div>
+				}
 			</div>
 
-			<div className = "detailSection p-8 bg-neutral-100 rounded-3xl w-1/3 flex flex-col gap-3">
-				<>
-					<h6 className = "text-neutral-800 text-s font-regular">
-						Roles
-						<i className="fa fa-info"/>
-					</h6>
-                    {user.roles
-                        ? <UserRoles roles = {user.userRoles}/>
-                        : <p className = "text-neutral-500">This person has no assigned roles yet</p> 
-                    }   
-				</>
-				<>
-					<h6>
-						Education Background
-					</h6>
-					<EducationBackground education = {user.educations}/>
-				</>
+			<div className = "detailSection p-[16px] bg-white border-custom w-1/3 flex flex-col justify-center items-center gap-3 shadow-custom max-h-[315px]">
+				<div className="flex flex-col justify-between gap-[20px] w-[80%]">
+					<>
+						<h6 className="text-base font-medium text-[18px] leading-4 tracking-normal text-left flex flex-row gap-[6px] items-center" title="Roles indicate access to special resources">
+							Roles
+							<i class="fa-solid fa-circle-info"></i>
+						</h6>
+						{user.roles
+							? <UserRoles roles = {user.roles}/>
+							: <p className = "text-neutral-500">This person has no assigned roles yet</p> 
+						}   
+					</>
+					<>
+						<h6 className="text-base font-medium text-[18px] leading-4 tracking-normal text-left">
+							Education Background
+						</h6>
+						<EducationBackground education = {user.educations}/>
+					</>
+				</div>
 			</div>
 		</div>
 	)

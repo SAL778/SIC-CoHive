@@ -86,8 +86,8 @@ function Navigation() {
 	  }, []); // Empty dependency array means this effect runs once on mount (load)
 
 	return (
-		<div className="flex-none md:w-[322px] px-3 py-4">
-			<div className="flex h-full flex-col bg-white rounded-[10px] shadow-md">
+		<div className="flex-none md:w-[282px] py-[30px]">
+			<div className="flex h-full flex-col bg-white rounded-[10px] shadow-custom">
 				<a href="/" className="mb-2 flex h-30 items-end rounded-[10px] bg-white p-4 justify-center" >	
 					<img
 						className="object-center"
@@ -95,9 +95,9 @@ function Navigation() {
 						alt="SIC logo"
 						width={250}
 						height={40}
-					/>
+					/>	
 				</a>
-				<div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 pl-4">
+				<div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0">
 					<img src={Underlay} className="nav-underlay" />
 					<div className="nav-container">
 						{objects.map((object, index) => (

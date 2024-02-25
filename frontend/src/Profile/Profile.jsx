@@ -83,12 +83,13 @@ export default function Profile() {
 				"major": "Computing Science",
 				"minor": "Economics"
 			  }
-			]
+			],
+			"roles": ["Audio Engineer", "Graphic Designer", "VFX Artist", "Animator"]
 		})
 	}
 
 	return (
-		<div className = "flex flex-col gap-4">
+		<div className = "flex flex-col gap-4 overflow-hidden px-[20px] py-[30px] max-w-[2000px] mx-auto">
 			<ProfileHeader user = {getUser()}/>
 			<Portfolio portfolio = {mockPortfolio} isCurrentUser = {true}/>
 		</div>
