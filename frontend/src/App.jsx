@@ -10,8 +10,10 @@ import Profile from "./Profile/Profile.jsx";
 import Signout from "./Signout.jsx";
 import Community from "./Community.jsx";
 import Feedback from "./Feedback.jsx";
+import Modal from 'react-modal';
 
 function App() {
+	Modal.setAppElement('#root');
 	return (
 		<Router>
 			<div className="flex h-screen w-screen flex-col md:flex-row md:overflow-hidden body-white py-0 px-[30px] gap-[40px]">

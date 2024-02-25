@@ -417,3 +417,19 @@ button.button-orange:focus {
 .filter-item span {
 	user-select: none;
 }
+
+
+.about-description,
+.about-description textarea {
+	background: none;
+	height: auto !important;
+}
+
+.about-description textarea:focus {
+	outline: none ;
+}
+
+.about-description textarea.description-edit:focus {
+	outline: 2px solid var(--primary-orange);
+}
+
