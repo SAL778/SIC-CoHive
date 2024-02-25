@@ -61,14 +61,12 @@ function Portfolio({ isCurrentUser, portfolio }) {
 
     return (    
         <div className="flex flex-col py-[16px] px-[20px] gap-4 grow-[1] overflow-hidden">
-
             <AboutMe 
                 isEditing = {aboutIsEdit} 
                 portfolioDescriptionProp = {aboutText}
                 isCurrentUser = {isCurrentUser}
                 onEditSubmit = {onChangeAboutMe}
             />
-
 			<section>
 				<h2 className="text-navy-blue font-medium mb-[16px]">Portfolio</h2>
 				<Carousel slides={renderPortfolio} options={{ align: "start" }} />
