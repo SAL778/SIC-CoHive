@@ -13,7 +13,7 @@ def index(request):
     return HttpResponse("Hello, world. You're at the User index. You're not supposed to be here.")
 
 # USER
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def user_list(request):
     """
     API endpoint for listing and creating users.
@@ -37,12 +37,12 @@ def user_list(request):
         
         serializer = CustomUserSerializer(queryset, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = CustomUserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+    # elif request.method == 'POST':
+    #     serializer = CustomUserSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=201)
+    #     return Response(serializer.errors, status=400)
 
 
 # ONE USER
@@ -98,10 +98,8 @@ class CompletePortfolioDetail(generics.RetrieveUpdateAPIView):
         # Get the user with the provided ID
         user_id = self.kwargs['user_id']
         user = get_object_or_404(CustomUser, pk=user_id)
-        print(user_id, user)
         # Check if the portfolio exists for this user
         portfolio, created = Complete_Portfolio.objects.get_or_create(user=user)
-        print(portfolio)
         return portfolio
 
     def get(self, request, *args, **kwargs):
@@ -129,11 +127,13 @@ class PortfolioItemList(generics.ListCreateAPIView):
     serializer_class = PortfolioItemSerializer
 
     def get_queryset(self):
-        portfolio_id = self.kwargs['portfolio_id']
-        return PortfolioItem.objects.filter(portfolio_id=portfolio_id)
+        user_id = self.kwargs['user_id']
+        portfolio = get_object_or_404(Complete_Portfolio, user_id=user_id)
+        return PortfolioItem.objects.filter(portfolio=portfolio)
 
     def perform_create(self, serializer):
-        portfolio = get_object_or_404(Complete_Portfolio, pk=self.kwargs['portfolio_id'])
+        user_id = self.kwargs['user_id']
+        portfolio = get_object_or_404(Complete_Portfolio, user_id=user_id)
         serializer.save(portfolio=portfolio)
 
 

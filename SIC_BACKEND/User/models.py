@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from allauth.socialaccount.models import SocialAccount
+from django.contrib.auth.models import Permission
 
 class Complete_Portfolio(models.Model):
     id = models.AutoField(primary_key=True,help_text="Unique identifier for the portfolio")
@@ -29,12 +30,27 @@ class PortfolioItem(models.Model):
     def __str__(self):
         return self.title
   
-     
+class AccessType(models.Model):
+    name = models.CharField(max_length=80, unique=True)
+    permissions = models.ManyToManyField(Permission, blank=True)
+
+    class Meta:
+        verbose_name = 'access type'
+        verbose_name_plural = 'access types'
+
+    def __str__(self):
+        return self.name
       
 class CustomUser(AbstractUser):
     # name = models.CharField(max_length=100)
     # uid = models.CharField(max_length=100, unique=True)
     # # You can add other fields as needed
+    username = models.CharField(max_length=100,unique=False,help_text="The username of the user")
+    email = models.EmailField(unique=True,help_text="The email of the user")
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
     ROLES_CHOICES = [
         ('User', 'User'),
         ('Organization', 'Organization'),
@@ -45,6 +61,9 @@ class CustomUser(AbstractUser):
     profileImage = models.URLField(max_length=100, blank=True, null=True,help_text="URL to the profile image")
     portfolioVisibility = models.BooleanField(default=True,help_text="decides if the portfolio is visible to others")
     portfolio = models.OneToOneField(Complete_Portfolio, on_delete=models.CASCADE, blank=True, null=True,help_text="The portfolio of the user")
+
+    accessType = models.ManyToManyField(AccessType, blank=True)
+    accessPermissions = models.ManyToManyField(Permission, blank=True)
 
     def save(self, *args, **kwargs):
         # Call the "real" save() method.
