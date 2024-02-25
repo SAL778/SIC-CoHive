@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -89,6 +90,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+    },
+    'test': {
+        'NAME': BASE_DIR / 'test_db.sqlite3',
     }
 }
 
