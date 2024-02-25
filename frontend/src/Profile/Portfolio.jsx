@@ -63,12 +63,12 @@ function Portfolio({isCurrentUser, portfolio}) {
         <div className="flex flex-col py-[16px] px-3 gap-[100px] grow-[1] overflow-hidden">
             <section>
                 <h1>About</h1>
-                <AboutMe 
+                {/* <AboutMe 
                     isEditing = {aboutIsEdit} 
                     portfolioDescriptionProp = {aboutText}
                     isCurrentUser = {isCurrentUser}
                     onEditSubmit = {changeAboutMe}
-                />
+                /> */}
                 
                 <button type="button" onClick= {() => setAboutIsEdit(true)}>
                     <i className = "fa fa-pen"/>

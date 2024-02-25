@@ -3,7 +3,7 @@
 
 import React, {useState } from "react";
 import Modal from "react-modal";
-import Carousel from "../components/Carousel/Carousel.jsx";
+import Carousel from "../../../src/components/Carousel/Carousel.jsx";
 
 import { Info } from "@phosphor-icons/react";
 

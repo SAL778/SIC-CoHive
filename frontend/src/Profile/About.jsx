@@ -1,11 +1,5 @@
 import React, { useState } from "react";
 
-<section>
-    <h1>About</h1>
-    <p>{portfolio.description}</p>
-    <button type="button"><i className = "fa fa-pen"/></button>
-</section>
-
 /**The rendered representation of the portfolio 
  * @param {string} portfolioDescription -- A string to describe the portolio (About Me section)
  * @param {Boolean} isCurrentUser -- Whether or not the viewer of the profile is the owner of the profile
