@@ -39,7 +39,7 @@ export function PortfolioItemEdit({ onEditSubmit, onEditCancel, portfolioItem })
                     onChange={handleInput}
                     placeholder="Enter a title"
                     maxLength={50}
-                    className="w-full px-4 py-2 rounded shadow outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 rounded shadow-custom outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                     type="text"
@@ -48,7 +48,7 @@ export function PortfolioItemEdit({ onEditSubmit, onEditCancel, portfolioItem })
                     onChange={handleInput}
                     placeholder="Enter a brief project description"
                     maxLength={100}
-                    className="w-full px-4 py-2 rounded shadow outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 rounded shadow-custom outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                     type="text"
@@ -56,9 +56,9 @@ export function PortfolioItemEdit({ onEditSubmit, onEditCancel, portfolioItem })
                     value={formData.link}
                     onChange={handleInput}
                     placeholder="Link your project via URL"
-                    className="w-full px-4 py-2 rounded shadow outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 rounded shadow-custom outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                <div className="flex flex-row justify-end mt-[32px] gap-[40px]">
+                <div className="flex flex-row justify-end mt-[32px] gap-[20px]">
                     <button type="button" onClick={onEditCancel} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                         Cancel
                     </button>

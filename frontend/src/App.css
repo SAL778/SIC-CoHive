@@ -18,30 +18,46 @@
 	--white: #ffffff;
 
 	/* text colors */
-	--subdued: #a3a3a3;
-	--slate: #262626;
+	--light-grey: #747474;
+	--charcoal: #262626;
 	--navy-blue: #172554;
 
-	--border-radius: 10px;
+	--border-radius: 6px;
+}
+
+* {
+	box-sizing: border-box;
 }
 
 body {
 	font-family: var(--roboto-font);
 	font-weight: 400;
+	font-size: 16px;
+}
+
+h1 {
+	font-size: 30px;
+}
+
+h2 {
+	font-size: 22px !important;
+}
+
+h3 {
+	font-size: 20px;
 }
 
 .text-navy-blue {
-	color: #172554;
+	color: var(--navy-blue);
+}
+
+.text-slate {
+	color: var(--charcoal);
+
 }
 
 .text-orange-500 {
-	--tw-text-opacity: 1;
-	color: rgba(
-		255,
-		165,
-		0,
-		var(--tw-text-opacity)
-	);
+	color: var(--primary-orange);
 }
 
 .bg-dark-orange {
@@ -51,6 +67,16 @@ body {
 .text-white {
 	color: #ffffff;
 }
+
+.shadow-custom {
+	box-shadow: 0px 2px 6px #00000029;
+}
+
+.border-custom {
+	border-radius: var(--border-radius);
+}
+
+/* ------------------------------------------- */
 
 .nav-container {
 	background: none;
@@ -62,8 +88,8 @@ body {
 	gap: 16px;
 	z-index: 1;
 	background: none;
-	color: var(--slate);
-	border-radius: var(--border-radius) 0 0 var(--border-radius);
+	color: var(--charcoal);
+	border-radius: var(--border-radius);
 	transition: color 0.4s ease;
 }
 
@@ -106,7 +132,7 @@ body {
 	row-gap: 20px;
 	column-gap: 40px;
 	background: #fafafa;
-	color: var(--slate);
+	color: var(--charcoal);
 	box-shadow: 4px 4px 10px 0px #0000000d;
 }
 
@@ -157,4 +183,162 @@ body {
     max-width: 80%;
     border: 1px solid #000;
     min-height: 400px;
+}
+
+.profileImg {
+	border-radius: var(--border-radius) 0 0 var(--border-radius);
+	clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
+}
+
+.roleTag:nth-child(1) {
+	--tag-color: #9747FF;
+}
+.roleTag:nth-child(2) {
+	--tag-color: #31C1CA;
+}
+.roleTag:nth-child(3) {
+	--tag-color: #FF4794;
+}
+.roleTag:nth-child(4) {
+	--tag-color: #033EB0;
+}
+
+.roleTag {
+	font-size: 10px;
+	font-weight: 700;
+	color: var(--tag-color);
+	border: 3px solid var(--tag-color);
+	border-radius: 8px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.education-input {
+	position: relative;
+}
+
+.education-input i {
+	font-size: 24px;
+}
+
+.education-input .education-cap {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	right: 64px;
+	top: -8px;
+	background: #fff;
+}
+
+.education-input input {
+	width: 100%;
+	display: flex;
+	min-height: 46px;
+	justify-content: flex-start;
+	align-items: center;
+	font-weight: 500;
+	color: var(--charcoal);
+	border: 3px solid var(--charcoal);
+	padding: 8px 70px 8px 16px;
+	letter-spacing: 0.5px;
+}
+
+.education-input input::placeholder {
+	color: var(--charcoal);
+}
+
+.education-input .square-button {
+	color: var(--charcoal);
+	background: #e4e4e4;
+}
+
+.education-input .square-button.changed-education {
+	color: #fff;
+	background: var(--primary-orange);
+}
+
+.square-button {
+	--size: 32px;
+	--font-size: 16px;
+	font-size: var(--font-size);
+	min-width: var(--size);
+	width: var(--size);
+	height: var(--size);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	border-radius: var(--border-radius);
+}
+
+.square-button i {
+	font-size: var(--font-size);
+}
+
+/* ------------------------------------- */
+
+.edit-buttons button {
+	opacity: 0;
+}
+
+.portfolio-card {
+	color: var(--primary-orange);
+}
+
+.portfolio-card p {
+	color: var(--light-grey);
+}
+
+.portfolio-card:hover,
+.portfolio-card:focus {
+	background: var(--primary-orange);
+	box-shadow: 0px 2px 6px #00000080;
+}
+
+.portfolio-card:hover,
+.portfolio-card:focus {
+	color: #fff;
+}
+
+.portfolio-card:hover p,
+.portfolio-card:focus p {
+	color: var(--charcoal);
+}
+
+.portfolio-card:hover .edit-buttons button,
+.portfolio-card:focus .edit-buttons button {
+	opacity: 1;
+}
+
+.card-icon {
+	font-size: 32px;
+}
+
+.portfolio-button-wrap {
+	position: relative;
+	bottom: 0;
+}
+
+.portfolio-card:hover .edit-buttons button:hover i,
+.portfolio-card:focus .edit-buttons button:focus i {
+	color: rgb(38 38 38 / 65%);
+}
+
+button.button-orange {
+	font-weight: 500;
+	padding: 0.75rem;
+	color: #fff;
+	background: var(--primary-orange);
+	border-radius: var(--border-radius);
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button.button-orange:hover,
+button.button-orange:focus {
+	padding: 0.75rem;
+	color: var(--primary-orange);
+	background: #fff;
+	box-shadow: 0px 2px 6px #00000080;
 }
