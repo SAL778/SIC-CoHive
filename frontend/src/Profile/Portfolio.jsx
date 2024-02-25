@@ -47,7 +47,6 @@ function Portfolio({isCurrentUser, portfolio}) {
     //Modify the portfolio when an object has been changed
     const onDelete = (deleteItem) => {
         //TODO: Send DELETE to backend and GET the updated portfolio list
-
         setPortfolioList(portfolioList.filter((item) => item.id !== deleteItem.id));
     }
     
@@ -63,15 +62,13 @@ function Portfolio({isCurrentUser, portfolio}) {
 
     return (    
         <div className="flex flex-col py-[16px] px-3 gap-[100px] grow-[1] overflow-hidden">
-            <section>
-                <h2 className="text-navy-blue font-medium">About</h2>
-                <AboutMe 
-                    isEditing = {aboutIsEdit} 
-                    portfolioDescriptionProp = {aboutText}
-                    isCurrentUser = {isCurrentUser}
-                    onEditSubmit = {onChangeAboutMe}
-                />
-            </section>
+
+            <AboutMe 
+                isEditing = {aboutIsEdit} 
+                portfolioDescriptionProp = {aboutText}
+                isCurrentUser = {isCurrentUser}
+                onEditSubmit = {onChangeAboutMe}
+            />
 
             <section>
                 <h2 className="text-navy-blue font-medium mb-[16px]">Portfolio</h2>

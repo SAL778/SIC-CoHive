@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import useAutosizeTextArea from "./useAutosizeTextArea";
 
 /**The rendered representation of the portfolio 
  * @param {string} portfolioDescription -- A string to describe the portolio (About Me section)
@@ -14,13 +15,24 @@ function AboutMe({isCurrentUser, portfolioDescriptionProp, isEditing, onEditSubm
     const [showButtonStack, setShowButtonStack] = useState(false)
     const [isEditMode, setIsEditMode] = useState(isEditing)
 
+    const [autoheight, setAutoheight] = useState("")
+
+    //Used to set the focus on button click
     const textAreaRef = useRef(null);
+    useEffect(() => {
+        if (isEditMode) {
+            textAreaRef.current.focus();
+        }
+    }, [isEditMode]);
+
+    //Wrapper for useEffect hook
+    useAutosizeTextArea(textAreaRef.current, autoheight);
 
     //update corresponding field on input
     const handleInput = (e) => {
         const {name, value} = e.target;
+        setAutoheight(textAreaRef.current, value)
         setPortfolioDescription(value);
-        console.log(e.target)
     };
 
     const handleSubmit = (e) => {
@@ -34,69 +46,71 @@ function AboutMe({isCurrentUser, portfolioDescriptionProp, isEditing, onEditSubm
     }
 
     const handleInit = () => {
-        textAreaRef.current?.focus();
+        setAutoheight(textAreaRef.current, portfolioDescription)
         setIsEditMode(true)
-        console.log(textAreaRef)
-        
     }
 
     return (
         <div 
-            className = "aboutMeContainer"
+            className = "aboutMeContainer relative max-w-full"
             onMouseEnter = {() => setShowButtonStack(true)} //Show the modify button stack
             onMouseLeave = {() => setShowButtonStack(false)}
             >
-            <div className = "textField min-h-40 rounded-md overflow-clip">
+            <div>
+                <h2 className="text-navy-blue font-medium">About</h2>
+                <ButtonStack
+                    className="absolute"
+                    isVisible= {showButtonStack}
+                    isEditing = {isEditMode}
+                    onEditSubmit={() => handleSubmit()}
+                    onEditInit = {() => handleInit()}
+                    onEditCancel = {() => handleCancel()}
+                />
+            </div>
+            <div className = "textField min-h-40 rounded-md relative overflow-auto">
                 {(isEditMode && isCurrentUser) ? (
                     <textarea
                     ref = {textAreaRef}
+                    rows = {1}
                     maxLength={500}
                     placeholder = "Add a brief description to describe yourself and your works"
-                    className = "resize-none w-full min-h-40 h-full active: outline-orange-600 outline-4 whitespace-pre-wrap overflow-visible"
+                    className = "resize-none rounded-md w-full min-h-40 focus:outline-orange-600 active:outline-4 whitespace-pre-wrap overflow-visibile p-r-8"
                     value = {portfolioDescription}
                     onChange = {handleInput}
                     >
                     </textarea>
                 ) : (
                         <p
-                        className = "h-full min-h-40 m-0 whitespace-pre-wrap"
+                        className = "h-full w-full min-h-40 m-0 whitespace-pre-wrap overflow-visible"
                         >{portfolioDescription ? portfolioDescription : "Student Innovation Center Member"}</p>
                     )
                 }
             </div>
-            <ButtonStack
-                isVisible={showButtonStack}
-                isEditing = {isEditMode}
-                onEditSubmit={() => handleSubmit()}
-                onEditInit = {() => handleInit()}
-                onEditCancel = {() => handleCancel()}
-            />
+            
         </div>
     )
 }
 
 function ButtonStack({ isVisible, isEditing, onEditInit, onEditCancel, onEditSubmit}) {
     if (isVisible) {
-        if (isEditing) {
-            return (
-                <>
-                    <button type="button" onClick={onEditSubmit}>
-                        <i className="fa fa-check" />
-                    </button>
-                    <button type="button" onClick={onEditCancel}>
-                        <i className="fa fa-times" />
-                    </button>
-                </>
-            );
-        } else {
-            return (
-                <>
-                    <button type="button" onClick={onEditInit}>
+        return (
+            <div className="button-stack flex flex-row absolute gap-3 right-0 top-0">
+                {isEditing ? (
+                    <>
+                        <button type="button" className="square-button button-orange" onClick={onEditSubmit}>
+                            <i className="fa fa-check" />
+                        </button>
+                        <button type="button" className="square-button button-orange" onClick={onEditCancel}>
+                            <i className="fa fa-times" />
+                        </button>
+                    </>
+                ) : (
+                    <button type="button" className="square-button button-orange" onClick={onEditInit}>
                         <i className="fa fa-pen" />
                     </button>
-                </>
-            );
-        }
+                )}
+            </div>
+        )
     }
     return null;
 }
