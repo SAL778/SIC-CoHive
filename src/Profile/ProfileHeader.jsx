@@ -50,7 +50,7 @@ function ProfileHeading({user}) {
                     <img src = {user.profileImage} className = "w-64 h-64 object-cover rounded-3xl"/> 
                     { user.is_staff && 
                         <div>
-                            <i class="fa fa-shield"/>
+                            <i className="fa fa-shield"/>
                             <p>Student Innovation Center Admin</p>
                         </div>
                     }
@@ -69,7 +69,7 @@ function ProfileHeading({user}) {
 					</h6>
                     {user.roles
                         ? <UserRoles roles = {user.userRoles}/>
-                        : <p className = "text-neutral-500">This person has no assigned roles yet</p>
+                        : <p className = "text-neutral-500">This person has no assigned roles yet</p> 
                     }   
 				</>
 				<>
