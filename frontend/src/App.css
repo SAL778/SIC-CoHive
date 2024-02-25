@@ -53,7 +53,6 @@ h3 {
 
 .text-slate {
 	color: var(--charcoal);
-
 }
 
 .text-orange-500 {
@@ -178,11 +177,11 @@ h3 {
 
 .delete-modal {
 	top: 50%;
-    position: relative;
-    transform: translateY(-50%);
-    max-width: 80%;
-    border: 1px solid #000;
-    min-height: 400px;
+	position: relative;
+	transform: translateY(-50%);
+	max-width: 80%;
+	border: 1px solid #000;
+	min-height: 400px;
 }
 
 .profileImg {
@@ -191,16 +190,16 @@ h3 {
 }
 
 .roleTag:nth-child(1) {
-	--tag-color: #9747FF;
+	--tag-color: #9747ff;
 }
 .roleTag:nth-child(2) {
-	--tag-color: #31C1CA;
+	--tag-color: #31c1ca;
 }
 .roleTag:nth-child(3) {
-	--tag-color: #FF4794;
+	--tag-color: #ff4794;
 }
 .roleTag:nth-child(4) {
-	--tag-color: #033EB0;
+	--tag-color: #033eb0;
 }
 
 .roleTag {
