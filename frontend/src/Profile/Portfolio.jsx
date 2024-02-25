@@ -55,24 +55,22 @@ function Portfolio({isCurrentUser, portfolio}) {
         //TODO: Send PATCH, just send all field and let the backend update whatever changed to backend and GET the updated portfolio list
     }
 
-    const changeAboutMe = (updatedDescription) => {
+    const onChangeAboutMe = (updatedDescription) => {
+        //TODO: Send the updated description to the backend
         setAboutText(updatedDescription)
+        setAboutIsEdit(false)
     }
 
     return (    
         <div className="flex flex-col py-[16px] px-3 gap-[100px] grow-[1] overflow-hidden">
             <section>
                 <h1>About</h1>
-                {/* <AboutMe 
+                <AboutMe 
                     isEditing = {aboutIsEdit} 
                     portfolioDescriptionProp = {aboutText}
                     isCurrentUser = {isCurrentUser}
-                    onEditSubmit = {changeAboutMe}
-                /> */}
-                
-                <button type="button" onClick= {() => setAboutIsEdit(true)}>
-                    <i className = "fa fa-pen"/>
-                </button>
+                    onEditSubmit = {onChangeAboutMe}
+                />
             </section>
 
             <section>
