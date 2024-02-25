@@ -30,14 +30,14 @@ function Portfolio({isCurrentUser, portfolio}) {
             description = {item.description}
             link = {item.link}
             onClickEdit = {() => {
-                console.log("Clicked item is:" + item)
-                setClicked(item)
+                // console.log("Clicked item is:" + item)
+                setClicked(item);
                 setModalIsOpen(true);
                 setModeIsDel(false);
             }}
             onClickDelete = {() => {
-                console.log("Clicked item is:" + item)
-                setClicked(item)
+                // console.log("Clicked item is:" + item)
+                setClicked(item);
                 setModalIsOpen(true);
                 setModeIsDel(true);
             }}
@@ -61,7 +61,7 @@ function Portfolio({isCurrentUser, portfolio}) {
     }
 
     return (    
-        <div className="flex flex-col py-[16px] px-3 gap-[100px] grow-[1] overflow-hidden">
+        <div className="flex flex-col py-[16px] px-[20px] gap-4 grow-[1] overflow-hidden">
 
             <AboutMe 
                 isEditing = {aboutIsEdit} 

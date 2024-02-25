@@ -342,3 +342,18 @@ button.button-orange:focus {
 	background: #fff;
 	box-shadow: 0px 2px 6px #00000080;
 }
+
+.about-description,
+.about-description textarea {
+	background: none;
+	height: auto !important;
+}
+
+.about-description textarea:focus {
+	outline: none ;
+}
+
+.about-description textarea.description-edit:focus {
+	outline: 2px solid var(--primary-orange);
+}
+

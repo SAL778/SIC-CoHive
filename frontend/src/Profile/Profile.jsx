@@ -89,8 +89,9 @@ export default function Profile() {
 	}
 
 	return (
-		<div className = "flex flex-col gap-4 overflow-auto px-[20px] py-[30px] max-w-[2000px] mx-auto">
+		<div className = "flex flex-col gap-4 overflow-auto px-0 py-[30px] max-w-[2000px] mx-auto">
 			<ProfileHeader user = {getUser()}/>
+			{/* <VisibilityToggle user = {getUser()}> */}
 			<Portfolio portfolio = {mockPortfolio} isCurrentUser = {true}/>
 		</div>
 		

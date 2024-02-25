@@ -11,10 +11,7 @@ import useAutosizeTextArea from "./useAutosizeTextArea";
 function AboutMe({isCurrentUser, portfolioDescriptionProp, isEditing, onEditSubmit}) {
     //init with pre-filled fields based on portfolioItem if they exist, otherwise create new fields
     const [portfolioDescription, setPortfolioDescription] = useState(portfolioDescriptionProp ?? "")   //This is the displayed text
-
-    const [showButtonStack, setShowButtonStack] = useState(false)
     const [isEditMode, setIsEditMode] = useState(isEditing)
-
     const [autoheight, setAutoheight] = useState("")
 
     //Used to set the focus on button click
@@ -53,66 +50,52 @@ function AboutMe({isCurrentUser, portfolioDescriptionProp, isEditing, onEditSubm
     return (
         <div 
             className = "aboutMeContainer relative max-w-full"
-            onMouseEnter = {() => setShowButtonStack(true)} //Show the modify button stack
-            onMouseLeave = {() => setShowButtonStack(false)}
             >
             <div>
                 <h2 className="text-navy-blue font-medium">About</h2>
                 <ButtonStack
                     className="absolute"
-                    isVisible= {showButtonStack}
                     isEditing = {isEditMode}
                     onEditSubmit={() => handleSubmit()}
                     onEditInit = {() => handleInit()}
                     onEditCancel = {() => handleCancel()}
                 />
             </div>
-            <div className = "textField min-h-40 rounded-md relative overflow-auto">
-                {(isEditMode && isCurrentUser) ? (
-                    <textarea
+            <div className = "about-description min-h-40 rounded-md relative mt-[20px]">
+                <textarea
+                    readOnly = {!(isEditMode && isCurrentUser)}
                     ref = {textAreaRef}
                     rows = {1}
                     maxLength={500}
                     placeholder = "Add a brief description to describe yourself and your works"
-                    className = "resize-none rounded-md w-full min-h-40 focus:outline-orange-600 active:outline-4 whitespace-pre-wrap overflow-visibile p-r-8"
+                    className = {"resize-none rounded-md w-full min-h-40 whitespace-pre-wrap p-x-8" + (!(isEditMode && isCurrentUser) ? "" : " description-edit")}
                     value = {portfolioDescription}
                     onChange = {handleInput}
-                    >
-                    </textarea>
-                ) : (
-                        <p
-                        className = "h-full w-full min-h-40 m-0 whitespace-pre-wrap overflow-visible"
-                        >{portfolioDescription ? portfolioDescription : "Student Innovation Center Member"}</p>
-                    )
-                }
+                />
             </div>
-            
         </div>
     )
 }
 
-function ButtonStack({ isVisible, isEditing, onEditInit, onEditCancel, onEditSubmit}) {
-    if (isVisible) {
-        return (
-            <div className="button-stack flex flex-row absolute gap-3 right-0 top-0">
-                {isEditing ? (
-                    <>
-                        <button type="button" className="square-button button-orange" onClick={onEditSubmit}>
-                            <i className="fa fa-check" />
-                        </button>
-                        <button type="button" className="square-button button-orange" onClick={onEditCancel}>
-                            <i className="fa fa-times" />
-                        </button>
-                    </>
-                ) : (
-                    <button type="button" className="square-button button-orange" onClick={onEditInit}>
-                        <i className="fa fa-pen" />
+function ButtonStack({isEditing, onEditInit, onEditCancel, onEditSubmit}) {
+    return (
+        <div className="button-stack flex flex-row absolute gap-3 right-0 top-0">
+            {isEditing ? (
+                <>
+                    <button type="button" className="square-button button-orange" onClick={onEditSubmit}>
+                        <i className="fa fa-check" />
                     </button>
-                )}
-            </div>
-        )
-    }
-    return null;
+                    <button type="button" className="square-button button-orange" onClick={onEditCancel}>
+                        <i className="fa fa-times" />
+                    </button>
+                </>
+            ) : (
+                <button type="button" className="square-button button-orange" onClick={onEditInit}>
+                    <i className="fa fa-pen" />
+                </button>
+            )}
+        </div>
+    )
 }
 
 export default AboutMe
