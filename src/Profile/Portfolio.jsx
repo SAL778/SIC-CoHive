@@ -7,9 +7,10 @@ export default Portfolio;
 
 /**The rendered representation of the portfolio 
  * @param {array} portfolio -- A portfolio object: {description: string, items: PortfolioItem[]}
+ * @param {Boolean} isActive -- Whether or not the viewer of the profile is the owner of the profile
  * @returns {JSX.Element} - The rendered representation of the portfolio
  */
-function Portfolio({portfolio}) {
+function Portfolio({isActive, portfolio}) {
 
     const [portfolioList, setPortfolioList] = useState(portfolio.items)
     //Modal Support
@@ -63,6 +64,16 @@ function Portfolio({portfolio}) {
                 slides = {renderPortfolio}
                 options = {{ align: 'start'}}
                 />
+
+                <button className="p-3 bg-orange-600 text-white rounded-md "
+                    type = "button" 
+                    onClick = {() => {
+                        setClicked(null)
+                        setModalIsOpen(true);
+                        setModeIsDel(false);}
+                    }>Add Item to Portfolio
+                </button>
+
             </section>
 
             <PortfolioModal

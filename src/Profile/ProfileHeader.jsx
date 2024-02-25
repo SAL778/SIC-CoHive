@@ -14,21 +14,6 @@ function UserRoles({roles}) {
 	return (<p className = "text-neutral-500 text-xs font-light">"No roles assigned yet."</p>)
 }
 
-/**
- * FieldOfStudy component represents a field of study, including its name and whether it is a major or minor.
- * @param {string} props.fieldName - The name of the field of study.
- * @param {string} props.minormajor - Indicates whether the field of study is a major or minor.
- * @returns {JSX.Element} - Returns a JSX element representing the field of study.
- */
-function FieldOfStudy({fieldName, minormajor}) {
-	return (
-		<li key = {fieldName} className = "flex justify-between p-3 border-4 rounded-md relative">
-			<span className = "capitalize align-middle">{fieldName}</span>
-			<span className = "text-xs font-bold uppercase align-bottom">{minormajor}</span>
-			<span className = "absolute top-0 right-0">Icon</span>
-		</li>
-	)
-}
 
 /**
  * Renders Educational Background as a list of field studies.
@@ -41,9 +26,9 @@ function EducationBackground({education}) {
 	//TODO: Replace the education shape with proper backend shape.
 	return (
 		<>
-			<ul>
-				{education.map((field) => <FieldOfStudy fieldName = {field[0]} minormajor = {field[1]}  />)}
-			</ul>
+			<p>{education.major} <span>Major</span></p>
+            <p>{education.minor} <span>Minor</span></p>
+
 			<button><span className = "text-orange-600 bold">Edit</span> fields of study</button>
 		</>
 	)
@@ -59,31 +44,39 @@ function EducationBackground({education}) {
 function ProfileHeading({user}) {
 	return (
 		// Profile head container
-		<div className = "profileHead gap-7 flex flex-row w-2/3 h-fit"> 
-		{/* <div className = "profileHead gap-7 flex flex-row w-2/3 h-fit">  */}
+		<div className = "profileHead gap-7 flex flex-row h-fit"> 
 			<div className = "nameSection flex flex-row gap-8 p-8 bg-neutral-100 w-2/3 rounded-3xl">
-			{/* <div className = "nameSection flex flex-row gap-8 p-8 bg-neutral-100 w-2/3 rounded-3xl"> */}
-				<img src = {user.profile} className = "w-64 h-64 object-cover rounded-3xl"/> 
-				{/* Figma img size 256 by 256 */}
-				<div className="username flex flex-col">
-					<span className="first text-blue-950 text-3xl font-semibold">{user.first}</span>
-					<span className="last text-orange-600 text-3xl font-light">{user.last}</span>
-				</div>
+                <div className = "flex flex-col">
+                    <img src = {user.profileImage} className = "w-64 h-64 object-cover rounded-3xl"/> 
+                    { user.is_staff && 
+                        <div>
+                            <i class="fa fa-shield"/>
+                            <p>Student Innovation Center Admin</p>
+                        </div>
+                    }
+                </div>
+                <div className="username flex flex-col">
+                    <span className="first text-blue-950 text-3xl font-semibold">{user.first_name}</span>
+                    <span className="last text-orange-600 text-3xl font-light">{user.last_name}</span>
+                </div>
 			</div>
 
 			<div className = "detailSection p-8 bg-neutral-100 rounded-3xl w-1/3 flex flex-col gap-3">
 				<>
 					<h6 className = "text-neutral-800 text-s font-regular">
 						Roles
-						<Info color = "#A3A3A3" weight="fill" size={24} className="inline"/>
+						<i className="fa fa-info"/>
 					</h6>
-					<UserRoles roles = {user.userRoles}/>
+                    {user.roles
+                        ? <UserRoles roles = {user.userRoles}/>
+                        : <p className = "text-neutral-500">This person has no assigned roles yet</p>
+                    }   
 				</>
 				<>
 					<h6>
 						Education Background
 					</h6>
-					<EducationBackground education = {user.education}/>
+					<EducationBackground education = {user.educations}/>
 				</>
 			</div>
 		</div>

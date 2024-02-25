@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Portfolio from "./Portfolio.jsx"
+import ProfileHeader from "./ProfileHeader.jsx";
+
 
 const mockPortfolio = 
 	{
@@ -56,15 +58,40 @@ const mockPortfolio =
 		]
 	}
 
+
+
 export default function Profile() {
 
 	//GET the information for the user
 	const getUser = () => {
-		return null
+		return ( {
+			"id": 0,
+			"username": "hBjdlXoc+P01-Uf0kFMalrO.xX6tlU.IHecZFPZSbofccN_u_GlHQVp@JutXh+RwcOC-KI-0NYyndJI7jBeLrQl-A6Wa",
+			"first_name": "Joseph",
+			"last_name": "Ghreeling",
+			"email": "user@example.com",
+			"is_staff": true,
+			"is_superuser": true,
+			"is_active": true,
+			"date_joined": "2024-02-25T01:08:59.016Z",
+			"last_login": "2024-02-25T01:08:59.016Z",
+			"portfolioVisibility": true,
+			"profileImage": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+			"educations": [
+			  {
+				"field_of_study": "string",
+				"major": "Computing Science",
+				"minor": "Economics"
+			  }
+			]
+		})
 	}
 
 	return (
-
-		<Portfolio portfolio = {mockPortfolio}/>
+		<div className = "flex flex-col gap-4">
+			<ProfileHeader user = {getUser()}/>
+			<Portfolio portfolio = {mockPortfolio}/>
+		</div>
+		
 	)
 }
