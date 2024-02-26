@@ -18,7 +18,7 @@ export function PortfolioItemEdit({ onEditSubmit, onEditCancel, portfolioItem })
     //update corresponding field on input
     const handleInput = (e) => {
         const {name, value} = e.target;
-        // console.log(e.target)
+        console.log(e.target)
         setFormData(prevState => ({
             ...prevState,
             [name]:value

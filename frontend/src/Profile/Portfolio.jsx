@@ -3,7 +3,7 @@ import Carousel from "../components/Carousel/Carousel.jsx";
 import PortfolioModal from "./PortfolioModal.jsx";
 import PortfolioCard from "./PortfolioCard.jsx";
 import AboutMe from "./About.jsx";
-import { HostContext } from "../App.jsx";
+import { HostContext, UserContext } from "../App.jsx";
 
 export default Portfolio;
 
@@ -15,19 +15,19 @@ export default Portfolio;
 function Portfolio({ isCurrentUser, portfolio }) {
 
     const {host} = useContext(HostContext)
-    const {user} = useContext(HostContext)
+    const {user} = useContext(UserContext)
 
-	const [portfolioList, setPortfolioList] = useState(portfolio.items);
+	const [portfolioList, setPortfolioList] = useState(portfolio?.items);
 	//Modal Support
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [clicked, setClicked] = useState(null);
 	const [modeIsDel, setModeIsDel] = useState(null);
 
 	const [aboutIsEdit, setAboutIsEdit] = useState(false); //Is the user editing their bio
-	const [aboutText, setAboutText] = useState(portfolio.description); //Text in the bio
+	const [aboutText, setAboutText] = useState(portfolio?.description); //Text in the bio
 
     //Converts the portfolio list into a carousel-usable prop
-    let renderPortfolio = portfolioList.map(item => (
+    let renderPortfolio = portfolioList?.map(item => (
         <PortfolioCard 
             key = {item.id} 
             title = {item.title}
@@ -62,8 +62,8 @@ function Portfolio({ isCurrentUser, portfolio }) {
     const onAdd = (updatedItem) => {
         //TODO: Send PUT to portfolio items
         console.log("add");
-        console.log(user);
-        fetch(`${host}/portfolio/${user.id}/`, {
+        console.log(updatedItem);
+        fetch(`${host}/users/${user.id}/portfolio/`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -81,8 +81,26 @@ function Portfolio({ isCurrentUser, portfolio }) {
     }
 
     const onChangeAboutMe = (updatedDescription) => {
-        //TODO: Send the updated description to the backend
         setAboutText(updatedDescription)
+        //TODO: Send the updated description to the backend
+        fetch(`${host}/users/${user.id}/portfolio/`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedDescription)
+        }).then(response => {
+            console.log(updatedDescription)
+            if(!response.ok) {
+                console.log(response)
+            }
+            else {
+                console.log("sent succesfully")
+            }
+        }).catch(error => {
+            console.error("Couldn't send...", error)
+        });
+
         setAboutIsEdit(false)
     }
 

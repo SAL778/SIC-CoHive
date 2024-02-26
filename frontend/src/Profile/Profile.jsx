@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import Portfolio from "./Portfolio.jsx";
 import ProfileHeader from "./ProfileHeader.jsx";
-import { UserContext } from "../App.jsx";
+import { HostContext, UserContext } from "../App.jsx";
 
 export default function Profile() {
 	//const [userData, setUserData] = useState(null);
 	const { user, setUser } = useContext(UserContext);
+	const { host } = useContext(HostContext);
 
+	const [portfolio, setPortfolio] = useState(null);
 	const [loading, setLoading] = useState(true);
 
 	function getCookieValue(cookieName) {
@@ -39,6 +41,31 @@ export default function Profile() {
 					);
 					setUser(sanitizedUser);
 					console.log(user)
+					//TODO: Distinguish between fetched user and current user (from context?)
+					//Now we do the portfolio call, if it's private, skip.
+					if (user.portfolioVisibility) {
+						fetch(`${host}/users/${user.id}/portfolio/`, {
+							method: "GET",
+							headers: {
+								accept: "application/json"
+							}
+						})
+						.then(response => {
+							if (response.ok) {
+								// Fetch portfolio (incl. items)
+								response.json().then(portfolio => {
+									console.log(portfolio)
+									setPortfolio(portfolio)
+									setLoading(false);
+								}
+									)
+							}
+							else {
+								console.log("Couldn't fetch portfolio description", response.statusText);
+							}
+						});
+					}
+					//If the portfolio is private, skip the additional fetches
 					setLoading(false);
 				} else {
 					console.error("Failed to fetch user data:", response.statusText);
@@ -63,7 +90,7 @@ export default function Profile() {
   			) : (
 				<div className="flex flex-col gap-4 overflow-auto px-0 py-[30px] max-w-[2000px] mx-auto">
 					<ProfileHeader user={user} />
-					<Portfolio portfolio={mockPortfolio} isCurrentUser={true} />
+					<Portfolio portfolio={portfolio} isCurrentUser={true} />
 				</div>
 			)}
 		</>
