@@ -6,6 +6,9 @@ import { useState } from 'react';
  * @returns {JSX.Element} - Returns a JSX element representing the user roles.
  */
 function UserRoles({roles}) {
+
+	roles = ["VFX Artist", "Producer", "Animator", "Sound Designer"];
+
 	if (roles?.length) {
 		return (
 			<ul className = "flex flex-wrap gap-2">
