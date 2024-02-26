@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'drf_yasg',
-    'rest_framework_simplejwt',
     'rest_framework.authtoken',
 ]
 
@@ -113,14 +112,9 @@ AUTHENTICATION_BACKENDS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ],
-}
-
-SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('JWT',),
 }
 
 # Password validation

@@ -50,7 +50,7 @@ function Filter({ onSearch }) {
 				<div className="search-bar">
 					<div className="filter-bar-text">
 						<i
-							class="fa-solid fa-magnifying-glass"
+							className="fa-solid fa-magnifying-glass"
 							style={{
 								paddingRight: "10px",
 								color: "#FF7A00",
@@ -70,7 +70,7 @@ function Filter({ onSearch }) {
 				<div className="filter-section">
 					<div className="filter-bar-text">
 						<i
-							class="fa-solid fa-filter"
+							className="fa-solid fa-filter"
 							style={{
 								paddingRight: "12px",
 								color: "#FF7A00",
