@@ -25,6 +25,11 @@ function UserRoles({roles}) {
  */
 function EducationBackground({education}) {
 
+	education = {
+		major: "Computing Science",
+		minor: "Computing Science"
+	};
+
 	const [major, setMajor] = useState(education.major || '');
 	const [minor, setMinor] = useState(education.minor || '');
 
@@ -99,7 +104,10 @@ function EducationBackground({education}) {
  * @see {EducationBackground} - as child component
  * @see {UserRoles} - as child component
  */
-function ProfileHeading({user}) {
+function ProfileHeader({user}) {
+
+	console.log(user);
+
 	return (
 		// Profile head container
 		<div className = "profileHead gap-7 flex flex-row h-fit px-[20px]"> 
@@ -141,4 +149,4 @@ function ProfileHeading({user}) {
 	)
 }
 
-export default ProfileHeading
+export default ProfileHeader;
