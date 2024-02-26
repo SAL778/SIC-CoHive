@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Portfolio from "./Portfolio.jsx";
 import ProfileHeader from "./ProfileHeader.jsx";
+import { UserContext } from "../App.jsx";
 
 export default function Profile() {
-	const [userData, setUserData] = useState(null);
+	//const [userData, setUserData] = useState(null);
+	const { user, setUser } = useContext(UserContext);
+
+	const [loading, setLoading] = useState(true);
 
 	function getCookieValue(cookieName) {
 		const cookies = document.cookie.split("; ");
@@ -33,7 +37,9 @@ export default function Profile() {
 					const sanitizedUser = JSON.parse(JSON.stringify(user), (key, value) =>
 						value === null ? "" : value
 					);
-					setUserData(sanitizedUser);
+					setUser(sanitizedUser);
+					console.log(user)
+					setLoading(false);
 				} else {
 					console.error("Failed to fetch user data:", response.statusText);
 				}
@@ -45,16 +51,22 @@ export default function Profile() {
 		fetchUserData();
 	}, []);
 
-	// Wait until userData is available before rendering ProfileHeader
-	if (!userData) {
-		return null; // or render a loading indicator
-	}
+	// // Wait until userData is available before rendering ProfileHeader
+	// if (!userData) {
+	// 	return null; // or render a loading indicator
+	// }
 
 	return (
-		<div className="flex flex-col gap-4 overflow-auto px-0 py-[30px] max-w-[2000px] mx-auto">
-			<ProfileHeader user={userData} />
-			<Portfolio portfolio={mockPortfolio} isCurrentUser={true} />
-		</div>
+		<>
+  			{loading ? (
+    			<div>Loading...</div>
+  			) : (
+				<div className="flex flex-col gap-4 overflow-auto px-0 py-[30px] max-w-[2000px] mx-auto">
+					<ProfileHeader user={user} />
+					<Portfolio portfolio={mockPortfolio} isCurrentUser={true} />
+				</div>
+			)}
+		</>
 	);
 }
 

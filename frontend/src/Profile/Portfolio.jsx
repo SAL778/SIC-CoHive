@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Carousel from "../components/Carousel/Carousel.jsx";
 import PortfolioModal from "./PortfolioModal.jsx";
 import PortfolioCard from "./PortfolioCard.jsx";
 import AboutMe from "./About.jsx";
+import { HostContext } from "../App.jsx";
 
 export default Portfolio;
 
@@ -12,6 +13,10 @@ export default Portfolio;
  * @returns {JSX.Element} - The rendered representation of the portfolio
  */
 function Portfolio({ isCurrentUser, portfolio }) {
+
+    const {host} = useContext(HostContext)
+    const {user} = useContext(HostContext)
+
 	const [portfolioList, setPortfolioList] = useState(portfolio.items);
 	//Modal Support
 	const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -47,10 +52,32 @@ function Portfolio({ isCurrentUser, portfolio }) {
     const onDelete = (deleteItem) => {
         //TODO: Send DELETE to backend and GET the updated portfolio list
         setPortfolioList(portfolioList.filter((item) => item.id !== deleteItem.id));
+
     }
     
     const onEdit = (updatedItem) => {
         //TODO: Send PATCH, just send all field and let the backend update whatever changed to backend and GET the updated portfolio list
+    }
+
+    const onAdd = (updatedItem) => {
+        //TODO: Send PUT to portfolio items
+        console.log("add");
+        console.log(user);
+        fetch(`${host}/portfolio/${user.id}/`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedItem)
+        }).then(response => {
+            console.log(updatedItem)
+            if(!response.ok) {
+                console.log(response)
+            }
+            console.log("sent succesfully")
+        }).catch(error => {
+            console.error("Couldn't send...", error)
+        });
     }
 
     const onChangeAboutMe = (updatedDescription) => {
@@ -85,7 +112,7 @@ function Portfolio({ isCurrentUser, portfolio }) {
 			</section>
 
 			<PortfolioModal
-				onEdit={onEdit}
+				onEdit={clicked ? onEdit : onAdd}
 				onDelete={onDelete}
 				isDel={modeIsDel}
 				clickedItem={clicked}
