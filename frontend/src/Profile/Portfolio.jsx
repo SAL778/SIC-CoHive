@@ -21,59 +21,52 @@ function Portfolio({ isCurrentUser, portfolio }) {
 	const [aboutIsEdit, setAboutIsEdit] = useState(false); //Is the user editing their bio
 	const [aboutText, setAboutText] = useState(portfolio.description); //Text in the bio
 
-	//Converts the portfolio list into a carousel-usable prop
-	let renderPortfolio = portfolioList.map((item) => (
-		<PortfolioCard
-			key={item.id}
-			title={item.title}
-			description={item.description}
-			link={item.link}
-			onClickEdit={() => {
-				console.log("Clicked item is:" + item);
-				setClicked(item);
-				setModalIsOpen(true);
-				setModeIsDel(false);
-			}}
-			onClickDelete={() => {
-				console.log("Clicked item is:" + item);
-				setClicked(item);
-				setModalIsOpen(true);
-				setModeIsDel(true);
-			}}
-		/>
-	));
+    //Converts the portfolio list into a carousel-usable prop
+    let renderPortfolio = portfolioList.map(item => (
+        <PortfolioCard 
+            key = {item.id} 
+            title = {item.title}
+            description = {item.description}
+            link = {item.link}
+            onClickEdit = {() => {
+                // console.log("Clicked item is:" + item)
+                setClicked(item);
+                setModalIsOpen(true);
+                setModeIsDel(false);
+            }}
+            onClickDelete = {() => {
+                // console.log("Clicked item is:" + item)
+                setClicked(item);
+                setModalIsOpen(true);
+                setModeIsDel(true);
+            }}
+        />
+    ));
 
-	//Modify the portfolio when an object has been changed
-	const onDelete = (deleteItem) => {
-		//TODO: Send DELETE to backend and GET the updated portfolio list
+    //Modify the portfolio when an object has been changed
+    const onDelete = (deleteItem) => {
+        //TODO: Send DELETE to backend and GET the updated portfolio list
+        setPortfolioList(portfolioList.filter((item) => item.id !== deleteItem.id));
+    }
+    
+    const onEdit = (updatedItem) => {
+        //TODO: Send PATCH, just send all field and let the backend update whatever changed to backend and GET the updated portfolio list
+    }
 
-		setPortfolioList(portfolioList.filter((item) => item.id !== deleteItem.id));
-	};
+    const onChangeAboutMe = (updatedDescription) => {
+        //TODO: Send the updated description to the backend
+        setAboutText(updatedDescription)
+        setAboutIsEdit(false)
+    }
 
-	const onEdit = (updatedItem) => {
-		//TODO: Send PATCH, just send all field and let the backend update whatever changed to backend and GET the updated portfolio list
-	};
-
-	const changeAboutMe = (updatedDescription) => {
-		setAboutText(updatedDescription);
-	};
-
-	return (
-		<div className="flex flex-col py-[16px] px-3 gap-[100px] grow-[1] overflow-hidden">
-			<section>
-				<h2 className="text-navy-blue font-medium">About</h2>
-				{/* <AboutMe 
-                    isEditing = {aboutIsEdit} 
-                    portfolioDescriptionProp = {aboutText}
-                    isCurrentUser = {isCurrentUser}
-                    onEditSubmit = {changeAboutMe}
-                /> */}
-
-				<button type="button" onClick={() => setAboutIsEdit(true)}>
-					<i className="fa fa-pen" />
-				</button>
-			</section>
-
+    return (    
+        <div className="flex flex-col py-[16px] px-[20px] gap-4 grow-[1] overflow-hidden">
+            <AboutMe 
+                isEditing = {aboutIsEdit} 
+                portfolioDescriptionProp = {aboutText}
+                isCurrentUser = {isCurrentUser}
+                onEditSubmit = {onChangeAboutMe}
+            />
 			<section>
 				<h2 className="text-navy-blue font-medium mb-[16px]">Portfolio</h2>
 				<Carousel slides={renderPortfolio} options={{ align: "start" }} />

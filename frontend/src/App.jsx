@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, createContext} from "react";
 import "./App.css";
 import "./output.css";
 import Navigation from "./components/Navbar.jsx";
@@ -10,9 +10,16 @@ import Profile from "./Profile/Profile.jsx";
 import Signout from "./Signout.jsx";
 import Community from "./Community.jsx";
 import Feedback from "./Feedback.jsx";
+import Modal from 'react-modal';
+
+export const HostContext = createContext();
 
 function App() {
+	Modal.setAppElement('#root');
+	const [host] = useState('http://localhost:8000'); //Replace host here
+
 	return (
+		<HostContext.Provider value = {{ host }}>
 		<Router>
 			<div className="flex h-screen w-screen flex-col md:flex-row md:overflow-hidden body-white py-0 px-[30px] gap-[40px]">
 				<Navigation />
@@ -27,6 +34,7 @@ function App() {
 				</Routes>
 			</div>
 		</Router>
+		</HostContext.Provider>
 	);
 }
 

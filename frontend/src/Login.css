@@ -1,0 +1,85 @@
+*{
+  margin: 0;
+  padding: 0;
+  /* box-sizing: border-box; */
+}
+
+body{
+  width: 100vw;
+  height:100vh;
+  background-color: #F5F5F5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.background-container{
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../assets/sic.jpg');
+  background-size: cover;
+  clip-path: polygon(0 0, 50% 0, 60% 100%, 0 100%);
+  position: relative;
+  z-index: 1;
+}
+.top-image {
+  position: absolute;
+  left: 25%;
+  z-index: 2;
+}
+
+.signup-button {
+  font-size: 24px;
+  width: 352px; 
+  position: fixed;
+  top: 60%;
+  right: var(--spacing-padding-padding-pad-sm, 100px); /* Adjust padding as needed */
+  transform: translateY(-50%);
+  border-radius: var(--radii-rad-sm, 6px);
+  background: var(--color-primary, linear-gradient(0deg, #EA580C 0%, #EA580C 100%), linear-gradient(0deg, #F97316 0%, #F97316 100%), #FF7A00);
+  color: white;
+  padding: var(--spacing-padding-padding-pad-sm, 16px);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.signup-button:hover {
+  filter: brightness(90%);
+}
+
+.white-button {
+  font-size: 24px;
+  width: 352px;
+  position: fixed;
+  top: 40%;
+  right: var(--spacing-padding-padding-pad-sm, 100px);
+  transform: translateY(-50%);
+  border-radius: var(--radii-rad-sm, 6px);
+  background-color: white;
+  color: black;
+  padding: var(--spacing-padding-padding-pad-sm, 16px);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.white-button:hover {
+  filter: brightness(90%);
+}
+
+.access-info {
+  color: #ABABAB;
+  font-size: 11px;
+  width: 334px;
+  text-align: left; 
+  padding: 10px;
+  position: absolute;
+  bottom: 50px;
+  left: 80%;
+  transform: translateX(-50%);
+}

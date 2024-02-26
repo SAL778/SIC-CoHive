@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import Modal from 'react-modal';
 import { PortfolioItemDelete, PortfolioItemEdit } from "./PortfolioModalContent.jsx";
 
-
 /**
  * Modal Implementation that supports deletion and editing of portfolio items.
  * @param {function} onEdit - Callable that defines action to occur once edit form is submitted

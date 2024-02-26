@@ -6,6 +6,9 @@ import { useState } from 'react';
  * @returns {JSX.Element} - Returns a JSX element representing the user roles.
  */
 function UserRoles({roles}) {
+
+	roles = ["VFX Artist", "Producer", "Animator", "Sound Designer"];
+
 	if (roles?.length) {
 		return (
 			<ul className = "flex flex-wrap gap-2">
@@ -25,8 +28,13 @@ function UserRoles({roles}) {
  */
 function EducationBackground({education}) {
 
-	const [major, setMajor] = useState(education.major);
-	const [minor, setMinor] = useState(education.minor);
+	education = {
+		major: "Computing Science",
+		minor: "Computing Science"
+	};
+
+	const [major, setMajor] = useState(education.major || '');
+	const [minor, setMinor] = useState(education.minor || '');
 
 	const handleMajorChange = (event) => {
 		setMajor(event.target.value);
@@ -63,7 +71,7 @@ function EducationBackground({education}) {
 					className={`square-button ${majorButtonClass}`}
 					disabled={isMajorButtonDisabled}
 				>
-					<i class="fa-solid fa-arrow-right"></i>
+					<i className="fa-solid fa-arrow-right"></i>
 				</button>
 			</div>
 			<div className="education-input flex flex-row justify-between items-center gap-4">
@@ -85,7 +93,7 @@ function EducationBackground({education}) {
 					className={`square-button ${minorButtonClass}`}
 					disabled={isMinorButtonDisabled}
 				>
-					<i class="fa-solid fa-arrow-right"></i>
+					<i className="fa-solid fa-arrow-right"></i>
 				</button>
 			</div>
 		</>
@@ -99,10 +107,13 @@ function EducationBackground({education}) {
  * @see {EducationBackground} - as child component
  * @see {UserRoles} - as child component
  */
-function ProfileHeading({user}) {
+function ProfileHeader({user}) {
+
+	console.log(user);
+
 	return (
 		// Profile head container
-		<div className = "profileHead gap-7 flex flex-row h-fit"> 
+		<div className = "profileHead gap-7 flex flex-row h-fit px-[20px]"> 
 			<div className = "nameSection relative flex flex-row gap-6 p-0 bg-white w-2/3 border-custom shadow-custom max-h-[315px] pr-[40px]">
 				<img src = {user.profileImage} className = "profileImg w-[315px] h-[315px] object-cover"/> 
                 <div className="username flex flex-col py-[40px]">
@@ -111,7 +122,7 @@ function ProfileHeading({user}) {
                 </div>
 				{ user.is_staff && 
 					<div className="absolute bottom-[40px] right-[40px] inline-flex items-center gap-[8px] text-[22px] text-orange-500">
-						<i class="fa-solid fa-shield-halved"></i>
+						<i className="fa-solid fa-shield-halved"></i>
 						<p>Student Innovation Center Admin</p>
 					</div>
 				}
@@ -122,7 +133,7 @@ function ProfileHeading({user}) {
 					<>
 						<h6 className="text-base font-medium text-[18px] leading-4 tracking-normal text-left flex flex-row gap-[6px] items-center" title="Roles indicate access to special resources">
 							Roles
-							<i class="fa-solid fa-circle-info"></i>
+							<i className="fa-solid fa-circle-info"></i>
 						</h6>
 						{user.roles
 							? <UserRoles roles = {user.roles}/>
@@ -141,4 +152,4 @@ function ProfileHeading({user}) {
 	)
 }
 
-export default ProfileHeading
+export default ProfileHeader;
