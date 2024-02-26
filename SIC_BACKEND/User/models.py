@@ -40,7 +40,7 @@ class AccessType(models.Model):
 
     def __str__(self):
         return self.name
-      
+       
 class CustomUser(AbstractUser):
     # name = models.CharField(max_length=100)
     # uid = models.CharField(max_length=100, unique=True)

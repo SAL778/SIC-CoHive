@@ -78,16 +78,24 @@ def user_list(request):
     - If GET request: A Response object with serialized data of all users.
     - If POST request: A Response object with serialized data of the created user if valid, otherwise a Response object with errors.
     """
+
     if request.method == 'GET':
         search = request.GET.get('search', '')
-        if search:
-            queryset = CustomUser.objects.filter(Q(first_name__icontains=search) | Q(last_name__icontains=search))
-        else:
-            queryset = CustomUser.objects.all()
+        filters = request.GET.get('filter', '')
         
-        serializer = CustomUserSerializer(queryset, many=True)
-        return Response(serializer.data)
-      
+        queryset = CustomUser.objects.all()
+
+        if search:
+            queryset = queryset.filter(Q(first_name__icontains=search) | Q(last_name__icontains=search))
+        
+        if filters:
+            access_types = filters.split(',')
+            queryset = queryset.filter(accessType__name__in=access_types).distinct()
+
+    serializer = CustomUserSerializer(queryset, many=True)
+    return Response(serializer.data)
+
+
    # elif request.method == 'POST':
     #    serializer = CustomUserSerializer(data=request.data)
      #   if serializer.is_valid():

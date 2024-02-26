@@ -6,6 +6,7 @@ import Filter from "./components/Filter";
 function Community() {
 	const [users, setUsers] = useState([]);
 	const [searchText, setSearchText] = useState("");
+	const [selectedFilters, setSelectedFilters] = useState([]);
 
 	useEffect(() => {
 		const delayDebounceFn = setTimeout(() => {
@@ -13,14 +14,24 @@ function Community() {
 		}, 600); // Set up a timeout to delay the execution of fetchData. Not too many frequent requests to the server.
 
 		return () => clearTimeout(delayDebounceFn);
-	}, [searchText]);
+	}, [searchText, selectedFilters]);
+
+	// const fetchData = () => {
+	// 	fetch(`http://127.0.0.1:8000/users/?search=${searchText}`)
+	// 		.then((res) => res.json())
+	// 		.then((data) => {
+	// 			setUsers(data);
+	// 			console.log(data);
+	// 		});
+	// };
 
 	const fetchData = () => {
-		fetch(`http://127.0.0.1:8000/users/?search=${searchText}`)
+		const filterQuery =
+			selectedFilters.length > 0 ? `&filter=${selectedFilters.join(",")}` : "";
+		fetch(`http://127.0.0.1:8000/users/?search=${searchText}${filterQuery}`)
 			.then((res) => res.json())
 			.then((data) => {
 				setUsers(data);
-				console.log(data);
 			});
 	};
 
@@ -28,9 +39,13 @@ function Community() {
 		setSearchText(searchText);
 	};
 
+	const handleFilterChange = (filters) => {
+		setSelectedFilters(filters);
+	};
+
 	return (
 		<div className="container mx-auto p-4">
-			<Filter onSearch={handleSearch} />
+			<Filter onSearch={handleSearch} onFilterChange={handleFilterChange} />
 			<div className="flex flex-wrap justify-flex-start gap-[32px] py-[30px]">
 				{users.map((user, index) => (
 					<CommunityCard

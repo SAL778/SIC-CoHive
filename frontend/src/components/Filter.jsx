@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 
 //HARD CODED FILTERS for now. Uncomment the GET request using the useEffect hook once the endpoint is available.
-function Filter({ onSearch }) {
+function Filter({ onSearch, onFilterChange }) {
 	const [selectedFilters, setSelectedFilters] = useState({
 		"SIC Member": false,
 		Organization: false,
 		"SIC Administrator": false,
 		"Audio Engineer": false,
 		"Graphic Designer": false,
-		"VFX Artist": false,
+		VFX: false,
 		Animator: false,
 	});
+
+	useEffect(() => {
+		// Notify parent component whenever selectedFilters change
+		onFilterChange(
+			Object.entries(selectedFilters)
+				.filter(([_, isSelected]) => isSelected)
+				.map(([filter, _]) => filter)
+		);
+	}, [selectedFilters]);
 
 	// DO NOT REMOVE. UNCOMMENT ONCE THE CORRECT ENDPOINT IS AVAILABLE.
 
