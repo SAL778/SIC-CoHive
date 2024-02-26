@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import Portfolio from "./Portfolio.jsx"
 import ProfileHeader from "./ProfileHeader.jsx";
-
+import axios from "axios";
+import { HostContext } from "../App.jsx";
 
 const mockPortfolio = 
 	{
@@ -62,8 +63,23 @@ const mockPortfolio =
 
 export default function Profile() {
 
+	const { host } = useContext(HostContext)
+
 	//GET the information for the user
 	const getUser = () => {
+		axios.get(`${host}/users/`)
+			.then(response => {
+				// Handle successful response here
+				console.log(`Got response from ${host}/users/`); // Example: Log the response data
+				console.log(response.data)
+				return response; // Return the response if needed
+			})
+			.catch(error => {
+				// Handle error here
+				console.error(`No response from ${host}/users/`, error);
+				throw error; // Throw the error to propagate it further if needed
+			});
+
 		return ( {
 			"id": 0,
 			"username": "hBjdlXoc+P01-Uf0kFMalrO.xX6tlU.IHecZFPZSbofccN_u_GlHQVp@JutXh+RwcOC-KI-0NYyndJI7jBeLrQl-A6Wa",
