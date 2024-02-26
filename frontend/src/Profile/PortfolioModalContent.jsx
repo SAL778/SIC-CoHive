@@ -59,10 +59,10 @@ export function PortfolioItemEdit({ onEditSubmit, onEditCancel, portfolioItem })
                     className="w-full px-4 py-2 rounded shadow-custom outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <div className="flex flex-row justify-end mt-[32px] gap-[20px]">
-                    <button type="button" onClick={onEditCancel} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    <button type="button" onClick={onEditCancel} className="cancelDeleteItem bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                         Cancel
                     </button>
-                    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <button type="submit" className="submitDeleteItem bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Submit
                     </button>
                 </div>

@@ -2,7 +2,11 @@ import unittest
 
 ##Change this
 PATH_TO_CHROMEDRIVER = "/usr/local/bin/chromedriver" #Change this to wherever your local is
-SLEEP_TIME = 1                                       #Time between selenium test calls
+SLEEP_TIME = 2                                       #Default time between selenium test calls, some events overwrite this.
+HOSTNAME = "127.0.0.1"
+PORT = "5173"
+
+ADDRESS = "http://" + HOSTNAME + ":" + PORT
 
 #What it says on success
 #test.shortDescription() is whatever you place in the docstrings of the defined function

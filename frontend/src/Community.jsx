@@ -16,15 +16,6 @@ function Community() {
 		return () => clearTimeout(delayDebounceFn);
 	}, [searchText, selectedFilters]);
 
-	// const fetchData = () => {
-	// 	fetch(`http://127.0.0.1:8000/users/?search=${searchText}`)
-	// 		.then((res) => res.json())
-	// 		.then((data) => {
-	// 			setUsers(data);
-	// 			console.log(data);
-	// 		});
-	// };
-
 	const fetchData = () => {
 		const filterQuery =
 			selectedFilters.length > 0 ? `&filter=${selectedFilters.join(",")}` : "";

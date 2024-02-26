@@ -9,4 +9,5 @@ urlpatterns = [
     path("users/<int:user_id>/portfolio/", views.CompletePortfolioDetail.as_view(), name="complete-portfolio-detail"),
     path("users/<int:user_id>/portfolio/items", views.PortfolioItemList.as_view(), name="portfolio-item-list"),
     path("users/portfolio/items/<int:pk>", views.PortfolioItemDetail.as_view(), name="portfolio-item-detail"),
+    path("users/accessTypes", views.AccessTypeList.as_view(), name="access-type-list"),
 ]
