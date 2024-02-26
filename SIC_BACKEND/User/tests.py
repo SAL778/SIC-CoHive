@@ -33,6 +33,9 @@ class CustomUserTestCase(APITestCase):
     US 1.05 As a user, I want to look up other users by using the search bar, so that I can find information about my friends, organizations, and admins.
     '''
     def test_user_get(self):
+        '''
+        Test the API endpoint for retrieving a list of all users.
+        '''
         response = self.client.get(reverse('user_list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['first_name'], 'Test')
@@ -51,6 +54,9 @@ class CustomUserTestCase(APITestCase):
     US 1.06 As a user, I want to be able to change the visibility of my portfolio, so that I can control if everyone/organizations/only me can see it.
     '''
     def test_user_patch(self):
+        '''
+        Test the API endpoint for updating a user's profile.
+        '''
         self.client.force_authenticate(user=self.user)
         response = self.client.patch(
             reverse('user_detail', kwargs={'pk': self.user.pk}),
@@ -80,6 +86,9 @@ class CustomUserTestCase(APITestCase):
         self.assertEqual(response.data['education']['minor'], 'Updated Minor')
 
     def test_user_patch_failure(self):
+        '''
+        Test the API endpoint for updating a user's profile with invalid data.
+        '''
         # Invalid portfolioVisibility
         response = self.client.patch(
             reverse('user_detail', kwargs={'pk': self.user.pk}),
@@ -105,6 +114,9 @@ class CustomUserTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_user_delete(self):
+        '''
+        Test the API endpoint for deleting a user.
+        '''
         self.client.force_authenticate(user=self.user)
         response = self.client.delete(reverse('user_detail', kwargs={'pk': self.user.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -137,6 +149,9 @@ class CompletePortfolioTestCase(APITestCase):
     
 
     def test_complete_portfolio_get(self):
+        '''
+        Test the API endpoint for retrieving a user's complete portfolio.
+        '''
         response = self.client.get(reverse('complete-portfolio-detail', kwargs={'user_id': self.user.pk}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['user'], self.user.pk)
@@ -144,12 +159,18 @@ class CompletePortfolioTestCase(APITestCase):
         self.assertEqual(response.data['items'], [])
         
     def test_complete_portfolio_get_failure(self):
+        '''
+        Test the API endpoint for retrieving a user's complete portfolio with invalid data.
+        '''
         # Trying to get a user that does not exist
         response = self.client.get(reverse('complete-portfolio-detail', kwargs={'user_id': 999999}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         
     def test_complete_portfolio_patch(self):
+        '''
+        Test the API endpoint for updating a user's complete portfolio.
+        '''
         self.client.force_authenticate(user=self.user)
         response = self.client.patch(
             reverse('complete-portfolio-detail', kwargs={'user_id': self.user.pk}),
@@ -163,6 +184,9 @@ class CompletePortfolioTestCase(APITestCase):
         self.assertEqual(response.data['description'], "Updated Description")
 
     def test_complete_portfolio_patch_add_user_failure(self):
+        '''
+        Test the API endpoint for updating a user's complete portfolio with invalid data.
+        '''
         # Trying to add a user that does not exist
         response = self.client.patch(reverse('complete-portfolio-detail', kwargs={'user_id': 999999}),  # Assuming 9999 is an ID that does not exist
              {
@@ -194,6 +218,9 @@ class PortfolioItemTestCase(APITestCase):
     US 1.04 As a user, I want to upload text and link to a portfolio in my profile, so that prospective employers will see my capabilities.
     '''
     def test_portfolio_item_post(self):
+        '''
+        Test the API endpoint for creating a new portfolio item.
+        '''
         self.client.force_authenticate(user=self.user)
         response = self.client.post(
             reverse('portfolio-item-list', kwargs={'user_id': self.user.pk}),
@@ -215,6 +242,9 @@ class PortfolioItemTestCase(APITestCase):
         
         
     def test_complete_portfolio_get(self):
+        '''
+        Test the API endpoint for retrieving a user's complete portfolio.
+        '''
         self.test_portfolio_item_post()
         response = self.client.get(reverse('complete-portfolio-detail', kwargs={'user_id': self.user.pk}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -226,11 +256,17 @@ class PortfolioItemTestCase(APITestCase):
         self.assertEqual(response.data['items'][0]['link'], 'http://example.com/link')
 
     def test_portfolio_get_failure(self):
+        '''
+        Test the API endpoint for retrieving a user's complete portfolio with invalid data.
+        '''
         # Trying to get a user that does not exist
         response = self.client.get(reverse('complete-portfolio-detail', kwargs={'user_id': 999999}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_portfolio_item_patch(self):
+        '''
+        Test the API endpoint for updating a portfolio item.
+        '''
         self.test_portfolio_item_post()
         response = self.client.patch(
             reverse('portfolio-item-detail', kwargs={'pk': 1}),
@@ -243,7 +279,6 @@ class PortfolioItemTestCase(APITestCase):
             format='json'
             
         )
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['icon'], "http://example.com/updated_icon")
         self.assertEqual(response.data['title'], 'Updated Title')
@@ -251,6 +286,9 @@ class PortfolioItemTestCase(APITestCase):
         self.assertEqual(response.data['link'], 'http://example.com/updated_link')
        
     def test_portfolio_item_patch_failure(self):
+        '''
+        Test the API endpoint for updating a portfolio item with invalid data.
+        '''
         # Trying to update a user that does not exist
         response = self.client.patch(
             reverse('portfolio-item-detail', kwargs={'pk': 999999}),  # Assuming 9999 is an ID that does not exist
@@ -281,6 +319,9 @@ class PortfolioItemTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
        
     def test_portfolio_item_delete(self):
+        '''
+        Test the API endpoint for deleting a portfolio item.
+        '''
         self.test_portfolio_item_post()
         self.assertEqual(PortfolioItem.objects.count(), 1)
         response = self.client.delete(reverse('portfolio-item-detail', kwargs={'pk': 1}))
@@ -292,7 +333,10 @@ class PortfolioItemTestCase(APITestCase):
    
     
 class AccessTypeTestCase(APITestCase):
-    def setUp(self):
+    def test_access_type_get(self):
+        '''
+        Test the API endpoint for retrieving a list of all access types.
+        '''
         self.accessType = AccessType.objects.create(
             name="Some Access Type"
         )
