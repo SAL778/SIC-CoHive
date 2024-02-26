@@ -291,8 +291,20 @@ class PortfolioItemTestCase(APITestCase):
         self.assertEqual(response.data['items'], [])
    
     
-    
-    
+class AccessTypeTestCase(APITestCase):
+    def setUp(self):
+        self.accessType = AccessType.objects.create(
+            name="Some Access Type"
+        )
+        self.accessType = AccessType.objects.create(
+            name="Another Access Type"
+        )
+        response = self.client.get(reverse('access-type-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['name'], 'Some Access Type')
+        self.assertEqual(response.data[1]['name'], 'Another Access Type')
+
+
     
     
     
