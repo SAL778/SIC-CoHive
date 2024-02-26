@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404, HttpResponse
 from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
-from .models import CustomUser, Complete_Portfolio, PortfolioItem
-from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer
+from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType
+from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer, AccessTypeSerializer
 from django.db.models import Q
 from rest_framework import generics,status
 from django.http import HttpResponseBadRequest
@@ -78,16 +78,24 @@ def user_list(request):
     - If GET request: A Response object with serialized data of all users.
     - If POST request: A Response object with serialized data of the created user if valid, otherwise a Response object with errors.
     """
+
     if request.method == 'GET':
         search = request.GET.get('search', '')
-        if search:
-            queryset = CustomUser.objects.filter(Q(first_name__icontains=search) | Q(last_name__icontains=search))
-        else:
-            queryset = CustomUser.objects.all()
+        filters = request.GET.get('filter', '')
         
-        serializer = CustomUserSerializer(queryset, many=True)
-        return Response(serializer.data)
-      
+        queryset = CustomUser.objects.all()
+
+        if search:
+            queryset = queryset.filter(Q(first_name__icontains=search) | Q(last_name__icontains=search))
+        
+        if filters:
+            access_types = filters.split(',')
+            queryset = queryset.filter(accessType__name__in=access_types).distinct()
+
+    serializer = CustomUserSerializer(queryset, many=True)
+    return Response(serializer.data)
+
+
    # elif request.method == 'POST':
     #    serializer = CustomUserSerializer(data=request.data)
      #   if serializer.is_valid():
@@ -194,3 +202,7 @@ class PortfolioItemDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         return get_object_or_404(PortfolioItem, pk=self.kwargs['pk'])
+
+class AccessTypeList(generics.ListAPIView):
+    queryset = AccessType.objects.all()
+    serializer_class = AccessTypeSerializer
