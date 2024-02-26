@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404, HttpResponse
 from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
-from .models import CustomUser, Complete_Portfolio, PortfolioItem
-from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer
+from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType
+from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer, AccessTypeSerializer
 from django.db.models import Q
 from rest_framework import generics,status
 from django.http import HttpResponseBadRequest
@@ -202,3 +202,7 @@ class PortfolioItemDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         return get_object_or_404(PortfolioItem, pk=self.kwargs['pk'])
+
+class AccessTypeList(generics.ListAPIView):
+    queryset = AccessType.objects.all()
+    serializer_class = AccessTypeSerializer
