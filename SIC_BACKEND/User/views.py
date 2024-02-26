@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import get_object_or_404, HttpResponse
 from rest_framework.decorators import api_view
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from .models import CustomUser, Complete_Portfolio, PortfolioItem
 from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer
@@ -25,7 +26,7 @@ def custom_login_redirect(request):
             # secure=True,  # Ensure you're using HTTPS
             max_age=3600  # Cookie expiration time (in seconds)
         )
-        response['Location'] = 'http://localhost:5175/'
+        response['Location'] = 'http://localhost:5173/'
         response.status_code = 302  # Redirect status code
         return response
     else:
@@ -60,7 +61,9 @@ def index(request):
     return HttpResponse("Hello, world. You're at the User index. You're not supposed to be here.")
 
 # USER
-@api_view(['GET'])
+@swagger_auto_schema(method='get', operation_description="Get a list of all users.", responses={200: CustomUserSerializer(many=True)})
+@swagger_auto_schema(method='post', operation_description="Create a new user.", request_body=CustomUserSerializer, responses={201: CustomUserSerializer, 400: 'Invalid data'})
+@api_view(['GET' ,'POST'])
 def user_list(request):
     """
     API endpoint for listing and creating users.
@@ -84,8 +87,19 @@ def user_list(request):
         
         serializer = CustomUserSerializer(queryset, many=True)
         return Response(serializer.data)
+      
+   # elif request.method == 'POST':
+    #    serializer = CustomUserSerializer(data=request.data)
+     #   if serializer.is_valid():
+      #      serializer.save()
+       #     return Response(serializer.data, status=201)
+        #return Response(serializer.errors, status=400)
+
 
 # ONE USER
+@swagger_auto_schema(method='get', operation_description="Get a user by ID.", responses={200: CustomUserSerializer})
+@swagger_auto_schema(method='patch', operation_description="Update a user by ID.", request_body=CustomUserSerializer, responses={200: CustomUserSerializer, 400: 'Invalid data'})
+@swagger_auto_schema(method='delete', operation_description="Delete a user by ID.", responses={204: 'No Content'})
 @api_view(['GET','PATCH','DELETE'])
 def user_detail(request, pk):
     """

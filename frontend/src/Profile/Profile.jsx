@@ -1,9 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import Portfolio from "./Portfolio.jsx";
 import ProfileHeader from "./ProfileHeader.jsx";
 
 export default function Profile() {
-	const [userData, setUserData] = useState(null);
 
 	function getCookieValue(cookieName) {
 		const cookies = document.cookie.split("; ");
@@ -44,10 +44,6 @@ export default function Profile() {
 
 		fetchUserData();
 	}, []);
-
-	// Wait until userData is available before rendering ProfileHeader
-	if (!userData) {
-		return null; // or render a loading indicator
 	}
 
 	return (
