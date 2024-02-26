@@ -5,21 +5,24 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from config import *
 
-### Boilerplate
+"""
+Tests intra-site navigation and routing, particularly with the sidebar.
+"""
+
 class TestRouting(unittest.TestCase) :
     def setUp(self) -> None:
         service = Service(PATH_TO_CHROMEDRIVER)
         self.driver = webdriver.Chrome(service=service)
 
     def test_basic_routing(self):
-        """Routed to Community Tab"""
+        """Verifies that community route does indeed correspond to the community page"""
         driver = self.driver
         driver.get("http://localhost:5173/community")
         self.assertEqual(driver.current_url, "http://localhost:5173/community")
         time.sleep(SLEEP_TIME)
 
     def test_community_tab_sidebar(self):
-        """Navigated to Community Tab via sidebar"""
+        """Verifies that the community page can be navigated to succesfully using the sidebar"""
         driver = self.driver
         driver.get("http://localhost:5173/community")
         community_tab = driver.find_element(By.XPATH, "//p[@class='md:block' and text()='Community']")
