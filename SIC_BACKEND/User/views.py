@@ -1,12 +1,59 @@
-from django.shortcuts import get_object_or_404, render
-from django.shortcuts import render, HttpResponse
+import json
+from django.shortcuts import get_object_or_404, HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import CustomUser, Complete_Portfolio, PortfolioItem
 from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer
 from django.db.models import Q
 from rest_framework import generics,status
-from rest_framework.views import APIView
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponse
+from rest_framework.authtoken.models import Token
+
+def custom_login_redirect(request):
+    user = request.user  # Assuming the user is already authenticated
+
+    if user.is_authenticated:
+        token, created = Token.objects.get_or_create(user=user)
+        access_token = str(token.key)
+        
+        response = HttpResponse('Authentication successful')
+        response.set_cookie(
+            'access_token',
+            access_token,
+            # httponly=True,  # Makes the cookie HTTPOnly
+            # secure=True,  # Ensure you're using HTTPS
+            max_age=3600  # Cookie expiration time (in seconds)
+        )
+        response['Location'] = 'http://localhost:5175/'
+        response.status_code = 302  # Redirect status code
+        return response
+    else:
+        return HttpResponseBadRequest('User is not authenticated.')
+
+
+@api_view(['GET'])
+def user_profile(request):
+    """
+    API endpoint for retrieving the profile of the authenticated user.
+
+    Parameters:
+    - request: The HTTP request object.
+
+    Returns:
+    - A Response object with serialized data of the authenticated user if the access token is valid, otherwise a Response object with an error message.
+    """
+    try:
+        access_token = request.META['HTTP_AUTHORIZATION']
+        token_obj = Token.objects.get(key=access_token)
+        user = token_obj.user
+
+        # Serialize the user data using your CustomUserSerializer
+        serializer = CustomUserSerializer(user)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 @api_view(['GET'])
 def index(request):
@@ -37,13 +84,6 @@ def user_list(request):
         
         serializer = CustomUserSerializer(queryset, many=True)
         return Response(serializer.data)
-    # elif request.method == 'POST':
-    #     serializer = CustomUserSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=201)
-    #     return Response(serializer.errors, status=400)
-
 
 # ONE USER
 @api_view(['GET','PATCH','DELETE'])
@@ -76,8 +116,6 @@ def user_detail(request, pk):
         user.delete()
         return Response(status=204)
     
-
-
 
 class CompletePortfolioDetail(generics.RetrieveUpdateAPIView):
     """
@@ -114,7 +152,6 @@ class CompletePortfolioDetail(generics.RetrieveUpdateAPIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class PortfolioItemList(generics.ListCreateAPIView):
