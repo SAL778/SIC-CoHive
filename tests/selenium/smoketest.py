@@ -4,7 +4,6 @@ from selenium.webdriver.common.by import By
 from config import PATH_TO_CHROMEDRIVER
 
 #This verifies that your selenium setup is correct. You should recieve "Recieved!" on success.
-
 def run():
     # # Create ChromeOptions object
     # chrome_options = Options()
