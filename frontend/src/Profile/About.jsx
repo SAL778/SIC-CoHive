@@ -68,7 +68,7 @@ function AboutMe({isCurrentUser, portfolioDescriptionProp, isEditing, onEditSubm
                     rows = {1}
                     maxLength={500}
                     placeholder = "Add a brief description to describe yourself and your works"
-                    className = {"resize-none rounded-md w-full min-h-40 whitespace-pre-wrap p-x-8" + (!(isEditMode && isCurrentUser) ? "" : " description-edit")}
+                    className = {"aboutText resize-none rounded-md w-full min-h-40 whitespace-pre-wrap p-x-8" + (!(isEditMode && isCurrentUser) ? "" : " description-edit")}
                     value = {portfolioDescription}
                     onChange = {handleInput}
                 />
@@ -82,15 +82,15 @@ function ButtonStack({isEditing, onEditInit, onEditCancel, onEditSubmit}) {
         <div className="button-stack flex flex-row absolute gap-3 right-0 top-0">
             {isEditing ? (
                 <>
-                    <button type="button" className="square-button button-orange" onClick={onEditSubmit}>
+                    <button type="button" className="aboutSubmitButton square-button button-orange" onClick={onEditSubmit}>
                         <i className="fa fa-check" />
                     </button>
-                    <button type="button" className="square-button button-orange" onClick={onEditCancel}>
+                    <button type="button" className="aboutCancelButton square-button button-orange" onClick={onEditCancel}>
                         <i className="fa fa-times" />
                     </button>
                 </>
             ) : (
-                <button type="button" className="square-button button-orange" onClick={onEditInit}>
+                <button type="button" className="aboutEditButton square-button button-orange" onClick={onEditInit}>
                     <i className="fa fa-pen" />
                 </button>
             )}
