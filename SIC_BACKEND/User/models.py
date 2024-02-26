@@ -62,7 +62,7 @@ class CustomUser(AbstractUser):
     portfolioVisibility = models.BooleanField(default=True,help_text="decides if the portfolio is visible to others")
     portfolio = models.OneToOneField(Complete_Portfolio, on_delete=models.CASCADE, blank=True, null=True,help_text="The portfolio of the user")
 
-    accessType = models.ManyToManyField(AccessType, blank=True)
+    accessType = models.ManyToManyField(AccessType, blank=True,related_name="accessType",help_text="The access type of the user")
     accessPermissions = models.ManyToManyField(Permission, blank=True)
 
     def save(self, *args, **kwargs):
@@ -98,3 +98,26 @@ class Education(models.Model):
     def __str__(self):
         return self.user.username
 
+
+
+
+# {
+#     "id": 1,
+#     "first_name": "",
+#     "last_name": "",
+#     "email": "kannan@gmail.com",
+#     "is_staff": true,
+#     "portfolioVisibility": true,
+#     "profileImage": null,
+#     "portfolio": 1,
+#     "education": {
+#         "field_of_study": "Computer Science2",
+#         "major": "Software Engineering2",
+#         "minor": "Data Science2"
+#     },
+#     "accessType": [
+#         {
+#             "name": "complete access granted"
+#         }
+#     ]
+# }

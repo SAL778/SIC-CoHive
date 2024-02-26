@@ -1,20 +1,23 @@
 from rest_framework import serializers
-from .models import CustomUser, Complete_Portfolio, PortfolioItem,Education
+from .models import CustomUser, Complete_Portfolio, PortfolioItem,Education,AccessType
 
 class EducationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Education
         fields = ('field_of_study', 'major', 'minor')
-        
+class AccessTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccessType
+        fields = ['name']
 class CustomUserSerializer(serializers.ModelSerializer):
-    education = EducationSerializer()
-    accessType = serializers.StringRelatedField(many=True)
+    education = EducationSerializer(required=False)
+    accessType = AccessTypeSerializer(read_only=True, many=True)
     
     class Meta:
         model = CustomUser
        # fields = '__all__'
         fields = ["id", "first_name", "last_name", "email", "is_staff","portfolioVisibility","profileImage","portfolio","education","accessType"]
-        read_only_fields = ["id","is_staff","portfolio","email"]
+        read_only_fields = ["id","is_staff","portfolio","email","accessType"]
         
     def create(self, validated_data):
         education_data = validated_data.pop('education', None)
@@ -36,19 +39,20 @@ class CustomUserSerializer(serializers.ModelSerializer):
         instance.save()
 
         if education_data is not None:
-            education_instance = instance.education
+            # Check if education object exists, otherwise create it
+            education_instance, _ = Education.objects.get_or_create(user=instance)
             education_instance.field_of_study = education_data.get('field_of_study', education_instance.field_of_study)
             education_instance.major = education_data.get('major', education_instance.major)
             education_instance.minor = education_data.get('minor', education_instance.minor)
             education_instance.save()
 
         return instance
-
+        
 
 class PortfolioItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PortfolioItem
-        fields= ('id', 'title', 'description', 'link')
+        fields= ('id','icon', 'title', 'description', 'link')
         # read_only_fields = ["id","portfolio"]
         
 class CompletePortfolioSerializer(serializers.ModelSerializer):
