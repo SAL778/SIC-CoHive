@@ -54,7 +54,7 @@ export default function Profile() {
 							if (response.ok) {
 								// Fetch portfolio (incl. items)
 								response.json().then(portfolio => {
-									console.log(portfolio)
+									//console.log(portfolio)
 									setPortfolio(portfolio)
 									setLoading(false);
 								}
@@ -65,8 +65,6 @@ export default function Profile() {
 							}
 						});
 					}
-					//If the portfolio is private, skip the additional fetches
-					setLoading(false);
 				} else {
 					console.error("Failed to fetch user data:", response.statusText);
 				}
@@ -78,14 +76,9 @@ export default function Profile() {
 		fetchUserData();
 	}, []);
 
-	// // Wait until userData is available before rendering ProfileHeader
-	// if (!userData) {
-	// 	return null; // or render a loading indicator
-	// }
-
 	return (
 		<>
-  			{loading ? (
+  			{loading  ? (
     			<div>Loading...</div>
   			) : (
 				<div className="flex flex-col gap-4 overflow-auto px-0 py-[30px] max-w-[2000px] mx-auto">
@@ -96,57 +89,3 @@ export default function Profile() {
 		</>
 	);
 }
-
-const mockPortfolio = {
-	description: "Hello welcome to my blog",
-	items: [
-		{
-			id: 1,
-			icon: "fa-react",
-			title: "React App",
-			description: "Made with Vite and Bootstrap",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-		{
-			id: 2,
-			icon: "fa-vue",
-			title: "Vue App",
-			description: "Made with Vue and Chakra",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-		{
-			id: 3,
-			icon: "fa-youtube",
-			title: "Chess AI Showcase",
-			description: "Tensorflow and lots of tears",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-		{
-			id: 4,
-			icon: "fa-youtube",
-			title: "Trackmania AI Showcase",
-			description: "Cars",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-		{
-			id: 5,
-			icon: "fa-youtube",
-			title: "Spinning",
-			description: "Cars",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-		{
-			id: 6,
-			icon: "fa-youtube",
-			title: "Weaving",
-			description: "Inverse Basket Weave with Willow fibers",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-	],
-};

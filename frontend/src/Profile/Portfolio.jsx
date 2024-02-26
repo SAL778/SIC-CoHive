@@ -14,6 +14,8 @@ export default Portfolio;
  */
 function Portfolio({ isCurrentUser, portfolio }) {
 
+    console.log("Portfolio is " + JSON.stringify(portfolio)) //Is called 4 times, fails 
+
     const {host} = useContext(HostContext)
     const {user} = useContext(UserContext)
 

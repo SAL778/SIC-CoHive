@@ -28,13 +28,15 @@ function UserRoles({roles}) {
  */
 function EducationBackground({education}) {
 
-	education = {
-		major: "Computing Science",
-		minor: "Computing Science"
-	};
+	// education = {
+	// 	major: "Computing Science",
+	// 	minor: "Computing Science"
+	// };
 
-	const [major, setMajor] = useState(education.major || '');
-	const [minor, setMinor] = useState(education.minor || '');
+	//Education is null on fresh accounts
+
+	const [major, setMajor] = useState(education?.major || '');
+	const [minor, setMinor] = useState(education?.minor || '');
 
 	const handleMajorChange = (event) => {
 		setMajor(event.target.value);
@@ -44,8 +46,8 @@ function EducationBackground({education}) {
 		setMinor(event.target.value);
 	};
 
-	const majorButtonClass = major !== education.major ? 'changed-education' : '';
-	const minorButtonClass = minor !== education.minor ? 'changed-education' : '';
+	const majorButtonClass = major !== education?.major ? 'changed-education' : '';
+	const minorButtonClass = minor !== education?.minor ? 'changed-education' : '';
 
 	const isMajorButtonDisabled = !majorButtonClass;
 	const isMinorButtonDisabled = !minorButtonClass;
@@ -108,8 +110,6 @@ function EducationBackground({education}) {
  * @see {UserRoles} - as child component
  */
 function ProfileHeader({user}) {
-
-	console.log(user);
 
 	return (
 		// Profile head container
