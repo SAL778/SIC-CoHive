@@ -96,14 +96,6 @@ def user_list(request):
     return Response(serializer.data)
 
 
-   # elif request.method == 'POST':
-    #    serializer = CustomUserSerializer(data=request.data)
-     #   if serializer.is_valid():
-      #      serializer.save()
-       #     return Response(serializer.data, status=201)
-        #return Response(serializer.errors, status=400)
-
-
 # ONE USER
 @swagger_auto_schema(method='get', operation_description="Get a user by ID.", responses={200: CustomUserSerializer})
 @swagger_auto_schema(method='patch', operation_description="Update a user by ID.", request_body=CustomUserSerializer, responses={200: CustomUserSerializer, 400: 'Invalid data'})
@@ -115,7 +107,6 @@ def user_detail(request, pk):
 
     Parameters:
     - request: The HTTP request object.
-    - pk: The primary key of the user.
 
     Returns:
     - If the request method is GET, returns the serialized user data.
@@ -123,20 +114,28 @@ def user_detail(request, pk):
     - If the request method is PATCH, updates and returns the serialized user data.
     - If the request method is DELETE, deletes the user and returns a 204 No Content response.
     """
-    user = get_object_or_404(CustomUser, pk=pk)
+    
+    try:
+        access_token = request.META['HTTP_AUTHORIZATION']
+        token_obj = Token.objects.get(key=access_token)
+        user = token_obj.user
+        
+        # user = get_object_or_404(CustomUser, pk=pk)
 
-    if request.method == 'GET':
-        serializer = CustomUserSerializer(user)
-        return Response(serializer.data)
-    elif request.method == 'PATCH':
-        serializer = CustomUserSerializer(user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
+        if request.method == 'GET':
+            serializer = CustomUserSerializer(user)
             return Response(serializer.data)
-        return Response(serializer.errors, status=400)
-    elif request.method == 'DELETE':
-        user.delete()
-        return Response(status=204)
+        elif request.method == 'PATCH':
+            serializer = CustomUserSerializer(user, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=400)
+        elif request.method == 'DELETE':
+            user.delete()
+            return Response(status=204)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
     
 
 class CompletePortfolioDetail(generics.RetrieveUpdateAPIView):
@@ -168,6 +167,11 @@ class CompletePortfolioDetail(generics.RetrieveUpdateAPIView):
         return Response(serializer.data)
 
     def patch(self, request, *args, **kwargs):
+
+        # access_token = request.META['HTTP_AUTHORIZATION']
+        # token_obj = Token.objects.get(key=access_token)
+        # user = token_obj.user
+
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)  # set partial=True to update a data partially
         if serializer.is_valid():

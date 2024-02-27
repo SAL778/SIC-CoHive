@@ -1,5 +1,6 @@
-import { useState } from 'react';
-
+import { useState, useContext } from 'react';
+import { HostContext, UserContext } from "../App.jsx";
+import { getCookieValue } from "../utils.js";
 /**
  * UserRoles component renders a list of user roles.
  * @param {Array} props.roles - An array containing role strings
@@ -19,7 +20,6 @@ function UserRoles({roles}) {
 	return (<p className = "text-neutral-500 text-xs font-light">"No roles assigned yet."</p>)
 }
 
-
 /**
  * Renders Educational Background as a list of field studies.
  * @param {string} props.education - list containing field of study and major, minor
@@ -28,13 +28,18 @@ function UserRoles({roles}) {
  */
 function EducationBackground({education}) {
 
-	education = {
-		major: "Computing Science",
-		minor: "Computing Science"
-	};
+	const { user, setUser } = useContext(UserContext);
+	const { host } = useContext(HostContext);
 
-	const [major, setMajor] = useState(education.major || '');
-	const [minor, setMinor] = useState(education.minor || '');
+	// education = {
+	// 	major: "Computing Science",
+	// 	minor: "Computing Science"
+	// };
+
+	//Education is null on fresh accounts
+	console.log(education)
+	const [major, setMajor] = useState(education?.major || '');
+	const [minor, setMinor] = useState(education?.minor || '');
 
 	const handleMajorChange = (event) => {
 		setMajor(event.target.value);
@@ -44,8 +49,38 @@ function EducationBackground({education}) {
 		setMinor(event.target.value);
 	};
 
-	const majorButtonClass = major !== education.major ? 'changed-education' : '';
-	const minorButtonClass = minor !== education.minor ? 'changed-education' : '';
+	const handleEducationChangeSubmit = async (education, fieldToChange) => {
+		console.log({[fieldToChange]: education})
+		const accessToken = getCookieValue("access_token");
+		try {
+			const response = await fetch(`${host}/users/${user.id}/`, {
+				method: "PATCH",
+				credentials: "include",
+				headers: {
+					Authorization: `Token ${accessToken}`,
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({ 'education' : {[fieldToChange] : education.toString()} })
+			});
+
+			if (response.ok) {
+				console.log("Sent successfully");
+				const data = await response.json();
+				if (data.fieldToChange === "minor") {
+					setMinor(minor);
+				} else {
+					setMajor(major);
+				}
+			} else {
+				console.log("Couldn't send", response.statusText);
+			}
+		} catch (error) {
+			console.error("Error:", error);
+		}
+	};
+
+	const majorButtonClass = major !== education?.major ? 'changed-education' : '';
+	const minorButtonClass = minor !== education?.minor ? 'changed-education' : '';
 
 	const isMajorButtonDisabled = !majorButtonClass;
 	const isMinorButtonDisabled = !minorButtonClass;
@@ -69,6 +104,7 @@ function EducationBackground({education}) {
 					aria-label="Edit Major"
 					role="button"
 					className={`square-button ${majorButtonClass}`}
+					onClick={() => handleEducationChangeSubmit(major, "major")}
 					disabled={isMajorButtonDisabled}
 				>
 					<i className="fa-solid fa-arrow-right"></i>
@@ -91,6 +127,7 @@ function EducationBackground({education}) {
 					aria-label="Edit Minor"
 					role="button"
 					className={`square-button ${minorButtonClass}`}
+					onClick={() => handleEducationChangeSubmit(minor, "minor")}
 					disabled={isMinorButtonDisabled}
 				>
 					<i className="fa-solid fa-arrow-right"></i>
@@ -108,8 +145,6 @@ function EducationBackground({education}) {
  * @see {UserRoles} - as child component
  */
 function ProfileHeader({user}) {
-
-	console.log(user);
 
 	return (
 		// Profile head container
@@ -144,12 +179,23 @@ function ProfileHeader({user}) {
 						<h6 className="text-base font-medium text-[18px] leading-4 tracking-normal text-left">
 							Education Background
 						</h6>
-						<EducationBackground education = {user.educations}/>
+						<EducationBackground education = {user.education}/>
 					</>
 				</div>
 			</div>
 		</div>
 	)
 }
+
+function Badge({userType}) {
+	if (userType == "organization") {
+		return <span><i className= "fa fa-building"/>Organization</span>
+	}
+
+	else if (userType == "admin") {
+		return <span><i className= "fa fa-admin"/>Student Innovation Center </span>
+	}
+}
+
 
 export default ProfileHeader;

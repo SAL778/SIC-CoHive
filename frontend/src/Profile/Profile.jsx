@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Portfolio from "./Portfolio.jsx";
 import ProfileHeader from "./ProfileHeader.jsx";
+import { HostContext, UserContext } from "../App.jsx";
+import { getCookieValue } from "../utils.js"
 
 export default function Profile() {
-	const [userData, setUserData] = useState(null);
+	//const [userData, setUserData] = useState(null);
+	const { user, setUser } = useContext(UserContext);
+	const { host } = useContext(HostContext);
 
-	function getCookieValue(cookieName) {
-		const cookies = document.cookie.split("; ");
-		for (const cookie of cookies) {
-			const [name, value] = cookie.split("=");
-			if (name === cookieName) {
-				return value;
-			}
-		}
-		return null;
-	}
+	const [portfolio, setPortfolio] = useState(null);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -30,10 +26,33 @@ export default function Profile() {
 
 				if (response.ok) {
 					const user = await response.json();
-					const sanitizedUser = JSON.parse(JSON.stringify(user), (key, value) =>
-						value === null ? "" : value
-					);
-					setUserData(sanitizedUser);
+					setUser(user);
+					console.log(user)
+					//TODO: Distinguish between fetched user and current user (from context?)
+					//Now we do the portfolio call, if it's private, skip.
+					if (user.portfolioVisibility) {
+						fetch(`${host}/users/${user.id}/portfolio/`, {
+							method: "GET",
+							headers: {
+								accept: "application/json"
+							}
+						})
+						.then(response => {
+							if (response.ok) {
+								response.json().then(portfolio => {
+									setPortfolio(portfolio)
+									setLoading(false);
+								}
+									)
+							}
+							else {
+								console.log("Couldn't fetch portfolio description", response.statusText);
+							}
+						});
+					}
+					else {
+						setLoading(false);
+					}
 				} else {
 					console.error("Failed to fetch user data:", response.statusText);
 				}
@@ -45,69 +64,42 @@ export default function Profile() {
 		fetchUserData();
 	}, []);
 
-	// Wait until userData is available before rendering ProfileHeader
-	if (!userData) {
-		return null; // or render a loading indicator
+	const changePortolioVisibility = async () => {
+		try {
+			const accessToken = getCookieValue("access_token");
+			const response = await fetch(`${host}/users/${user.id}/`, { 
+				method: "PATCH",
+				credentials: "include",
+				headers: {
+					Authorization: `Token ${accessToken}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ "portfolioVisibility": !user.portfolioVisibility }),
+			});
+
+			if (response.ok) {
+				const user = await response.json();
+				setUser(user);
+			} else {
+				console.error("Failed to change portfolio visibility:", response.statusText);
+			}
+		} catch (error) {
+			console.error("Unexpected error:", error);
+		}
 	}
 
 	return (
-		<div className="flex flex-col gap-4 overflow-auto px-0 py-[30px] max-w-[2000px] mx-auto">
-			<ProfileHeader user={userData} />
-			<Portfolio portfolio={mockPortfolio} isCurrentUser={true} />
-		</div>
+		<>
+  			{loading  ? (
+    			<div>Loading...</div>
+  			) : (
+				
+				<div className="flex flex-col gap-4 overflow-auto px-0 py-[30px] max-w-[2000px] mx-auto">
+					<ProfileHeader user={user} />
+					<button type="button" className="button-orange mx-[20px]" onClick = {() => changePortolioVisibility()}>Change Visibility </button>
+					{user.portfolioVisibility && <Portfolio portfolio={portfolio} isCurrentUser={true} />}
+				</div>
+			)}
+		</>
 	);
 }
-
-const mockPortfolio = {
-	description: "Hello welcome to my blog",
-	items: [
-		{
-			id: 1,
-			icon: "fa-react",
-			title: "React App",
-			description: "Made with Vite and Bootstrap",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-		{
-			id: 2,
-			icon: "fa-vue",
-			title: "Vue App",
-			description: "Made with Vue and Chakra",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-		{
-			id: 3,
-			icon: "fa-youtube",
-			title: "Chess AI Showcase",
-			description: "Tensorflow and lots of tears",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-		{
-			id: 4,
-			icon: "fa-youtube",
-			title: "Trackmania AI Showcase",
-			description: "Cars",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-		{
-			id: 5,
-			icon: "fa-youtube",
-			title: "Spinning",
-			description: "Cars",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-		{
-			id: 6,
-			icon: "fa-youtube",
-			title: "Weaving",
-			description: "Inverse Basket Weave with Willow fibers",
-			link: "https://google.com/",
-			portfolio: 0,
-		},
-	],
-};

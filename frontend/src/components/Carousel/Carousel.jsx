@@ -25,7 +25,7 @@ const EmblaCarousel = (props) => {
     <section className="embla space-y-4">
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container flex gap-6 p-[20px] m-[-20px]">
-          {slides.map((slide, index) => (
+          {slides?.map((slide, index) => (
             <div className="embla__slide" key={index}>
               {slide}
             </div>

@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
-from .models import CustomUser, Education, Complete_Portfolio, PortfolioItem, AccessType
+from .models import CustomUser, Education_Field, Complete_Portfolio, PortfolioItem, AccessType
 from .serializers import CustomUserSerializer, EducationSerializer
 
 
@@ -20,7 +20,7 @@ class CustomUserTestCase(APITestCase):
             portfolioVisibility=True,
             profileImage="http://example.com/image.jpg",
         )
-        self.education = Education.objects.create(
+        self.education = Education_Field.objects.create(
             user=self.user,
             field_of_study="Computer Science",
             major="Software Engineering",
@@ -109,7 +109,7 @@ class CustomUserTestCase(APITestCase):
         response = self.client.delete(reverse('user_detail', kwargs={'pk': self.user.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(CustomUser.objects.count(), 0)
-        self.assertEqual(Education.objects.count(), 0)
+        self.assertEqual(Education_Field.objects.count(), 0)
 
     
 
@@ -126,7 +126,7 @@ class CompletePortfolioTestCase(APITestCase):
             portfolioVisibility=True,
             profileImage="http://example.com/image.jpg",
         )
-        self.education = Education.objects.create(
+        self.education = Education_Field.objects.create(
             user=self.user,
             field_of_study="Computer Science",
             major="Software Engineering",
@@ -182,7 +182,7 @@ class PortfolioItemTestCase(APITestCase):
             portfolioVisibility=True,
             profileImage="http://example.com/image.jpg",
         )
-        self.education = Education.objects.create(
+        self.education = Education_Field.objects.create(
             user=self.user,
             field_of_study="Computer Science",
             major="Software Engineering",
