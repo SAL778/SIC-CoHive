@@ -187,4 +187,15 @@ function ProfileHeader({user}) {
 	)
 }
 
+function Badge({userType}) {
+	if (userType == "organization") {
+		return <span><i className= "fa fa-building"/>Organization</span>
+	}
+
+	else if (userType == "admin") {
+		return <span><i className= "fa fa-admin"/>Student Innovation Center </span>
+	}
+}
+
+
 export default ProfileHeader;

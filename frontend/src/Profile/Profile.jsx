@@ -50,6 +50,9 @@ export default function Profile() {
 							}
 						});
 					}
+					else {
+						setLoading(false);
+					}
 				} else {
 					console.error("Failed to fetch user data:", response.statusText);
 				}
@@ -61,14 +64,40 @@ export default function Profile() {
 		fetchUserData();
 	}, []);
 
+	const changePortolioVisibility = async () => {
+		try {
+			const accessToken = getCookieValue("access_token");
+			const response = await fetch(`${host}/users/${user.id}/`, { 
+				method: "PATCH",
+				credentials: "include",
+				headers: {
+					Authorization: `Token ${accessToken}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ "portfolioVisibility": !user.portfolioVisibility }),
+			});
+
+			if (response.ok) {
+				const user = await response.json();
+				setUser(user);
+			} else {
+				console.error("Failed to change portfolio visibility:", response.statusText);
+			}
+		} catch (error) {
+			console.error("Unexpected error:", error);
+		}
+	}
+
 	return (
 		<>
   			{loading  ? (
     			<div>Loading...</div>
   			) : (
+				
 				<div className="flex flex-col gap-4 overflow-auto px-0 py-[30px] max-w-[2000px] mx-auto">
 					<ProfileHeader user={user} />
-					<Portfolio portfolio={portfolio} isCurrentUser={true} />
+					<button type="button" className="button-orange px-[20px]" onClick = {() => changePortolioVisibility()}>Change Visibility </button>
+					{user.portfolioVisibility && <Portfolio portfolio={portfolio} isCurrentUser={true} />}
 				</div>
 			)}
 		</>
