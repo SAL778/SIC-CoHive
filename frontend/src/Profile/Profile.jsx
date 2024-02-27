@@ -96,7 +96,7 @@ export default function Profile() {
 				
 				<div className="flex flex-col gap-4 overflow-auto px-0 py-[30px] max-w-[2000px] mx-auto">
 					<ProfileHeader user={user} />
-					<button type="button" className="button-orange px-[20px]" onClick = {() => changePortolioVisibility()}>Change Visibility </button>
+					<button type="button" className="button-orange mx-[20px]" onClick = {() => changePortolioVisibility()}>Change Visibility </button>
 					{user.portfolioVisibility && <Portfolio portfolio={portfolio} isCurrentUser={true} />}
 				</div>
 			)}
