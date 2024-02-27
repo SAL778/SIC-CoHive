@@ -1,0 +1,13 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("", views.index, name="index"),
+    path("users/profile", views.user_profile, name="user_profile"),
+    path("users/", views.user_list, name="user_list"),
+    path("users/<int:pk>/", views.user_detail, name="user_detail"),
+    path("users/<int:user_id>/portfolio/", views.CompletePortfolioDetail.as_view(), name="complete-portfolio-detail"),
+    path("users/<int:user_id>/portfolio/items", views.PortfolioItemList.as_view(), name="portfolio-item-list"),
+    path("users/portfolio/items/<int:pk>", views.PortfolioItemDetail.as_view(), name="portfolio-item-detail"),
+    path("users/accessTypes", views.AccessTypeList.as_view(), name="access-type-list"),
+]

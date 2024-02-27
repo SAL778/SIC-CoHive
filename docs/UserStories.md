@@ -1,6 +1,6 @@
 # User Stories
 
-## 1.01 - User Profiles
+## US 1.01 - Assign Roles
 As an admin, I want to be able to assign roles to users, so that I can control their access to features.
 
 Acceptance Tests
@@ -12,7 +12,7 @@ Acceptance Tests
 5. Admin cannot assign a duplicate role to a user.
 6. User's access is restricted based on the assigned role.
 
-## 1.02 - User Profiles
+## US 1.02 - Manage Profile
 As a user, I want to create and manage my profile, including my basic information and academic details.
 
 Acceptance Tests
@@ -23,7 +23,7 @@ Acceptance Tests
 4. User cannot create a profile with invalid information.
 5. Users can successfully delete their profile.
 
-## 1.03 - User Profiles
+## US 1.03 - Admin Center Role
 As an admin, I want to include additional information in my profile like innovation center role, so it can be visible on my profile.
 
 Acceptance Tests
@@ -33,7 +33,7 @@ Acceptance Tests
 3. Admin cannot add an invalid role to their profile.
 4. Admin's profile displays the innovation center role.
 
-## 1.04 - User Profiles
+## US 1.04 - User Portfolio
 As a user, I want to upload text and link to a portfolio in my profile, so that prospective employers will see my capabilities.
 
 Acceptance Tests
@@ -44,7 +44,7 @@ Acceptance Tests
 4. User cannot upload files with invalid formats to their portfolio.
 5. User cannot upload unvetted links to their portfolio.
 
-## 1.05 - User Profiles
+## US 1.05 - User Profile Search
 As a user, I want to look up other users by using the search bar, so that I can find information about fellow SIC members
 
 Acceptance Tests
@@ -52,7 +52,7 @@ Acceptance Tests
 2. User can successfully search organization.
 3. User can successfully search admins. 
 
-## 1.06 - User Profiles
+## US 1.06 - Portfolio Visibility
 As a user, I want to be able to change the visibility of my portfolio, so that I can control if everyone/organizations/only me can see it.
 
 Acceptance Tests
@@ -63,7 +63,7 @@ Acceptance Tests
 4. Portfolio is displayed according to the selected visibility settings.
 5. User cannot set portfolio visibility of others.
 
-## 1.07 - User Profiles
+## US 1.07 - Assign Access Labels
 As an admin, I want to approve AccessType Labels for users like "podcast studio", so that they can access restricted resources/rooms.
 
 Acceptance Tests
@@ -72,7 +72,7 @@ Acceptance Tests
 2. Users with approved UserType Labels gain access to the associated resources/rooms.
 3. Admin can reject UserType Labels and deny access to associated resources/rooms.
 
-## 1.08 - User Profiles
+## US 1.08 - Admin Manage Users
 As an admin, I want to be able to disable/delete users or change their roles, so that I can prevent abuse of the system.
 
 Acceptance Tests
@@ -83,7 +83,7 @@ Acceptance Tests
 4. Deletion or role changes are logged for auditing purposes.
 5. Users will be notified of their role change.
 
-## 2.01 - Booking
+## US 2.01 - View My Bookings
 As a user, I want to view my current bookings, so that I can review my bookings and cancel them if needed.
 
 Acceptance Tests
@@ -92,7 +92,7 @@ Acceptance Tests
 2. User can review details such as resource name, room number, and booking details.
 3. User can cancel a booking successfully.
 
-## 2.02 - Booking
+## US 2.02 - Create Asset Fields
 As an admin, I want to provide the "name" of the resource, "room number", "details", "image" and "room code" description, so that resources follow a format.
 
 Acceptance Tests
@@ -101,7 +101,7 @@ Acceptance Tests
 2. Admin can edit the name, room number, and details of an existing resource.
 3. Resources must display the specified name, room number, and details consistently.
 
-## 2.03 - Booking
+## US 2.03 - Manage Assets
 As an admin, I want to have the ability to manage assets or meeting rooms, so that assets and rooms can be added, deleted or put on maintenance.
 
 Acceptance Tests
@@ -112,7 +112,7 @@ Acceptance Tests
 4. Deleted assets or rooms no longer appear in the booking system.
 5. Rooms under maintenance will appear in the booking system, but will be unaccessible for the duration of the maintenance.
 
-## 2.04 - Booking
+## US 2.04 - Restrict Asset Access
 As an admin, I want to restrict certain assets to users with special AccessType Labels, so that important assets are protected.
 
 Acceptance Tests
@@ -121,7 +121,7 @@ Acceptance Tests
 2. Users with the required UserType Label can book and access restricted assets.
 3. Users without the required UserType Label cannot book or access restricted assets.
 
-## 2.05 - Booking 
+## US 2.05 - Admin Delete Bookings 
 As an admin, I want to be able to delete the bookings of users, so that I can prevent abuse of the system.
 
 Acceptance Tests
@@ -131,7 +131,7 @@ Acceptance Tests
 3. Deleted bookings no longer appear in the user's booking history.
 4. Users will be notified of the deleted booking.
 
-## 2.06 - Booking
+## US 2.06 - Create a Booking
 As a user, I want to book a room or a resource, so that I can reserve it for myself on the website.
 
 Acceptance Tests
@@ -141,15 +141,7 @@ Acceptance Tests
 3. User receives confirmation of the successful booking.
 4. User cannot book an occupied room or resource.
 
-## 2.07 - Booking
-As a user, I want to see the visibility of room bookings, so I know whether they're available or not at a glance.
-
-Acceptance Tests
-
-1. User can view a calendar or schedule displaying the availability of rooms.
-2. Booked rooms are clearly marked on the calendar.
-
-## 2.08 - Booking
+## US 2.07 - Recurring Bookings
 As a user, I want to book a room at reoccurring times (daily, weekly, monthly, yearly), so that I can ensure I always have a consistent schedule.
 
 Acceptance Tests
@@ -159,7 +151,7 @@ Acceptance Tests
 3. The booking system accurately reflects the recurring schedule on the calendar.
 4. User cannot book the reoccuring timeslots if atleast one timeslot is already occupied.
 
-## 3.01 - Events Calendar
+## US 3.01 - Approve Events
 As an admin, I want to approve Events submitted by organizations, so that I can control which organizations may host their Event.
 
 Acceptance Tests
@@ -168,7 +160,7 @@ Acceptance Tests
 2. Admin can approve Events, allowing them to be displayed on the Events Calendar.
 3. Admin can reject Events, preventing them from being shown on the Events Calendar.
 
-## 3.02 - Events Calendar
+## US 3.02 - Submit Events
 As an organization, I want to submit my Events on the website, so that I can host my Event at the center.
 
 Acceptance Tests
@@ -178,7 +170,7 @@ Acceptance Tests
 3. Organization is notified of approval or rejection by the admin.
 4. Validation ensures that all required details are provided before an event is added.
 
-## 3.03 - Events Calendar
+## US 3.03 - Admin Manage Events
 As an admin, I want to add and manage events through the website, so that users can view events and their details.
 
 Acceptance Tests
@@ -189,16 +181,7 @@ Acceptance Tests
 4. Deleted events no longer appear on the Events Calendar.
 5. Respective Organizations will be notified of deleted events.
 
-## 3.04 - Events Calendar
-As a user, I want to view the Events Calendar, so that I can see events, workshops, and other activities happening at the center.
-
-Acceptance Tests
-
-1. Users can access the Events Calendar on the website.
-2. Events are displayed on the calendar with relevant details (name, room number, date(s), organization).
-3. Users can navigate through the calendar to view upcoming and past events.
-
-## 3.05 - Events Calendar
+## US 3.04 - Integrate Google Calendar
 As an admin, I want to integrate Google Calendar with Events Calendar, so that both calendars can be synced.
 
 Acceptance Tests
@@ -207,7 +190,7 @@ Acceptance Tests
 2. Events added to the Events Calendar are automatically synchronized with Google Calendar.
 3. Changes made in Google Calendar are reflected in the Events Calendar on the website.
 
-## 3.06 - Events Calendar
+## US 3.05 - Create Event Fields
 As an admin, I want to provide the "name" of the event, "room number", "date(s)", "organization" and "details", so that events follow a consistent format.
 
 Acceptance Tests
@@ -216,8 +199,8 @@ Acceptance Tests
 2. Events displayed on the calendar adhere to the specified format consistently.
 3. Validation ensures that all required details are provided before an event is added.
 
-## 4.01 - Analytics
-As a user, I want to access an "Insights" tab, so that I can view usage hours, peak times, and the popularity of different technologies and rooms.
+## US 4.01 - Analytics Tab
+As an admin, I want to collect analytics, so that all users can view usage hours, peak times, and the popularity of different technologies and rooms.
 
 Acceptance Tests
 
@@ -225,7 +208,7 @@ Acceptance Tests
 2. The "Insights" tab displays usage hours, peak times, and the popularity of various technologies and resources.
 3. Insights are presented in a clear and understandable format.
 
-## 4.02 - Analytics
+## US 4.02 - Admin Download Analytics
 As an admin, I want to download Analytics from the "Insights" tab as a CSV/XLS file so that I can optimize the center's operations more effectively.
 
 Acceptance Tests
@@ -237,7 +220,16 @@ Acceptance Tests
 5. Admin can download analytics data in CSV or XLS format successfully.
 6. Downloaded analytics file contains accurate and relevant data.
 
-## 5.01 - Notifications
+## US 4.03 - Admin Download Email List
+As an admin, I want to download the Email list of all users, so that I can view and find all users with a specific Gmail domain.
+
+Acceptance Tests
+1. Admin can download the Email list of all users.
+2. Downloaded Email list contains accurate and relevant data.
+3. Downloaded Email list is in a CSV or XLS format.
+4. Downloaded Email list contains all user Email addresses grouped by their Gmail domain.
+
+## US 5.01 - Web Notifications
 As an admin, I want to send notifications on the website to the mailbox of all users, so that they can be notified not only through Email.
 
 Acceptance Tests
@@ -246,7 +238,7 @@ Acceptance Tests
 2. Notifications are delivered to the mailbox of all users on the website.
 3. Users receive notifications in their website mailbox.
 
-## 5.02 - Notifications
+## US 5.02 - Send Email Notifications
 As an admin, I want to send Email notifications to users, so that they can be informed about the latest updates, events, and opportunities related to the center.
 
 Acceptance Tests
@@ -255,7 +247,7 @@ Acceptance Tests
 2. Email notifications are sent to users' registered Email addresses.
 3. Email notifications contain relevant information about updates, events, and opportunities.
 
-## 5.03 - Notifications
+## US 5.03 - Optional Notification
 As an admin, I want to have the option to check whether they want to notify users on an update, so that some updates do not send a notification.
 
 Acceptance Tests
@@ -264,7 +256,7 @@ Acceptance Tests
 2. Admin can select which updates trigger notifications to users.
 3. Notification settings are saved and applied accurately.
 
-## 5.04 - Notifications
+## US 5.04 - Toggle Notifications
 As a user, I want to have the option to toggle which types of notifications I receive, so that I get the information important to me.
 
 Acceptance Tests
@@ -274,8 +266,8 @@ Acceptance Tests
 3. Changes to notification settings are saved and applied successfully.
 4. Users receive only the notifications they have opted to receive.
 
-## 6.01 - Feedback
-As an admin, I want to collect Feedback Form data, so that I can review feedback from my users.
+## US 6.01 - Collect Feedback
+As an admin, I want to collect feedback and manage the Feedback Form, so that I can review feedback from my users.
 
 Acceptance Tests
 
@@ -283,35 +275,8 @@ Acceptance Tests
 2. Feedback data includes information about feedback, reported issues, and support requests.
 3. Feedback entries are organized and presented in a clear format.
 
-## 6.02 - Feedback
-As a user, I want to have access to a Feedback Form, so that I can provide feedback, report issues or seek support related to the center or the application.
-
-Acceptance Tests
-
-1. Users can access the Feedback Form on the website.
-2. Feedback Form includes sections for general feedback, issue reporting, and support requests.
-3. Users can submit feedback with relevant details.
-
-## 6.03 - Feedback
-As an admin, I want to manage Feedback Form sections, so that I can update the form and change required fields.
-
-Acceptance Tests
-
-1. Admin can access and update the sections of the Feedback Form.
-2. Admin can add, remove, or modify fields within the Feedback Form.
-3. Changes to the Feedback Form are applied successfully, and users see the updated form.
-
-## 7.01 - Integration
-As an admin, I want to ensure that the application can integrate with Google Suite, so that it can streamline management.
-
-Acceptance Tests
-
-1. Admin can initiate the integration process with Google Suite.
-2. The application successfully connects to Google Suite services.
-3. Features such as feedback are automatically sent to Google Suite.
-
-## 7.02 - Integration
-As a user, I want to sign up/in using my @ualberta.ca account, so that accessing SIC does not require extra credentials.
+## US 7.01 - Sign Up Google Auth
+As a user, I want to sign up/in using my Gmail account, so that accessing SIC does not require extra credentials.
 
 Acceptance Tests
 
@@ -321,34 +286,7 @@ Acceptance Tests
 4. User cannot sign in with incorrect @ualberta.ca credentials.
 5. The integration provides a seamless and secure sign-up/in process using @ualberta.ca accounts.
 
-## 8.01 - Scalability
-As an admin, I want the website style to not be SIC specific, so that it can be used with other innovation and entrepreneurship spaces across campus.
-
-Acceptance Tests
-
-1. The website style is designed to be generic and not specific to any particular space.
-2. The website's visual elements and branding are easily customizable for different spaces.
-3. Style changes do not affect the functionality of the website.
-
-## 8.02 - Scalability
-As an admin, I want the website to handle expansions to future spaces, so that it can be scalable.
-
-Acceptance Tests
-
-1. The website can accommodate the addition of new spaces without significant modifications.
-2. Navigation and structure support the inclusion of future spaces seamlessly.
-3. The website's functionality remains consistent as new spaces are added.
-
-## 8.03 - Scalability
-As an admin, I want the website to have the capacity to support many users, so that it can be scalable with future growth of users.
-
-Acceptance Tests
-
-1. The website can handle a large number of concurrent users without performance degradation.
-3. The website's responsiveness is maintained even during peak usage periods.
-4. The website can support user growth without a decrease in performance.
-
-## 9.01 - Application Portal
+## US 8.01 - Submit Opportunities
 As a user, I want to submit entrepreneurial thinking placements, so that other users can view the opportunities available.
 
 Acceptance Tests
@@ -358,7 +296,7 @@ Acceptance Tests
 3. Users can submit applications for specific placements.
 4. Users can upload relevant documents, such as a CV, during the application process.
 
-## 9.02 - Application Portal
+## US 8.02 - Manage Opportunities
 As an admin, I want to be able to manage the application/job portal placements, so that I can approve which placements are appropriate.
 
 Acceptance Tests
@@ -367,7 +305,7 @@ Acceptance Tests
 2. Admin can approve or reject applications based on appropriateness.
 3. Approved placements are displayed on the application portal for users.
 
-## 9.03 - Application Portal
+## US 8.03 - Upload CV
 As a user, I want to upload a CV document to my profile, so that it can be used when I apply for placements on the application/job portal.
 
 Acceptance Tests
@@ -376,16 +314,17 @@ Acceptance Tests
 2. Users can upload a CV document to their profile.
 3. The uploaded CV is associated with the user's profile and can be used during placement applications.
 
-## 9.04 - Application Portal
-As a user, I want to view the profiles and the CVs of applicants, so that I can select candidates for my placements.
+## US 8.04 - View Applicants
+As a user, I want to review and download the profiles and the CVs of applicants, so that I can select candidates for my placements.
 
 Acceptance Tests
 
 1. Users can access a list of applicants for a specific placement.
 2. Users can view the profiles and CVs of applicants.
 3. Users can make informed decisions based on applicant profiles and CVs.
+4. Users can download applicant CVs for further review.
 
-## 9.05 - Application Portal
+## US 8.05 - Manage Applications
 As a user, I want to view and manage my current applications/placements, so that I can review my applications, withdraw them or delete my placements.
 
 Acceptance Tests
@@ -395,7 +334,7 @@ Acceptance Tests
 3. Users can withdraw an application or delete a placement if needed.
 4. The application portal accurately reflects the status of user applications and placements.
 
-## 9.06 - Application Portal
+## US 8.06 - Apply to Opportunities
 As a user, I want to apply to internships on the application/job portal, so that my information and resume are sent to the company that is hosting the internship.
 
 Acceptance Tests
@@ -403,22 +342,3 @@ Acceptance Tests
 2. Users can upload files to be sent to the company hosting the internship.
 3. Users cannot submit an application with missing required fields.
 4. Users will be notified that application was succesful upon valid submission.
-
-## 10.01 - System Design
-As an admin, I want the "Schedule" page to look similar to a previous tool, so that users can transition to the website easily.
-
-Acceptance Tests
-
-1. Admin can customize the design and layout of the "Schedule" page to resemble the previous tool.
-2. The transition from the previous tool to the website is seamless for users.
-3. Key functionalities of the "Schedule" page from the previous tool are retained on the website.
-
-## 10.02 - System Design
-As a user, I want to access the website on smaller devices, so that I can easily use it on my mobile phone.
-
-Acceptance Tests
-
-1. Users can access the website using smaller devices, such as mobile phones or tablets.
-2. The website design is responsive and adjusts appropriately to different screen sizes.
-3. All features and functionalities are accessible and user-friendly on smaller devices.
-4. Make navigation intuitive and easy on smaller screens.
