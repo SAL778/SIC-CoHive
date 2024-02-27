@@ -208,5 +208,9 @@ class PortfolioItemDetail(generics.RetrieveUpdateDestroyAPIView):
         return get_object_or_404(PortfolioItem, pk=self.kwargs['pk'])
 
 class AccessTypeList(generics.ListAPIView):
+    '''
+    get:
+    API view to retrieve the list of all access types.
+    '''
     queryset = AccessType.objects.all()
     serializer_class = AccessTypeSerializer

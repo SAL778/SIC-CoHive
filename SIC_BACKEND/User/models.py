@@ -37,8 +37,8 @@ class PortfolioItem(models.Model):
         return self.title
   
 class AccessType(models.Model):
-    name = models.CharField(max_length=80, unique=True)
-    permissions = models.ManyToManyField(Permission, blank=True)
+    name = models.CharField(max_length=80, unique=True,help_text="The name of the access type")
+    permissions = models.ManyToManyField(Permission, blank=True,help_text="The permissions of the access type")
 
     class Meta:
         verbose_name = 'access type'
@@ -63,7 +63,7 @@ class CustomUser(AbstractUser):
         ('Admin', 'Admin'),
     ]
 
-    roles = models.CharField(max_length=100, choices=ROLES_CHOICES, default='User')
+    roles = models.CharField(max_length=100, choices=ROLES_CHOICES, default='User',help_text="The role of the user")
     profileImage = models.URLField(max_length=100, blank=True, null=True,help_text="URL to the profile image")
     portfolioVisibility = models.BooleanField(default=True,help_text="decides if the portfolio is visible to others")
     portfolio = models.OneToOneField(Complete_Portfolio, on_delete=models.CASCADE, blank=True, null=True,help_text="The portfolio of the user")
