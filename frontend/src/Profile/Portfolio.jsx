@@ -4,6 +4,7 @@ import PortfolioModal from "./PortfolioModal.jsx";
 import PortfolioCard from "./PortfolioCard.jsx";
 import AboutMe from "./About.jsx";
 import { HostContext, UserContext } from "../App.jsx";
+import { getCookieValue } from "../utils.js";
 
 export default Portfolio;
 
@@ -13,8 +14,6 @@ export default Portfolio;
  * @returns {JSX.Element} - The rendered representation of the portfolio
  */
 function Portfolio({ isCurrentUser, portfolio }) {
-
-    console.log("Portfolio is " + JSON.stringify(portfolio)) //Is called 4 times, fails 
 
     const {host} = useContext(HostContext)
     const {user} = useContext(UserContext)
@@ -53,46 +52,46 @@ function Portfolio({ isCurrentUser, portfolio }) {
     //Modify the portfolio when an object has been changed
     const onDelete = (deleteItem) => {
         //TODO: Send DELETE to backend and GET the updated portfolio list
-        setPortfolioList(portfolioList.filter((item) => item.id !== deleteItem.id));
-
+        console.log("delete");
+        console.log(deleteItem);
+        const accessToken = getCookieValue("access_token");
+        fetch(`${host}/users/portfolio/items/${deleteItem.id}`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                Authorization: `Token ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(deleteItem)
+        }).then(response => {
+            console.log(deleteItem)
+            if(!response.ok) {
+                console.log(response)
+            }
+            else {
+                console.log("sent succesfully")
+                setPortfolioList(portfolioList.filter((item) => item.id !== deleteItem.id))
+            }
+        }).catch(error => {
+            console.error("Couldn't send...", error)
+        });
+        ;
     }
     
     const onEdit = (updatedItem) => {
         //TODO: Send PATCH, just send all field and let the backend update whatever changed to backend and GET the updated portfolio list
-    }
-
-    const onAdd = (updatedItem) => {
-        //TODO: Send PUT to portfolio items
-        console.log("add");
-        console.log(updatedItem);
-        fetch(`${host}/users/${user.id}/portfolio/`, {
-            method: "PUT",
+        
+        const accessToken = getCookieValue("access_token");
+        fetch(`${host}/users/portfolio/items/${clicked.id}`, {
+            method: "PATCH",
+            credentials: "include",
             headers: {
+                Authorization: `Token ${accessToken}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(updatedItem)
+            body: JSON.stringify({"icon": updatedItem.icon, "title" : updatedItem.title, "description" : updatedItem.description, "link" : updatedItem.link})
         }).then(response => {
             console.log(updatedItem)
-            if(!response.ok) {
-                console.log(response)
-            }
-            console.log("sent succesfully")
-        }).catch(error => {
-            console.error("Couldn't send...", error)
-        });
-    }
-
-    const onChangeAboutMe = (updatedDescription) => {
-        setAboutText(updatedDescription)
-        //TODO: Send the updated description to the backend
-        fetch(`${host}/users/${user.id}/portfolio/`, {
-            method: "PATCH",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedDescription)
-        }).then(response => {
-            console.log(updatedDescription)
             if(!response.ok) {
                 console.log(response)
             }
@@ -102,8 +101,118 @@ function Portfolio({ isCurrentUser, portfolio }) {
         }).catch(error => {
             console.error("Couldn't send...", error)
         });
+    }
 
-        setAboutIsEdit(false)
+    // const onAdd = async (updatedDescription) => {
+    //     setAboutText(updatedDescription);
+    //     try {
+    //         console.log(updatedDescription);
+    //         const accessToken = getCookieValue("access_token");
+    //         const response = await fetch(`${host}/users/${user.id}/portfolio/`, {
+    //             method: "PATCH",
+    //             credentials: "include",
+    //             headers: {
+    //                 Authorization: `Token ${accessToken}`,
+    //                 "Content-Type": "application/json"
+    //             },
+    //             body: JSON.stringify({ 'description': updatedDescription.toString() })
+    //         });
+    //         if (response.ok) {
+    //             console.log("Sent successfully");
+    //         } else {
+    //             console.log("Couldn't send", response.statusText);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error:", error);
+    //     }
+
+    //     setAboutIsEdit(false);
+    // }
+
+    const onAdd = (addedItem) => {
+        //TODO: Send PUT to portfolio items
+        console.log("add");
+        console.log(addedItem);
+        const accessToken = getCookieValue("access_token");
+        fetch(`${host}/users/${user.id}/portfolio/items`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                Authorization: `Token ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            // body: JSON.stringify({
+            //     icon: "https://fontawesome.com/icons/phone?f=classic&s=solid",
+            //     link: "https://google.com",
+            //     title: "I am a title",
+            //     description: "I am a description"
+            // })
+            body: JSON.stringify(addedItem)
+            
+        }).then(response => {
+            console.log(addedItem)
+            if(!response.ok) {
+                console.log(response)
+            }
+            else {
+                console.log("sent succesfully")
+            }
+        }).catch(error => {
+            console.error("Couldn't send...", error)
+        });
+    }
+
+    // try {
+    //     const response = await fetch(`${host}/users/${user.id}/`, {
+    //         method: "PATCH",
+    //         credentials: "include",
+    //         headers: {
+    //             Authorization: `Token ${accessToken}`,
+    //             "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify({ 'education' : {[fieldToChange] : education.toString()} })
+    //     });
+
+    //     if (response.ok) {
+    //         console.log("Sent successfully");
+    //         const data = await response.json();
+    //         if (data.fieldToChange === "minor") {
+    //             setMinor(minor);
+    //         } else {
+    //             setMajor(major);
+    //         }
+    //     } else {
+    //         console.log("Couldn't send", response.statusText);
+    //     }
+    // } catch (error) {
+    //     console.error("Error:", error);
+    // }
+
+
+    const onChangeAboutMe = async (updatedDescription) => {
+        setAboutText(updatedDescription);
+        try {
+            console.log(updatedDescription);
+            const accessToken = getCookieValue("access_token");
+            const response = await fetch(`${host}/users/${user.id}/portfolio/`, {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    Authorization: `Token ${accessToken}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ 'description' :  updatedDescription.toString()})
+            });
+            if (response.ok) {
+                console.log("Sent successfully"); 
+            } else {
+                console.log("Couldn't send", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+
+        setAboutIsEdit(false);
     }
 
     return (    

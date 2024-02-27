@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Portfolio from "./Portfolio.jsx";
 import ProfileHeader from "./ProfileHeader.jsx";
 import { HostContext, UserContext } from "../App.jsx";
+import { getCookieValue } from "../utils.js"
 
 export default function Profile() {
 	//const [userData, setUserData] = useState(null);
@@ -10,17 +11,6 @@ export default function Profile() {
 
 	const [portfolio, setPortfolio] = useState(null);
 	const [loading, setLoading] = useState(true);
-
-	function getCookieValue(cookieName) {
-		const cookies = document.cookie.split("; ");
-		for (const cookie of cookies) {
-			const [name, value] = cookie.split("=");
-			if (name === cookieName) {
-				return value;
-			}
-		}
-		return null;
-	}
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -36,10 +26,7 @@ export default function Profile() {
 
 				if (response.ok) {
 					const user = await response.json();
-					const sanitizedUser = JSON.parse(JSON.stringify(user), (key, value) =>
-						value === null ? "" : value
-					);
-					setUser(sanitizedUser);
+					setUser(user);
 					console.log(user)
 					//TODO: Distinguish between fetched user and current user (from context?)
 					//Now we do the portfolio call, if it's private, skip.
@@ -52,9 +39,7 @@ export default function Profile() {
 						})
 						.then(response => {
 							if (response.ok) {
-								// Fetch portfolio (incl. items)
 								response.json().then(portfolio => {
-									//console.log(portfolio)
 									setPortfolio(portfolio)
 									setLoading(false);
 								}

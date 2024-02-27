@@ -63,12 +63,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 ]
 
-
-
 ROOT_URLCONF = "SIC_BACKEND.urls"
 
 CORS_ALLOW_ALL_ORIGINS = True  # If you want to allow all origins
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = ('content-disposition', 'accept-encoding',
+                      'content-type', 'accept', 'origin', 'authorization')
 
 TEMPLATES = [
     {

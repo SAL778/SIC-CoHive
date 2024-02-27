@@ -41,7 +41,7 @@ function PortfolioModal(props) {
         ) : (
             <Modal isOpen={isOpen} onRequestClose={onRequestClose} {...rest}>
                 <PortfolioItemEdit
-                    onEditSubmit={() => terminateModal(onEdit({clickedItem}))}
+                    onEditSubmit={(e) => terminateModal(onEdit(e))}
                     onEditCancel={terminateModal}
                     portfolioItem={clickedItem}
                 />

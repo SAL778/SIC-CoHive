@@ -10,6 +10,7 @@ export function PortfolioItemEdit({ onEditSubmit, onEditCancel, portfolioItem })
 
     //init with pre-filled fields based on portfolioItem if they exist, otherwise create new fields
     const [formData, setFormData] = useState({
+        icon: portfolioItem?.icon?? "https://fontawesome.com/icons/user?f=classic&s=solid",
         title: portfolioItem?.title ?? "" ,
         description: portfolioItem?.description ?? "" ,
         link: portfolioItem?.link ?? "" ,
@@ -27,6 +28,7 @@ export function PortfolioItemEdit({ onEditSubmit, onEditCancel, portfolioItem })
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(formData)
         onEditSubmit(formData);
     }
 
