@@ -1,16 +1,36 @@
 import React, { useState, useEffect } from "react";
 
-//HARD CODED FILTERS for now. Uncomment the GET request using the useEffect hook once the endpoint is available.
+//HARD CODED FILTERS for now. Delete when the correct ednpoint is available
+// function Filter({ onSearch, onFilterChange }) {
+// 	const [selectedFilters, setSelectedFilters] = useState({
+// 		"SIC Member": false,
+// 		Organization: false,
+// 		"SIC Administrator": false,
+// 		"Audio Engineer": false,
+// 		"Graphic Designer": false,
+// 		VFX: false,
+// 		Animator: false,
+// 	});
+
 function Filter({ onSearch, onFilterChange }) {
-	const [selectedFilters, setSelectedFilters] = useState({
-		"SIC Member": false,
-		Organization: false,
-		"SIC Administrator": false,
-		"Audio Engineer": false,
-		"Graphic Designer": false,
-		VFX: false,
-		Animator: false,
-	});
+	const [selectedFilters, setSelectedFilters] = useState({});
+
+	useEffect(() => {
+		// Fetch filters from the endpoint
+		fetch("http://127.0.0.1:8000/users/accessTypes")
+			.then((response) => response.json())
+			.then((data) => {
+				// Initialize all filters to false
+				const initialFilters = {};
+				data.forEach((filterObj) => {
+					initialFilters[filterObj.name] = false;
+				});
+				setSelectedFilters(initialFilters);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+			});
+	}, []);
 
 	useEffect(() => {
 		// Notify parent component whenever selectedFilters change
@@ -20,27 +40,6 @@ function Filter({ onSearch, onFilterChange }) {
 				.map(([filter, _]) => filter)
 		);
 	}, [selectedFilters]);
-
-	// DO NOT REMOVE. UNCOMMENT ONCE THE CORRECT ENDPOINT IS AVAILABLE.
-
-	// function Filter({ onSearch }) {
-	// 	const [selectedFilters, setSelectedFilters] = useState({});
-
-	// 	useEffect(() => {
-	// 		fetch("http://localhost:8000/filters/") // GET request for the filters, endpoint needed.
-	// 			.then((response) => response.json())
-	// 			.then((data) => {
-	// 				const filters = data; // array of filters from the response
-	// 				const initialFilterState = {};
-	// 				filters.forEach((filter) => {
-	// 					initialFilterState[filter] = false;
-	// 				});
-	// 				setSelectedFilters(initialFilterState);
-	// 			})
-	// 			.catch((error) => {
-	// 				console.error("There was an error! Error:", error);
-	// 			});
-	// 	}, []);
 
 	const toggleFilter = (filter) => {
 		setSelectedFilters({
