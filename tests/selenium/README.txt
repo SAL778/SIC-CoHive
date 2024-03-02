@@ -6,6 +6,6 @@ Change config.py with the path to your chromedriver before beginning.
 
 You need both backend and frontend running before running scripts
 -> frontend: npm run dev
--> SIC_BACKEND: python3 manage.py runserver 
+-> backend: python3 manage.py runserver 
 
 Run all tests via runtests.py
