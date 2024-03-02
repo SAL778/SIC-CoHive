@@ -4,27 +4,53 @@ This is a [React](https://react.dev/) project bootstrapped with [`Vite`](https:/
 
 ## Getting Started
 
-First, run the development server:
+First, set up the backend django server:
+
+Make sure you have a `Virtual Environment` set up.  
+Then, in the root directory:
+
+```bash
+pip install -r requirements.txt
+```
+
+Once the requirements are installed, `cd` into the backend folder called `backend`.
+Make sure you are in the directory that contains the `manage.py` file.
+
+Now, make and run the migrations:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+Now, you're all set to run the backend server. Run the following command while in the same directory:
+
+```bash
+python manage.py runserver
+```
+
+After having successfully run the django server, keep this terminal window open. By default, the backend uses port 8000.
+
+Second, open a new terminal window.
+Run the frontend development server:
+
+`cd` into the frontend folder called `frontend`.
+
+Install the dependencies:
+
+```bash
+npm install
+```
+
+Followed by running the server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The frontend environment should be up and running now. By default, the frontend uses port 5173.
 
 You can start editing a page and watch it auto-updates as you edit the file.
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## Link to the Figma Hi-Fi
 
