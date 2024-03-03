@@ -6,6 +6,9 @@ class ResourcesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class BookingSerializer(serializers.ModelSerializer):
+    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
+    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
+
     class Meta:
         model = Booking
         fields = '__all__'
