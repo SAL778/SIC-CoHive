@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import Assets
+from .models import Resources
 # Register your models here.
-admin.site.register(Assets)
+admin.site.register(Resources)

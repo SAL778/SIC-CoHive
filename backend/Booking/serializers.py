@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import Assets, Schedule
-class AssetsSerializer(serializers.ModelSerializer):
+from .models import Resources, Booking
+class ResourcesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Assets
+        model = Resources
         fields = '__all__'
 
-class ScheduleSerializer(serializers.ModelSerializer):
+class BookingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Schedule
+        model = Booking
         fields = '__all__'
-        read_only_fields = ["id"]
+        read_only_fields = ["id","user"]
