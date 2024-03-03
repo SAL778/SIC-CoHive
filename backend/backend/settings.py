@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'drf_yasg',
     'rest_framework.authtoken',
+    'Booking'
 ]
 
 MIDDLEWARE = [
