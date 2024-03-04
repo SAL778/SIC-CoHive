@@ -71,11 +71,11 @@ function BookingListView({onItemClick, displayAssets}) {
     const dateHeaders = getUniqueDateHeaders(displayAssets.map(asset => asset.from))
      
     return (
-        <ul>
+        <ul className = "flex flex-col gap-5 w-2/3">
             {dateHeaders.map(dateHeader => (
                 <li key={dateHeader}>
                     <DateHeaderComponent date = {dateHeader}/>
-                    <ul>
+                    <ul className = "flex flex-col gap-2">
                         {displayAssets
                             .filter(asset => asset.from.getDay() === dateHeader.getDay())
                             .map(asset => (
@@ -117,34 +117,38 @@ function AssetComponent({asset}) {
 
     return (
         //TODO: On private, grey everything out
-        <div className = {greyOut && "greyed-out"}>
-            <div>
-                <h3>{asset.name}</h3>
-                <p>{asset.description}</p>
+        <div className = {`flex items-center p-3 rounded-md gap-10 ${!greyOut && "shadow-custom"}`}>
+            <div className = "colA basis-2 flex-col flex-grow text-neutral-800">
+                <h3 className = "text-2xl font-semibold">{asset.name}</h3>
+                <p className = "text-base font-regular">{asset.description}</p>
             </div>
 
-            { asset.type == "location" &&
-             <div>
-                <i className = "fa fa-location"/>
-                <p>{asset.location}</p>
+            { asset.type == "room" &&
+             <div className = "colB basis-1 flex flex-grow text-2xl">
+                <i className = "fa fa-location-dot mr-3" aria-hidden="true"/>
+                <p className = "font-light">{asset.location}</p>
              </div>
             }
             
-            <div>
-                <i className = "fa fa-calendar"/>
-                <p>
-                    {asset.from.toLocaleString('en-us', {weekday:'long'})}
-                    {asset.from.toLocaleString('en-us', {month:'short'})}
-                    {asset.from.getDate()}
-                </p>
-                <p>{formatTime(asset.from)} - {formatTime(asset.to)}</p>
+            <div className = "colC basis-1 flex flex-row flex-grow items-center ">
+                <i className = "fa fa-calendar mr-3 text-2xl text-neutral-800"/>
+                <div className = "timeSlot">
+                    <p className = "text-base font-medium text-orange-600">
+                        {formatTime(asset.from)} - {formatTime(asset.to)}
+                    </p>
+                    <p className = "text-base font-medium text-neutral-800 flex gap-1">
+                        <span>{asset.from.toLocaleString('en-us', {weekday:'long'})}</span>
+                        <span>{asset.from.toLocaleString('en-us', {month:'short'})}</span>
+                        <span>{asset.from.getDate()}</span>
+                    </p>
+                </div>
             </div>
 
             { !greyOut &&
-             <div>
+             <div className = "colD basis-1 flex-grow">
                 {/* Booker not present on private posts */}
-                <p>{asset.booker?.name}</p>
-                <p>{asset.booker?.email}</p>
+                <p className = "text-base text-orange-600">{asset.booker?.name}</p>
+                <p className = "text-neutral-800">{asset.booker?.email}</p>
              </div>
             }
         </div>
@@ -158,14 +162,20 @@ function AssetComponent({asset}) {
  */
 function DateHeaderComponent({date}) {
     return (
-        <>
-            <h2>{date.toLocaleString('en-us', {weekday:'long'})}</h2>
-            <div>
-                <h3>{date.toLocaleString('default', { month: 'long' })} {date.getDate()}</h3>
-                <h3>{date.getYear() + 1900}</h3> {/* getYear() returns years since 1900 */}
+        <div className = "dateHeader mb-4 flex items-center">
+            <div className = "date flex gap-4 items-stretch mr-3">
+                <h2 className = "text-4xl font-bold text-orange-600 uppercase">
+                    {date.toLocaleString('en-us', {weekday:'long'})}
+                </h2>
+                <div className = "flex flex-col justify-between">
+                    <h3 className = "text-xl font-bold text-neutral-800 uppercase">
+                        {date.toLocaleString('default', { month: 'long' })} {date.getDate()}
+                    </h3>
+                    <h3 className = "text-xs font-medium text-neutral-400">{date.getYear() + 1900}</h3> {/* getYear() returns years since 1900 */}
+                </div>
             </div>
-            <hr/>
-        </>
+            <span className = "flex-grow h-1 bg-gradient-to-r from-neutral-400 from-30% to-transparent to-90%"/>
+        </div>
     )
 }
 

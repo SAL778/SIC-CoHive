@@ -16,7 +16,6 @@ function Bookings() {
 				email: "short@email.here",
 				id: 1,
 				},
-			private: false
 		},
 		{
 			name: "Single Loop Study Space",
@@ -30,7 +29,6 @@ function Bookings() {
 				email: "lawj@email.here",
 				id: 3,
 				},
-			private: false
 		},
 		{
 			name: "Conference Room A",
@@ -44,7 +42,6 @@ function Bookings() {
 				email: "hughhugor@ualberta.ca",
 				id: 4,
 				},
-			private: false
 		},
 		{
 			name: "Art Workstation 2",
@@ -58,7 +55,19 @@ function Bookings() {
 				email: "hughhugor@ualberta.ca",
 				id: 4,
 			},
-			private: false
+		},
+		{
+			name: "Art Workstation 2",
+			type: "room",
+			location: "SIC M975",
+			description: "Logo Design for StartupAB",
+			to: new Date('2024-04-02T08:30:00'),
+			from: new Date('2024-04-02T07:30:00'), 
+			booker: {
+				name: "Hugh Hugor",
+				email: "hughhugor@ualberta.ca",
+				id: 4,
+			},
 		},
 	]
 
