@@ -40,6 +40,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         education_data = validated_data.get('education')
         if education_data is not None:
             education = instance.education
+# Comment the following out. Seems to be causing an error
             # if education is None:
             #     education = Education_Field.objects.create(user=instance)
             # else:
