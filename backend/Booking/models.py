@@ -26,7 +26,7 @@ class Booking(models.Model):
     id = models.AutoField(primary_key=True,help_text="Unique identifier for the schedule")
     start_time = models.DateTimeField(help_text="Start time of the schedule",default=timezone.now())
     end_time = models.DateTimeField(help_text="End time of the schedule",default=timezone.now())
-    resources = models.ForeignKey(Resources, on_delete=models.CASCADE,help_text="Asset that the schedule is for")
+    resources = models.ForeignKey(Resources, on_delete=models.CASCADE,related_name='bookings',help_text="Resource that the schedule is for")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,help_text="User that the schedule is for")
 
     def __str__(self):
