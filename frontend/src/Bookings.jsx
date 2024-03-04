@@ -1,12 +1,69 @@
 import React from "react";
+import BookingListView from "./BookingList"
 
 function Bookings() {
+
+	const exampleRooms = [
+		{
+			name: "Upper Floor Workshop Area",
+			location: "SIC M212",
+			description: "Alberta SAT Meetup",
+			type: "room",
+			to: new Date('2024-03-02T08:30:00'),
+			from: new Date('2024-03-02T07:30:00'), 
+			booker: {
+				name: "Really Long Name Here",
+				email: "short@email.here",
+				id: 1,
+				},
+			private: false
+		},
+		{
+			name: "Single Loop Study Space",
+			location: "SIC M215",
+			type: "room",
+			description: "Hello World",
+			to: new Date('2024-03-02T08:30:00'),
+			from: new Date('2024-03-02T07:30:00'), 
+			booker: {
+				name: "Lawrence J",
+				email: "lawj@email.here",
+				id: 3,
+				},
+			private: false
+		},
+		{
+			name: "Conference Room A",
+			type: "room",
+			location: "SIC M073",
+			description: "Meeting with key shareholders",
+			to: new Date('2024-03-02T08:30:00'),
+			from: new Date('2024-03-02T07:30:00'), 
+			booker: {
+				name: "Hugh Hugor",
+				email: "hughhugor@ualberta.ca",
+				id: 4,
+				},
+			private: false
+		},
+		{
+			name: "Art Workstation 2",
+			type: "room",
+			location: "SIC M875",
+			description: "Logo Design for StartupAB",
+			to: new Date('2024-03-02T08:30:00'),
+			from: new Date('2024-03-02T07:30:00'), 
+			booker: {
+				name: "Hugh Hugor",
+				email: "hughhugor@ualberta.ca",
+				id: 4,
+			},
+			private: false
+		},
+	]
+
 	return (
-		<div>
-			<h1 style={{ color: "black", fontFamily: "Arial, sans-serif" }}>
-				Bookings page
-			</h1>
-		</div>
+		<BookingListView displayAssets = {exampleRooms}/>
 	);
 }
 
