@@ -3,8 +3,8 @@ from .models import Resources, Booking
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
-    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S")
+    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
+    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
 
     class Meta:
         model = Booking

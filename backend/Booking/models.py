@@ -7,8 +7,8 @@ from django.utils import timezone
 class Resources(models.Model):
     Type=[
         ('room','Room'),
-        ('equipment','Equipment'),
-        ('other','Other')
+        ('equipment','Equipment')
+    #    ('other','Other')
     ]
 
     id = models.AutoField(primary_key=True,help_text="Unique identifier for the asset")
