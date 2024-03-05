@@ -79,7 +79,7 @@ function BookingListView({onItemClick, displayAssets}) {
                         {displayAssets
                             .filter(asset => asset.from.getDay() === dateHeader.getDay())
                             .map(asset => (
-                                <AssetComponent key={asset.id} asset={asset} onItemClick={onItemClick} />
+                                <AssetComponent key={asset.id} asset={asset} onItemClick = {onItemClick} />
                             ))}
                     </ul>
                 </li>
@@ -92,7 +92,7 @@ function BookingListView({onItemClick, displayAssets}) {
  * A component that returns the render of a list item to be displayed.
  * @param {Object} asset - The object representation of an asset (room or equipment)
  */
-function AssetComponent({asset}) {
+function AssetComponent({asset, onItemClick}) {
 
     const { currentUser } = useContext(UserContext);
 
@@ -117,7 +117,7 @@ function AssetComponent({asset}) {
 
     return (
         //TODO: On private, grey everything out
-        <div className = {`flex items-center p-3 rounded-md gap-10 ${!greyOut && "shadow-custom"}`}>
+        <div className = {`flex items-center p-3 rounded-md gap-10 ${!greyOut && "shadow-custom"}`} onClick = {() => onItemClick(asset)}>
             <div className = "colA basis-2 flex-col flex-grow text-neutral-800">
                 <h3 className = "text-2xl font-semibold">{asset.name}</h3>
                 <p className = "text-base font-regular">{asset.description}</p>
@@ -158,7 +158,6 @@ function AssetComponent({asset}) {
 /**
  * A component that returns the renders of a date header
  * @param {Date} - The date to be rendered
- * TODO: Style
  */
 function DateHeaderComponent({date}) {
     return (

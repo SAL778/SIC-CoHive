@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState, useRef } from "react";
+import ModalComponent from "./components/CustomModal"
 import BookingListView from "./BookingList"
+
+
 
 function Bookings() {
 
@@ -71,8 +74,48 @@ function Bookings() {
 		},
 	]
 
+
+	//Use this ref to handle form submission
+	const formRef = useRef(null)
+	const [clickedBooking, setClickedBooking] = useState({})
+	const [showModal, setShowModal] = useState(false)
+
+	const onClickBooking = (bookingInfo) => {
+		console.log("click")
+		setClickedBooking(bookingInfo)
+		setShowModal(true)
+	}
+
+	const onSubmitBooking = (bookingInfo) => {
+		//TODO: Send to backend
+		console.log("Submitted")
+		setClickedBooking({})
+		setShowModal(false)
+	}
+
+	const onCloseBooking = () => {
+		console.log("Cancelled")
+		setClickedBooking({})
+		setShowModal(false)
+	}
+
 	return (
-		<BookingListView displayAssets = {exampleRooms}/>
+		<>
+			<BookingListView displayAssets = {exampleRooms} onItemClick = {onClickBooking}/>
+
+			{/* This Component shows how  */}
+			<ModalComponent
+				isOpen = {showModal}
+				onAffirmative = {onSubmitBooking}
+				onNegative = {onCloseBooking}
+				onRequestClose = {onCloseBooking}
+				preventScroll = {true}
+				contentLabel = {"Booking form"}
+			>
+				<h1>{clickedBooking?.name}</h1>
+			</ModalComponent>
+		
+		</>
 	);
 }
 
