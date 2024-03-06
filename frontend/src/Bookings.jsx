@@ -5,6 +5,7 @@ import BookingFormComponent from "./components/Forms/BookingForm";
 
 import { useDisclosure } from "@mantine/hooks"
 import { Modal } from "@mantine/core"
+import ColumnView from "./Bookings/ColumnView.jsx";
 
 function Bookings() {
 	const exampleRooms = [
@@ -106,6 +107,7 @@ function Bookings() {
 	return (
 		<>
 			<BookingListView displayAssets = {exampleRooms} onItemClick = {onClickBooking}/>
+			{/* <ColumnView /> */}
 
 			<Modal
 				opened = {opened}
