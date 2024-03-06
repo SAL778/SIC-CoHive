@@ -1,12 +1,5 @@
 const Column = ({ column }) => {
 
-    const timeSlot = (
-        <div className="rounded-lg overflow-hidden shadow-custom px-4 py-2 mb-2 bg-green-200 text-sm">
-            <p className="font-bold">Available</p>
-            {/* <p>{currentTime.toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })} - {new Date(currentTime.getTime() + 15 * 60000).toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })}</p> */}
-        </div>
-    );
-
     const generateTimeSlots = () => {
         const timeSlots = [];
 
@@ -20,7 +13,7 @@ const Column = ({ column }) => {
                 timeSlots.push(timeSlot);
             }
         }
-        console.log(timeSlots);
+        // console.log(timeSlots);
         return timeSlots;
     };
 
@@ -43,12 +36,7 @@ const Column = ({ column }) => {
                         for (let currentMinute = (currentHour === startTime.getHours() ? startHour : 0); currentMinute < (currentHour === endTime.getHours() ? endHour : 60); currentMinute += 15) {
                             const currentTime = new Date();
                             currentTime.setHours(currentHour, currentMinute, 0, 0);
-                            const timeSlot = (
-                                <div key={`${currentHour}-${currentMinute}`} className="rounded-lg overflow-hidden shadow-custom px-4 py-2 mb-2 bg-red-200 text-sm">
-                                    {/* <p className="font-bold">Unavailable</p> */}
-                                    <p>{currentTime.toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })} - {new Date(currentTime.getTime() + 15 * 60000).toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })}</p>
-                                </div>
-                            );
+                            const timeSlot = `${currentTime.toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })} - ${new Date(currentTime.getTime() + 15 * 60000).toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })}`;
                             unavailable.push(timeSlot);
                         }
                     }
@@ -62,12 +50,15 @@ const Column = ({ column }) => {
                         </div>
                     );
                 })}
-                {unavailable.map(slot => (
-                    console.log(slot.props.children)
+                {timeslots.filter(slot => !unavailable.includes(slot)).map(slot => (
+                    <div className="rounded-lg overflow-hidden shadow-custom px-4 py-2 mb-2 bg-green-200 text-sm" key={slot}>
+                        <p className="font-bold">Available</p>
+                        <p>{slot}</p>
+                        {/* <p>{currentTime.toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })} - {new Date(currentTime.getTime() + 15 * 60000).toLocaleTimeString([], { hour: 'numeric', minute: 'numeric' })}</p> */}
+                    </div>
                 ))}
             </div>
-        );
-    };
+    )};
 
     return (
         <div key={column.id} className="h-full flex flex-col">
