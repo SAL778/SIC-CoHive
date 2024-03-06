@@ -87,7 +87,7 @@ function Navigation() {
 	}, []); // Empty dependency array means this effect runs once on mount (load)
 
 	return (
-		<div className="flex-none md:w-[282px] py-[30px]">
+		<div className="flex-none md:w-[282px] py-[30px] fixed h-full left-[30px] z-10">
 			<div className="flex h-full flex-col bg-white rounded-[10px] shadow-custom">
 				<Link
 					href="/"

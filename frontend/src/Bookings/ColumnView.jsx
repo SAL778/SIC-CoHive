@@ -46,7 +46,7 @@ export default function ColumnView() {
 			{loading ? (
 				<div>Loading...</div>
 			) : (
-				<div className="flex flex-row gap-4 overflow-x-hidden overflow-y-scroll px-[10px] py-[30px] max-w-[1520px] mx-auto h-full">
+				<div className="flex flex-row flex-grow gap-4 overflow-clip px-[10px] my-[30px] h-full">
 					<div className="flex flex-col mt-[100px] h-full">
 						{Array.from({ length: 52 }, (_, index) => {
 							const hour = Math.floor(index / 4) + 7;
@@ -66,9 +66,11 @@ export default function ColumnView() {
 							);
 						})}
 					</div>
-					<EmblaCarousel slides={columnView.map((item, index) => (
-						<Column key={index} column={item} />
-					))} options={{ align: "start" }} />
+					<div className="overflow-x-hidden h-full pl-[10px] pr-[30px]">
+						<EmblaCarousel slides={columnView.map((item, index) => (	
+							<Column key={index} column={item} />
+						))} options={{ align: "start" }} />
+					</div>
 				</div>
 			)}
 		</>
