@@ -27,6 +27,7 @@ function App() {
 					<div className="flex h-screen w-screen flex-col md:flex-row md:overflow-hidden body-white py-0 px-[30px] gap-[40px]">
 						<Navigation />
 						<Routes>
+							<Route path="/" element={<Bookings />} />
 							<Route path="/bookings" element={<Bookings />} />
 							<Route path="/events" element={<Events />} />
 							<Route path="/community" element={<Community />} />
