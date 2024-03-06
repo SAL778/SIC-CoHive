@@ -41,7 +41,7 @@ class AllBookingsView(generics.ListAPIView):
 class FilterBookingsView(generics.ListAPIView):
     '''
     get:
-    Get all bookings that fall within the given time range.
+    Get all bookings that fall within the given date range.
     '''
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
@@ -50,27 +50,24 @@ class FilterBookingsView(generics.ListAPIView):
         start_time = request.query_params.get('start_time')
         end_time = request.query_params.get('end_time')
 
-        # If start_time and end_time are not provided, set them to the start and end of the current day
+        print(start_time, end_time)
+        # If start_date and end_date are not provided, set them to the current day
         if start_time is None:
-            start_time = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            start_time = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
         else:
-            start_time = datetime.datetime.strptime(start_time, "%Y-%m-%dT%H:%M:%S")
+            start_time = timezone.make_aware(datetime.datetime.strptime(start_time, "%Y-%m-%d").replace(hour=0, minute=0, second=0, microsecond=0))
 
         if end_time is None:
-            end_time = datetime.datetime.now().replace(hour=23, minute=59, second=59, microsecond=999999)
+            end_time = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
         else:
-            end_time = datetime.datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S")
-
-        # Make the datetime objects timezone aware
-        start_time = timezone.make_aware(start_time)
-        end_time = timezone.make_aware(end_time)
+            end_time = timezone.make_aware(datetime.datetime.strptime(end_time, "%Y-%m-%d").replace(hour=23, minute=59, second=59, microsecond=999999))
 
         # Subtract a millisecond from start_time and add a millisecond to end_time
-        start_time -= timedelta(microseconds=1000)
-        end_time += timedelta(microseconds=1000)
+        # start_time -= timedelta(microseconds=1000)
+        # end_time += timedelta(microseconds=1000)
 
+        print(start_time, end_time)
         return Response(self.get_serializer(Booking.objects.filter(start_time__lte=end_time, end_time__gte=start_time), many=True).data)
-
 
 class UserBookingView(generics.ListCreateAPIView):
     '''

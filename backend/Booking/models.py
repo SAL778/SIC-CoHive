@@ -28,6 +28,8 @@ class Booking(models.Model):
     end_time = models.DateTimeField(help_text="End time of the schedule",default=timezone.now())
     resources = models.ForeignKey(Resources, on_delete=models.CASCADE,related_name='bookings',help_text="Resource that the schedule is for")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,help_text="User that the schedule is for")
+    visibility = models.BooleanField(help_text="Visibility of the schedule",default=True)
+    title = models.CharField(max_length=100, blank=True, null=True,help_text="Title of the schedule")
 
     def __str__(self):
         return str(self.id)
