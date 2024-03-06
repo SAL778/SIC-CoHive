@@ -15,6 +15,7 @@ export default BookingFormComponent
 function BookingFormComponent({currentBooking = null, availableAssets, type}) {
 
     const { currentUser } = useContext(UserContext);
+    const interval = 30;
     //const [timeErrorMessage, setTimeErrorMessage] = null
 
     //TODO: Change this to prop
@@ -22,8 +23,9 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
 
     const form = useForm({
         initialValues: {
-            // start and end times are split from their standard date formatting so that date/time pickeres are useable.They will be recombined on submit.
-            name: currentBooking?.name ?? "",
+            // start and end times are split from their standard date formatting so that
+            // date/time pickers are useable. They will be recombined on (valid) submit.
+            name: currentBooking?.name ?? "Add a Room Booking",
             date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             startTime: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "00:00",
             endTime: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "23:59",
@@ -31,10 +33,36 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
             public: currentBooking.public ?? true,
             booker: currentBooking.booker ?? currentUser,
         },
+        validate: {
+            //TODO: Times between (and including) start and end cannot be booked.
+            startTime: (value, values) => {
+                value < values.endTime          //Start time precedes end time
+                value.getMinutes() % interval == 0           //Time booked is a multiple of interval (e.g. every 30 mins)
+            },
+            endTime: (value) => {
+                value.getMinutes() % interval == 0           //Time booked is a multiple of interval
+            },
+            name: (value) => {
+                value !== ""                    //Valid room is selected.
+            },
+            description: (value) => {
+                value.length < 100
+            },
+            date: (value) => {
+                value >= new Date()              //Booking cannot be retroactive
+            }
+
+        },
+
+        //Convert the to/from dates back into ISO format
+        transformValues: (values) => ({
+            startTime:  values.date.setHours(...startTime.split(":")),  //Adjust the time
+            endTime: values.date.setHours(...endTime.split(":")),
+        })
     });
 
     return (
-        <form>
+        <form onSubmit = {() => console.dir(values)}>
             {/* This is static until submitted */}
             <h1>{currentBooking.name || ""}</h1>
 
@@ -76,13 +104,12 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
                 label = "Description"
                 placeholder = "Add a brief description of this booking"
                 rows={3}
-                resize = 'none'
                 {...form.getInputProps('description')}
             />
 
             <div className ="flex justify-end gap-3 p-4">
-                <button className = "p-3 text-neutral-400 rounded-md" >Close</button>
-                <button className = "p-3 text-white bg-orange-600 rounded-md">Submit</button>
+                <button className = "p-3 text-neutral-400 rounded-md">Close</button>
+                <button type = "submit" className = "p-3 text-white bg-orange-600 rounded-md">Submit</button>
             </div>
 
         </form>

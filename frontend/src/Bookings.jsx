@@ -107,17 +107,6 @@ function Bookings() {
 		<>
 			<BookingListView displayAssets = {exampleRooms} onItemClick = {onClickBooking}/>
 
-			{/* <ModalComponent
-				isOpen = {showModal}
-				onAffirmative = {onModalSubmitBooking}
-				onNegative = {onModalCloseBooking}
-				onRequestClose = {onModalCloseBooking}
-				preventScroll = {true}
-				contentLabel = {"Booking form"}
-			>
-				<BookingFormComponent currentBooking = {clickedBooking}/>
-			</ModalComponent> */}
-
 			<Modal
 				opened = {opened}
 				onClose = {onModalCloseBooking}
