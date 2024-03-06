@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from .models import Resources, Booking
 from .serializers import ResourcesSerializer,BookingSerializer
 from django.contrib.auth import get_user_model
+from rest_framework.exceptions import ValidationError
 
 # Create your views here.
 User = get_user_model()
@@ -50,21 +51,20 @@ class FilterBookingsView(generics.ListAPIView):
         start_time = request.query_params.get('start_time')
         end_time = request.query_params.get('end_time')
 
-        print(start_time, end_time)
+        # Check if both start_time and end_time are either None or have a value
+        if (start_time is None) != (end_time is None):
+            raise ValidationError("Both start_time and end_time should either be None or have a value.")
+
         # If start_date and end_date are not provided, set them to the current day
         if start_time is None:
-            start_time = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            start_time = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
         else:
             start_time = timezone.make_aware(datetime.datetime.strptime(start_time, "%Y-%m-%d").replace(hour=0, minute=0, second=0, microsecond=0))
 
         if end_time is None:
-            end_time = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
+            end_time = timezone.localtime(timezone.now()).replace(hour=23, minute=59, second=59, microsecond=999999)
         else:
             end_time = timezone.make_aware(datetime.datetime.strptime(end_time, "%Y-%m-%d").replace(hour=23, minute=59, second=59, microsecond=999999))
-
-        # Subtract a millisecond from start_time and add a millisecond to end_time
-        # start_time -= timedelta(microseconds=1000)
-        # end_time += timedelta(microseconds=1000)
 
         print(start_time, end_time)
         return Response(self.get_serializer(Booking.objects.filter(start_time__lte=end_time, end_time__gte=start_time), many=True).data)
@@ -73,6 +73,8 @@ class UserBookingView(generics.ListCreateAPIView):
     '''
     get:
     Get all bookings for a specific user.
+    post:
+    Add a new booking for a specific user.
     '''
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer

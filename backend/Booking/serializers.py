@@ -1,16 +1,27 @@
 from rest_framework import serializers
 from .models import Resources, Booking
 from rest_framework.authtoken.models import Token
+from rest_framework import serializers
+
+def validate_time_interval(value):
+    if value.minute % 15 != 0:
+        raise serializers.ValidationError("Time must be in 15-minute intervals.")
+    return value
 
 class BookingSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
-    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
+    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M", validators=[validate_time_interval])
+    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M", validators=[validate_time_interval])
     user = serializers.SerializerMethodField("get_user")
 
     class Meta:
         model = Booking
         fields = ['id', 'start_time', 'end_time', 'resources', 'user', 'title']
         read_only_fields = ["id","user"]
+
+    def validate(self, data):
+        if data['start_time'] >= data['end_time']:
+            raise serializers.ValidationError("End time must be after start time.")
+        return data
 
     def get_user(self, obj):
         request = self.context.get("request")
