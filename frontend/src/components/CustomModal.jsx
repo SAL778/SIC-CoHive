@@ -13,9 +13,6 @@ import Modal from "react-modal";
  * @param {string} negativeText - Optional prop to set button (positive) text. Will be "Submit" if unspecified.
  */
 function ModalComponent({onAffirmative, onNegative, children, ...props}) {
-
-    console.log(props)
-
     return (
         <Modal {...props} className = "h-fit w-fit absolute left-1/2 top-1/2 p-8">
             {children} 

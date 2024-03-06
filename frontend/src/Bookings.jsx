@@ -1,19 +1,17 @@
 import React, { useState, useRef } from "react";
 import ModalComponent from "./components/CustomModal"
 import BookingListView from "./BookingList"
-
-
+import BookingFormComponent from "./components/Forms/BookingForm";
 
 function Bookings() {
-
 	const exampleRooms = [
 		{
 			name: "Upper Floor Workshop Area",
 			location: "SIC M212",
 			description: "Alberta SAT Meetup",
 			type: "room",
-			to: new Date('2024-03-02T08:30:00'),
-			from: new Date('2024-03-02T07:30:00'), 
+			start_time: new Date('2024-03-02T08:30:00'),
+			end_time: new Date('2024-03-02T07:30:00'), 
 			booker: {
 				name: "Really Long Name Here",
 				email: "short@email.here",
@@ -25,8 +23,8 @@ function Bookings() {
 			location: "SIC M215",
 			type: "room",
 			description: "Hello World",
-			to: new Date('2024-03-02T08:30:00'),
-			from: new Date('2024-03-02T07:30:00'), 
+			start_time: new Date('2024-03-02T08:30:00'),
+			end_time: new Date('2024-03-02T07:30:00'), 
 			booker: {
 				name: "Lawrence J",
 				email: "lawj@email.here",
@@ -38,8 +36,8 @@ function Bookings() {
 			type: "room",
 			location: "SIC M073",
 			description: "Meeting with key shareholders",
-			to: new Date('2024-03-02T08:30:00'),
-			from: new Date('2024-03-02T07:30:00'), 
+			start_time: new Date('2024-03-02T08:30:00'),
+			end_time: new Date('2024-03-02T07:30:00'), 
 			booker: {
 				name: "Hugh Hugor",
 				email: "hughhugor@ualberta.ca",
@@ -51,8 +49,8 @@ function Bookings() {
 			type: "room",
 			location: "SIC M875",
 			description: "Logo Design for StartupAB",
-			to: new Date('2024-03-02T08:30:00'),
-			from: new Date('2024-03-02T07:30:00'), 
+			start_time: new Date('2024-03-02T08:30:00'),
+			end_time: new Date('2024-03-02T07:30:00'), 
 			booker: {
 				name: "Hugh Hugor",
 				email: "hughhugor@ualberta.ca",
@@ -64,8 +62,8 @@ function Bookings() {
 			type: "room",
 			location: "SIC M975",
 			description: "Logo Design for StartupAB",
-			to: new Date('2024-04-02T08:30:00'),
-			from: new Date('2024-04-02T07:30:00'), 
+			start_time: new Date('2024-04-02T08:30:00'),
+			end_time: new Date('2024-04-02T07:30:00'), 
 			booker: {
 				name: "Hugh Hugor",
 				email: "hughhugor@ualberta.ca",
@@ -73,7 +71,6 @@ function Bookings() {
 			},
 		},
 	]
-
 
 	//Use this ref to handle form submission
 	const formRef = useRef(null)
@@ -86,33 +83,33 @@ function Bookings() {
 		setShowModal(true)
 	}
 
-	const onSubmitBooking = (bookingInfo) => {
+	//Send the updated booking (not necessarily the one that was clicked)
+	const onModalSubmitBooking = (bookingInfo) => {
 		//TODO: Send to backend
 		console.log("Submitted")
 		setClickedBooking({})
 		setShowModal(false)
 	}
 
-	const onCloseBooking = () => {
-		console.log("Cancelled")
+	const onModalCloseBooking = () => {
 		setClickedBooking({})
 		setShowModal(false)
 	}
+
 
 	return (
 		<>
 			<BookingListView displayAssets = {exampleRooms} onItemClick = {onClickBooking}/>
 
-			{/* This Component shows how  */}
 			<ModalComponent
 				isOpen = {showModal}
-				onAffirmative = {onSubmitBooking}
-				onNegative = {onCloseBooking}
-				onRequestClose = {onCloseBooking}
+				onAffirmative = {onModalSubmitBooking}
+				onNegative = {onModalCloseBooking}
+				onRequestClose = {onModalCloseBooking}
 				preventScroll = {true}
 				contentLabel = {"Booking form"}
 			>
-				<h1>{clickedBooking?.name}</h1>
+				<BookingFormComponent currentBooking = {clickedBooking}/>
 			</ModalComponent>
 		
 		</>

@@ -3,73 +3,14 @@ import Filter from "./components/Filter.jsx";
 import { HostContext, UserContext } from "./App.jsx";
 import { getCookieValue } from "./utils.js";
 
-const exampleItems = [
-    {
-        name: "Upper Floor Workshop Area",
-        location: "SIC M212",
-        description: "Alberta SAT Meetup",
-        type: "room",
-        to: new Date('2024-03-02T08:30:00'),
-        from: new Date('2024-03-02T07:30:00'), 
-        booker: {
-            name: "Really Long Name Here",
-            email: "short@email.here",
-            id: 1,
-            },
-        private: false
-    },
-    {
-        name: "Single Loop Study Space",
-        location: "SIC M215",
-        type: "room",
-        description: "Hello World",
-        to: new Date('2024-03-02T08:30:00'),
-        from: new Date('2024-03-02T07:30:00'), 
-        booker: {
-            name: "Lawrence J",
-            email: "lawj@email.here",
-            id: 3,
-            },
-        private: false
-    },
-    {
-        name: "Conference Room A",
-        type: "room",
-        location: "SIC M073",
-        description: "Meeting with key shareholders",
-        to: new Date('2024-03-02T08:30:00'),
-        from: new Date('2024-03-02T07:30:00'), 
-        booker: {
-            name: "Hugh Hugor",
-            email: "hughhugor@ualberta.ca",
-            id: 4,
-            },
-        private: false
-    },
-    {
-        name: "Art Workstation 2",
-        type: "room",
-        location: "SIC M875",
-        description: "Logo Design for StartupAB",
-        to: new Date('2024-03-02T08:30:00'),
-        from: new Date('2024-03-02T07:30:00'), 
-        booker: {
-            name: "Hugh Hugor",
-            email: "hughhugor@ualberta.ca",
-            id: 4,
-        },
-        private: false
-    },
-]
-
 /**
  * A component that returns the render of a list view.
- * @param {function} onItemClick - Callback for what to do when an item is clicked on (i.e. open modal)
+ * @param {function} onItemClick - Callback for what end_time do when an item is clicked on (i.e. open modal)
  * @param {Array[Object]} displayAssets - An array of javascript objects that represent each item (i.e. Room or equipment)
  */
 function BookingListView({onItemClick, displayAssets}) {
-    const dateHeaders = getUniqueDateHeaders(displayAssets.map(asset => asset.from))
-     
+    const dateHeaders = getUniqueDateHeaders(displayAssets.map(asset => asset.start_time))
+    
     return (
         <ul className = "flex flex-col gap-5 w-2/3">
             {dateHeaders.map(dateHeader => (
@@ -77,7 +18,7 @@ function BookingListView({onItemClick, displayAssets}) {
                     <DateHeaderComponent date = {dateHeader}/>
                     <ul className = "flex flex-col gap-2">
                         {displayAssets
-                            .filter(asset => asset.from.getDay() === dateHeader.getDay())
+                            .filter(asset => asset.start_time.getDay() === dateHeader.getDay())
                             .map(asset => (
                                 <AssetComponent key={asset.id} asset={asset} onItemClick = {onItemClick} />
                             ))}
@@ -134,12 +75,12 @@ function AssetComponent({asset, onItemClick}) {
                 <i className = "fa fa-calendar mr-3 text-2xl text-neutral-800"/>
                 <div className = "timeSlot">
                     <p className = "text-base font-medium text-orange-600">
-                        {formatTime(asset.from)} - {formatTime(asset.to)}
+                        {formatTime(asset.start_time)} - {formatTime(asset.end_time)}
                     </p>
                     <p className = "text-base font-medium text-neutral-800 flex gap-1">
-                        <span>{asset.from.toLocaleString('en-us', {weekday:'long'})}</span>
-                        <span>{asset.from.toLocaleString('en-us', {month:'short'})}</span>
-                        <span>{asset.from.getDate()}</span>
+                        <span>{asset.start_time.toLocaleString('en-us', {weekday:'long'})}</span>
+                        <span>{asset.start_time.toLocaleString('en-us', {month:'short'})}</span>
+                        <span>{asset.start_time.getDate()}</span>
                     </p>
                 </div>
             </div>
@@ -170,10 +111,10 @@ function DateHeaderComponent({date}) {
                     <h3 className = "text-xl font-bold text-neutral-800 uppercase">
                         {date.toLocaleString('default', { month: 'long' })} {date.getDate()}
                     </h3>
-                    <h3 className = "text-xs font-medium text-neutral-400">{date.getYear() + 1900}</h3> {/* getYear() returns years since 1900 */}
+                    <h3 className = "text-xs font-medium text-neutral-400">{date.getFullYear()}</h3>
                 </div>
             </div>
-            <span className = "flex-grow h-1 bg-gradient-to-r from-neutral-400 from-30% to-transparent to-90%"/>
+            <span className = "flex-grow h-1 bg-gradient-to-r from-neutral-400 from-10% to-transparent to-100%"/>
         </div>
     )
 }
