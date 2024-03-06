@@ -60,15 +60,15 @@ export default function ColumnView() {
 								time = `${(hour - 12).toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} PM`;
 							}
 							return (
-								<div key={index} className="flex items-center justify-center min-h-[56px] w-[80px] rounded-lg overflow-hidden shadow-custom text-sm">
-									{time}
+								<div key={index} className="flex items-start justify-center min-h-[36px] w-[80px] rounded-lg overflow-hidden text-sm font-bold">
+									{minute === 0 || minute === 30 ? time : null}
 								</div>
 							);
 						})}
 					</div>
-					<div className="overflow-x-hidden h-full pl-[10px] pr-[30px]">
+					<div className="booking-column-container overflow-x-hidden h-full pl-[10px] pr-[30px]">
 						<EmblaCarousel slides={columnView.map((item, index) => (	
-							<Column key={index} column={item} />
+							<Column key={index} column={item}/>
 						))} options={{ align: "start" }} />
 					</div>
 				</div>

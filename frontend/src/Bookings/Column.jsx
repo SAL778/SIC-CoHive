@@ -95,17 +95,17 @@ const Column = ({ column }) => {
         // Set the bookingElements to the sorted array
         bookingElements = sortTimeRanges(bookingElements);
 
-        // Go through the timeslots and remove any that are in the unavailable list
-        timeslots = timeslots.filter((slot) => !unavailable.includes(slot));
-
         // Go through the bookingElements and insert into the timeslots array at the correct index
         bookingElements.forEach((bookingElement) => {
             const index = timeslots.findIndex(slot => slot.endsWith(bookingElement.split(' - ')[0]));
             if (index !== -1) {
-                const formattedBookingElement = `${bookingElement} (Booking)`;
-                timeslots.splice(index, 0, formattedBookingElement);
+            const formattedBookingElement = `${bookingElement} (Booking)`;
+            timeslots.splice(index + 1, 0, formattedBookingElement);
             }
         });
+
+        // Remove the unavailable time slots from the timeslots array
+        timeslots = timeslots.filter(slot => !unavailable.includes(slot));
 
         return (
             <div>
@@ -113,14 +113,13 @@ const Column = ({ column }) => {
                     return (
                         <div key={slot}>
                             {slot.includes('(Booking)') ? (
-                                <div className="rounded-lg overflow-hidden shadow-custom px-4 py-2 bg-blue-200 text-sm" key={slot} style={{ minHeight: `${Math.ceil((parseTime(slot.split(' - ')[1]) - parseTime(slot.split(' - ')[0])) / (15 * 60000)) * 56}px` }}>
+                                <div className="rounded-lg overflow-hidden shadow-custom px-4 py-2 bg-blue-200 text-sm" key={slot} style={{ minHeight: `${Math.ceil((parseTime(slot.split(' - ')[1]) - parseTime(slot.split(' - ')[0])) / (15 * 60000)) * 36}px` }}>
                                     <p className="font-bold">Booking</p>
                                     <p>{slot.replace(' (Booking)', '')}</p>
                                 </div>
                             ) : (
-                                <div className="rounded-lg overflow-hidden shadow-sm px-4 py-2 text-sm" key={slot} style={{ minHeight: '56px' }}>
-                                    {/* <p className="font-bold">Available</p>
-                                    <p>{slot}</p> */}
+                                <div className="open-booking-slot rounded-lg overflow-hidden px-4 py-2 text-sm" key={slot} style={{ minHeight: '36px' }}>
+                                    {/* <p>{slot}</p> */}
                                 </div>
                             )}
                         </div>
@@ -136,7 +135,7 @@ const Column = ({ column }) => {
                 <p className="text-lg font-bold uppercase">{column.name}</p>
                 <p className="text-lg">{column.room_number}</p>
             </div>
-            <div className="py-0 px-0 rounded-md flex flex-col flex-grow w-[260px]" style={{ backgroundColor: column.id % 2 === 0 ? '#F2F4F9' : '#FFF' }}>
+            <div className="py-0 px-0 rounded-md flex flex-col flex-grow w-[260px]">
                 <BookingList bookings={column.bookings} generateTimeSlots={generateTimeSlots} />
             </div>
         </div>

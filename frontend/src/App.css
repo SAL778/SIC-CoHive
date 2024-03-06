@@ -434,3 +434,18 @@ button.button-orange:focus {
 	outline: 2px solid var(--primary-orange);
 }
 
+.booking-column-container .embla__slide {
+	background: none;
+}
+
+.booking-column-container .embla__slide .open-booking-slot {
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+}
+
+.booking-column-container .embla__slide:nth-child(2n + 1) .open-booking-slot {
+	background: #f2f4f9;
+}
+
+.booking-column-container .embla__slide:nth-child(2n) .open-booking-slot {
+	background: #fff;
+}
