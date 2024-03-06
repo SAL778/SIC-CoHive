@@ -42,7 +42,7 @@ def custom_login_redirect(request):
     else:
         return HttpResponseBadRequest('User is not authenticated.')
 
-
+@swagger_auto_schema(method='get', operation_description="Get the profile of the authenticated user.", responses={200: CustomUserSerializer})
 @api_view(['GET'])
 def user_profile(request):
     """
@@ -186,7 +186,6 @@ class CompletePortfolioDetail(generics.RetrieveUpdateAPIView):
         if self.user != user1:
             return Response({'error': 'You do not have permission to edit this portfolio.'}, status=status.HTTP_401_UNAUTHORIZED)
         else:
-            print("i am in else")
             instance=self.get_object()
             serializer = self.get_serializer(instance, data=request.data, partial=True)  # set partial=True to update a data partially
             if serializer.is_valid():
@@ -241,11 +240,13 @@ class PortfolioItemList(generics.ListCreateAPIView):
 
 
 class PortfolioItemDetail(APIView):
+    @swagger_auto_schema(operation_description="Get a portfolio item by ID.", responses={200: PortfolioItemSerializer})
     def get(self, request, pk):
         obj = get_object_or_404(PortfolioItem, pk=pk)
         serializer = PortfolioItemSerializer(obj)
         return Response(serializer.data)
 
+    @swagger_auto_schema(operation_description="Update a portfolio item by ID.", request_body=PortfolioItemSerializer, responses={200: PortfolioItemSerializer, 400: 'Invalid data'})
     def put(self, request, pk):
         obj = get_object_or_404(PortfolioItem, pk=pk)
         user = get_user_from_token(request)
@@ -257,6 +258,7 @@ class PortfolioItemDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(operation_description="Partially update a portfolio item by ID.", request_body=PortfolioItemSerializer, responses={200: PortfolioItemSerializer, 400: 'Invalid data'})
     def patch(self, request, pk):
         obj = get_object_or_404(PortfolioItem, pk=pk)
         user = get_user_from_token(request)
@@ -268,6 +270,7 @@ class PortfolioItemDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(operation_description="Delete a portfolio item by ID.", responses={204: 'No Content'})
     def delete(self, request, pk):
         obj = get_object_or_404(PortfolioItem, pk=pk)
         user = get_user_from_token(request)
