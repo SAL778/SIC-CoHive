@@ -47,6 +47,25 @@ export default function ColumnView() {
 				<div>Loading...</div>
 			) : (
 				<div className="flex flex-row gap-4 overflow-x-hidden overflow-y-scroll px-[10px] py-[30px] max-w-[1520px] mx-auto h-full">
+					<div className="flex flex-col mt-[100px] h-full">
+						{Array.from({ length: 52 }, (_, index) => {
+							const hour = Math.floor(index / 4) + 7;
+							const minute = (index % 4) * 15;
+							let time = "";
+							if (hour < 12) {
+								time = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} AM`;
+							} else if (hour === 12) {
+								time = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} PM`;
+							} else {
+								time = `${(hour - 12).toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} PM`;
+							}
+							return (
+								<div key={index} className="flex items-center justify-center min-h-[56px] w-[80px] rounded-lg overflow-hidden shadow-custom text-sm">
+									{time}
+								</div>
+							);
+						})}
+					</div>
 					<EmblaCarousel slides={columnView.map((item, index) => (
 						<Column key={index} column={item} />
 					))} options={{ align: "start" }} />
