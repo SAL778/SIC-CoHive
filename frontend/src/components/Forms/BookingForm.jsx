@@ -1,11 +1,8 @@
 import React, { useState, useContext } from "react"
 import { UserContext } from "../../App.jsx";
 import { useForm } from "@mantine/form";
-import { TextInput, Textarea, Checkbox } from "@mantine/core";
-import { TimeInput, DatePicker } from "@mantine/dates";
-
-import { SearchableDropdown } from "../Inputs/SearchableDropdown.jsx";
-
+import { TextInput, Textarea, Checkbox, Select } from "@mantine/core";
+import { TimeInput, DatePickerInput } from "@mantine/dates";
 
 export default BookingFormComponent
 
@@ -21,11 +18,12 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
     //const [timeErrorMessage, setTimeErrorMessage] = null
 
     //TODO: Change this to prop
-    let available = ["Room A", "Room B", "Room C", "Room D"]
+    let available = ["Room A", "Room B", "Room C", "Room D", "Room E", "Room F"]
 
     const form = useForm({
         initialValues: {
             // start and end times are split from their standard date formatting so that date/time pickeres are useable.They will be recombined on submit.
+            name: currentBooking?.name ?? "",
             date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             startTime: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "00:00",
             endTime: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "23:59",
@@ -37,10 +35,27 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
 
     return (
         <form>
+            {/* This is static until submitted */}
+            <h1>{currentBooking.name || ""}</h1>
 
-            <DatePicker
+            {/* TODO: The name of the room must be in available assets to appear.*/}
+            <Select
+                label="Select a Room"
+                placeholder="Pick a Room"
+                data = {available}
+                searchable
+                withScrollArea={false}
+                styles={{ dropdown: { maxHeight: 140, overflowY: 'auto' } }}
+                {...form.getInputProps('name')}
+            />
+
+            <DatePickerInput
+                label={isToday(form.values.date) ? "Today" : null}
                 hideOutsideDates
                 allowSingleDateInRange
+                allowDeselect= {false}
+                firstDayOfWeek={0}
+                defaultDate={form.values.date} //Automatically go to the month of current booking
                 {...form.getInputProps('date')}
             />
 
@@ -64,6 +79,12 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
                 resize = 'none'
                 {...form.getInputProps('description')}
             />
+
+            <div className ="flex justify-end gap-3 p-4">
+                <button className = "p-3 text-neutral-400 rounded-md" >Close</button>
+                <button className = "p-3 text-white bg-orange-600 rounded-md">Submit</button>
+            </div>
+
         </form>
     )
 }
@@ -92,9 +113,4 @@ const serializeTime = (date) => {
     }
 
     return `${hours}:${date.getMinutes()}`
-}
-
-const serializeDate = (date) => {
-    //Gets the day/month/year of an date.
-    return `${date.getDate()}`
 }

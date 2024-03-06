@@ -3,10 +3,13 @@ import ModalComponent from "./components/CustomModal"
 import BookingListView from "./BookingList"
 import BookingFormComponent from "./components/Forms/BookingForm";
 
+import { useDisclosure } from "@mantine/hooks"
+import { Modal } from "@mantine/core"
+
 function Bookings() {
 	const exampleRooms = [
 		{
-			name: "Upper Floor Workshop Area",
+			name: "Room A",
 			location: "SIC M212",
 			description: "Alberta SAT Meetup",
 			type: "room",
@@ -74,13 +77,16 @@ function Bookings() {
 
 	//Use this ref to handle form submission
 	const formRef = useRef(null)
+
+	const [opened, { open, close }] = useDisclosure(false);
+
 	const [clickedBooking, setClickedBooking] = useState({})
 	const [showModal, setShowModal] = useState(false)
 
 	const onClickBooking = (bookingInfo) => {
 		console.log("click")
 		setClickedBooking(bookingInfo)
-		setShowModal(true)
+		open()
 	}
 
 	//Send the updated booking (not necessarily the one that was clicked)
@@ -88,12 +94,12 @@ function Bookings() {
 		//TODO: Send to backend
 		console.log("Submitted")
 		setClickedBooking({})
-		setShowModal(false)
+		close()
 	}
 
 	const onModalCloseBooking = () => {
 		setClickedBooking({})
-		setShowModal(false)
+		close()
 	}
 
 
@@ -101,7 +107,7 @@ function Bookings() {
 		<>
 			<BookingListView displayAssets = {exampleRooms} onItemClick = {onClickBooking}/>
 
-			<ModalComponent
+			{/* <ModalComponent
 				isOpen = {showModal}
 				onAffirmative = {onModalSubmitBooking}
 				onNegative = {onModalCloseBooking}
@@ -110,8 +116,17 @@ function Bookings() {
 				contentLabel = {"Booking form"}
 			>
 				<BookingFormComponent currentBooking = {clickedBooking}/>
-			</ModalComponent>
-		
+			</ModalComponent> */}
+
+			<Modal
+				opened = {opened}
+				onClose = {onModalCloseBooking}
+				centered
+				transitionProps = {{transition: "slide-up", duration: 200, timingFunction: "ease-in-out"}}
+			>
+				<BookingFormComponent currentBooking = {clickedBooking}/>
+			</Modal>
+
 		</>
 	);
 }
