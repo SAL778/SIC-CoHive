@@ -8,12 +8,16 @@ from django.contrib.auth import get_user_model
 from .serializers import BookingSerializer, ResourcesSerializer
 from django.shortcuts import get_object_or_404
 from .models import Resources, Booking
-from .serializers import ResourcesSerializer,BookingSerializer
+from .serializers import ResourcesSerializer, BookingSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
+from User.views import get_user_from_token
+
 
 # Create your views here.
 User = get_user_model()
+
+
 class ResourcesView(generics.ListCreateAPIView):
     '''
     post:
@@ -23,6 +27,10 @@ class ResourcesView(generics.ListCreateAPIView):
     serializer_class = ResourcesSerializer
 
     def post(self, request, *args, **kwargs):
+        # check if user have permission to add a resource
+        user = get_user_from_token(request)
+        if not user.is_staff and not user.is_superuser:
+            return Response({"error": "You don't have permission to add a resource."}, status=status.HTTP_403_FORBIDDEN)
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -59,15 +67,20 @@ class FilterBookingsView(generics.ListAPIView):
         if start_time is None:
             start_time = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
         else:
-            start_time = timezone.make_aware(datetime.datetime.strptime(start_time, "%Y-%m-%d").replace(hour=0, minute=0, second=0, microsecond=0))
+            start_time = timezone.make_aware(
+                datetime.datetime.strptime(start_time, "%Y-%m-%d").replace(hour=0, minute=0, second=0, microsecond=0))
 
         if end_time is None:
             end_time = timezone.localtime(timezone.now()).replace(hour=23, minute=59, second=59, microsecond=999999)
         else:
-            end_time = timezone.make_aware(datetime.datetime.strptime(end_time, "%Y-%m-%d").replace(hour=23, minute=59, second=59, microsecond=999999))
+            end_time = timezone.make_aware(
+                datetime.datetime.strptime(end_time, "%Y-%m-%d").replace(hour=23, minute=59, second=59,
+                                                                         microsecond=999999))
 
         print(start_time, end_time)
-        return Response(self.get_serializer(Booking.objects.filter(start_time__lte=end_time, end_time__gte=start_time), many=True).data)
+        return Response(self.get_serializer(Booking.objects.filter(start_time__gte=start_time, end_time__lte=end_time),
+                                            many=True).data)
+
 
 class UserBookingView(generics.ListCreateAPIView):
     '''
