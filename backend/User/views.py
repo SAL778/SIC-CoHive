@@ -7,10 +7,11 @@ from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType
 from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer, AccessTypeSerializer
 from django.db.models import Q
 from rest_framework import generics,status
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
+from django.contrib.auth import logout
 
 def get_user_from_token(request):
     try:
@@ -20,6 +21,23 @@ def get_user_from_token(request):
         return user
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+def signout_view(request):
+    id = logout(request)
+    Token.objects.filter(user=id).delete()
+    # logout(request)
+    # return Response({'detail': 'Successfully logged out.'})
+    response = HttpResponse("Logged out")
+
+    response.delete_cookie('access_token')
+    response.delete_cookie('messages')
+    response.delete_cookie('sessionid')  # Instructs the browser to delete the sessionid cookie
+    response.delete_cookie('csrftoken') # Instructs the browser to delete the csrftoken cookie
+
+    # return JsonResponse({'message': 'Logged out successfully'})
+    return response
+
 
 def custom_login_redirect(request):
     user = request.user  # Assuming the user is already authenticated
@@ -36,7 +54,7 @@ def custom_login_redirect(request):
             # secure=True,  # Ensure you're using HTTPS
             max_age=3600  # Cookie expiration time (in seconds)
         )
-        response['Location'] = 'http://localhost:5173/'
+        response['Location'] = 'http://localhost:5173/bookings'
         response.status_code = 302  # Redirect status code
         return response
     else:

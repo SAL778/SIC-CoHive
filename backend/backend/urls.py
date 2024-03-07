@@ -19,6 +19,7 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    # path("", include("User.urls")), # added by Kenji
     path("admin/", admin.site.urls),
     path("users/", include("User.urls")),
     path("bookings/", include("Booking.urls")),
