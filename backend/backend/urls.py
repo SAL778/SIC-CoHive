@@ -19,9 +19,10 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    # path("", include("User.urls")), # added by Kenji
     path("admin/", admin.site.urls),
     path("users/", include("User.urls")),
-    path("booking/", include("Booking.urls")),
+    path("bookings/", include("Booking.urls")),
     path('accounts/', include('allauth.urls')),
     path('accounts/profile/', custom_login_redirect, name='custom-login-redirect'),
     re_path(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

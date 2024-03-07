@@ -27,13 +27,13 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
         initialValues: {
             // start and end times are split from their standard date formatting so that
             // date/time pickers are useable. They will be recombined on (valid) submit.
-            name: currentBooking?.name ?? "",
+            resources_name: currentBooking?.resources_name ?? "",
             date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             startTime: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "",
             endTime: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "",
             description: currentBooking?.description ?? "",
             public: currentBooking?.public ?? true,
-            booker: currentBooking?.booker ?? currentUser,
+            user: currentBooking?.user ?? currentUser,
         },
         validate: {
             //TODO: Times between (and including) start and end cannot be booked.
@@ -87,7 +87,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
         // values represents the booking object
         <form onSubmit = {form.onSubmit(values => {onSubmit(values)})}> 
             {/* This is static until submitted */}
-            <h1>{currentBooking?.name || "Book an Asset"}</h1>
+            <h1>{currentBooking?.resources_name || "Book an Asset"}</h1>
 
             {/* TODO: The name of the room must be in available assets to appear.*/}
             <Select
@@ -97,7 +97,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                 searchable
                 withScrollArea={false}
                 styles={{ dropdown: { maxHeight: 140, overflowY: 'auto' } }}
-                {...form.getInputProps('name')}
+                {...form.getInputProps('resources_name')}
             />
 
             <DatePickerInput
@@ -148,13 +148,13 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
              />
             }
 
-            {/* If currentBooking is private, booker information will not be present */}
+            {/* If currentBooking is private, user information will not be present */}
 
-            { currentBooking?.booker &&
+            { currentBooking?.user &&
                 //TODO: load user info here
                 <>
                     <p>Booking as</p>
-                    <p>{currentBooking.booker.name}</p>
+                    <p>{currentBooking.user.first_name}</p>
                 </>
             }
             <div className ="flex justify-end gap-3 p-4">

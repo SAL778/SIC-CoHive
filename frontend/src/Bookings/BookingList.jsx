@@ -19,7 +19,7 @@ function BookingListView({onItemClick}) {
     useEffect(() => {
         //(Get the list of booking (in theory)
         httpRequest({
-                endpoint: `${host}/booking/`,
+                endpoint: `${host}/bookings/`,
                 onSuccess: (data) => {
                     let sterilized = data.map(asset => convertToISO(asset)) //Date strings converted
                     setAssets(sterilized);
@@ -61,7 +61,7 @@ function AssetComponent({asset, onItemClick}) {
 
     const { currentUser } = useContext(UserContext);
 
-    const greyOut = ( asset.private && currentUser.id != asset.booker.id )
+    const greyOut = ( !asset.visibility && currentUser.id != asset.booker.id )
 
     //Convert AM/PM date
     const formatTime= (date) => {
@@ -84,7 +84,7 @@ function AssetComponent({asset, onItemClick}) {
         //TODO: On private, grey everything out
         <div className = {`flex items-center p-3 rounded-md gap-10 ${!greyOut && "shadow-custom"}`} onClick = {() => onItemClick(asset)}>
             <div className = "colA basis-2 flex-col flex-grow text-neutral-800">
-                <h3 className = "text-2xl font-semibold">{asset.name}</h3>
+                <h3 className = "text-2xl font-semibold capitalize">{asset.resources_name}</h3>
                 <p className = "text-base font-regular">{asset.description}</p>
             </div>
 
@@ -112,8 +112,8 @@ function AssetComponent({asset, onItemClick}) {
             { !greyOut &&
              <div className = "colD basis-1 flex-grow">
                 {/* Booker not present on private posts */}
-                <p className = "text-base text-orange-600">{asset.booker?.name}</p>
-                <p className = "text-neutral-800">{asset.booker?.email}</p>
+                <p className = "text-base text-orange-600">{asset.user?.first_name}</p>
+                <p className = "text-neutral-800">{asset.user?.email}</p>
              </div>
             }
         </div>

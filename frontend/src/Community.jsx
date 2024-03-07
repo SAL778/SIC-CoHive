@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import CommunityCard from "./components/CommunityCard";
 import image from "./assets/community-person.jpg";
 import Filter from "./components/Filter";
+import { checkUserLoggedIn } from "./utils.js";
 
 function Community() {
+
+	checkUserLoggedIn();
+	
 	const [users, setUsers] = useState([]);
 	const [searchText, setSearchText] = useState("");
 	const [selectedFilters, setSelectedFilters] = useState([]);

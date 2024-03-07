@@ -1,6 +1,10 @@
 import React from "react";
+import { checkUserLoggedIn } from "./utils.js";
 
 function Feedback() {
+
+	checkUserLoggedIn();
+
 	return (
 		<div className="my-[30px] mx-auto">
 			<iframe

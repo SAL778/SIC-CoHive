@@ -67,9 +67,9 @@ class PortfolioItemSerializer(serializers.ModelSerializer):
         return instance
         
 class CompletePortfolioSerializer(serializers.ModelSerializer):
-    items = PortfolioItemSerializer(many=True)
+    items = PortfolioItemSerializer(read_only=True,many=True)
     
     class Meta:
         model = Complete_Portfolio
         fields = ('id', 'user', 'description', 'items')
-        read_only_fields = ["id","user"]
+        read_only_fields = ["id","user","items"]

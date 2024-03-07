@@ -327,7 +327,7 @@ class PortfolioItemTestCase(APITestCase):
         '''
         self.test_portfolio_item_post()
         self.assertEqual(PortfolioItem.objects.count(), 1)
-        response = self.client.delete(reverse('portfolio-item-detail', kwargs={'pk': 1}))
+        response = self.client.delete(reverse('portfolio-item-detail', kwargs={'pk': 1}), HTTP_AUTHORIZATION=self.token.key)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(PortfolioItem.objects.count(), 0)
         response = self.client.get(reverse('complete-portfolio-detail', kwargs={'user_id': self.user.pk}))

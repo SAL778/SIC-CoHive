@@ -9,13 +9,16 @@ import { notifications } from '@mantine/notifications';
 
 import ColumnView from "./Bookings/BookingColumnView.jsx";
 import BookingHeader from "./Bookings/BookingHeader.jsx";
+import { checkUserLoggedIn } from "./utils.js";
 
 function Bookings() {
 
+	checkUserLoggedIn();
+
 	const [opened, { open, close }] = useDisclosure(false);
 
-	const [clickedBooking, setClickedBooking] = useState({})
-	const [isColumnView, setIsColumnView] = useState(true)
+	const [clickedBooking, setClickedBooking] = useState(null);
+	const [isColumnView, setIsColumnView] = useState(true);
  
 	const onClickBooking = (bookingInfo) => {
 		console.log("click")
