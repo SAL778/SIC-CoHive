@@ -31,7 +31,7 @@ function App() {
 				<MantineProvider>
 				<Notifications/>
 					<Router>
-						<div className="flex h-screen w-screen flex-col md:flex-row md:overflow-hidden body-white py-0 px-[30px] gap-[40px]">
+						<div className="flex min-h-screen h-full w-screen flex-col md:flex-row body-white py-0 pl-[350px] pr-[30px] gap-[40px]">
 							<Navigation />
 							<Routes>
 								<Route path="/bookings" element={<Bookings />} />
