@@ -18,7 +18,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
 
     const { currentUser } = useContext(UserContext);
     const interval = 30;
-    //const [timeErrorMessage, setTimeErrorMessage] = null
+    const timeRange = [7, 20] //Opening times are between 7AM and 8PM
 
     //TODO: Change this to prop
     let available = ["Room A", "Room B", "Room C", "Room D", "Room E", "Room F"]
@@ -29,8 +29,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             // date/time pickers are useable. They will be recombined on (valid) submit.
             name: currentBooking?.name ?? "",
             date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
-            startTime: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "00:00",
-            endTime: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "23:59",
+            startTime: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "",
+            endTime: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "",
             description: currentBooking?.description ?? "",
             public: currentBooking?.public ?? true,
             booker: currentBooking?.booker ?? currentUser,
@@ -38,19 +38,20 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
         validate: {
             //TODO: Times between (and including) start and end cannot be booked.
             startTime: (value, values) => (
-                value >= values.endTime 
-                    ? 'Start time must come after end time'
-                    : parseInt(value.split(":")[1]) % interval != 0
-                    ? `End time must be a ${interval}-minute slot`
-                    : null
+                !(value)
+                ? 'Start time must be selected'
+                : timeIsGreaterThan(deserializeTime(value), deserializeTime(values.endTime)) //Checks if start time exceeds end time
+                ? 'Start time must come after end time'
+                : null
+                    
             ),
             endTime: (value) => (
-                parseInt(value.split(":")[1]) % interval != 0  
-                    ? `End time must be a ${interval}-minute slot`   //Time booked is a multiple of interval
+                !(value)
+                    ? 'End time must be selected'   //Time booked is a multiple of interval
                     : null
             ),
             name: (value) => {
-                value == ""
+                !(value)
                     ? 'Asset must be selected'
                     : null
             },
@@ -71,11 +72,16 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
 
         //Convert the to/from dates back into ISO format
         //Exclude the intermediary value "date" from the final booking object
-        transformValues: ({date, ...values}) => ({
-            ...values,
-            startTime: new Date(date.setHours(...values.startTime.split(":"))),  //Adjust the time
-            endTime: new Date(date.setHours(...values.endTime.split(":"))),
-        })
+        transformValues: ({date, ...values}) => {
+            console.dir({...values})
+            const transformedStart = values.startTime ? new Date(date.setHours(...deserializeTime(values.startTime))) : "";
+            const transformedEnd = values.endTime ? new Date(date.setHours(...deserializeTime(values.endTime))) : "";
+            return {
+                ...values,
+                startTime: transformedStart,
+                endTime: transformedEnd,
+            }
+        }
     });
 
     return (
@@ -106,21 +112,31 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             />
 
             <div className = "timeSelector flex gap-3">
-                <TimeInput
-                    maxTime="20:00"
-                    minTime="07:00"
-                    label="from"
+                <Select
+                    label="From"
+                    checkIconPosition="right"
+                    placeholder="from"
+                    data = {getTimePeriods(interval, ...timeRange)}
+                    searchable
+                    clearable
                     withAsterisk
+                    maxDropdownHeight={140}
                     {...form.getInputProps('startTime')}
                 />
-                {/* TODO: min/max times need to be added, but this breaks the validate logic?? */}
-                <TimeInput
-                    maxTime="20:00"
-                    minTime="07:00"
-                    label="to"
+
+                <Select
+                    label="To"
+                    checkIconPosition="right"
+                    placeholder="to"
+                    data = {getTimePeriods(interval, ...timeRange)}
+                    searchable
+                    clearable
                     withAsterisk
+                    maxDropdownHeight={140}
                     {...form.getInputProps('endTime')}
                 />
+
+                
             </div>
 
             {/* If currentBooking is private, description will not be present. */}
@@ -164,13 +180,76 @@ const isToday = (date) => {
     )
 }
 
-//Gets the time from a Date object such that it can be used by Mantine's timepicker (i.e HH:mm)
+//Gets the time from a Date object such that it can be loaded by the Select
 const serializeTime = (date) => {
     let hours = date.getHours()
+    const minutes = date.getMinutes()
+    const ampm = hours >= 12 ? 'PM' : 'AM';
 
-    if (hours < 10) {
-        hours = "0" + hours //Padding to match time picker
+    hours = hours % 12 || 12;
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+      
+    //Return the formatted time
+    return `${hours}:${formattedMinutes} ${ampm}`;
+}
+
+//Returns the timestring as a 24hr (hours, minutes) tuple
+const deserializeTime = (timestring) => {
+    // Split the time string by ':' to separate hours and minutes (12 hour format + [AP]M)
+    const [time, ampm] = timestring.split(/(?=[AP]M)/i);
+    const [hours, minutes] = time.split(':').map(num => parseInt(num, 10));
+    
+    // Convert hours to 24-hour format if necessary
+    let hour24 = hours
+
+    if (ampm == "PM") {
+        hour24 += 12
     }
 
-    return `${hours}:${date.getMinutes()}`
+    return [hour24, minutes];
 }
+
+//Gets the time periods between a certain time range
+const getTimePeriods = (interval, startHour, endHour) => {
+    const periods = [];
+  
+    // Loop through each interval
+    for (let i = startHour * 60; i < endHour * 60; i += interval) {
+        // Convert current interval to hours and minutes
+        let hours = Math.floor(i / 60);
+        const minutes = i % 60;
+      
+        // Determine AM/PM
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+      
+        // Convert to 12-hour format
+        hours = hours % 12 || 12;
+        const formattedMinutes = minutes.toString().padStart(2, '0');
+
+        // Add formatted time period to periods array
+        periods.push(`${hours}:${formattedMinutes} ${ampm}`);
+    }
+  
+    return periods;
+}
+
+
+//Does an int-wise comparison of deserialized time (standard > symbol compares them as strings)
+//which causes 1x < y (where y is a single digit (AM)) 
+const timeIsGreaterThan = (deserializedTime1, deserializedTime2) => {
+    for (let i = 0; i < deserializedTime1.length; i++) {
+        // Convert elements to integers before comparison
+        const element1 = parseInt(deserializedTime1[i]);
+        const element2 = parseInt(deserializedTime2[i]);
+        
+        console.log(element1)
+        console.log(element2)
+        if (element1 > element2) {
+          return true;
+        }
+        else if (element1 < element2) {
+            return false; //Short circuits on hours; avoid minute-wise comparison
+        }
+      }
+      return true; //Times are equal
+    }

@@ -101,7 +101,7 @@ function Bookings() {
 			title: 'Submitted Booking',
 			message: 'Booking was submitted',
 		  })
-		setClickedBooking({})
+		setClickedBooking(null)
 		close()
 	}
 
