@@ -13,7 +13,6 @@ from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 from User.views import get_user_from_token
 
-
 # Create your views here.
 User = get_user_model()
 
@@ -36,6 +35,16 @@ class ColumnsView(generics.ListAPIView):
     #         serializer.save()
     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ColumnView(generics.RetrieveAPIView):
+    '''
+    get:
+    Get a specific resource.
+    '''
+    serializer_class = ResourcesSerializer
+    queryset = Resources.objects.all()
+    lookup_field = 'pk'
 
 
 class AllBookingsView(generics.ListAPIView):

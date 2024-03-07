@@ -9,5 +9,7 @@ urlpatterns = [
   #  path('filter/', RedirectView.as_view(url='/booking/filter')),
     path('user/<int:user_id>/', views.UserBookingView.as_view(), name='booking-list'),
     path('columns/filter', views.ColumnsView.as_view(), name='column-list'),
+    path('columns/<int:pk>/', views.ColumnView.as_view(), name='column-detail'),
     path('<int:pk>/', views.ViewBookingView.as_view(), name='booking-detail'),
+
 ]
