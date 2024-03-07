@@ -3,6 +3,7 @@ import "./App.css";
 import "./output.css";
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
 import Navigation from "./components/Navbar.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Bookings from "./Bookings.jsx";
@@ -14,6 +15,7 @@ import Community from "./Community.jsx";
 import Feedback from "./Feedback.jsx";
 import Modal from 'react-modal';
 import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 
 export const HostContext = createContext();
 export const UserContext = createContext();
@@ -27,6 +29,7 @@ function App() {
 		<HostContext.Provider value = {{ host }}>
 			<UserContext.Provider value = {{user, setUser}}>
 				<MantineProvider>
+				<Notifications/>
 					<Router>
 						<div className="flex h-screen w-screen flex-col md:flex-row md:overflow-hidden body-white py-0 px-[30px] gap-[40px]">
 							<Navigation />

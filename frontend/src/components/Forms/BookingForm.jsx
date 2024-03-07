@@ -11,8 +11,10 @@ export default BookingFormComponent
  * @param {Object} currentBooking - A booking object, if one exists.
  * @param {Array[Object]} availableAssets - A list of assets available to be booked
  * @param {string} type - A string that tells what type of assets were provided (i.e room, assets)
+ * @param {function} onClose - A callable that triggeres upon form cancellation
+ * @param {onSubmit} onSubmit - A callable that triggers upon form submission
  */
-function BookingFormComponent({currentBooking = null, availableAssets, type}) {
+function BookingFormComponent({currentBooking = null, availableAssets, onClose, onSubmit}) {
 
     const { currentUser } = useContext(UserContext);
     const interval = 30;
@@ -29,9 +31,9 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
             date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             startTime: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "00:00",
             endTime: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "23:59",
-            description: currentBooking.description ?? "",
-            public: currentBooking.public ?? true,
-            booker: currentBooking.booker ?? currentUser,
+            description: currentBooking?.description ?? "",
+            public: currentBooking?.public ?? true,
+            booker: currentBooking?.booker ?? currentUser,
         },
         validate: {
             //TODO: Times between (and including) start and end cannot be booked.
@@ -45,11 +47,11 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
             endTime: (value) => (
                 parseInt(value.split(":")[1]) % interval != 0  
                     ? `End time must be a ${interval}-minute slot`   //Time booked is a multiple of interval
-                    : null        
+                    : null
             ),
             name: (value) => {
                 value == ""
-                    ? 'Room must be selected'
+                    ? 'Asset must be selected'
                     : null
             },
             description: (value) => (
@@ -77,14 +79,15 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
     });
 
     return (
-        <form onSubmit = {form.onSubmit(values => console.log(values))}>
+        // values represents the booking object
+        <form onSubmit = {form.onSubmit(values => {onSubmit(values)})}> 
             {/* This is static until submitted */}
-            <h1>{currentBooking.name || "Book a Room"}</h1>
+            <h1>{currentBooking?.name || "Book an Asset"}</h1>
 
             {/* TODO: The name of the room must be in available assets to appear.*/}
             <Select
-                label="Select a Room"
-                placeholder="Pick a Room"
+                label="Select an Asset"
+                placeholder="Pick an asset"
                 data = {available}
                 searchable
                 withScrollArea={false}
@@ -104,11 +107,16 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
 
             <div className = "timeSelector flex gap-3">
                 <TimeInput
+                    maxTime="20:00"
+                    minTime="07:00"
                     label="from"
                     withAsterisk
                     {...form.getInputProps('startTime')}
                 />
+                {/* TODO: min/max times need to be added, but this breaks the validate logic?? */}
                 <TimeInput
+                    maxTime="20:00"
+                    minTime="07:00"
                     label="to"
                     withAsterisk
                     {...form.getInputProps('endTime')}
@@ -129,10 +137,13 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
 
             { currentBooking?.booker &&
                 //TODO: load user info here
-                <p>User stuff goes here</p>
+                <>
+                    <p>Booking as</p>
+                    <p>{currentBooking.booker.name}</p>
+                </>
             }
             <div className ="flex justify-end gap-3 p-4">
-                <button className = "p-3 text-neutral-400 rounded-md">Close</button>
+                <button className = "p-3 text-neutral-400 rounded-md" onClick = {onClose}>Close</button>
                 <button type = "submit" className ="p-3 text-white bg-orange-600 rounded-md">Submit</button>
             </div>
         </form>
