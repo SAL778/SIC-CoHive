@@ -40,7 +40,7 @@ h1 {
 }
 
 h2 {
-	font-size: 22px !important;
+	font-size: 22px /*!important*/;
 }
 
 h3 {
@@ -92,17 +92,15 @@ h3 {
 	transition: color 0.4s ease;
 }
 
-.nav-container .nav-item.active {
-	color: #fff;
-}
-
 .nav-container .nav-item:hover,
 .nav-container .nav-item:focus {
 	background: rgb(249 115 22 / 80%);
 }
 
+.nav-container .nav-item.active,
 .nav-container .nav-item.active:hover,
-.nav-container .nav-item.active:focus {
+.nav-container .nav-item.active:focus,
+.nav-container .nav-item[aria-current="page"] {
 	color: #fff;
 	background: none;
 }
@@ -114,7 +112,8 @@ h3 {
 
 .nav-underlay {
 	position: absolute;
-	width: calc(282px + 14px);
+	min-width: calc(282px + 14px);
+	max-width: calc(282px + 14px);
 	object-fit: cover;
 	z-index: 0;
 	transition: top 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
@@ -418,7 +417,6 @@ button.button-orange:focus {
 	user-select: none;
 }
 
-
 .about-description,
 .about-description textarea {
 	background: none;
@@ -426,10 +424,44 @@ button.button-orange:focus {
 }
 
 .about-description textarea:focus {
-	outline: none ;
+	outline: none;
 }
 
 .about-description textarea.description-edit:focus {
 	outline: 2px solid var(--primary-orange);
 }
 
+.booking-column-container .embla__slide {
+	background: none;
+}
+
+/* Changed from box-shadow to border because box-shadow was consuming too much resources to render that many */
+.booking-column-container .embla__slide .open-booking-slot {
+	border-bottom: 1px solid rgb(228 228 228 / 70%);
+}
+
+.booking-column-container .embla__slide:nth-child(2n + 1) .open-booking-slot {
+	background: #f2f4f9;
+}
+
+.booking-column-container .embla__slide:nth-child(2n) .open-booking-slot {
+	background: #fff;
+}
+
+.column-booking-card::after {
+	position: absolute;
+	display: block;
+	left: 0;
+	top: 0;
+	width: 10px;
+	height: 100%;
+	content: "";
+	background: var(--primary-orange);
+}
+
+.booking-column .draggable-slot {
+	width: 260px;
+	position: absolute;
+	left: 0;
+	z-index: 2;
+}
