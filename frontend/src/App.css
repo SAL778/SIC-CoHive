@@ -419,7 +419,6 @@ button.button-orange:focus {
 	user-select: none;
 }
 
-
 .about-description,
 .about-description textarea {
 	background: none;
@@ -427,7 +426,7 @@ button.button-orange:focus {
 }
 
 .about-description textarea:focus {
-	outline: none ;
+	outline: none;
 }
 
 .about-description textarea.description-edit:focus {
@@ -439,7 +438,8 @@ button.button-orange:focus {
 }
 
 .booking-column-container .embla__slide .open-booking-slot {
-	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+	/* box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;b */
+	border-bottom: 1px solid rgb(228 228 228 / 70%);
 }
 
 .booking-column-container .embla__slide:nth-child(2n + 1) .open-booking-slot {
