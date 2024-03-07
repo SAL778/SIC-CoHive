@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 // import DatePicker from 'react-datepicker';
 // import 'react-datepicker/dist/react-datepicker.css';
 
-const BookingHeader = () => {
+/**Component function that renders a booking header
+ * 
+ * @param {function} setColumnView - Callback that toggles the booking view
+ * @returns 
+ */
+
+const BookingHeader = ({setColumnView}) => {
     const [selectedTab, setSelectedTab] = useState('Rooms');
     const [selectedIcon, setSelectedIcon] = useState('columns');
 
@@ -54,7 +60,9 @@ const BookingHeader = () => {
                             className={`${
                                 selectedIcon === 'columns' ? 'text-orange-600' : 'text-gray-300'
                             } hover:text-orange-500 font-regular py-2 px-4 rounded mr-2`}
-                            onClick={() => handleIconChange('columns')}
+                            onClick={
+                                () => setColumnView(true)
+                            }
                         >
                             <i className="fa fa-columns"></i>
                         </button>
@@ -62,7 +70,7 @@ const BookingHeader = () => {
                             className={`${
                                 selectedIcon === 'rows' ? 'text-orange-600' : 'text-gray-300'
                             } hover:text-orange-500  font-regular py-2 px-4 rounded`}
-                            onClick={() => handleIconChange('rows')}
+                            onClick={() => setColumnView(false)}
                         >
                             <i className="fa fa-th-list"></i>
                         </button>

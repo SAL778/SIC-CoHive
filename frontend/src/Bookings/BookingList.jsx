@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
-import Filter from "./components/Filter.jsx";
-import { HostContext, UserContext } from "./App.jsx";
-import { getCookieValue } from "./utils.js";
+import Filter from "../components/Filter.jsx";
+import { HostContext, UserContext } from "../App.jsx";
+import { getCookieValue } from "../utils.js";
 
 /**
  * A component that returns the render of a list view.

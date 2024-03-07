@@ -1,13 +1,13 @@
 import React, { useState, useRef } from "react";
 import ModalComponent from "./components/CustomModal"
-import BookingListView from "./BookingList"
+import BookingListView from "./Bookings/BookingList.jsx"
 import BookingFormComponent from "./components/Forms/BookingForm";
 
 import { useDisclosure } from "@mantine/hooks";
 import { Modal } from "@mantine/core";
 import { notifications } from '@mantine/notifications';
 
-import ColumnView from "./Bookings/ColumnView.jsx";
+import ColumnView from "./Bookings/BookingColumnView.jsx";
 import BookingHeader from "./Bookings/BookingHeader.jsx";
 
 function Bookings() {
@@ -82,6 +82,7 @@ function Bookings() {
 	const [opened, { open, close }] = useDisclosure(false);
 
 	const [clickedBooking, setClickedBooking] = useState({})
+	const [isColumnView, setIsColumnView] = useState(true)
  
 	const onClickBooking = (bookingInfo) => {
 		console.log("click")
@@ -112,11 +113,14 @@ function Bookings() {
 
 	return (
 		<div className="h-full overflow-clip flex-grow">
-			<BookingHeader />
+			<BookingHeader setColumnView={setIsColumnView}/>
 			
-			<BookingListView displayAssets = {exampleRooms} onItemClick = {onClickBooking}/>
-			{/* <ColumnView /> */}
-
+			{!isColumnView ?
+				<BookingListView displayAssets = {exampleRooms} onItemClick = {onClickBooking}/>
+			:
+				<ColumnView />
+			} 
+			
 			<Modal
 				opened = {opened}
 				onClose = {onModalCloseBooking}
