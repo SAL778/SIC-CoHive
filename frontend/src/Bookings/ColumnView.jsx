@@ -15,21 +15,23 @@ export default function ColumnView() {
 		const fetchUserData = async () => {
 			try {
 				const accessToken = getCookieValue("access_token");
-				const response = await fetch("http://localhost:8000/booking/resources/", {
-					method: "GET",
-					credentials: "include",
-					headers: {
-						Authorization: `Token ${accessToken}`,
-					},
-				});
+				const response = await fetch(
+					"http://localhost:8000/booking/resources/",
+					{
+						method: "GET",
+						credentials: "include",
+						headers: {
+							Authorization: `Token ${accessToken}`,
+						},
+					}
+				);
 
 				if (response.ok) {
 					response.json().then(columnView => {
 						setColumnView(columnView)
 						setLoading(false);
 					});
-				}
-				else {
+				} else {
 					console.log("Error fetching all bookings", response.statusText);
 				}
 			} catch (error) {
@@ -52,15 +54,24 @@ export default function ColumnView() {
 							const minute = (index % 4) * 15;
 							let time = "";
 							if (hour < 12) {
-								time = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} AM`;
+								time = `${hour.toString().padStart(2, "0")}:${minute
+									.toString()
+									.padStart(2, "0")} AM`;
 							} else if (hour === 12) {
-								time = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} PM`;
+								time = `${hour.toString().padStart(2, "0")}:${minute
+									.toString()
+									.padStart(2, "0")} PM`;
 							} else {
-								time = `${(hour - 12).toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} PM`;
+								time = `${(hour - 12).toString().padStart(2, "0")}:${minute
+									.toString()
+									.padStart(2, "0")} PM`;
 							}
 							return (
-								<div key={index} className="flex items-start justify-center min-h-[36px] w-[80px] rounded-lg overflow-hidden text-sm font-bold">
-									{minute === 0 || minute === 30 ? time : null}
+								<div
+									key={index}
+									className="flex items-start justify-center min-h-[24px] w-[80px] rounded-lg overflow-hidden text-sm font-bold leading-[1]"
+								>
+									{minute === 0 ? time : null}
 								</div>
 							);
 						})}

@@ -417,7 +417,6 @@ button.button-orange:focus {
 	user-select: none;
 }
 
-
 .about-description,
 .about-description textarea {
 	background: none;
@@ -425,7 +424,7 @@ button.button-orange:focus {
 }
 
 .about-description textarea:focus {
-	outline: none ;
+	outline: none;
 }
 
 .about-description textarea.description-edit:focus {
@@ -458,4 +457,11 @@ button.button-orange:focus {
 	height: 100%;
 	content: "";
 	background: var(--primary-orange);
+}
+
+.booking-column .draggable-slot {
+	width: 260px;
+	position: absolute;
+	left: 0;
+	z-index: 2;
 }
