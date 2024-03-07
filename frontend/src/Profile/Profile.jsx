@@ -2,9 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import Portfolio from "./Portfolio.jsx";
 import ProfileHeader from "./ProfileHeader.jsx";
 import { HostContext, UserContext } from "../App.jsx";
-import { getCookieValue } from "../utils.js"
+import { getCookieValue, checkUserLoggedIn } from "../utils.js"
 
 export default function Profile() {
+
+	checkUserLoggedIn();
+	
 	//const [userData, setUserData] = useState(null);
 	const { user, setUser } = useContext(UserContext);
 	const { host } = useContext(HostContext);

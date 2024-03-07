@@ -7,7 +7,7 @@ from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType
 from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer, AccessTypeSerializer
 from django.db.models import Q
 from rest_framework import generics,status
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
@@ -21,21 +21,31 @@ def get_user_from_token(request):
         return user
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+    
+@api_view(['GET'])
+def check_user_auth(request):
+    user = get_user_from_token(request)
+    if user:
+        return Response({'authenticated': True})
 
 @api_view(['POST'])
 def signout_view(request):
-    id = logout(request)
-    Token.objects.filter(user=id).delete()
-    # logout(request)
-    # return Response({'detail': 'Successfully logged out.'})
+    try:
+        # Delete the token from the database when the user logs out if its provided and valid
+        access_token = request.META['HTTP_AUTHORIZATION']
+        token_obj = Token.objects.get(key=access_token)
+        token_obj.delete()
+    except:
+        # If the token is not provided or is invalid, we'll just sign the user out in the same way
+        pass
+
     response = HttpResponse("Logged out")
 
-    response.delete_cookie('access_token')
+    response.delete_cookie('access_token') # Instructs the browser to delete the access_token cookie
     response.delete_cookie('messages')
     response.delete_cookie('sessionid')  # Instructs the browser to delete the sessionid cookie
     response.delete_cookie('csrftoken') # Instructs the browser to delete the csrftoken cookie
 
-    # return JsonResponse({'message': 'Logged out successfully'})
     return response
 
 

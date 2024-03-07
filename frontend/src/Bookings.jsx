@@ -9,8 +9,12 @@ import { notifications } from '@mantine/notifications';
 
 import ColumnView from "./Bookings/BookingColumnView.jsx";
 import BookingHeader from "./Bookings/BookingHeader.jsx";
+import { checkUserLoggedIn } from "./utils.js";
 
 function Bookings() {
+
+	checkUserLoggedIn();
+
 	const exampleRooms = [
 		{
 			name: "Room A",
