@@ -15,22 +15,23 @@ export default function ColumnView() {
 		const fetchUserData = async () => {
 			try {
 				const accessToken = getCookieValue("access_token");
-				const response = await fetch("http://localhost:8000/booking/resources/", {
-					method: "GET",
-					credentials: "include",
-					headers: {
-						Authorization: `Token ${accessToken}`,
-					},
-				});
+				const response = await fetch(
+					"http://localhost:8000/booking/resources/",
+					{
+						method: "GET",
+						credentials: "include",
+						headers: {
+							Authorization: `Token ${accessToken}`,
+						},
+					}
+				);
 
 				if (response.ok) {
 					response.json().then(columnView => {
-						console.log(columnView);
 						setColumnView(columnView)
 						setLoading(false);
 					});
-				}
-				else {
+				} else {
 					console.log("Error fetching all bookings", response.statusText);
 				}
 			} catch (error) {
@@ -46,30 +47,39 @@ export default function ColumnView() {
 			{loading ? (
 				<div>Loading...</div>
 			) : (
-				<div className="flex flex-row flex-grow gap-4 overflow-clip px-[10px] my-[30px] h-full">
-					<div className="flex flex-col mt-[100px] h-full">
+				<div className="flex flex-row flex-grow overflow-clip px-[10px] my-8 h-full">
+					<div className="flex flex-col mt-[100px] h-full mr-8">
 						{Array.from({ length: 52 }, (_, index) => {
 							const hour = Math.floor(index / 4) + 7;
 							const minute = (index % 4) * 15;
 							let time = "";
 							if (hour < 12) {
-								time = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} AM`;
+								time = `${hour.toString().padStart(2, "0")}:${minute
+									.toString()
+									.padStart(2, "0")} AM`;
 							} else if (hour === 12) {
-								time = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} PM`;
+								time = `${hour.toString().padStart(2, "0")}:${minute
+									.toString()
+									.padStart(2, "0")} PM`;
 							} else {
-								time = `${(hour - 12).toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} PM`;
+								time = `${(hour - 12).toString().padStart(2, "0")}:${minute
+									.toString()
+									.padStart(2, "0")} PM`;
 							}
 							return (
-								<div key={index} className="flex items-start justify-center min-h-[36px] w-[80px] rounded-lg overflow-hidden text-sm font-bold">
-									{minute === 0 || minute === 30 ? time : null}
+								<div
+									key={index}
+									className="flex items-start justify-center min-h-[24px] w-[80px] rounded-lg overflow-hidden text-sm font-bold leading-[1]"
+								>
+									{minute === 0 ? time : null}
 								</div>
 							);
 						})}
 					</div>
-					<div className="booking-column-container overflow-x-hidden h-full pl-[10px] pr-[30px]">
+					<div className="booking-column-container overflow-x-hidden h-full p-[10px] m-[-10px]">
 						<EmblaCarousel slides={columnView.map((item, index) => (	
 							<Column key={index} column={item}/>
-						))} options={{ align: "start" }} />
+						))} options={{ align: "start", watchDrag: false }} />
 					</div>
 				</div>
 			)}

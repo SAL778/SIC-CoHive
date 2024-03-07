@@ -8,6 +8,7 @@ import { Modal } from "@mantine/core";
 import { notifications } from '@mantine/notifications';
 
 import ColumnView from "./Bookings/ColumnView.jsx";
+import BookingHeader from "./Bookings/BookingHeader.jsx";
 
 function Bookings() {
 	const exampleRooms = [
@@ -110,7 +111,9 @@ function Bookings() {
 
 
 	return (
-		<>
+		<div className="h-full overflow-clip flex-grow">
+			<BookingHeader />
+			
 			<BookingListView displayAssets = {exampleRooms} onItemClick = {onClickBooking}/>
 			{/* <ColumnView /> */}
 
@@ -129,7 +132,7 @@ function Bookings() {
 
 			</Modal>
 
-		</>
+		</div>
 	);
 }
 

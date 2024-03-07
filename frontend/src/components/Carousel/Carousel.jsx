@@ -18,13 +18,13 @@ const EmblaCarousel = (props) => {
     useDotButton(emblaApi)
 
   //TODO: Replace this with a better solution
-  const baseButtonStyles = "border-orange-500 w-6 h-6 border-2 rounded-lg ease-out duration-500"
+  const baseButtonStyles = "border-orange-500 w-6 h-6 border-4 rounded-lg ease-out duration-500"
 
   return (
     //A "slide" is each individual JSX component
     <section className="embla space-y-4">
       <div className="embla__viewport" ref={emblaRef}>
-        <div className="embla__container flex gap-6 p-[20px] m-[-20px]">
+        <div className="embla__container flex gap-6">
           {slides?.map((slide, index) => (
             <div className="embla__slide" key={index}>
               {slide}
