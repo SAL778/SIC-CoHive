@@ -25,7 +25,6 @@ export default function ColumnView() {
 
 				if (response.ok) {
 					response.json().then(columnView => {
-						console.log(columnView);
 						setColumnView(columnView)
 						setLoading(false);
 					});
@@ -46,8 +45,8 @@ export default function ColumnView() {
 			{loading ? (
 				<div>Loading...</div>
 			) : (
-				<div className="flex flex-row flex-grow gap-4 overflow-clip px-[10px] my-[30px] h-full">
-					<div className="flex flex-col mt-[100px] h-full">
+				<div className="flex flex-row flex-grow overflow-clip px-[10px] my-8 h-full">
+					<div className="flex flex-col mt-[100px] h-full mr-8">
 						{Array.from({ length: 52 }, (_, index) => {
 							const hour = Math.floor(index / 4) + 7;
 							const minute = (index % 4) * 15;
@@ -66,10 +65,10 @@ export default function ColumnView() {
 							);
 						})}
 					</div>
-					<div className="booking-column-container overflow-x-hidden h-full pl-[10px] pr-[30px]">
+					<div className="booking-column-container overflow-x-hidden h-full p-[10px] m-[-10px]">
 						<EmblaCarousel slides={columnView.map((item, index) => (	
 							<Column key={index} column={item}/>
-						))} options={{ align: "start" }} />
+						))} options={{ align: "start", watchDrag: false }} />
 					</div>
 				</div>
 			)}

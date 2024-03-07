@@ -24,7 +24,7 @@ function App() {
 		<HostContext.Provider value = {{ host }}>
 			<UserContext.Provider value = {{user, setUser}}>
 				<Router>
-					<div className="flex min-h-screen h-full w-screen flex-col md:flex-row body-white py-0 pl-[330px] pr-[30px] gap-[40px]">
+					<div className="flex min-h-screen h-full w-screen flex-col md:flex-row body-white py-0 pl-[350px] pr-[30px] gap-[40px]">
 						<Navigation />
 						<Routes>
 							<Route path="/" element={<Bookings />} />

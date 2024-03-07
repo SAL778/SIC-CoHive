@@ -113,12 +113,12 @@ const Column = ({ column }) => {
                     return (
                         <div key={slot}>
                             {slot.includes('(Booking)') ? (
-                                <div className="rounded-lg overflow-hidden shadow-custom px-4 py-2 bg-blue-200 text-sm" key={slot} style={{ minHeight: `${Math.ceil((parseTime(slot.split(' - ')[1]) - parseTime(slot.split(' - ')[0])) / (15 * 60000)) * 36}px` }}>
+                                <div className="column-booking-card relative z-1 overflow-hidden flex flex-col justify-between rounded-[12px] shadow-custom pl-8 pr-4 py-4 bg-white text-sm" key={slot} style={{ height: `${Math.ceil((parseTime(slot.split(' - ')[1]) - parseTime(slot.split(' - ')[0])) / (15 * 60000)) * 36}px` }}>
                                     <p className="font-bold">Booking</p>
-                                    <p>{slot.replace(' (Booking)', '')}</p>
+                                    <p className="text-[0.75rem]">{slot.replace(' (Booking)', '')}</p>
                                 </div>
                             ) : (
-                                <div className="open-booking-slot rounded-lg overflow-hidden px-4 py-2 text-sm" key={slot} style={{ minHeight: '36px' }}>
+                                <div className="open-booking-slot rounded-[12px] overflow-hidden px-4 py-2 text-sm" key={slot} style={{ height: '36px' }}>
                                     {/* <p>{slot}</p> */}
                                 </div>
                             )}
@@ -131,11 +131,11 @@ const Column = ({ column }) => {
 
     return (
         <div key={column.id} className="h-full flex flex-col">
-            <div className="min-h-[80px] h-[80px] mb-[20px] rounded-md shadow-custom w-[100] py-2 px-4 bg-white">
-                <p className="text-lg font-bold uppercase">{column.name}</p>
-                <p className="text-lg">{column.room_number}</p>
+            <div className="flex justify-center items-center min-h-[80px] h-[80px] mb-[20px] rounded-[12px] shadow-custom w-[100] py-2 px-4 bg-white">
+                <p className="text-lg font-bold capitalize">{column.name}</p>
+                {/* <p className="text-lg">{column.room_number}</p> */}
             </div>
-            <div className="py-0 px-0 rounded-md flex flex-col flex-grow w-[260px]">
+            <div className="py-0 px-0 rounded-[12px] flex flex-col flex-grow min-w-[260px]">
                 <BookingList bookings={column.bookings} generateTimeSlots={generateTimeSlots} />
             </div>
         </div>

@@ -92,17 +92,15 @@ h3 {
 	transition: color 0.4s ease;
 }
 
-.nav-container .nav-item.active {
-	color: #fff;
-}
-
 .nav-container .nav-item:hover,
 .nav-container .nav-item:focus {
 	background: rgb(249 115 22 / 80%);
 }
 
+.nav-container .nav-item.active,
 .nav-container .nav-item.active:hover,
-.nav-container .nav-item.active:focus {
+.nav-container .nav-item.active:focus,
+.nav-container .nav-item[aria-current="page"] {
 	color: #fff;
 	background: none;
 }
@@ -438,8 +436,9 @@ button.button-orange:focus {
 	background: none;
 }
 
+/* Changed from box-shadow to border because box-shadow was consuming too much resources to render that many */
 .booking-column-container .embla__slide .open-booking-slot {
-	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+	border-bottom: 1px solid rgb(228 228 228 / 70%);
 }
 
 .booking-column-container .embla__slide:nth-child(2n + 1) .open-booking-slot {
@@ -448,4 +447,15 @@ button.button-orange:focus {
 
 .booking-column-container .embla__slide:nth-child(2n) .open-booking-slot {
 	background: #fff;
+}
+
+.column-booking-card::after {
+	position: absolute;
+	display: block;
+	left: 0;
+	top: 0;
+	width: 10px;
+	height: 100%;
+	content: "";
+	background: var(--primary-orange);
 }
