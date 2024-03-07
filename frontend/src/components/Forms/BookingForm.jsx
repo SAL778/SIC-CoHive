@@ -73,7 +73,6 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
         //Convert the to/from dates back into ISO format
         //Exclude the intermediary value "date" from the final booking object
         transformValues: ({date, ...values}) => {
-            console.dir({...values})
             const transformedStart = values.startTime ? new Date(date.setHours(...deserializeTime(values.startTime))) : "";
             const transformedEnd = values.endTime ? new Date(date.setHours(...deserializeTime(values.endTime))) : "";
             return {
@@ -241,9 +240,7 @@ const timeIsGreaterThan = (deserializedTime1, deserializedTime2) => {
         // Convert elements to integers before comparison
         const element1 = parseInt(deserializedTime1[i]);
         const element2 = parseInt(deserializedTime2[i]);
-        
-        console.log(element1)
-        console.log(element2)
+
         if (element1 > element2) {
           return true;
         }

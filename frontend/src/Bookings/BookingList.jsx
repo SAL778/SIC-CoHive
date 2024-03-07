@@ -1,33 +1,57 @@
 import React, { useState, useEffect, useContext } from "react";
 import Filter from "../components/Filter.jsx";
 import { HostContext, UserContext } from "../App.jsx";
-import { getCookieValue } from "../utils.js";
+import { Loader, isOptionsGroup } from "@mantine/core";
+import { httpRequest } from "../utils.js";
 
 /**
  * A component that returns the render of a list view.
  * @param {function} onItemClick - Callback for what end_time do when an item is clicked on (i.e. open modal)
  * @param {Array[Object]} displayAssets - An array of javascript objects that represent each item (i.e. Room or equipment)
  */
-function BookingListView({onItemClick, displayAssets}) {
-    const dateHeaders = getUniqueDateHeaders(displayAssets.map(asset => asset.start_time))
-    
+function BookingListView({onItemClick}) {
+    //const dateHeaders = getUniqueDateHeaders(displayAssets.map(asset => asset.start_time))
+    const { host } = useContext(HostContext)
+    const [isLoading, setIsLoading] = useState(true)
+    const [assets, setAssets] = useState([]) //An array of assets from the backend
+    const [dateHeaders, setDateHeaders] = useState([]) //An array of unique dates to be displayed as a header.
+
+    useEffect(() => {
+        //(Get the list of booking (in theory)
+        httpRequest({
+                endpoint: `${host}/booking/`,
+                onSuccess: (data) => {
+                    let sterilized = data.map(asset => convertToISO(asset)) //Date strings converted
+                    setAssets(sterilized);
+                    console.dir(sterilized)
+                    setDateHeaders(getUniqueDateHeaders(sterilized.map(asset => asset.start_time)));
+                    setIsLoading(false);
+                }
+            }
+        );
+    }, []); // The empty array specifies run only once (during render phase)
+
     return (
-        <ul className = "flex flex-col gap-5 w-2/3">
-            {dateHeaders.map(dateHeader => (
-                <li key={dateHeader}>
-                    <DateHeaderComponent date = {dateHeader}/>
-                    <ul className = "flex flex-col gap-2">
-                        {displayAssets
-                            .filter(asset => asset.start_time.getDay() === dateHeader.getDay())
-                            .map(asset => (
-                                <AssetComponent key={asset.id} asset={asset} onItemClick = {onItemClick} />
-                            ))}
-                    </ul>
-                </li>
-            ))}
-        </ul>
-    );
-}
+        isLoading ? (
+            <Loader size={50} color="orange" />
+        ) : (
+            //Listview
+            <ul className="flex flex-col gap-5 w-2/3">
+                {dateHeaders.map(dateHeader => (
+                    <li key={dateHeader}>
+                        <DateHeaderComponent date={dateHeader} />
+                        <ul className="flex flex-col gap-2">
+                            {assets
+                                .filter(asset => asset.start_time.getDay() === dateHeader.getDay()) //Apply more filters here
+                                .map(asset => (
+                                    <AssetComponent key={asset.id} asset={asset} onItemClick={onItemClick} />
+                                ))}
+                        </ul>
+                    </li>
+                ))}
+            </ul>
+        )
+    )};
 
 /**
  * A component that returns the render of a list item to be displayed.
@@ -130,15 +154,38 @@ const getUniqueDateHeaders = (dates) => {
     const serialized = new Set(); //Used to hold the date string to avoid reference comparison
     
     dates.forEach(date => {
-        const newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        date = new Date(date) //Convert string to ISO date
+        const newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()); //Ignore hours, seconds, minutes, in comparison
 
         if (!serialized.has(newDate.toString())) {
             serialized.add(newDate.toString())
             uniqueDates.push(newDate)           //Date object so that Date-methods can still be used.
         }        
     });
-
     return uniqueDates;
 };
+
+/** A function that returns an object, with all datestring fields converted into an ISO date
+ * 
+ * @param {Object} obj 
+ * @returns {Object} - The object with datestrings converted to Date objects
+ */
+const convertToISO = (obj) =>  {
+    const newObj = {};
+    for (const key in obj) {
+        if (typeof obj[key] === 'string') {
+            const date = new Date(obj[key]);
+            if (!isNaN(date.getTime())) {
+                newObj[key] = date;
+            } else {
+                newObj[key] = obj[key]; // If not a valid date, retain the original value
+            }
+        } else {
+            newObj[key] = obj[key]; // If not a string, retain the original value
+        }
+    }
+    return newObj;
+}
+
 
 export default BookingListView
