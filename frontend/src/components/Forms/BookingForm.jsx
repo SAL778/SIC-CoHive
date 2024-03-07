@@ -9,7 +9,7 @@ export default BookingFormComponent
 /**
  * A component function that returns the render of the booking form, and handles values changes.
  * @param {Object} currentBooking - A booking object, if one exists.
- * @param {Available} availableAssets - A list of assets available to be booked
+ * @param {Array[Object]} availableAssets - A list of assets available to be booked
  * @param {string} type - A string that tells what type of assets were provided (i.e room, assets)
  */
 function BookingFormComponent({currentBooking = null, availableAssets, type}) {
@@ -25,7 +25,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
         initialValues: {
             // start and end times are split from their standard date formatting so that
             // date/time pickers are useable. They will be recombined on (valid) submit.
-            name: currentBooking?.name ?? "Add a Room Booking",
+            name: currentBooking?.name ?? "",
             date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             startTime: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "00:00",
             endTime: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "23:59",
@@ -35,36 +35,51 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
         },
         validate: {
             //TODO: Times between (and including) start and end cannot be booked.
-            startTime: (value, values) => {
-                value < values.endTime          //Start time precedes end time
-                value.getMinutes() % interval == 0           //Time booked is a multiple of interval (e.g. every 30 mins)
-            },
-            endTime: (value) => {
-                value.getMinutes() % interval == 0           //Time booked is a multiple of interval
-            },
+            startTime: (value, values) => (
+                value >= values.endTime 
+                    ? 'Start time must come after end time'
+                    : parseInt(value.split(":")[1]) % interval != 0
+                    ? `End time must be a ${interval}-minute slot`
+                    : null
+            ),
+            endTime: (value) => (
+                parseInt(value.split(":")[1]) % interval != 0  
+                    ? `End time must be a ${interval}-minute slot`   //Time booked is a multiple of interval
+                    : null        
+            ),
             name: (value) => {
-                value !== ""                    //Valid room is selected.
+                value == ""
+                    ? 'Room must be selected'
+                    : null
             },
-            description: (value) => {
-                value.length < 100
-            },
+            description: (value) => (
+                value.length > 50
+                    ? 'Description must be less than 50 characters'
+                    : null
+            ),
             date: (value) => {
-                value >= new Date()              //Booking cannot be retroactive
-            }
+                const today = new Date();
+                today.setHours(0, 0, 0 ,0) //Rewind to very beginning of the day
 
+                value <= today     //Booking cannot be from yesterday backwards
+                    ? 'Chosen date has already passed'
+                    : null
+            }
         },
 
         //Convert the to/from dates back into ISO format
-        transformValues: (values) => ({
-            startTime:  values.date.setHours(...startTime.split(":")),  //Adjust the time
-            endTime: values.date.setHours(...endTime.split(":")),
+        //Exclude the intermediary value "date" from the final booking object
+        transformValues: ({date, ...values}) => ({
+            ...values,
+            startTime: new Date(date.setHours(...values.startTime.split(":"))),  //Adjust the time
+            endTime: new Date(date.setHours(...values.endTime.split(":"))),
         })
     });
 
     return (
-        <form onSubmit = {() => console.dir(values)}>
+        <form onSubmit = {form.onSubmit(values => console.log(values))}>
             {/* This is static until submitted */}
-            <h1>{currentBooking.name || ""}</h1>
+            <h1>{currentBooking.name || "Book a Room"}</h1>
 
             {/* TODO: The name of the room must be in available assets to appear.*/}
             <Select
@@ -100,22 +115,29 @@ function BookingFormComponent({currentBooking = null, availableAssets, type}) {
                 />
             </div>
 
-            <Textarea
-                label = "Description"
-                placeholder = "Add a brief description of this booking"
-                rows={3}
-                {...form.getInputProps('description')}
-            />
+            {/* If currentBooking is private, description will not be present. */}
+            { currentBooking?.description &&
+             <Textarea
+                 label = "Description"
+                 placeholder = "Add a brief description of this booking"
+                 rows={3}
+                 {...form.getInputProps('description')}
+             />
+            }
 
+            {/* If currentBooking is private, booker information will not be present */}
+
+            { currentBooking?.booker &&
+                //TODO: load user info here
+                <p>User stuff goes here</p>
+            }
             <div className ="flex justify-end gap-3 p-4">
                 <button className = "p-3 text-neutral-400 rounded-md">Close</button>
-                <button type = "submit" className = "p-3 text-white bg-orange-600 rounded-md">Submit</button>
+                <button type = "submit" className ="p-3 text-white bg-orange-600 rounded-md">Submit</button>
             </div>
-
         </form>
     )
 }
-
 
 /**
  * A function to check whether a supplied date matches today.
