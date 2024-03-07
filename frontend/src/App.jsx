@@ -1,4 +1,4 @@
-import React, { useState, createContext} from "react";
+import React, { useState, createContext, useEffect } from "react";
 import "./App.css";
 import "./output.css";
 import '@mantine/core/styles.css';
@@ -13,38 +13,44 @@ import Profile from "./Profile/Profile.jsx";
 import Signout from "./Signout.jsx";
 import Community from "./Community.jsx";
 import Feedback from "./Feedback.jsx";
+import Login from "./Login.jsx";
 import Modal from 'react-modal';
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 
 export const HostContext = createContext();
 export const UserContext = createContext();
+export const NavigationContext = createContext();
 
 function App() {
 	Modal.setAppElement('#root');
 	const [host] = useState('http://localhost:8000'); //Replace host here
 	const [user, setUser] = useState(null)			  //User gets added to context on login
+	const [showNavigation, setShowNavigation] = useState(true);
 
 	return (
-		<HostContext.Provider value = {{ host }}>
-			<UserContext.Provider value = {{user, setUser}}>
-				<MantineProvider>
-				<Notifications/>
-					<Router>
-						<div className="flex min-h-screen h-full w-screen flex-col md:flex-row body-white py-0 pl-[350px] pr-[30px] gap-[40px]">
-							<Navigation />
-							<Routes>
-								<Route path="/bookings" element={<Bookings />} />
-								<Route path="/events" element={<Events />} />
-								<Route path="/community" element={<Community />} />
-								<Route path="/statistics" element={<Statistics />} />
-								<Route path="/profile" element={<Profile />} />
-								<Route path="/feedback" element={<Feedback />} />
-								<Route path="/signout" element={<Signout />} />
-							</Routes>
-						</div>
-					</Router>
-				</MantineProvider>
+		<HostContext.Provider value={{ host }}>
+			<UserContext.Provider value={{ user, setUser }}>
+				<NavigationContext.Provider value={{ showNavigation, setShowNavigation }}>
+					<MantineProvider>
+						<Notifications />
+						<Router>
+							<div className={`flex min-h-screen h-full w-screen flex-col md:flex-row body-white py-0 ${showNavigation ? "pl-[350px]" : "pl-[30px]"} pr-[30px] gap-[40px]`}>
+								{showNavigation && <Navigation />}
+								<Routes>
+									<Route path="/" element={<Login />} />
+									<Route path="/bookings" element={<Bookings />} />
+									<Route path="/events" element={<Events />} />
+									<Route path="/community" element={<Community />} />
+									<Route path="/statistics" element={<Statistics />} />
+									<Route path="/profile" element={<Profile />} />
+									<Route path="/feedback" element={<Feedback />} />
+									<Route path="/signout" element={<Signout />} />
+								</Routes>
+							</div>
+						</Router>
+					</MantineProvider>
+				</NavigationContext.Provider>
 			</UserContext.Provider>
 		</HostContext.Provider>
 	);

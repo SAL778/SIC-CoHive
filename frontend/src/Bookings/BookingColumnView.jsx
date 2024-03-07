@@ -16,7 +16,7 @@ export default function ColumnView() {
 			try {
 				const accessToken = getCookieValue("access_token");
 				const response = await fetch(
-					"http://localhost:8000/booking/resources/",
+					"http://localhost:8000/bookings/columns/filter",
 					{
 						method: "GET",
 						credentials: "include",
