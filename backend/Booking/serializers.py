@@ -1,3 +1,6 @@
+import datetime
+
+from django.utils import timezone
 from rest_framework import serializers
 from .models import Resources, Booking
 from rest_framework.authtoken.models import Token
@@ -8,11 +11,12 @@ class BookingSerializer(serializers.ModelSerializer):
     start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
     end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
     user = serializers.SerializerMethodField("get_user")
+    resources_name = serializers.CharField(source="resources.name", read_only=True)
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_time', 'end_time', 'resources', 'user', 'title', 'visibility']
-        read_only_fields = ["id","user"]
+        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name', 'user', 'title', 'visibility']
+        read_only_fields = ["id", "user", "resources_name"]
 
     def validate(self, data):
         if data['start_time'] > data['end_time']:
@@ -55,8 +59,23 @@ class BookingSerializer(serializers.ModelSerializer):
             return user_info
         return {}
 
+
 class ResourcesSerializer(serializers.ModelSerializer):
-    bookings = BookingSerializer(many=True, read_only=True)
+    # bookings = BookingSerializer(many=True, read_only=True)
+    bookings = serializers.SerializerMethodField("get_bookings")
+
     class Meta:
         model = Resources
         fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings']
+
+    def get_bookings(self, obj):
+        request = self.context.get("request")
+        date = request.query_params.get('date')
+        filter_date = None
+        if date is None:
+            filter_date = timezone.localtime(timezone.now()).date()
+        else:
+            filter_date = timezone.make_aware(
+                datetime.datetime.strptime(date, "%Y-%m-%d").replace(hour=0, minute=0, second=0, microsecond=0))
+        bookings = Booking.objects.filter(resources=obj, start_time__date=filter_date)
+        return BookingSerializer(bookings, many=True).data

@@ -18,24 +18,24 @@ from User.views import get_user_from_token
 User = get_user_model()
 
 
-class ResourcesView(generics.ListCreateAPIView):
+class ColumnsView(generics.ListAPIView):
     '''
-    post:
-    Add a new resource
+    get:
+    Get all resources.
     '''
-    queryset = Resources.objects.all()
     serializer_class = ResourcesSerializer
+    queryset = Resources.objects.all()
 
-    def post(self, request, *args, **kwargs):
-        # check if user have permission to add a resource
-        user = get_user_from_token(request)
-        if not user.is_staff and not user.is_superuser:
-            return Response({"error": "You don't have permission to add a resource."}, status=status.HTTP_403_FORBIDDEN)
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # def post(self, request, *args, **kwargs):
+    #     # check if user have permission to add a resource
+    #     user = get_user_from_token(request)
+    #     if not user.is_staff and not user.is_superuser:
+    #         return Response({"error": "You don't have permission to add a resource."}, status=status.HTTP_403_FORBIDDEN)
+    #     serializer = self.get_serializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AllBookingsView(generics.ListAPIView):
