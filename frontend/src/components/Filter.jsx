@@ -103,7 +103,7 @@ function Filter({ onSearch, onFilterChange }) {
 										></div>
 										<span onClick={() => toggleFilter(filter)}>{filter}</span>
 									</div>
-									{index === 2 && (
+									{index === 3 && (
 										<strong style={{ margin: "10px 0 5px 0" }}>SIC Role</strong>
 									)}
 								</React.Fragment>
