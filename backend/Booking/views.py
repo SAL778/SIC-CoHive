@@ -23,7 +23,13 @@ class ColumnsView(generics.ListAPIView):
     Get all resources.
     '''
     serializer_class = ResourcesSerializer
-    queryset = Resources.objects.all()
+
+    def get_queryset(self):
+        type = self.request.query_params.get('type')
+        if type is not None:
+            return Resources.objects.filter(type=type)
+        return Resources.objects.all()
+
 
     # def post(self, request, *args, **kwargs):
     #     # check if user have permission to add a resource
