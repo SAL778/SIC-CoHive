@@ -1,0 +1,53 @@
+/* Styling for forms (cause Mantine kinda sucks with tailwind) */
+@import "../../App.css";
+
+.mantine-Popover-dropdown {
+    border-radius: var(--border-radius);
+    background-color: var(--digital-white);
+}
+
+.mantine-DatePickerInput-day {
+    color: var(--charcoal);
+    font-size: 0.9em;
+}
+
+.mantine-DatePickerInput-day[data-weekend] {
+    color: var(--light-grey);
+    font-size: 0.9em;
+}
+
+.mantine-DatePickerInput-day[data-selected]  {
+    background-color: var(--primary-orange);
+    color: white
+}
+
+.mantine-DatePickerInput-weekday {
+    color: var(--charcoal);
+    font-weight: 400;
+    font-size: 1em;
+}
+
+.mantine-DatePickerInput-calendarHeaderLevel {
+    color: var(--navy-blue);
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.mantine-Input-input.mantine-DatePickerInput-input {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--navy-blue);
+}
+
+.mantine-Select-label {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.6em;
+    color: var(--light-grey);
+}
+
+.mantine-Modal-header {
+    padding-bottom: 0;
+    padding-top: 0;
+}
+

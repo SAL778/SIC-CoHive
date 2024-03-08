@@ -15,78 +15,10 @@ function Bookings() {
 
 	// checkUserLoggedIn();
 
-	const exampleRooms = [
-		{
-			name: "Room A",
-			location: "SIC M212",
-			description: "Alberta SAT Meetup",
-			type: "room",
-			start_time: new Date('2024-03-02T08:30:00'),
-			end_time: new Date('2024-03-02T07:30:00'), 
-			booker: {
-				name: "Really Long Name Here",
-				email: "short@email.here",
-				id: 1,
-				},
-		},
-		{
-			name: "Single Loop Study Space",
-			location: "SIC M215",
-			type: "room",
-			description: "Hello World",
-			start_time: new Date('2024-03-02T08:30:00'),
-			end_time: new Date('2024-03-02T07:30:00'), 
-			booker: {
-				name: "Lawrence J",
-				email: "lawj@email.here",
-				id: 3,
-				},
-		},
-		{
-			name: "Conference Room A",
-			type: "room",
-			location: "SIC M073",
-			description: "Meeting with key shareholders",
-			start_time: new Date('2024-03-02T08:30:00'),
-			end_time: new Date('2024-03-02T07:30:00'), 
-			booker: {
-				name: "Hugh Hugor",
-				email: "hughhugor@ualberta.ca",
-				id: 4,
-				},
-		},
-		{
-			name: "Art Workstation 2",
-			type: "room",
-			location: "SIC M875",
-			description: "Logo Design for StartupAB",
-			start_time: new Date('2024-03-02T08:30:00'),
-			end_time: new Date('2024-03-02T07:30:00'), 
-			booker: {
-				name: "Hugh Hugor",
-				email: "hughhugor@ualberta.ca",
-				id: 4,
-			},
-		},
-		{
-			name: "Art Workstation 2",
-			type: "room",
-			location: "SIC M975",
-			description: "Logo Design for StartupAB",
-			start_time: new Date('2024-04-02T08:30:00'),
-			end_time: new Date('2024-04-02T07:30:00'), 
-			booker: {
-				name: "Hugh Hugor",
-				email: "hughhugor@ualberta.ca",
-				id: 4,
-			},
-		},
-	]
-
 	const [opened, { open, close }] = useDisclosure(false);
 
-	const [clickedBooking, setClickedBooking] = useState({})
-	const [isColumnView, setIsColumnView] = useState(true)
+	const [clickedBooking, setClickedBooking] = useState(null);
+	const [isColumnView, setIsColumnView] = useState(true);
  
 	const onClickBooking = (bookingInfo) => {
 		console.log("click")
@@ -120,8 +52,8 @@ function Bookings() {
 			<BookingHeader setColumnView={setIsColumnView}/>
 			
 			{!isColumnView ?
-				<BookingListView displayAssets = {exampleRooms} onItemClick = {onClickBooking}/>
-			:
+				<BookingListView onItemClick = {onClickBooking}/>
+			:	
 				<ColumnView />
 			} 
 			
@@ -129,6 +61,7 @@ function Bookings() {
 				opened = {opened}
 				onClose = {onModalCloseBooking}
 				centered
+				size = "auto"
 				transitionProps = {{transition: "slide-up", duration: 200, timingFunction: "ease-in-out"}}
 			>
 				<BookingFormComponent 
