@@ -61,6 +61,7 @@ function Bookings() {
 				opened = {opened}
 				onClose = {onModalCloseBooking}
 				centered
+				size = "auto"
 				transitionProps = {{transition: "slide-up", duration: 200, timingFunction: "ease-in-out"}}
 			>
 				<BookingFormComponent 
