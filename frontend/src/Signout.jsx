@@ -2,7 +2,8 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 import ModalComponent from './components/SignOutModal/SignOutModal';
 import { NavigationContext } from "./App.jsx";
-import { getCookieValue } from "./utils.js"
+import { getCookieValue } from "./utils.js";
+import { Modal } from "@mantine/core";
 
 const Signout = () => {
 
@@ -42,13 +43,25 @@ const Signout = () => {
     };
 
     return (
-        <>
-            <ModalComponent
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onConfirm={handleSignout}
-            />
-        </>
+        <Modal
+				opened={isModalOpen}
+				centered
+                withCloseButton={false}
+				size="auto"
+				transitionProps={{
+					transition: "slide-up",
+					duration: 200,
+					timingFunction: "ease-in-out",
+				}}
+			>
+            <div className="modalContent p-5">
+                <p>Are you sure you want to sign out?</p>
+                <div className = "flex justify-end gap-3 mt-4">
+                    <button onClick={() => setIsModalOpen(false)} className = "text-neutral-600 hover:text-neutral-800">Cancel</button>
+                    <button onClick={handleSignout} className = "button-orange" >Confirm</button>
+                </div>
+            </div>
+		</Modal>
     );
 };
 
