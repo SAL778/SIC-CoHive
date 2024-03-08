@@ -3,7 +3,7 @@ from django.urls import path, include, re_path
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-from User.views import custom_login_redirect
+from User.views import custom_login_redirect, verify_google_jwt
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -19,11 +19,14 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    # path("", include("User.urls")), # added by Kenji
+    # Oauth
+    path("auth/", include("drf_social_oauth2.urls", namespace="drf")),
+    path('api/verify_google_jwt/', verify_google_jwt, name='verify_google_jwt'),
+    # Project URLs 
     path("admin/", admin.site.urls),
     path("users/", include("User.urls")),
     path("bookings/", include("Booking.urls")),
-    path('accounts/', include('allauth.urls')),
+    # path('accounts/', include('allauth.urls')),
     path('accounts/profile/', custom_login_redirect, name='custom-login-redirect'),
     re_path(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

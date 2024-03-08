@@ -12,28 +12,65 @@ from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from django.contrib.auth import logout
+from google.auth.transport import requests
+from google.oauth2 import id_token
+
+@api_view(['POST'])
+def verify_google_jwt(request):
+    # Replace 'your-client-id-from-google-console' with your actual Google client ID
+    client_id = '738911792381-du1hc1l4go32tj2iunbnufo6qf9h0u7v.apps.googleusercontent.com'
+    
+    # Get the JWT token from the request (e.g., from the Authorization header)
+    jwt_token = request.data.get('jwt_token')
+
+    if not jwt_token:
+        return JsonResponse({'error': 'No JWT token provided'}, status=400)
+
+    try:
+        # Verify the JWT token using Google's public keys
+        id_info = id_token.verify_oauth2_token(jwt_token, requests.Request(), client_id)
+
+        # Check if the user already exists
+        user = CustomUser.objects.filter(email=id_info['email']).first()
+
+        if not user:
+
+            # Create a new user if it doesn't exist
+            user = CustomUser.objects.create(
+                username=id_info['email'],
+                email=id_info['email'],
+                profileImage=id_info['picture'],
+                first_name=id_info['given_name'],
+                last_name=id_info['family_name'],
+            )
+
+        token, created = Token.objects.get_or_create(user=user)
+        access_token = str(token.key)
+        response = HttpResponse('Authentication successful')
+        response.set_cookie('access_token', access_token)
+        response.status_code = 200
+        return response
+
+    except ValueError as e:
+        return JsonResponse({'error': f'JWT verification failed: {str(e)}'}, status=401)
 
 def get_user_from_token(request):
     try:
-        access_token = request.META['HTTP_AUTHORIZATION']
+        access_token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
         token_obj = Token.objects.get(key=access_token)
         user = token_obj.user
         return user
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
-    
-@api_view(['GET'])
-def check_user_auth(request):
-    user = get_user_from_token(request)
-    if user:
-        return Response({'authenticated': True})
+
 
 @api_view(['POST'])
 def signout_view(request):
     try:
         # Delete the token from the database when the user logs out if its provided and valid
-        access_token = request.META['HTTP_AUTHORIZATION']
+        access_token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
         token_obj = Token.objects.get(key=access_token)
+        print(token_obj)
         token_obj.delete()
     except:
         # If the token is not provided or is invalid, we'll just sign the user out in the same way
