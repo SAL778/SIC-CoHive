@@ -2,12 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import Portfolio from "./Portfolio.jsx";
 import ProfileHeader from "./ProfileHeader.jsx";
 import { HostContext, UserContext } from "../App.jsx";
-import { getCookieValue, checkUserLoggedIn } from "../utils.js"
+import { getCookieValue } from "../utils.js"
 
 export default function Profile() {
 
-	checkUserLoggedIn();
-	
+	// checkUserLoggedIn();
+
 	//const [userData, setUserData] = useState(null);
 	const { user, setUser } = useContext(UserContext);
 	const { host } = useContext(HostContext);
@@ -42,6 +42,7 @@ export default function Profile() {
 						})
 						.then(response => {
 							if (response.ok) {
+								console.log(response);
 								response.json().then(portfolio => {
 									setPortfolio(portfolio)
 									setLoading(false);

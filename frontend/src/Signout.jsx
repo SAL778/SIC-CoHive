@@ -2,11 +2,11 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 import ModalComponent from './components/SignOutModal/SignOutModal';
 import { NavigationContext } from "./App.jsx";
-import { getCookieValue, checkUserLoggedIn } from "./utils.js"
+import { getCookieValue } from "./utils.js"
 
 const Signout = () => {
 
-    checkUserLoggedIn();
+    // checkUserLoggedIn();
 
     const navigate = useNavigate();
     const { setShowNavigation } = useContext(NavigationContext); // Access the context
@@ -15,12 +15,9 @@ const Signout = () => {
     const handleSignout = async () => {
         setIsModalOpen(false);
         try {
-            // document.cookie = "sessionid=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            // document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            // document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            // document.cookie = "messages=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
             const accessToken = getCookieValue("access_token");
+            console.log(accessToken);
             const response = await fetch('http://localhost:8000/users/signout/', {
                 method: 'POST',
                 credentials: 'include',

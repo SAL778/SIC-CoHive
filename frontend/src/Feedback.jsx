@@ -1,9 +1,9 @@
 import React from "react";
-import { checkUserLoggedIn } from "./utils.js";
+// import { checkUserLoggedIn } from "./utils.js";
 
 function Feedback() {
 
-	checkUserLoggedIn();
+	// checkUserLoggedIn();
 
 	return (
 		<div className="my-[30px] mx-auto">
