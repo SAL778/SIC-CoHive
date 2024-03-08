@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from allauth.socialaccount.models import SocialAccount
+# from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import Permission
 
 class Education_Field(models.Model):
@@ -75,15 +75,15 @@ class CustomUser(AbstractUser):
         # Call the "real" save() method.
         super().save(*args, **kwargs)
 
-        # Retrieve the social account object for the user.
-        socialaccount_obj = SocialAccount.objects.filter(provider='google', user_id=self.id)
-        picture = None
-        if len(socialaccount_obj):
-            picture = socialaccount_obj[0].extra_data['picture']
+        # # Retrieve the social account object for the user.
+        # socialaccount_obj = SocialAccount.objects.filter(provider='google', user_id=self.id)
+        # picture = None
+        # if len(socialaccount_obj):
+        #     picture = socialaccount_obj[0].extra_data['picture']
 
-        # Update the profile image field.
-        self.profileImage = picture
-        super().save(update_fields=['profileImage'])
+        # # Update the profile image field.
+        # self.profileImage = picture
+        # super().save(update_fields=['profileImage'])
 
         if not self.portfolio:
             # Create a new portfolio and assign it to the user.

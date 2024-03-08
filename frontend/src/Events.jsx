@@ -1,9 +1,9 @@
 import React from "react";
-import { checkUserLoggedIn } from "./utils.js";
+// import { checkUserLoggedIn } from "./utils.js";
 
 function Events() {
-	
-	checkUserLoggedIn();
+
+	// checkUserLoggedIn();
 
 	return (
 		<div>

@@ -1,9 +1,6 @@
 import React from "react";
-import { checkUserLoggedIn } from "./utils.js"
 
 function Statistics() {
-
-	checkUserLoggedIn();
 
 	return (
 		<div>
