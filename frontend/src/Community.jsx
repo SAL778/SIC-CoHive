@@ -5,9 +5,8 @@ import Filter from "./components/Filter";
 // import { checkUserLoggedIn } from "./utils.js";
 
 function Community() {
-
 	// checkUserLoggedIn();
-	
+
 	const [users, setUsers] = useState([]);
 	const [searchText, setSearchText] = useState("");
 	const [selectedFilters, setSelectedFilters] = useState([]);
