@@ -17,11 +17,6 @@ const Signout = () => {
         setIsModalOpen(false);
         try {
             const accessToken = getCookieValue("access_token");
-            // DO YOU STILL WANT THIS INCLUDED YEHVEN?
-            // document.cookie = "sessionid=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            // document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            // document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            // document.cookie = "messages=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
             console.log(accessToken);
             const response = await fetch('http://localhost:8000/users/signout/', {
