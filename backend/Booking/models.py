@@ -30,6 +30,7 @@ class Booking(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,help_text="User that the schedule is for")
     visibility = models.BooleanField(help_text="Visibility of the schedule",default=True)
     title = models.CharField(max_length=100, blank=True, null=True,help_text="Title of the schedule")
+    # description = models.TextField(help_text="Description of the schedule")
 
     def __str__(self):
         return str(self.id)

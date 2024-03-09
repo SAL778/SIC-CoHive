@@ -12,10 +12,11 @@ from .serializers import ResourcesSerializer, BookingSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 from User.views import get_user_from_token
-
+from rest_framework.views import APIView
+from django.http import Http404
+from drf_yasg.utils import swagger_auto_schema
 # Create your views here.
 User = get_user_model()
-
 
 class ColumnsView(generics.ListAPIView):
     '''
@@ -23,7 +24,13 @@ class ColumnsView(generics.ListAPIView):
     Get all resources.
     '''
     serializer_class = ResourcesSerializer
-    queryset = Resources.objects.all()
+
+    def get_queryset(self):
+        type = self.request.query_params.get('type')
+        if type is not None:
+            return Resources.objects.filter(type=type)
+        return Resources.objects.all()
+
 
     # def post(self, request, *args, **kwargs):
     #     # check if user have permission to add a resource
@@ -107,8 +114,13 @@ class UserBookingView(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         user_id = kwargs.get('user_id')
-        user = get_object_or_404(User, id=user_id)
-
+        user1= get_object_or_404(User, id=user_id)
+        user = get_user_from_token(request)
+        if user != user1:
+            return Response({"error": "You don't have permission to add a booking for another user."}, status=status.HTTP_403_FORBIDDEN)
+        
+        print("user below")
+        print("here",user)
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=user)
@@ -116,15 +128,56 @@ class UserBookingView(generics.ListCreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ViewBookingView(generics.RetrieveUpdateDestroyAPIView):
-    '''
-    get:
-    Get a specific booking.
-    put:
-    Update a specific booking.
-    delete:
-    Delete a specific booking.
-    '''
-    queryset = Booking.objects.all()
-    serializer_class = BookingSerializer
-    lookup_field = 'pk'
+class ViewBookingView(APIView):
+    """
+    Retrieve, update or delete a booking instance.
+    """
+    
+    def get_object(self, pk):
+        try:
+            return Booking.objects.get(pk=pk)
+        except Booking.DoesNotExist as e:
+            raise Http404
+
+    @swagger_auto_schema(operation_description="Get a specific booking.", responses={200: BookingSerializer})
+    def get(self, request, pk, format=None):
+        """
+        Get a specific booking.
+        """
+        booking = self.get_object(pk)
+        serializer = BookingSerializer(booking)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(operation_description="Update a specific booking.", request_body=BookingSerializer, responses={200: BookingSerializer})
+    def patch(self, request, pk, format=None):
+        """
+        Update a specific booking.
+        """
+        
+        booking = self.get_object(pk)
+        user = get_user_from_token(request)
+        if user != booking.user:
+            return Response({"error": "You don't have permission to update this booking."}, status=status.HTTP_403_FORBIDDEN)
+        serializer = BookingSerializer(booking, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(operation_description="Delete a specific booking.", responses={204: "No Content"})
+    def delete(self, request, pk, format=None):
+        """
+        Delete a specific booking.
+        """
+        print("deleting booking")
+        booking = self.get_object(pk)
+        user = get_user_from_token(request)
+        print("hello")
+        
+        if user != booking.user:
+            print("user")
+            return Response({"error": "You don't have permission to delete this booking."}, status=status.HTTP_403_FORBIDDEN)
+        
+        print("deleting booking")
+        booking.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

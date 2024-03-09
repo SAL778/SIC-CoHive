@@ -7,9 +7,13 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import axios from "axios";
 
+import { UserContext } from "./App.jsx";
+
 export default function Login({}){
 
     const { setShowNavigation } = useContext(NavigationContext); // Access the context
+
+    const { user, setUser } = useContext(UserContext);
 
     const decodeJWT = (credentialJWT) => {
         try {
@@ -41,6 +45,7 @@ export default function Login({}){
             console.log(response.data); // Log the response data
             // Redirect to /bookings if the request is successful
             if (response.status === 302 || response.status === 200) {
+                setUser(user);
                 window.location.href = '/bookings';
             }
             // Continue with other actions or state updates as needed

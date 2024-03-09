@@ -19,6 +19,9 @@ class BookingSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "user", "resources_name"]
 
     def validate(self, data):
+
+        print(data['start_time'])
+
         if data['start_time'] > data['end_time']:
             raise serializers.ValidationError("End time must be after start time.")
 
@@ -43,7 +46,7 @@ class BookingSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         user = None
         try:
-            access_token = request.META['HTTP_AUTHORIZATION']
+            access_token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
             token_obj = Token.objects.get(key=access_token)
             user = token_obj.user
         except:
@@ -58,6 +61,21 @@ class BookingSerializer(serializers.ModelSerializer):
             }
             return user_info
         return {}
+    
+    # # Removed for now, can add back if we have description
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     request = self.context.get("request")
+    #     user = None
+    #     try:
+    #         access_token = request.META['HTTP_AUTHORIZATION']
+    #         token_obj = Token.objects.get(key=access_token)
+    #         user = token_obj.user
+    #     except:
+    #         pass
+    #     if not instance.visibility and (user is None or not user.is_authenticated):
+    #         representation['description'] = None
+    #     return representation
 
 
 class ResourcesSerializer(serializers.ModelSerializer):

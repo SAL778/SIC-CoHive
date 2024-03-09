@@ -16,8 +16,8 @@ function BookingListView({onItemClick}) {
     const [assets, setAssets] = useState([]) //An array of assets from the backend
     const [dateHeaders, setDateHeaders] = useState([]) //An array of unique dates to be displayed as a header.
 
+    //(Get the list of booking (in theory)
     useEffect(() => {
-        //(Get the list of booking (in theory)
         httpRequest({
                 endpoint: `${host}/bookings/`,
                 onSuccess: (data) => {
@@ -84,14 +84,14 @@ function AssetComponent({asset, onItemClick}) {
         //TODO: On private, grey everything out
         <div className = {`flex items-center p-3 rounded-md gap-10 ${!greyOut && "shadow-custom"}`} onClick = {() => onItemClick(asset)}>
             <div className = "colA basis-2 flex-col flex-grow text-neutral-800">
-                <h3 className = "text-2xl font-semibold capitalize">{asset.resources_name}</h3>
-                <p className = "text-base font-regular">{asset.description}</p>
+                <h3 className = "text-2xl font-semibold capitalize">{asset?.resources_name}</h3>
+                <p className = "text-base font-regular">{asset?.description}</p>
             </div>
 
-            { asset.type == "room" &&
+            { asset?.type == "room" &&
              <div className = "colB basis-1 flex flex-grow text-2xl">
                 <i className = "fa fa-location-dot mr-3" aria-hidden="true"/>
-                <p className = "font-light">{asset.location}</p>
+                <p className = "font-light">{asset?.location}</p>
              </div>
             }
             
@@ -173,7 +173,7 @@ const getUniqueDateHeaders = (dates) => {
 const convertToISO = (obj) =>  {
     const newObj = {};
     for (const key in obj) {
-        if (typeof obj[key] === 'string') {
+        if (key === "start_time" || key === "end_time") {
             const date = new Date(obj[key]);
             if (!isNaN(date.getTime())) {
                 newObj[key] = date;
