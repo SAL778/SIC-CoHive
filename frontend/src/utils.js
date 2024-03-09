@@ -47,6 +47,7 @@ export function getCookieValue(cookieName) {
  * @param {string} httpRequestOptions.endpoint - The endpoint to retrieve from.
  * @param {string} [httpRequestOptions.method="GET"] - HTTP method, "GET", "POST", etc. Defaults to "GET".
  * @param {boolean} [httpRequestOptions.useAuth=true] - Whether or not to use auth. Invokes getCookieValue. Defaults to true.
+ * @param {any} [httpRequestOptions.body=null] - The content of the request as JSON
  * @param {function} httpRequestOptions.onSuccess - Callback on what to do with response (as JSON).
  * @param {function} [httpRequestOptions.onFailure=res => console.log(res.statusText)] - Callback triggered on failure. Defaults to console.log.
  * @param {function} [httpRequestOptions.onError=e => console.log("error", e)] - Callback triggered on error. Defaults to console.log.
@@ -57,6 +58,7 @@ export async function httpRequest({
     useAuth = true, 
     method = "GET", 
     onSuccess, 
+    body = null,
     onFailure = ((res) => console.log(res.statusText)), 
     onError = ((e) => console.log("error", e))
     }) {
@@ -68,6 +70,9 @@ export async function httpRequest({
         if (useAuth) {
             options.credentials = "include"
             options.headers = {Authorization: `Token ${token}`}
+        }
+        if (body) {
+            options.headers = {contentType: "application/json"}
         }
         
         const res = await fetch(endpoint, options)

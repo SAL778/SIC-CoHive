@@ -16,8 +16,8 @@ function BookingListView({onItemClick}) {
     const [assets, setAssets] = useState([]) //An array of assets from the backend
     const [dateHeaders, setDateHeaders] = useState([]) //An array of unique dates to be displayed as a header.
 
+    //(Get the list of booking (in theory)
     useEffect(() => {
-        //(Get the list of booking (in theory)
         httpRequest({
                 endpoint: `${host}/bookings/`,
                 onSuccess: (data) => {
