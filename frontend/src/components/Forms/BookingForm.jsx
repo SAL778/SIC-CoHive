@@ -28,7 +28,6 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     //b) Current booking does not yet exist (i.e it's being created) and thus visible to the creator
     const isShowDetails = () => ((currentBooking?.id && currentBooking?.visibility) || !currentBooking?.id);
 
-    console.log(currentUser)
     const interval = 15;
     const timeRange = [7, 20] //Opening times are between 7AM and 8PM
 
@@ -68,8 +67,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                     : null
             },
             title: (value) => (
-                value.length > 50
-                    ? 'Description must be less than 50 characters'
+                (value.length < 50 && value.length < 1)
+                    ? 'Description must between 1 and 50 characters'
                     : null
             ),
             date: (value) => {
@@ -79,7 +78,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                 value <= today     //Booking cannot be from yesterday backwards
                     ? 'Chosen date has already passed'
                     : null
-            }
+            },
         },
 
         //Convert the to/from dates back into ISO format
@@ -157,6 +156,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             { isShowDetails() && //Booking belongs to user
              <Textarea
                  label = "Description"
+                 withAsterisk
                  placeholder = "Add a brief description of this booking"
                  rows={3}
                  {...form.getInputProps('title')}
@@ -181,7 +181,6 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                 }
                 <div className ="flex gap-3 pt-3">
                     <button type="button" className = "p-3 text-neutral-400 rounded-md" onClick = {onClose}>Close</button>
-                    { console.log(currentBooking?.user?.id, currentUser) }
                     
                     { currentBooking?.user?.id == currentUser?.id && // Booking belongs to the current user
                         <>

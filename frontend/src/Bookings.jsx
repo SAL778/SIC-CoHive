@@ -49,6 +49,7 @@ function Bookings() {
 
 	const onClickBooking = (bookingInfo) => {
 		console.log("click");
+		console.dir(bookingInfo)
 		setClickedBooking(bookingInfo);
 		open();
 	};
@@ -124,7 +125,7 @@ function Bookings() {
 			{!isColumnView ? (
 				<BookingListView onItemClick={onClickBooking} />
 			) : (
-				<ColumnView />
+				<ColumnView onBookingEdit={onClickBooking} />
 			)}
 
 			<Modal
