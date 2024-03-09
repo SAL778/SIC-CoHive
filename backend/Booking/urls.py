@@ -11,5 +11,5 @@ urlpatterns = [
     path('columns/filter', views.ColumnsView.as_view(), name='column-list'),
     path('columns/<int:pk>/', views.ColumnView.as_view(), name='column-detail'),
     path('<int:pk>/', views.ViewBookingView.as_view(), name='booking-detail'),
-
+    path('resources/filter', views.ResourceListView.as_view(), name='resource-list'),
 ]
