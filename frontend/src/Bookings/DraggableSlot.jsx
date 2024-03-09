@@ -2,7 +2,7 @@ import React from 'react';
 import { ResizableBox } from 'react-resizable';
 import "react-resizable/css/styles.css";
 
-const DraggableSlot = ({ selectedSlot, onResize }) => {
+const DraggableSlot = ({ selectedSlot, setSelectedSlot, onResize, onRelease, resourceName}) => {
     const slotHeight = 24; // Extracted variable for slot height
 
     return (
@@ -20,6 +20,10 @@ const DraggableSlot = ({ selectedSlot, onResize }) => {
             draggableOpts={{ grid: [slotHeight, slotHeight] }} // Snap to 24px grid
             style={{
                 top: `${selectedSlot.index * slotHeight + 100}px`, // Calculate the top position based on the slot index
+            }}
+            onMouseUp={() => {
+                onRelease({ resources_name: resourceName, ...selectedSlot });
+                setSelectedSlot();
             }}
         >
             {/* Content for the booking slot, e.g., time range */}

@@ -4,7 +4,7 @@ import { getCookieValue } from "../utils.js";
 import Column from "./Column.jsx";
 import EmblaCarousel from "../components/Carousel/Carousel.jsx";
 
-export default function ColumnView() {
+export default function ColumnView({onBookingEdit}) {
 	//const [userData, setUserData] = useState(null);
 	const { host } = useContext(HostContext);
 
@@ -78,7 +78,7 @@ export default function ColumnView() {
 					</div>
 					<div className="booking-column-container overflow-x-hidden h-full p-[10px] m-[-10px]">
 						<EmblaCarousel slides={columnView.map((item, index) => (	
-							<Column key={index} column={item}/>
+							<Column key={index} column={item} onBookingEdit={onBookingEdit} />
 						))} options={{ align: "start", watchDrag: false }} />
 					</div>
 				</div>

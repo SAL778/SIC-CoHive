@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import DraggableSlot from "./DraggableSlot";
 
-function sortTimeRanges(timeRanges) {
-	// Convert time ranges to Date objects for comparison
-	const sortedTimeRanges = timeRanges.sort((a, b) => {
-		const [startA, endA] = parseTimeRange(a);
-		const [startB, endB] = parseTimeRange(b);
+// function sortTimeRanges(timeRanges) {
+// 	// Convert time ranges to Date objects for comparison
+// 	const sortedTimeRanges = timeRanges.sort((a, b) => {
+// 		const [startA, endA] = parseTimeRange(a);
+// 		const [startB, endB] = parseTimeRange(b);
 
-		return startA - startB || endA - endB;
-	});
+// 		return startA - startB || endA - endB;
+// 	});
 
-	return sortedTimeRanges;
-}
+// 	return sortedTimeRanges;
+// }
 
 // Helper function to parse time range string into Date objects
 function parseTimeRange(timeRange) {
 	const [startStr, endStr] = timeRange.split(" - ");
 	const startTime = parseTime(startStr);
 	const endTime = parseTime(endStr);
+	console.log(startTime, endTime);
 
 	return [startTime, endTime];
 }
@@ -39,7 +40,7 @@ function parseTime(timeStr) {
 	return result;
 }
 
-const Column = ({ column }) => {
+const Column = ({ column, onBookingEdit }) => {
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Generate all time slots for the day in 15-minute intervals (empty by default)
 	const generateTimeSlots = () => {
@@ -60,7 +61,7 @@ const Column = ({ column }) => {
 					{ hour: "numeric", minute: "numeric" }
 				)}`;
 				// Add the time slot to the list, sample format: "7:00 AM - 7:15 AM"
-				timeSlots.push(timeSlot);
+				timeSlots.push({display_time: timeSlot, booking : false});
 			}
 		}
 		return timeSlots;
@@ -68,11 +69,12 @@ const Column = ({ column }) => {
 
 	// ---------------------------------------------------------------------------------------------------------------------
 	const BookingList = ({ bookings, generateTimeSlots, onSlotClick }) => {
-		let timeslots = generateTimeSlots(bookings);
+		let timeslots = generateTimeSlots();
 		let unavailable = [];
-		let bookingElements = [];
+		let realBookings = [];
 
 		bookings.map((booking) => {
+			// console.log(booking);
 			const startTime = new Date(booking.start_time);
 			const endTime = new Date(booking.end_time);
 
@@ -100,7 +102,7 @@ const Column = ({ column }) => {
 					})} - ${new Date(
 						currentTime.getTime() + 15 * 60000
 					).toLocaleTimeString([], { hour: "numeric", minute: "numeric" })}`;
-					unavailable.push(timeSlot);
+					unavailable.push({display_time: timeSlot, booking : false});
 				}
 			}
 
@@ -116,35 +118,44 @@ const Column = ({ column }) => {
 				hour: "numeric",
 				minute: "numeric",
 			})}`;
-			bookingElements.push(fullTimeRange);
+
+			booking.start_time = startTime;
+			booking.end_time = endTime;
+			realBookings.push({display_time: fullTimeRange, booking: true, ...booking}); //booking (backend)
 		});
 
-    // Set the bookingElements to the sorted array
-    bookingElements = sortTimeRanges(bookingElements);
-
-    // Go through the bookingElements and insert into the timeslots array at the correct index
-    bookingElements.forEach((bookingElement) => {
+    // Go through the realBookings and insert into the timeslots array at the correct index
+    realBookings.forEach((bookingSlot) => {
         const index = timeslots.findIndex((slot) =>
-            slot.endsWith(bookingElement.split(" - ")[0])
+            slot.display_time.endsWith(bookingSlot.display_time.split(" - ")[0])
         );
-        if (index !== -1) {
-            const formattedBookingElement = `${bookingElement} (Booking)`;
-            timeslots.splice(index + 1, 0, formattedBookingElement);
-        }
+		if (index !== -1) {
+			timeslots.splice(index + 1, 0, bookingSlot);
+		}
+		else if (bookingSlot.display_time.split(" - ")[0] == "7:00 AM") {
+			timeslots.splice(0, 0, bookingSlot);
+		}
     });
 
-    // Remove the unavailable time slots from the timeslots array
-    timeslots = timeslots.filter((slot) => !unavailable.includes(slot));
+	const filteredTimeslots = timeslots.filter((timeslot, index) => {
+		return !unavailable.some((unavailableSlot) => unavailableSlot.display_time === timeslot.display_time && !timeslot.booking && index !== 0);
+	});
+
+	timeslots = filteredTimeslots;
 
     return (
         <div>
             {timeslots.map((slot, index) => {
                 return (
-                    <div key={slot}>
-                        {slot.includes('(Booking)') ? (
-                            <div className="column-booking-card relative z-1 overflow-hidden flex flex-col justify-between rounded-[12px] shadow-custom pl-8 pr-10 py-4 bg-white text-sm" key={slot} style={{ height: `${Math.ceil((parseTime(slot.split(' - ')[1]) - parseTime(slot.split(' - ')[0])) / (15 * 60000)) * 24}px` }}>
-                                <p className="font-bold">Booking</p>
-                                <p className="text-[0.75rem]">{slot.replace(' (Booking)', '')}</p>
+                    <div key={slot.display_time}>
+                        { slot.booking ? (
+                            <div className="column-booking-card relative z-1 overflow-hidden flex flex-col justify-between rounded-[12px] shadow-custom pl-8 pr-10 py-4 bg-white text-sm"
+								key={slot} 
+								style={{ height: `${Math.ceil((parseTime(slot.display_time.split(' - ')[1]) - parseTime(slot.display_time.split(' - ')[0])) / (15 * 60000)) * 24}px` }}
+								onClick={() => onBookingEdit(slot)}
+							>
+								<p className="font-bold">{slot.title || "Booking"}</p>
+                                <p className="text-[0.75rem]">{slot.display_time}</p>
                             </div>
                         ) : (
                             <div className="open-booking-slot rounded-[12px] overflow-hidden px-4 py-2 text-sm" key={slot} style={{ height: '24px' }} onClick={() => onSlotClick(index, slot)}>
@@ -165,7 +176,7 @@ const Column = ({ column }) => {
 
 	// Function to handle click on a time slot
 	const handleSlotClick = (slotIndex, slotTime) => {
-		const startTime = parseTimeRange(slotTime)[0];
+		const startTime = parseTimeRange(slotTime.display_time)[0];
 		setSelectedSlot({
 			index: slotIndex,
 			start_time: startTime,
@@ -179,7 +190,7 @@ const Column = ({ column }) => {
 		const newEndTime = new Date(
 			selectedSlot.start_time.getTime() + (heightMultiple / 24) * 15 * 60000
 		);
-		setSelectedSlot({ ...selectedSlot, end_time: newEndTime });
+		setSelectedSlot({ ...selectedSlot, end_time: newEndTime});
 	};
 
     return (
@@ -197,7 +208,10 @@ const Column = ({ column }) => {
 				{selectedSlot && (
 					<DraggableSlot
                         selectedSlot={selectedSlot}
+						setSelectedSlot={setSelectedSlot}
                         onResize={onResize}
+						onRelease={onBookingEdit}
+						resourceName={column.name}
                     />
 				)}
 			</div>
