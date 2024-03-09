@@ -85,7 +85,7 @@ function AssetComponent({asset, onItemClick}) {
         <div className = {`flex items-center p-3 rounded-md cursor-pointer gap-10 ${!greyOut && "shadow-custom"}`} onClick = {() => onItemClick(asset)}>
             <div className = "colA basis-2 flex-col flex-grow text-neutral-800">
                 <h3 className = "text-2xl font-semibold capitalize">{asset?.resources_name}</h3>
-                <p className = "text-base font-regular">{asset?.description}</p>
+                <p className = "text-base font-regular">{asset?.title}</p>
             </div>
 
             { asset?.type == "room" &&

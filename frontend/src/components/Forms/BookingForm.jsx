@@ -12,7 +12,7 @@ export default BookingFormComponent
  * @param {Object} currentBooking - A booking object, if one exists.
  * @param {Array[Object]} availableAssets - A list of assets available to be booked
  * @param {string} type - A string that tells what type of assets were provided (i.e room, assets)
- * @param {function} onClose - A callable that triggeres upon form cancellation
+ * @param {function} onClose - A callable that triggers upon form cancellation
  * @param {function} onSubmit - A callable that triggers upon form submission
  * @param {function} onDelete - A callable that triggers upon form deletion
  */
@@ -22,6 +22,11 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     const fallbackAssetImage = "https://images.unsplash.com/photo-1633633292416-1bb8e7b2832b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 
     const { currentUser } = useContext(UserContext);
+
+    //This logic is responsible for conditionally rendering the description and booker of a booked asset, based on...
+    //a) Current booking already exists (i.e not being made from scratch) and is visible
+    //b) Current booking does not yet exist (i.e it's being created) and thus visible to the creator
+    const isShowDetails = () => ((currentBooking?.id && currentBooking?.visibility) || !currentBooking?.id);
 
     console.log(currentUser)
     const interval = 15;
@@ -129,7 +134,6 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             placeholder="from"
                             data = {getTimePeriods(interval, ...timeRange)}
                             searchable
-                            clearable
                             withAsterisk
                             maxDropdownHeight={140}
                             {...form.getInputProps('start_time')}
@@ -141,7 +145,6 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             placeholder="to"
                             data = {getTimePeriods(interval, ...timeRange)}
                             searchable
-                            clearable
                             withAsterisk
                             maxDropdownHeight={140}
                             {...form.getInputProps('end_time')}
@@ -151,7 +154,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             </div>
 
             {/* If currentBooking is private, description will not be present. */}
-            { (currentBooking?.id && currentBooking?.visbility) || !currentBooking?.id && //Booking belongs to user
+            { isShowDetails() && //Booking belongs to user
              <Textarea
                  label = "Description"
                  placeholder = "Add a brief description of this booking"
@@ -161,19 +164,18 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             }
 
             {/* If currentBooking is private, user information will not be present */}
-            
             <div className = "lowerSection flex justify-between mt-4">
-                { currentBooking?.user &&
+                { isShowDetails() &&
                     //TODO: load user info here
                     <div className = "bookerInfo flex gap-3">
                         <img 
-                        src = { currentBooking.user?.profileImage ?? fallbackProfileImage }
+                        src = { form.values?.user?.profileImage ?? fallbackProfileImage }
                         className = "rounded-md w-16 h-16 object-cover"
                         />
                         <div>
                             <p className = "text-neutral-400 text-sm">Booking as</p>
-                            <p className = "text-orange-600 text-lg font-semibold">{currentBooking.user.first_name}</p>
-                            <p className = "text-neutral-400 text-sm">{currentBooking.user.email}</p>
+                            <p className = "text-orange-600 text-lg font-semibold">{form.values?.user?.first_name}</p>
+                            <p className = "text-neutral-400 text-sm">{form.values?.user?.email}</p>
                         </div>
                     </div>
                 }
