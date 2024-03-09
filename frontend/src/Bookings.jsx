@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { HostContext, UserContext } from "./App.jsx";
 
 import ModalComponent from "./components/CustomModal"
@@ -18,14 +18,34 @@ import { httpRequest } from "./utils.js";
 
 function Bookings() {
 	// checkUserLoggedIn();
+	const [availableRooms, setAvailableRooms] = useState([])
+	const [availableEquipment, setAvailableEquipment] = useState([])
+	const [currentAssetViewIsRoom, setCurrentAssetViewIsRoom] = useState(true)
 
 	const { host } = useContext(HostContext)
-	const { currentUser } =  useContext(UserContext);
+	const { currentUser } =  useContext(UserContext); //alias user as currentUser
 
 	const [opened, { open, close }] = useDisclosure(false);
 
 	const [clickedBooking, setClickedBooking] = useState(null);
 	const [isColumnView, setIsColumnView] = useState(true);
+
+	useEffect(() => {
+			httpRequest({
+					endpoint: `${host}/bookings/resources/filter?type=room`,
+					onSuccess: (data) => {
+						setAvailableRooms(data);
+					}
+				}
+			);
+			httpRequest({
+					endpoint: `${host}/bookings/resources/filter?type=equipment`,
+					onSuccess: (data) => {
+						setAvailableEquipment(data);
+					}
+				}
+			);
+		}, []); // The empty array specifies run only once (during render phase)
 
 	const onClickBooking = (bookingInfo) => {
 		console.log("click");
@@ -38,7 +58,6 @@ function Bookings() {
 		console.dir(bookingInfo)
 		//If bookingInfo has an ID, it is a PATCH (frontend doesn't assign this)
 		if (!!bookingInfo.id) {
-			
 			httpRequest({
 				endpoint: `${host}/bookings/${bookingInfo.id}/`,
 				method: "PATCH",
@@ -57,22 +76,40 @@ function Bookings() {
 		//New booking posted
 		else {
 			httpRequest({
-				endpoint: `${host}/bookings/user/${currentUser.id}/`,
+				endpoint: `${host}/bookings/user/${currentUser?.id}/`,
 				method: "POST",
 				body: JSON.stringify(bookingInfo),
 				onSuccess: () => {
 					console.log("Success")
-					new SuccessNotification("Booking added", `${bookingInfo.resource_name} was succesfully booked!`).show()
+					new SuccessNotification("Booking added", `${bookingInfo.resources_name} was succesfully booked!`).show()
 				},
 				onFailure: () => {
 					console.log("Fail")
 					console.dir(bookingInfo)
-					new ErrorNotification("Booking couldn't be added", `${bookingInfo.resource_name} couldn't be booked`).show()
+					new ErrorNotification("Booking couldn't be added", `${bookingInfo.resources_name} couldn't be booked`).show()
 				}
 			})
 		}
 		setClickedBooking(null)
 		close()
+	}
+
+	const onModalDeleteBooking = (bookingInfo) => {
+		httpRequest({
+			endpoint: `${host}/bookings/${bookingInfo.id}/`,
+			method: "DELETE",
+			onSuccess: () => {
+				console.log("Success")
+				new SuccessNotification("Booking deleted", `${bookingInfo.resources_name} was succesfully deleted!`).show()
+			},
+			onFailure: () => {
+				console.log("Fail")
+				console.dir(bookingInfo)
+				new ErrorNotification("Booking couldn't be deleted", `${bookingInfo.resources_name} couldn't be deleted`).show()
+			}
+		});
+		setClickedBooking(null);
+		close();
 	}
 
 	const onModalCloseBooking = () => {
@@ -82,7 +119,7 @@ function Bookings() {
 
 	return (
 		<div className="h-full overflow-clip flex-grow">
-			<BookingHeader setColumnView={setIsColumnView} />
+			<BookingHeader setColumnView={setIsColumnView} onBookClick={onClickBooking} onAssetToggle={setCurrentAssetViewIsRoom}/>
 
 			{!isColumnView ? (
 				<BookingListView onItemClick={onClickBooking} />
@@ -101,12 +138,13 @@ function Bookings() {
 					timingFunction: "ease-in-out",
 				}}
 			>
-				<BookingFormComponent
-					currentBooking={clickedBooking}
-					availableAssets={null} //TODO: Fill this in
-					onSubmit={onModalSubmitBooking}
-					onClose={onModalCloseBooking}
-				/>
+			<BookingFormComponent
+				currentBooking={clickedBooking}
+				availableAssets={currentAssetViewIsRoom ? availableRooms : availableEquipment} //TODO: Fill this in
+				onSubmit={onModalSubmitBooking}
+				onClose={onModalCloseBooking}
+				onDelete={onModalDeleteBooking}
+			/>
 			</Modal>
 		</div>
 	);

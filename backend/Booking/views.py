@@ -121,8 +121,12 @@ class UserBookingView(generics.ListCreateAPIView):
             return Response({"error": "You don't have permission to add a booking for another user."},
                             status=status.HTTP_403_FORBIDDEN)
 
-        print("user below")
-        print("here", user)
+        # print("user below")
+        # print("here", user)
+
+        # Need to get the resource id by using the resource name from the request data
+        # Made the resource name a unique field in the model, already - Yevhen
+
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=user)

@@ -15,7 +15,7 @@ export default Portfolio;
  */
 function Portfolio({ isCurrentUser, portfolio }) {
 	const { host } = useContext(HostContext);
-	const { user } = useContext(UserContext);
+	const { currentUser : user } = useContext(UserContext);
 
 	const [portfolioList, setPortfolioList] = useState(portfolio?.items);
 	//Modal Support

@@ -28,7 +28,7 @@ function UserRoles({roles}) {
  */
 function EducationBackground({education}) {
 
-	const { user, setUser } = useContext(UserContext);
+	const { currentUser : user , setCurrentUser: setUser } = useContext(UserContext);
 	const { host } = useContext(HostContext);
 
 	// education = {
