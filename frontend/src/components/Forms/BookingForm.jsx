@@ -32,11 +32,12 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             // start and end times are split from their standard date formatting so that
             // date/time pickers are useable. They will be recombined on (valid) submit.
             id: currentBooking?.id,
+            resources: currentBooking?.resources, //The ID of the resource asset for backend
             resources_name: currentBooking?.resources_name ?? "",
             date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             start_time: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "",
             end_time: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "",
-            description: currentBooking?.description ?? "",
+            title: currentBooking?.title ?? "",
             visibility: currentBooking?.visibility ?? true,
             user: currentBooking?.user ?? currentUser,
         },
@@ -60,7 +61,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                     ? 'Asset must be selected'
                     : null
             },
-            description: (value) => (
+            title: (value) => (
                 value.length > 50
                     ? 'Description must be less than 50 characters'
                     : null

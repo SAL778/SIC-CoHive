@@ -38,6 +38,7 @@ function Bookings() {
 		console.dir(bookingInfo)
 		//If bookingInfo has an ID, it is a PATCH (frontend doesn't assign this)
 		if (!!bookingInfo.id) {
+			
 			httpRequest({
 				endpoint: `${host}/bookings/${bookingInfo.id}/`,
 				method: "PATCH",

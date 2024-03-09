@@ -16,7 +16,6 @@ from User.views import get_user_from_token
 # Create your views here.
 User = get_user_model()
 
-
 class ColumnsView(generics.ListAPIView):
     '''
     get:
@@ -128,3 +127,18 @@ class ViewBookingView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
     lookup_field = 'pk'
+
+    def patch(self, request, *args, **kwargs):
+
+        user_token = get_user_from_token(request).id
+        user_requested = request.data['user']['id']
+
+        if not str(user_token) == str(user_requested):
+            return Response({"error": "You don't have permission to update this booking."}, status=status.HTTP_403_FORBIDDEN)
+
+        booking = self.get_object()
+        serializer = BookingSerializer(booking, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
