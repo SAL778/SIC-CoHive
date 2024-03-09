@@ -175,7 +175,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                         <div>
                             <p className = "text-neutral-400 text-sm">Booking as</p>
                             <p className = "text-orange-600 text-lg font-semibold">{form.values?.user?.first_name}</p>
-                            <p className = "text-neutral-400 text-sm">{currentBooking?.user?.email}</p>
+                            <p className = "text-neutral-400 text-sm">{form.values?.user?.email}</p>
                         </div>
                     </div>
                 }
