@@ -9,7 +9,7 @@ export default function Profile() {
 	// checkUserLoggedIn();
 
 	//const [userData, setUserData] = useState(null);
-	const { user, setUser } = useContext(UserContext);
+	const { currentUser : user , setCurrentUser: setUser } = useContext(UserContext);
 	const { host } = useContext(HostContext);
 
 	const [portfolio, setPortfolio] = useState(null);

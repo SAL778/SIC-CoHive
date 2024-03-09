@@ -12,7 +12,7 @@ class Resources(models.Model):
     ]
 
     id = models.AutoField(primary_key=True,help_text="Unique identifier for the asset")
-    name = models.CharField(max_length=100, blank=True, null=True,help_text="Name of the asset")
+    name = models.CharField(max_length=100, unique=True, blank=True, null=True, help_text="Name of the asset")
     description = models.TextField(help_text="Description of the asset")
     # image = models.FilePathField(path="/resource/img", blank=True, null=True,help_text="Path to the image of the asset")
     # room_code = models.CharField(max_length=100, blank=True, null=True,help_text="Room code of the asset")

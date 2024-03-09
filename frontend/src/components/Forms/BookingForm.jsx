@@ -13,26 +13,27 @@ export default BookingFormComponent
  * @param {Array[Object]} availableAssets - A list of assets available to be booked
  * @param {string} type - A string that tells what type of assets were provided (i.e room, assets)
  * @param {function} onClose - A callable that triggeres upon form cancellation
- * @param {onSubmit} onSubmit - A callable that triggers upon form submission
+ * @param {function} onSubmit - A callable that triggers upon form submission
+ * @param {function} onDelete - A callable that triggers upon form deletion
  */
-function BookingFormComponent({currentBooking = null, availableAssets, onClose, onSubmit}) {
+function BookingFormComponent({currentBooking = null, availableAssets, onClose, onSubmit, onDelete}) {
 
     const fallbackProfileImage = "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?q=80&w=1828&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     const fallbackAssetImage = "https://images.unsplash.com/photo-1633633292416-1bb8e7b2832b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 
     const { currentUser } = useContext(UserContext);
+
+    console.log(currentUser)
     const interval = 30;
     const timeRange = [7, 20] //Opening times are between 7AM and 8PM
 
-    //TODO: Change this to prop
-    let available = ["Room A", "Room B", "Room C", "Room D", "Room E", "Room F"]
-
+    //TODO: Change the resources ID from 1 to something else later.
     const form = useForm({
         initialValues: {
             // start and end times are split from their standard date formatting so that
             // date/time pickers are useable. They will be recombined on (valid) submit.
             id: currentBooking?.id,
-            resources: currentBooking?.resources, //The ID of the resource asset for backend
+            resources: currentBooking?.resources ?? 1, //The ID of the resource asset for backend
             resources_name: currentBooking?.resources_name ?? "",
             date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             start_time: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "",
@@ -103,7 +104,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                     <Select
                         label="Select an Asset"
                         placeholder="Pick an asset"
-                        data = {available}
+                        data = {availableAssets}
                         searchable
                         withScrollArea={false}
                         styles={{ dropdown: { maxHeight: 140, overflowY: 'auto' } }}
@@ -150,12 +151,12 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             </div>
 
             {/* If currentBooking is private, description will not be present. */}
-            { currentBooking?.description &&
+            { (currentBooking?.id && currentBooking?.visbility) || !currentBooking?.id && //Booking belongs to user
              <Textarea
                  label = "Description"
                  placeholder = "Add a brief description of this booking"
                  rows={3}
-                 {...form.getInputProps('description')}
+                 {...form.getInputProps('title')}
              />
             }
 
@@ -177,10 +178,19 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                     </div>
                 }
                 <div className ="flex gap-3 pt-3">
-                    <button className = "p-3 text-neutral-400 rounded-md" onClick = {onClose}>Close</button>
-                    <button type = "submit" className ="button-orange">Submit</button>
+                    <button type="button" className = "p-3 text-neutral-400 rounded-md" onClick = {onClose}>Close</button>
+                    { console.log(currentBooking?.user?.id, currentUser) }
+                    
+                    { currentBooking?.user?.id == currentUser?.id && // Booking belongs to the current user
+                        <>
+                            <button type="button" className ="button-orange" onClick = {() => onDelete(currentBooking)}>Delete</button>
+                            <button type = "submit" className ="button-orange">Edit</button>
+                        </>
+                    }
+                    { currentUser?.id && !currentBooking?.id &&     // Booking does not yet exist, but is being added by current user                
+                        <button type = "submit" className ="button-orange">Submit</button>
+                    }           
                 </div>
-            
             </div>
         </form>
     )

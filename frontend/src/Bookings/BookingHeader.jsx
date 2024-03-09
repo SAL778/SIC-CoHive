@@ -5,10 +5,11 @@ import React, { useState } from 'react';
 /**Component function that renders a booking header
  * 
  * @param {function} setColumnView - Callback that toggles the booking view
+ * @param {function} onToggleRooms - Callback that toggles the viewed resource
  * @returns 
  */
 
-const BookingHeader = ({setColumnView}) => {
+const BookingHeader = ({setColumnView, onBookClick, onToggleRooms}) => {
     const [selectedTab, setSelectedTab] = useState('Rooms');
     const [selectedIcon, setSelectedIcon] = useState('columns');
 
@@ -32,7 +33,7 @@ const BookingHeader = ({setColumnView}) => {
             </div>
             <div className="flex flex-row justify-between items-end">
                 <div>
-                    <button className="bg-orange-600 hover:bg-orange-500 text-white font-regular py-4 px-8 rounded ">
+                    <button onClick = {onBookClick} className="bg-orange-600 hover:bg-orange-500 text-white font-regular py-4 px-8 rounded ">
                         Book a Room
                     </button>
                 </div>
@@ -42,7 +43,7 @@ const BookingHeader = ({setColumnView}) => {
                             className={`${
                                 selectedTab === 'Rooms' ? 'bg-orange-600' : 'bg-gray-300'
                             } hover:bg-orange-500 text-sm text-white font-regular py-2 px-4 rounded mr-2`}
-                            onClick={() => handleTabChange('Rooms')}
+                            onClick={() => onToggleRooms(true)}
                         >
                             Rooms
                         </button>
@@ -50,7 +51,7 @@ const BookingHeader = ({setColumnView}) => {
                             className={`${
                                 selectedTab === 'Equipment' ? 'bg-orange-600' : 'bg-gray-300'
                             } hover:bg-orange-500 text-sm text-white font-regular py-2 px-4 rounded`}
-                            onClick={() => handleTabChange('Equipment')}
+                            onClick={() => onToggleRooms(false)}
                         >
                             Equipment
                         </button>
