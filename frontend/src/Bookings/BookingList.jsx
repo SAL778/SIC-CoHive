@@ -36,11 +36,11 @@ function BookingListView({onItemClick}) {
             <Loader size={50} color="orange" />
         ) : (
             //Listview
-            <ul className="flex flex-col gap-5 w-2/3">
+            <ul className="flex flex-col gap-5 px-[10px] py-8">
                 {dateHeaders.map(dateHeader => (
                     <li key={dateHeader}>
                         <DateHeaderComponent date={dateHeader} />
-                        <ul className="flex flex-col gap-2">
+                        <ul className="flex flex-col gap-4">
                             {assets
                                 .filter(asset => asset.start_time.getDay() === dateHeader.getDay()) //Apply more filters here
                                 .map(asset => (
@@ -82,7 +82,7 @@ function AssetComponent({asset, onItemClick}) {
 
     return (
         //TODO: On private, grey everything out
-        <div className = {`flex items-center p-3 rounded-md gap-10 ${!greyOut && "shadow-custom"}`} onClick = {() => onItemClick(asset)}>
+        <div className = {`flex items-center p-3 rounded-md cursor-pointer gap-10 ${!greyOut && "shadow-custom"}`} onClick = {() => onItemClick(asset)}>
             <div className = "colA basis-2 flex-col flex-grow text-neutral-800">
                 <h3 className = "text-2xl font-semibold capitalize">{asset?.resources_name}</h3>
                 <p className = "text-base font-regular">{asset?.title}</p>

@@ -29,7 +29,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     const isShowDetails = () => ((currentBooking?.id && currentBooking?.visibility) || !currentBooking?.id);
 
     console.log(currentUser)
-    const interval = 30;
+    const interval = 15;
     const timeRange = [7, 20] //Opening times are between 7AM and 8PM
 
     //TODO: Change the resources ID from 1 to something else later.
