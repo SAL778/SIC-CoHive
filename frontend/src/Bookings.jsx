@@ -8,7 +8,7 @@ import { ErrorNotification, SuccessNotification } from "./components/notificatio
 
 import { useDisclosure } from "@mantine/hooks";	
 import { Modal } from "@mantine/core";
-import { notifications } from '@mantine/notifications';
+import { notifications } from "@mantine/notifications";
 
 import ColumnView from "./Bookings/BookingColumnView.jsx";
 import BookingHeader from "./Bookings/BookingHeader.jsx";
@@ -17,7 +17,6 @@ import { httpRequest } from "./utils.js";
 // import { checkUserLoggedIn } from "./utils.js";
 
 function Bookings() {
-
 	// checkUserLoggedIn();
 
 	const { host } = useContext(HostContext)
@@ -27,12 +26,12 @@ function Bookings() {
 
 	const [clickedBooking, setClickedBooking] = useState(null);
 	const [isColumnView, setIsColumnView] = useState(true);
- 
+
 	const onClickBooking = (bookingInfo) => {
-		console.log("click")
-		setClickedBooking(bookingInfo)
-		open()
-	}
+		console.log("click");
+		setClickedBooking(bookingInfo);
+		open();
+	};
 
 	//Send the updated booking (not necessarily the one that was clicked)
 	const onModalSubmitBooking = (bookingInfo) => {
@@ -75,36 +74,38 @@ function Bookings() {
 	}
 
 	const onModalCloseBooking = () => {
-		setClickedBooking(null)
-		close()
-	}
+		setClickedBooking(null);
+		close();
+	};
 
 	return (
 		<div className="h-full overflow-clip flex-grow">
-			<BookingHeader setColumnView={setIsColumnView}/>
-			
-			{!isColumnView ?
-				<BookingListView onItemClick = {onClickBooking}/>
-			:	
+			<BookingHeader setColumnView={setIsColumnView} />
+
+			{!isColumnView ? (
+				<BookingListView onItemClick={onClickBooking} />
+			) : (
 				<ColumnView />
-			} 
-			
+			)}
+
 			<Modal
-				opened = {opened}
-				onClose = {onModalCloseBooking}
+				opened={opened}
+				onClose={onModalCloseBooking}
 				centered
-				size = "auto"
-				transitionProps = {{transition: "slide-up", duration: 200, timingFunction: "ease-in-out"}}
+				size="auto"
+				transitionProps={{
+					transition: "slide-up",
+					duration: 200,
+					timingFunction: "ease-in-out",
+				}}
 			>
-				<BookingFormComponent 
-					currentBooking = {clickedBooking}
-					availableAssets = {null} //TODO: Fill this in
-					onSubmit = {onModalSubmitBooking}
-					onClose = {onModalCloseBooking}
+				<BookingFormComponent
+					currentBooking={clickedBooking}
+					availableAssets={null} //TODO: Fill this in
+					onSubmit={onModalSubmitBooking}
+					onClose={onModalCloseBooking}
 				/>
-
 			</Modal>
-
 		</div>
 	);
 }
