@@ -10,6 +10,7 @@ import { Link, NavLink } from "react-router-dom";
  * @returns {void} - Nothing.
  * Changes the location of the underlay to the clicked element by setting the CSS top position.
  */
+// TODO: fix the way the underlay is positioned when the page is resized, or attach it to the active nav item better
 function handleClick(rect) {
 	const yPos = rect.y;
 	const underlay = document.querySelector(".nav-underlay");
@@ -102,7 +103,8 @@ function Navigation() {
 					/>
 				</Link>
 				<div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0">
-					<img src={Underlay} className="nav-underlay" />
+					{/* NOTE: commented out until the positioning is fixed
+					<img src={Underlay} className="nav-underlay" /> */}
 					<div className="nav-container">
 						{objects.map((object, index) => (
 							<NavItem

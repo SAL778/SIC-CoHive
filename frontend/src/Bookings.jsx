@@ -18,11 +18,11 @@ import { httpRequest } from "./utils.js";
 
 function Bookings() {
 	// checkUserLoggedIn();
-	const [availableRooms, setAvailableRooms] = useState([])
-	const [availableEquipment, setAvailableEquipment] = useState([])
-	const [currentAssetViewIsRoom, setCurrentAssetViewIsRoom] = useState(true)
+	const [availableRooms, setAvailableRooms] = useState([]);
+	const [availableEquipment, setAvailableEquipment] = useState([]);
+	const [currentAssetViewIsRoom, setCurrentAssetViewIsRoom] = useState(true);
 
-	const { host } = useContext(HostContext)
+	const { host } = useContext(HostContext);
 	const { currentUser } =  useContext(UserContext); //alias user as currentUser
 
 	const [opened, { open, close }] = useDisclosure(false);
@@ -119,7 +119,7 @@ function Bookings() {
 
 	return (
 		<div className="h-full overflow-clip flex-grow">
-			<BookingHeader setColumnView={setIsColumnView} onBookClick={onClickBooking} onAssetToggle={setCurrentAssetViewIsRoom}/>
+			<BookingHeader setColumnView={setIsColumnView} onBookClick={onClickBooking} onToggleRooms={setCurrentAssetViewIsRoom}/>
 
 			{!isColumnView ? (
 				<BookingListView onItemClick={onClickBooking} />
