@@ -33,7 +33,7 @@ const BookingHeader = ({setColumnView, onBookClick, onToggleRooms}) => {
             </div>
             <div className="flex flex-row justify-between items-end">
                 <div>
-                    <button onClick = {onBookClick} className="bg-orange-600 hover:bg-orange-500 text-white font-regular py-4 px-8 rounded ">
+                    <button type="button" onClick = {() => onBookClick(null)} className="bg-orange-600 hover:bg-orange-500 text-white font-regular py-4 px-8 rounded ">
                         Book a Room
                     </button>
                 </div>
