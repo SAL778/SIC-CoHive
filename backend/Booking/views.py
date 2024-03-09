@@ -15,8 +15,10 @@ from User.views import get_user_from_token
 from rest_framework.views import APIView
 from django.http import Http404
 from drf_yasg.utils import swagger_auto_schema
+
 # Create your views here.
 User = get_user_model()
+
 
 class ColumnsView(generics.ListAPIView):
     '''
@@ -30,7 +32,6 @@ class ColumnsView(generics.ListAPIView):
         if type is not None:
             return Resources.objects.filter(type=type)
         return Resources.objects.all()
-
 
     # def post(self, request, *args, **kwargs):
     #     # check if user have permission to add a resource
@@ -114,13 +115,14 @@ class UserBookingView(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         user_id = kwargs.get('user_id')
-        user1= get_object_or_404(User, id=user_id)
+        user1 = get_object_or_404(User, id=user_id)
         user = get_user_from_token(request)
         if user != user1:
-            return Response({"error": "You don't have permission to add a booking for another user."}, status=status.HTTP_403_FORBIDDEN)
-        
+            return Response({"error": "You don't have permission to add a booking for another user."},
+                            status=status.HTTP_403_FORBIDDEN)
+
         print("user below")
-        print("here",user)
+        print("here", user)
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=user)
@@ -132,7 +134,7 @@ class ViewBookingView(APIView):
     """
     Retrieve, update or delete a booking instance.
     """
-    
+
     def get_object(self, pk):
         try:
             return Booking.objects.get(pk=pk)
@@ -148,16 +150,18 @@ class ViewBookingView(APIView):
         serializer = BookingSerializer(booking)
         return Response(serializer.data)
 
-    @swagger_auto_schema(operation_description="Update a specific booking.", request_body=BookingSerializer, responses={200: BookingSerializer})
+    @swagger_auto_schema(operation_description="Update a specific booking.", request_body=BookingSerializer,
+                         responses={200: BookingSerializer})
     def patch(self, request, pk, format=None):
         """
         Update a specific booking.
         """
-        
+
         booking = self.get_object(pk)
         user = get_user_from_token(request)
         if user != booking.user:
-            return Response({"error": "You don't have permission to update this booking."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"error": "You don't have permission to update this booking."},
+                            status=status.HTTP_403_FORBIDDEN)
         serializer = BookingSerializer(booking, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -173,11 +177,32 @@ class ViewBookingView(APIView):
         booking = self.get_object(pk)
         user = get_user_from_token(request)
         print("hello")
-        
+
         if user != booking.user:
             print("user")
-            return Response({"error": "You don't have permission to delete this booking."}, status=status.HTTP_403_FORBIDDEN)
-        
+            return Response({"error": "You don't have permission to delete this booking."},
+                            status=status.HTTP_403_FORBIDDEN)
+
         print("deleting booking")
         booking.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class ResourceListView(generics.ListAPIView):
+    '''
+    get:
+    Get all resources name with filter by type.
+    '''
+    serializer_class = ResourcesSerializer
+
+    def get_queryset(self):
+        type = self.request.query_params.get('type')
+        if type is not None:
+            return Resources.objects.filter(type=type)
+        return Resources.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        names = queryset.values_list('name', flat=True)
+        return Response(names)
