@@ -35,6 +35,7 @@ function Bookings() {
 
 	//Send the updated booking (not necessarily the one that was clicked)
 	const onModalSubmitBooking = (bookingInfo) => {
+		console.dir(bookingInfo)
 		//If bookingInfo has an ID, it is a PATCH (frontend doesn't assign this)
 		if (!!bookingInfo.id) {
 			httpRequest({
@@ -43,12 +44,12 @@ function Bookings() {
 				body: JSON.stringify(bookingInfo),
 				onSuccess: () => {
 					console.log("Success")
-					new SuccessNotification("Booking modified", `${bookingInfo.resource_name} was succesfully edited!`).show()
+					new SuccessNotification("Booking modified", `${bookingInfo.resources_name} was succesfully edited!`).show()
 				},
 				onFailure: () => {
 					console.log("Fail")
 					console.dir(bookingInfo)
-					new ErrorNotification("Booking couldn't be modified", `${bookingInfo.resource_name} couldn't be booked`).show()
+					new ErrorNotification("Booking couldn't be modified", `${bookingInfo.resources_name} couldn't be booked`).show()
 				}
 			})
 		}

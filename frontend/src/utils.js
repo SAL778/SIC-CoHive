@@ -72,7 +72,7 @@ export async function httpRequest({
             options.headers = {Authorization: `Token ${token}`}
         }
         if (body) {
-            options.headers = {contentType: "application/json"}
+            options.headers = {"Content-Type": "application/json"}
         }
         
         const res = await fetch(endpoint, options)

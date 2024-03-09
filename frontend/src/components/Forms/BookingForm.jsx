@@ -31,6 +31,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
         initialValues: {
             // start and end times are split from their standard date formatting so that
             // date/time pickers are useable. They will be recombined on (valid) submit.
+            id: currentBooking?.id,
             resources_name: currentBooking?.resources_name ?? "",
             date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             start_time: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "",
@@ -89,7 +90,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
 
     return (
         // values represents the booking object
-        <form onSubmit = {form.onSubmit(values => {onSubmit(values)})}> 
+        <form onSubmit = {form.onSubmit((values) => {onSubmit(values)})}> 
             <div className = "upperSection flex">
                 <img 
                 src = {currentBooking?.image ?? fallbackAssetImage}
