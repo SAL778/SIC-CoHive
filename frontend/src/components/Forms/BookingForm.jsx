@@ -1,9 +1,10 @@
-import React, { useState, useContext } from "react"
-import { UserContext } from "../../App.jsx";
+import React, { useState, useContext, useEffect } from "react"
+import { UserContext, HostContext } from "../../App.jsx";
 import { useForm } from "@mantine/form";
-import { TextInput, Textarea, Checkbox, Select } from "@mantine/core";
+import { TextInput, Textarea, Checkbox, Select, Text } from "@mantine/core";
 import { TimeInput, DatePickerInput } from "@mantine/dates";
 import './form.css';
+import { httpRequest } from "../../utils.js";
 
 export default BookingFormComponent
 
@@ -22,14 +23,21 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     const fallbackAssetImage = "https://images.unsplash.com/photo-1633633292416-1bb8e7b2832b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 
     const { currentUser } = useContext(UserContext);
+    const { host } = useContext(HostContext);
 
     //This logic is responsible for conditionally rendering the description and booker of a booked asset, based on...
     //a) Current booking already exists (i.e not being made from scratch) and is visible
     //b) Current booking does not yet exist (i.e it's being created) and thus visible to the creator
     const isShowDetails = () => ((currentBooking?.id && currentBooking?.visibility) || !currentBooking?.id);
 
+    const currentUserMatchesBooking = () => (form?.values.user?.id == currentUser?.id);
+
     const interval = 15;
     const timeRange = [7, 20] //Opening times are between 7AM and 8PM
+
+
+    //Initial booking time slots
+    const [availableTimeSlots, setAvailableTimeSlots] = useState(getTimePeriods(interval, ...timeRange))
 
     //TODO: Change the resources ID from 1 to something else later.
     const form = useForm({
@@ -94,44 +102,103 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
         }
     });
 
+    //This should NOT prohibit loading, but rather modify existing data when the GET goes through.
+    //Gets all unique 15 minute intervals that are already booked (and therefore should be disabled)
+    useEffect(() => {
+        if (form?.values.resources_name) {
+            // THIS RELIES ON THE ASSET ID BEING THE INDEX OF THE ASSETS RETRIEVED
+            // THIS ____MUST____ BE REPLACED AT THE EARLIEST AVAILABILITY BECAUSE OF ITS
+            // FRAGILITY. A MORE ROBUST SOLUTION MUST BE FOUND.
+            // TODO: REPLACE THE LOGIC THAT MAPS RESOURCE NAME TO ITS ID.
+            // TODO: ADD AN ADDITIONAL CHECK TO MATCH THE DAY (NEEDS BACKEND SUPPORT)
+            const resourceId = availableAssets.indexOf(form.values.resources_name) + 1
+            console.log("Form value changed")
+            httpRequest({
+                endpoint: `${host}/bookings/columns/${resourceId}`,
+                onSuccess: (data) => {
+                    console.log(data)
+                    const bookedTimeSlots = new Set()               //Unique 15 min intervals
+                    for (const booking of data.bookings) {
+                        const bookedTimes = getTimePeriods(interval, booking.start_time, booking.end_time)  //Booked 15 min intervals
+                        bookedTimes.forEach((bookedTime) => {
+                            bookedTimeSlots.add(bookedTime)
+                        });
+                    }
+                    setAvailableTimeSlots(
+                        availableTimeSlots.map((timeSlot) => ({
+                            value: timeSlot,
+                            disabled: bookedTimeSlots.has(timeSlot) // Check if the time slot is in bookedTimeSlots
+                        }))
+                    );
+                }
+            })
+        }   
+    }, [form.values.resources_name])
+
     return (
         // values represents the booking object
         <form onSubmit = {form.onSubmit((values) => {onSubmit(values)})}> 
-            <div className = "upperSection flex">
+            <div className = "upperSection flex justify-between gap-4">
                 <img 
                 src = {currentBooking?.image ?? fallbackAssetImage}
-                className = "rounded-md h-64 w-64 object-cover mr-4"
+                className = "rounded-md w-[325px] h-[325px] object-cover"
                 />
-                <div className = " flex flex-col space-between w-72 h-64 justify-between">
-                    <h1 className="capitalize text-2xl font-bold">{currentBooking?.resources_name || "Book an Asset"}</h1>
-                    {/* TODO: The name of the room must be in available assets to appear.*/}
-                    <Select
-                        label="Select an Asset"
-                        placeholder="Pick an asset"
-                        data = {availableAssets}
-                        searchable
-                        withScrollArea={false}
-                        styles={{ dropdown: { maxHeight: 140, overflowY: 'auto' } }}
-                        {...form.getInputProps('resources_name')}
-                    />
+                <div className = "w-[300px] flex flex-col space-between justify-between">
+                    <div className= "roomInfo"> 
+                        <h1 className="capitalize text-xl font-bold">{currentBooking?.resources_name || "Book an Asset"}</h1>
 
+                        {/* If currentBooking is private, description will not be present. */}
+                        { isShowDetails() && //Booking is visible
+                            <>
+                                {currentUserMatchesBooking() ? (
+                                    <TextInput
+                                    label="title"
+                                    withAsterisk
+                                    placeholder="Give your booking a title"
+                                    rows={1}
+                                    {...form.getInputProps('title')}
+                                    />
+                                ) : (
+                                    <Text>{form.values.title}</Text>
+                                )
+                                }
+                            </>
+                        }
+                    </div>
+
+                    {/* TODO: The name of the room must be in available assets to appear.*/}
+                    {currentUserMatchesBooking() &&
+                        <Select
+                            label="Select an Asset"
+                            placeholder="Pick an asset"
+                            data = {availableAssets}
+                            searchable
+                            withScrollArea={false}
+                            styles={{ dropdown: { maxHeight: 140, overflowY: 'auto' } }}
+                            {...form.getInputProps('resources_name')}
+                        />
+                    }
                     <DatePickerInput
                         label={isToday(form.values.date) ? "Today" : null}
                         hideOutsideDates
+                        disabled={!currentUserMatchesBooking()}
+                        pointer="default"
                         allowSingleDateInRange
-                        allowDeselect= {false}
+                        allowDeselect={false}
                         firstDayOfWeek={0}
                         defaultDate={form.values.date} //Automatically go to the month of current booking
-                        rightSection={<i className="fa fa-calendar text-orange-600"/>}
+                        rightSection={<i className="fa fa-calendar text-orange-600" />}
                         {...form.getInputProps('date')}
+                        className="mt-4"
                     />
 
                     <div className = "timeSelector flex gap-3">
                         <Select
                             label="From"
+                            disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="from"
-                            data = {getTimePeriods(interval, ...timeRange)}
+                            data = {availableTimeSlots}
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
@@ -140,56 +207,55 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
 
                         <Select
                             label="To"
+                            disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="to"
-                            data = {getTimePeriods(interval, ...timeRange)}
+                            data = {availableTimeSlots}
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
                             {...form.getInputProps('end_time')}
                         />
                     </div>
+                    {/* If the currentBooking matches the currentUser, show the visibility toggle */}
+                    {   currentUser.id == form?.values.user?.id &&
+                        <Checkbox
+                            label = "Display booking details publicly"
+                            color = "rgba(234, 88, 12, 1)"
+                            {...form.getInputProps('visibility', {type: 'checkbox'})}
+                            className={`mt-3 ${form.values?.visibility ? 'text-neutral-800' : 'text-neutral-400'}`}
+                        />
+                    }
                 </div>
             </div>
 
-            {/* If currentBooking is private, description will not be present. */}
-            { isShowDetails() && //Booking belongs to user
-             <Textarea
-                 label = "Description"
-                 withAsterisk
-                 placeholder = "Add a brief description of this booking"
-                 rows={3}
-                 {...form.getInputProps('title')}
-             />
-            }
-
             {/* If currentBooking is private, user information will not be present */}
-            <div className = "lowerSection flex justify-between mt-4">
+            <div className = "lowerSection flex justify-between mt-8 gap-8">
                 { isShowDetails() &&
                     //TODO: load user info here
-                    <div className = "bookerInfo flex gap-3">
+                    <div className = "bookerInfo flex items-center gap-3">
                         <img 
                         src = { form.values?.user?.profileImage ?? fallbackProfileImage }
                         className = "rounded-md w-16 h-16 object-cover"
                         />
-                        <div>
-                            <p className = "text-neutral-400 text-sm">Booking as</p>
-                            <p className = "text-orange-600 text-lg font-semibold">{form.values?.user?.first_name}</p>
-                            <p className = "text-neutral-400 text-sm">{form.values?.user?.email}</p>
+                        <div className="max-w-[180px] overflow-hidden">
+                            <p className = "text-neutral-700 text-sm truncate">{currentUserMatchesBooking() ? "Booking as" : "Booked by"}</p>
+                            <p className = "text-orange-600 text-xl font-semibold truncate leading-[1]">{form.values?.user?.first_name}</p>
+                            <p className = "text-neutral-400 text-sm truncate">{form.values?.user?.email}</p>
                         </div>
                     </div>
                 }
                 <div className ="flex gap-3 pt-3">
-                    <button type="button" className = "p-3 text-neutral-400 rounded-md" onClick = {onClose}>Close</button>
+                    <button type="button" className = "button-grey-hover modal-button" onClick = {onClose}>Close</button>
                     
                     { currentBooking?.user?.id == currentUser?.id && // Booking belongs to the current user
                         <>
-                            <button type="button" className ="button-orange" onClick = {() => onDelete(currentBooking)}>Delete</button>
-                            <button type = "submit" className ="button-orange">Edit</button>
+                            <button type="button" className ="button-orange modal-button" onClick = {() => onDelete(currentBooking)}>Delete</button>
+                            <button type = "submit" className ="button-orange modal-button">Edit</button>
                         </>
                     }
                     { currentUser?.id && !currentBooking?.id &&     // Booking does not yet exist, but is being added by current user                
-                        <button type = "submit" className ="button-orange">Submit</button>
+                        <button type = "submit" className ="button-orange modal-button">Submit</button>
                     }           
                 </div>
             </div>
@@ -239,7 +305,7 @@ const deserializeTime = (timestring) => {
     } else if (ampm === "AM" && hours === 24) {
         hour24 = 12;
     }
-    
+
     return [hour24, minutes];
 }
 

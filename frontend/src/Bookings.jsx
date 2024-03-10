@@ -121,7 +121,10 @@ function Bookings() {
 				}
 			})
 		}
-		setClickedBooking(null)
+		//Wait until the modal transition has occurred before removing data
+		setTimeout(() => {
+			setClickedBooking(null);
+		}, 300)
 		close()
 	}
 
@@ -144,8 +147,11 @@ function Bookings() {
 	}
 
 	const onModalCloseBooking = () => {
-		setClickedBooking(null);
-		close();
+		//Wait until the modal transition has occurred before removing data
+		setTimeout(() => {
+			setClickedBooking(null);
+		}, 300)
+		close()
 	};
 
 	return (

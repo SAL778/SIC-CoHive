@@ -60,31 +60,27 @@ export default function Login({}){
 
     return(
         <> 
-            <div className="background-container"></div> 
-            <img src={placeholder} className="logo object-none" alt="Logo" />
-            <div className="signInButtons flex flex-col gap-4">
-                {/* <button onClick={googleSignInClick}  type="button" className="button-orange rounded-md p-3 shadow-custom text-2xl">
-                    <i className="fa-brands fa-google mr-4"/>
-                    Continue with Google
-                </button> */}
-                <GoogleLogin
-                    onSuccess={handleGoogleLogin}
-                    onError={() => {
-                        console.log('Login Failed');
-                    }}
-                />
-                {/* <button onClick={guestSignInClick} type="button" className="button-orange p-3 rounded-md shadow-custom text-2xl">
-                    <i className="fa fa-user mr-4"/>
-                    Continue as Guest
-                </button> */}
-            </div>
-            <div className="access-info">
-                <p className="access-info text-neutral-400 justify-self-end">
-                    All registering users must first be approved by the Student Innovation Center
-                    prior to accessing any amenities. The Student Innovation Center is for University
-                    students, or University adjacent organizations only.
-                </p>
-            </div>
+            <div className="background-container flex justify-end px-[100px]">
+                <div className="flex flex-col justify-between  h-full pt-[94px] pb-[94px] w-[30%]">
+                    <img src={placeholder} className="logo object-none" alt="Student Inovation Center" />
+                    <div className="flex flex-col gap-40 items-center">
+                        <div className="flex flex-col gap-6 items-center">
+                            <h1 className="text-4xl font-bold text-center text-neutral-900">Sign In:</h1>
+                            <GoogleLogin
+                                onSuccess={handleGoogleLogin}
+                                onError={() => {
+                                    console.log('Login Failed');
+                                }}
+                            />
+                        </div>
+                        <p className="access-info text-neutral-400 text-center">
+                                All registering users must first be approved by the Student Innovation Center
+                                prior to accessing any amenities. The Student Innovation Center is for University
+                                students, or University adjacent organizations only.
+                        </p>
+                    </div>
+                </div>
+            </div> 
         </>
     );
 }

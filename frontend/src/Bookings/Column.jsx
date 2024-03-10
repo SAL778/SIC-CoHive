@@ -212,7 +212,7 @@ const Column = ({ column, onBookingEdit }) => {
 	};
 
 	return (
-		<div key={column.id} className="booking-column h-full flex flex-col relative">
+		<div key={column.id} className={`booking-column h-full flex flex-col relative ${selectedSlot ? 'currentlyBooking' : ''}`}>
 			<div className="flex justify-center items-center min-h-[80px] h-[80px] mb-[20px] rounded-[12px] shadow-custom w-[100] py-2 px-4 bg-white">
 				<p className="text-lg font-bold capitalize">{column.name}</p>
 			</div>
