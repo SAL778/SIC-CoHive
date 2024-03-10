@@ -54,7 +54,13 @@ const Signout = () => {
 					Are you sure you want to sign out?
 				</p>
 				<div className="flex justify-center gap-4">
-					<button onClick={() => setIsModalOpen(false)} className="button-red">
+					<button
+						onClick={() => {
+							setIsModalOpen(false);
+							navigate("/bookings");
+						}}
+						className="button-red"
+					>
 						Cancel
 					</button>
 					<button onClick={handleSignout} className="button-orange">
