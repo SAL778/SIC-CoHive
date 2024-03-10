@@ -305,6 +305,20 @@ class PortfolioItemList(generics.ListCreateAPIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+    # def patch(self, request, *args, **kwargs):
+    #     user_id = self.kwargs['user_id']
+    #     user = get_object_or_404(CustomUser, pk=user_id)
+    #     user1=get_user_from_token(request)
+    #     if user != user1:
+    #         return Response({'error': 'You do not have permission to update a portfolio item.'}, status=status.HTTP_401_UNAUTHORIZED)
+    #     else:
+    #         portfolio = self.get_object()
+    #         serializer = self.get_serializer(portfolio, data=request.data, partial=True)
+    #         if serializer.is_valid():
+    #             serializer.save()
+    #             return Response(serializer.data)
+    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 
 
