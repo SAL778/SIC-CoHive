@@ -22,7 +22,7 @@ export default function ColumnView({onBookingEdit, assetType, currentDate}) {
 
 	useEffect(() => {
 		httpRequest({
-			endpoint: `${host}/bookings/columns/filter?type=${assetType}&start_time=${currentDate.toISOString()}`,
+			endpoint: `${host}/bookings/columns/filter?type=${assetType}&date=${currentDate}`,
 			onSuccess: (columnsData) => {
 				console.dir(columnsData)
 				setColumnView(columnsData);

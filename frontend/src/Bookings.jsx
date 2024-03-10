@@ -172,7 +172,7 @@ function Bookings() {
 				<ColumnView
 				onBookingEdit={onClickBooking}
 				assetType={currentAssetViewIsRoom ? "room" : "equipment"}
-				currentDate={currentDay}
+				currentDate={currentDay?.toISOString().split('T')[0]}
 				/>
 			)}
 
