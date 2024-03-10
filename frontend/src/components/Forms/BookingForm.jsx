@@ -1,9 +1,10 @@
-import React, { useState, useContext } from "react"
-import { UserContext } from "../../App.jsx";
+import React, { useState, useContext, useEffect } from "react"
+import { UserContext, HostContext } from "../../App.jsx";
 import { useForm } from "@mantine/form";
 import { TextInput, Textarea, Checkbox, Select, Text } from "@mantine/core";
 import { TimeInput, DatePickerInput } from "@mantine/dates";
 import './form.css';
+import { httpRequest } from "../../utils.js";
 
 export default BookingFormComponent
 
@@ -22,6 +23,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     const fallbackAssetImage = "https://images.unsplash.com/photo-1633633292416-1bb8e7b2832b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 
     const { currentUser } = useContext(UserContext);
+    const { host } = useContext(HostContext);
 
     //This logic is responsible for conditionally rendering the description and booker of a booked asset, based on...
     //a) Current booking already exists (i.e not being made from scratch) and is visible
@@ -32,6 +34,10 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
 
     const interval = 15;
     const timeRange = [7, 20] //Opening times are between 7AM and 8PM
+
+
+    //Initial booking time slots
+    const [availableTimeSlots, setAvailableTimeSlots] = useState(getTimePeriods(interval, ...timeRange))
 
     //TODO: Change the resources ID from 1 to something else later.
     const form = useForm({
@@ -96,6 +102,39 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
         }
     });
 
+    //This should NOT prohibit loading, but rather modify existing data when the GET goes through.
+    //Gets all unique 15 minute intervals that are already booked (and therefore should be disabled)
+    useEffect(() => {
+        if (form?.values.resources_name) {
+            // THIS RELIES ON THE ASSET ID BEING THE INDEX OF THE ASSETS RETRIEVED
+            // THIS ____MUST____ BE REPLACED AT THE EARLIEST AVAILABILITY BECAUSE OF ITS
+            // FRAGILITY. A MORE ROBUST SOLUTION MUST BE FOUND.
+            // TODO: REPLACE THE LOGIC THAT MAPS RESOURCE NAME TO ITS ID.
+            // TODO: ADD AN ADDITIONAL CHECK TO MATCH THE DAY (NEEDS BACKEND SUPPORT)
+            const resourceId = availableAssets.indexOf(form.values.resources_name) + 1
+            console.log("Form value changed")
+            httpRequest({
+                endpoint: `${host}/bookings/columns/${resourceId}`,
+                onSuccess: (data) => {
+                    console.log(data)
+                    const bookedTimeSlots = new Set()               //Unique 15 min intervals
+                    for (const booking of data.bookings) {
+                        const bookedTimes = getTimePeriods(interval, booking.start_time, booking.end_time)  //Booked 15 min intervals
+                        bookedTimes.forEach((bookedTime) => {
+                            bookedTimeSlots.add(bookedTime)
+                        });
+                    }
+                    setAvailableTimeSlots(
+                        availableTimeSlots.map((timeSlot) => ({
+                            value: timeSlot,
+                            disabled: bookedTimeSlots.has(timeSlot) // Check if the time slot is in bookedTimeSlots
+                        }))
+                    );
+                }
+            })
+        }   
+    }, [form.values.resources_name])
+
     return (
         // values represents the booking object
         <form onSubmit = {form.onSubmit((values) => {onSubmit(values)})}> 
@@ -158,7 +197,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="from"
-                            data = {getTimePeriods(interval, ...timeRange)}
+                            data = {availableTimeSlots}
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
@@ -170,7 +209,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="to"
-                            data = {getTimePeriods(interval, ...timeRange)}
+                            data = {availableTimeSlots}
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
