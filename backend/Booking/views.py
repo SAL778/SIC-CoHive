@@ -33,17 +33,6 @@ class ColumnsView(generics.ListAPIView):
             return Resources.objects.filter(type=type)
         return Resources.objects.all()
 
-    # def post(self, request, *args, **kwargs):
-    #     # check if user have permission to add a resource
-    #     user = get_user_from_token(request)
-    #     if not user.is_staff and not user.is_superuser:
-    #         return Response({"error": "You don't have permission to add a resource."}, status=status.HTTP_403_FORBIDDEN)
-    #     serializer = self.get_serializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class ColumnView(generics.RetrieveAPIView):
     '''
@@ -121,14 +110,20 @@ class UserBookingView(generics.ListCreateAPIView):
             return Response({"error": "You don't have permission to add a booking for another user."},
                             status=status.HTTP_403_FORBIDDEN)
 
-        # print("user below")
-        # print("here", user)
+        # Extract resource name from request data
+        resource_name = request.data.get('resources_name')
+        # Get the resource object with this name
+        resource = Resources.objects.filter(name=resource_name).first()
+        print(request.data)
+        if not resource:
+            return Response({"error": f"No resource found with name {resource_name}."},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-        # Need to get the resource id by using the resource name from the request data
-        # Made the resource name a unique field in the model, already - Yevhen
+        # Add the resource's ID to the request data, front end only sends the name
+        request.data['resources'] = resource.id
 
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid():   
             serializer.save(user=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -190,7 +185,6 @@ class ViewBookingView(APIView):
         print("deleting booking")
         booking.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 
 class ResourceListView(generics.ListAPIView):

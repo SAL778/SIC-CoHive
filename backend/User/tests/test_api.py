@@ -40,7 +40,7 @@ class CustomUserTestCase(APITestCase):
         self.assertEqual(response.data[0]['last_name'], 'User')
         self.assertEqual(response.data[0]['email'], 'testuser@example.com')
         self.assertEqual(response.data[0]['portfolioVisibility'], True)
-        self.assertEqual(response.data[0]['profileImage'], None)
+        self.assertEqual(response.data[0]['profileImage'], "http://example.com/image.jpg")
         self.assertEqual(response.data[0]['education']['field_of_study'], 'Computer Science')
         self.assertEqual(response.data[0]['education']['major'], 'Software Engineering')
         self.assertEqual(response.data[0]['education']['minor'], 'Data Science')
@@ -73,7 +73,8 @@ class CustomUserTestCase(APITestCase):
             },
             format='json',
            # headers={'AUTHORIZATION':self.token.key}
-           HTTP_AUTHORIZATION = self.token.key
+           HTTP_AUTHORIZATION = "Token " + self.token.key
+           
             # print(response.data)
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -81,7 +82,7 @@ class CustomUserTestCase(APITestCase):
         self.assertEqual(response.data['last_name'], 'User')
         self.assertEqual(response.data['email'], 'testuser@example.com')  # Email should not be updated
         self.assertEqual(response.data['portfolioVisibility'], False)
-        self.assertEqual(response.data['profileImage'], None)
+        self.assertEqual(response.data['profileImage'], 'http://example.com/updated_image.jpg')
         self.assertEqual(response.data['education']['field_of_study'], 'Updated Field')
         self.assertEqual(response.data['education']['major'], 'Updated Major')
         self.assertEqual(response.data['education']['minor'], 'Updated Minor')
@@ -96,7 +97,7 @@ class CustomUserTestCase(APITestCase):
             reverse('user_detail', kwargs={'pk': self.user.pk}),
             {'portfolioVisibility': "OK"},  # Invalid data: portfolioVisibility should be a boolean
             format='json',
-            HTTP_AUTHORIZATION=self.token.key
+            HTTP_AUTHORIZATION = "Token " + self.token.key
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -105,7 +106,7 @@ class CustomUserTestCase(APITestCase):
             reverse('user_detail', kwargs={'pk': self.user.pk}),
             {'profileImage': 'invalidurl'},  # Invalid data: profileImage should be a valid URL
             format='json',
-            HTTP_AUTHORIZATION = self.token.key
+            HTTP_AUTHORIZATION = "Token " + self.token.key
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -114,7 +115,7 @@ class CustomUserTestCase(APITestCase):
             reverse('user_detail', kwargs={'pk': 999999}),  # Assuming 9999 is an ID that does not exist
             {'profileImage': 'invalidurl'},  # Invalid data: profileImage should be a valid URL
             format='json',
-            HTTP_AUTHORIZATION = self.token.key
+            HTTP_AUTHORIZATION = "Token " + self.token.key
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -122,7 +123,7 @@ class CustomUserTestCase(APITestCase):
         '''
         Test the API endpoint for deleting a user.
         '''
-        response = self.client.delete(reverse('user_detail', kwargs={'pk': self.user.pk},), HTTP_AUTHORIZATION=self.token.key)
+        response = self.client.delete(reverse('user_detail', kwargs={'pk': self.user.pk},),HTTP_AUTHORIZATION = "Token " + self.token.key)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(CustomUser.objects.count(), 0)
         self.assertEqual(Education_Field.objects.count(), 0)
@@ -152,7 +153,7 @@ class CompletePortfolioTestCase(APITestCase):
         '''
         Test the API endpoint for retrieving a user's complete portfolio.
         '''
-        response = self.client.get(reverse('complete-portfolio-detail', kwargs={'user_id': self.user.pk}), HTTP_AUTHORIZATION=self.token.key)
+        response = self.client.get(reverse('complete-portfolio-detail', kwargs={'user_id': self.user.pk}), HTTP_AUTHORIZATION = "Token " + self.token.key)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['user'], self.user.pk)
         self.assertEqual(response.data['description'], "")
@@ -177,7 +178,7 @@ class CompletePortfolioTestCase(APITestCase):
                 'description': 'Updated Description',
             },
             format='json',
-            HTTP_AUTHORIZATION=self.token.key
+            HTTP_AUTHORIZATION = "Token " + self.token.key
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['user'], self.user.pk)
@@ -194,11 +195,11 @@ class CompletePortfolioTestCase(APITestCase):
                                          'description': 'Updated Description',
                                      },
                                      format='json',
-                                    HTTP_AUTHORIZATION=self.token.key
+                                    HTTP_AUTHORIZATION = "Token " + self.token.key
                                      )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-# ---------------------------------------------------------------
+# # ---------------------------------------------------------------
 class PortfolioItemTestCase(APITestCase):
     def setUp(self):
         self.user = CustomUser.objects.create(
@@ -215,9 +216,9 @@ class PortfolioItemTestCase(APITestCase):
         self.user.education.save()
         self.token = Token.objects.create(user=self.user)
 
-    '''
-    US 1.04 As a user, I want to upload text and link to a portfolio in my profile, so that prospective employers will see my capabilities.
-    '''
+#     '''
+#     US 1.04 As a user, I want to upload text and link to a portfolio in my profile, so that prospective employers will see my capabilities.
+#     '''
 
     def test_portfolio_item_post(self):
         '''
@@ -233,7 +234,7 @@ class PortfolioItemTestCase(APITestCase):
                 'link': 'http://example.com/link'
             },
             format='json',
-            HTTP_AUTHORIZATION=self.token.key
+            HTTP_AUTHORIZATION = "Token " + self.token.key
         )
         # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -278,7 +279,7 @@ class PortfolioItemTestCase(APITestCase):
                 'link': 'http://example.com/updated_link'
             },
             format='json',
-            HTTP_AUTHORIZATION=self.token.key
+            HTTP_AUTHORIZATION = "Token " + self.token.key
 
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -301,7 +302,7 @@ class PortfolioItemTestCase(APITestCase):
                 'link': 'http://example.com/updated_link'
             },
             format='json',
-            HTTP_AUTHORIZATION=self.token.key
+            HTTP_AUTHORIZATION = "Token " + self.token.key
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -327,7 +328,7 @@ class PortfolioItemTestCase(APITestCase):
         '''
         self.test_portfolio_item_post()
         self.assertEqual(PortfolioItem.objects.count(), 1)
-        response = self.client.delete(reverse('portfolio-item-detail', kwargs={'pk': 1}), HTTP_AUTHORIZATION=self.token.key)
+        response = self.client.delete(reverse('portfolio-item-detail', kwargs={'pk': 1}), HTTP_AUTHORIZATION = "Token " + self.token.key)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(PortfolioItem.objects.count(), 0)
         response = self.client.get(reverse('complete-portfolio-detail', kwargs={'user_id': self.user.pk}))
