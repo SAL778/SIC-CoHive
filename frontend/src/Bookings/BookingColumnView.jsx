@@ -1,51 +1,42 @@
 import React, { useState, useContext, useEffect } from "react";
 import { HostContext } from "../App.jsx";
-import { getCookieValue } from "../utils.js";
+import { httpRequest } from "../utils.js";
 import Column from "./Column.jsx";
 import EmblaCarousel from "../components/Carousel/Carousel.jsx";
+import { Loader } from "@mantine/core";
 
-export default function ColumnView({onBookingEdit}) {
+
+/** Function that returns a view of the ColumnView.
+ * 
+ * @param {function} onBookingEdit - A callable that triggers when a booking is edited
+ * @param {string} assetType - A string of either "room" or "equipment" that specifies the asset requested
+ * @param {date} currentDate - A string that specifies which day to get the bookings for
+ * @returns 
+ */
+export default function ColumnView({onBookingEdit, assetType, currentDate}) {
 	//const [userData, setUserData] = useState(null);
 	const { host } = useContext(HostContext);
 
 	const [columnView, setColumnView] = useState(null);
-	const [loading, setLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const fetchUserData = async () => {
-			try {
-				const accessToken = getCookieValue("access_token");
-				const response = await fetch(
-					"http://localhost:8000/bookings/columns/filter",
-					{
-						method: "GET",
-						credentials: "include",
-						headers: {
-							Authorization: `Token ${accessToken}`,
-						},
-					}
-				);
-
-				if (response.ok) {
-					response.json().then(columnView => {
-						setColumnView(columnView)
-						setLoading(false);
-					});
-				} else {
-					console.log("Error fetching all bookings", response.statusText);
-				}
-			} catch (error) {
-				console.log("Error", error);
+		httpRequest({
+			endpoint: `${host}/bookings/columns/filter?type=${assetType}&start_time=${currentDate.toISOString()}`,
+			onSuccess: (columnsData) => {
+				console.dir(columnsData)
+				setColumnView(columnsData);
+				setTimeout(() => {
+					setIsLoading(false); // Added this to mitigate "flashing" when toggling assetType.
+				}, 150);
 			}
-		};
-
-		fetchUserData();
-	}, []);
+		});
+	}, [assetType, currentDate]);
 
 	return (
 		<>
-			{loading ? (
-				<div>Loading...</div>
+			{isLoading ? (
+				<Loader size={50} color="orange" />
 			) : (
 				<div className="flex flex-row flex-grow overflow-clip px-[10px] my-8 h-full">
 					<div className="flex flex-col mt-[100px] h-full mr-8">
