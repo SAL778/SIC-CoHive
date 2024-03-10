@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react"
 import { UserContext } from "../../App.jsx";
 import { useForm } from "@mantine/form";
-import { TextInput, Textarea, Checkbox, Select } from "@mantine/core";
+import { TextInput, Textarea, Checkbox, Select, Text } from "@mantine/core";
 import { TimeInput, DatePickerInput } from "@mantine/dates";
 import './form.css';
 
@@ -27,6 +27,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     //a) Current booking already exists (i.e not being made from scratch) and is visible
     //b) Current booking does not yet exist (i.e it's being created) and thus visible to the creator
     const isShowDetails = () => ((currentBooking?.id && currentBooking?.visibility) || !currentBooking?.id);
+
+    const currentUserMatchesBooking = () => (form?.values.user?.id == currentUser?.id);
 
     const interval = 15;
     const timeRange = [7, 20] //Opening times are between 7AM and 8PM
@@ -102,22 +104,46 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                 src = {currentBooking?.image ?? fallbackAssetImage}
                 className = "rounded-md h-64 w-64 object-cover mr-4"
                 />
-                <div className = " flex flex-col space-between w-72 h-64 justify-between">
-                    <h1 className="capitalize text-2xl font-bold">{currentBooking?.resources_name || "Book an Asset"}</h1>
-                    {/* TODO: The name of the room must be in available assets to appear.*/}
-                    <Select
-                        label="Select an Asset"
-                        placeholder="Pick an asset"
-                        data = {availableAssets}
-                        searchable
-                        withScrollArea={false}
-                        styles={{ dropdown: { maxHeight: 140, overflowY: 'auto' } }}
-                        {...form.getInputProps('resources_name')}
-                    />
+                <div className = "flex flex-col space-between w-72 h-64 justify-between">
+                    <div className= "roomInfo"> 
+                        <h1 className="capitalize text-xl font-bold">{currentBooking?.resources_name || "Book an Asset"}</h1>
 
+                        {/* If currentBooking is private, description will not be present. */}
+                        { isShowDetails() && //Booking is visible
+                            <>
+                                {currentUserMatchesBooking() ? (
+                                    <TextInput
+                                    label="title"
+                                    withAsterisk
+                                    placeholder="Give your booking a title"
+                                    rows={1}
+                                    {...form.getInputProps('title')}
+                                    />
+                                ) : (
+                                    <Text>{form.values.title}</Text>
+                                )
+                                }
+                            </>
+                        }
+                    </div>
+
+                    {/* TODO: The name of the room must be in available assets to appear.*/}
+                    {currentUserMatchesBooking() &&
+                        <Select
+                            label="Select an Asset"
+                            placeholder="Pick an asset"
+                            data = {availableAssets}
+                            searchable
+                            withScrollArea={false}
+                            styles={{ dropdown: { maxHeight: 140, overflowY: 'auto' } }}
+                            {...form.getInputProps('resources_name')}
+                        />
+                    }
                     <DatePickerInput
                         label={isToday(form.values.date) ? "Today" : null}
                         hideOutsideDates
+                        disabled = {!currentUserMatchesBooking()}
+                        pointer = "default"
                         allowSingleDateInRange
                         allowDeselect= {false}
                         firstDayOfWeek={0}
@@ -129,6 +155,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                     <div className = "timeSelector flex gap-3">
                         <Select
                             label="From"
+                            disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="from"
                             data = {getTimePeriods(interval, ...timeRange)}
@@ -140,6 +167,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
 
                         <Select
                             label="To"
+                            disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="to"
                             data = {getTimePeriods(interval, ...timeRange)}
@@ -152,24 +180,13 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                 </div>
             </div>
 
-            {/* If currentBooking is private, description will not be present. */}
-            { isShowDetails() && //Booking belongs to user
-                <Textarea
-                    label = "Description"
-                    withAsterisk
-                    placeholder = "Add a brief description of this booking"
-                    rows={1}
-                    {...form.getInputProps('title')}
-                />
-            }
-
             {/* If the currentBooking matches the currentUser, show the visibility toggle */}
             {   currentUser.id == form?.values.user?.id &&
                 <Checkbox
                     label = "Display booking details publicly"
                     color = "rgba(234, 88, 12, 1)"
                     {...form.getInputProps('visibility', {type: 'checkbox'})}
-                    className={`mt-3 flex justify-end ${form.values?.visibility ? 'text-neutral-800' : 'text-neutral-400'}`}
+                    className={`mt-3 ${form.values?.visibility ? 'text-neutral-800' : 'text-neutral-400'}`}
                 />
             }
 
@@ -183,7 +200,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                         className = "rounded-md w-16 h-16 object-cover"
                         />
                         <div>
-                            <p className = "text-neutral-400 text-sm">Booking as</p>
+                            <p className = "text-neutral-400 text-sm">{currentUserMatchesBooking() ? "Booking as" : "Booked by"}</p>
                             <p className = "text-orange-600 text-lg font-semibold">{form.values?.user?.first_name}</p>
                             <p className = "text-neutral-400 text-sm">{form.values?.user?.email}</p>
                         </div>

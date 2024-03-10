@@ -46,6 +46,13 @@
     color: var(--light-grey);
 }
 
+.mantine-TextInput-label {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.6em;
+    color: var(--light-grey);
+}
+
 .mantine-Modal-header {
     padding-bottom: 0;
     padding-top: 0;
