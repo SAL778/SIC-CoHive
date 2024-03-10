@@ -188,27 +188,17 @@ h3 {
 	clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
 }
 
-.roleTag:nth-child(1) {
-	--tag-color: #9747ff;
-}
-.roleTag:nth-child(2) {
-	--tag-color: #31c1ca;
-}
-.roleTag:nth-child(3) {
-	--tag-color: #ff4794;
-}
-.roleTag:nth-child(4) {
-	--tag-color: #033eb0;
-}
-
 .roleTag {
 	font-size: 10px;
 	font-weight: 700;
-	color: var(--tag-color);
-	border: 3px solid var(--tag-color);
+	color: white;
 	border-radius: 8px;
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
+	padding: 6px 8px;
+	margin-right: 4px;
+	margin-bottom: 4px;
+	background-color: var(--tag-color, #333); /* Default */
 }
 
 .education-input {
@@ -331,12 +321,31 @@ button.button-orange {
 	background: var(--primary-orange);
 	border-radius: var(--border-radius);
 	transition: background-color 0.3s ease, color 0.3s ease;
+	cursor: pointer;
 }
 
 button.button-orange:hover,
 button.button-orange:focus {
 	padding: 0.75rem;
 	color: var(--primary-orange);
+	background: #fff;
+	box-shadow: 0px 2px 6px #00000080;
+}
+
+button.button-red {
+	font-weight: 500;
+	padding: 0.75rem;
+	color: #fff;
+	background: #e52c03; /* --cancel-red */
+	border-radius: var(--border-radius);
+	/* transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease; */
+	transition: background-color 0.3s ease, color 0.3s ease;
+	cursor: pointer;
+}
+
+button.button-red:hover,
+button.button-red:focus {
+	color: #e52c03;
 	background: #fff;
 	box-shadow: 0px 2px 6px #00000080;
 }

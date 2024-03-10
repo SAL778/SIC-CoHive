@@ -15,7 +15,7 @@ export default Portfolio;
  */
 function Portfolio({ isCurrentUser, portfolio }) {
 	const { host } = useContext(HostContext);
-	const { currentUser : user } = useContext(UserContext);
+	const { currentUser: user } = useContext(UserContext);
 
 	const [portfolioList, setPortfolioList] = useState(portfolio?.items);
 	//Modal Support
@@ -80,10 +80,8 @@ function Portfolio({ isCurrentUser, portfolio }) {
 	};
 
 	const onEdit = (updatedItem) => {
-		//TODO: Send PATCH, just send all field and let the backend update whatever changed to backend and GET the updated portfolio list
-
 		const accessToken = getCookieValue("access_token");
-		fetch(`${host}/users/portfolio/items/${clicked.id}`, {
+		fetch(`${host}/users/portfolio/items/${clicked.id}/`, {
 			method: "PATCH",
 			credentials: "include",
 			headers: {
@@ -103,6 +101,7 @@ function Portfolio({ isCurrentUser, portfolio }) {
 					console.log(response);
 				} else {
 					console.log("sent succesfully");
+					fetchPortfolioItems(); // Refresh the portfolio items list
 				}
 			})
 			.catch((error) => {
@@ -110,65 +109,55 @@ function Portfolio({ isCurrentUser, portfolio }) {
 			});
 	};
 
-	// const onAdd = async (updatedDescription) => {
-	//     setAboutText(updatedDescription);
-	//     try {
-	//         console.log(updatedDescription);
-	//         const accessToken = getCookieValue("access_token");
-	//         const response = await fetch(`${host}/users/${user.id}/portfolio/`, {
-	//             method: "PATCH",
-	//             credentials: "include",
-	//             headers: {
-	//                 Authorization: `Token ${accessToken}`,
-	//                 "Content-Type": "application/json"
-	//             },
-	//             body: JSON.stringify({ 'description': updatedDescription.toString() })
-	//         });
-	//         if (response.ok) {
-	//             console.log("Sent successfully");
-	//         } else {
-	//             console.log("Couldn't send", response.statusText);
-	//         }
-	//     } catch (error) {
-	//         console.error("Error:", error);
-	//     }
+	const fetchPortfolioItems = async () => {
+		try {
+			const accessToken = getCookieValue("access_token");
+			const response = await fetch(`${host}/users/${user.id}/portfolio/`, {
+				method: "GET",
+				credentials: "include",
+				headers: {
+					Authorization: `Token ${accessToken}`,
+				},
+			});
 
-	//     setAboutIsEdit(false);
-	// }
+			if (response.ok) {
+				const updatedPortfolio = await response.json();
+				setPortfolioList(updatedPortfolio.items);
+			} else {
+				console.error("Failed to fetch updated portfolio items.");
+			}
+		} catch (error) {
+			console.error("Error fetching portfolio items:", error);
+		}
+	};
 
-	const onAdd = (addedItem) => {
-		//TODO: Send PUT to portfolio items
+	const onAdd = async (addedItem) => {
 		console.log("add");
-		console.log(addedItem);
 		const accessToken = getCookieValue("access_token");
-		fetch(`${host}/users/${user.id}/portfolio/items/`, {
-			method: "POST",
-			credentials: "include",
-			headers: {
-				Authorization: `Token ${accessToken}`,
-				"Content-Type": "application/json",
-			},
-			// body: JSON.stringify({
-			//     icon: "https://fontawesome.com/icons/phone?f=classic&s=solid",
-			//     link: "https://google.com",
-			//     title: "I am a title",
-			//     description: "I am a description"
-			// })
-			body: JSON.stringify(addedItem),
-		})
-			.then((response) => {
-				console.log(addedItem);
-				if (!response.ok) {
-					console.log(response);
-				} else {
-					console.log("sent succesfully");
+		try {
+			const response = await fetch(
+				`${host}/users/${user.id}/portfolio/items/`,
+				{
+					method: "POST",
+					credentials: "include",
+					headers: {
+						Authorization: `Token ${accessToken}`,
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(addedItem),
 				}
-			})
-			.catch((error) => {
-				console.error("Couldn't send...", error);
-			});
-	};
+			);
 
+			if (response.ok) {
+				console.log("Item added successfully");
+				fetchPortfolioItems(); // Refresh the portfolio items list
+			} else {
+				console.error("Failed to add the item:", response.statusText);
+			}
+		} catch (error) {
+			console.error("Error adding item:", error);
+		}
+	};
 	// try {
 	//     const response = await fetch(`${host}/users/${user.id}/`, {
 	//         method: "PATCH",
