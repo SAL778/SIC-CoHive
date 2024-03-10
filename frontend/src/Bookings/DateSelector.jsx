@@ -4,6 +4,7 @@ import { Popover } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import '../components/Forms/form.css';
 
+
 export default function DateSelector({currentDate, onSetDate}) {
 
     const [opened, {toggle}] = useDisclosure(false);
@@ -33,9 +34,7 @@ export default function DateSelector({currentDate, onSetDate}) {
 function getDisplayDate({date, onShow, isExpanded}) {
     return (
         <button type = "button" onClick = {onShow}>   
-            { isToday(date) &&
-                <label className={`text-left ${isToday(date) ? 'block' : 'none'}`}>Today</label>
-            }
+            <label className="block text-left">{isToday(date) ? 'Today' : 'Date'}</label>
             <div className = "flex flex-start items-center gap-3">
                 <h1 className="inline">
                     <span className = " text-3xl font-bold text-orange-600 mr-2">

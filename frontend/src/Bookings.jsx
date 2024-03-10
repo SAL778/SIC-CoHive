@@ -14,7 +14,6 @@ import ColumnView from "./Bookings/BookingColumnView.jsx";
 import BookingHeader from "./Bookings/BookingHeader.jsx";
 import { httpRequest } from "./utils.js";
 import { getCookieValue } from "./utils.js";
-import DateSelector from "./Bookings/DateSelector.jsx";
 // import { checkUserLoggedIn } from "./utils.js";
 
 function Bookings() {
@@ -156,15 +155,13 @@ function Bookings() {
 
 	return (
 		<div className="h-full overflow-clip flex-grow">
-			<DateSelector
-				onSetDate = {setCurrentDay}
-				currentDate = {currentDay}
-			/>
 
 			<BookingHeader
 			  	setColumnView={setIsColumnView}
 			  	onBookClick={onClickBooking}
 			  	onToggleRooms={setCurrentAssetViewIsRoom}
+				onSetDate = {setCurrentDay}
+				currentDate = {currentDay}
 			/>
 			{!isColumnView ? (
 				<BookingListView 

@@ -312,16 +312,16 @@ const deserializeTime = (timestring) => {
 //Gets the time periods between a certain time range
 const getTimePeriods = (interval, startHour, endHour) => {
     const periods = [];
-  
+
     // Loop through each interval
-    for (let i = startHour * 60; i < endHour * 60; i += interval) {
+    for (let i = startHour * 60; i <= endHour * 60; i += interval) {
         // Convert current interval to hours and minutes
         let hours = Math.floor(i / 60);
         const minutes = i % 60;
-      
+
         // Determine AM/PM
         const ampm = hours >= 12 ? 'PM' : 'AM';
-      
+
         // Convert to 12-hour format
         hours = hours % 12 || 12;
         const formattedMinutes = minutes.toString().padStart(2, '0');
@@ -329,7 +329,7 @@ const getTimePeriods = (interval, startHour, endHour) => {
         // Add formatted time period to periods array
         periods.push(`${hours}:${formattedMinutes} ${ampm}`);
     }
-  
+
     return periods;
 }
 
