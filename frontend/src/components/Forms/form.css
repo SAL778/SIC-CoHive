@@ -51,3 +51,41 @@
     padding-top: 0;
 }
 
+.mantine-Checkbox-input {
+    border: 2px solid var(--primary-orange);
+}
+
+.mantine-Checkbox-input[data-checked] {
+    background-color: var(--primary-orange)
+}
+
+
+
+.mantine-DatePicker-day {
+    color: var(--charcoal);
+    font-size: 0.9em;
+}
+
+.mantine-DatePicker-day[data-weekend] {
+    color: var(--light-grey);
+    font-size: 0.9em;
+}
+
+.mantine-DatePicker-day[data-selected]  {
+    background-color: var(--primary-orange);
+    color: white
+}
+
+.mantine-DatePicker-weekday {
+    color: var(--charcoal);
+    font-weight: 400;
+    font-size: 1em;
+}
+
+.mantine-DatePicker-calendarHeaderLevel {
+    color: var(--navy-blue);
+    font-weight: 600;
+    font-size: 1em;
+}
+
+

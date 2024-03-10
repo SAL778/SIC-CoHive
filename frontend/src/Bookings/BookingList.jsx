@@ -8,8 +8,9 @@ import { httpRequest } from "../utils.js";
  * A component that returns the render of a list view.
  * @param {function} onItemClick - Callback for what end_time do when an item is clicked on (i.e. open modal)
  * @param {Array[Object]} displayAssets - An array of javascript objects that represent each item (i.e. Room or equipment)
+ * @param {string} assetType - A string of either "equipment" or "room" that specifies the asset requested.
  */
-function BookingListView({onItemClick}) {
+function BookingListView({onItemClick, assetType}) {
     //const dateHeaders = getUniqueDateHeaders(displayAssets.map(asset => asset.start_time))
     const { host } = useContext(HostContext)
     const [isLoading, setIsLoading] = useState(true)
@@ -18,18 +19,21 @@ function BookingListView({onItemClick}) {
 
     //(Get the list of booking (in theory)
     useEffect(() => {
+        console.log(assetType)
         httpRequest({
-                endpoint: `${host}/bookings/`,
+                endpoint: `${host}/bookings/?type=${assetType}`,
                 onSuccess: (data) => {
                     let sterilized = data.map(asset => convertToISO(asset)) //Date strings converted
                     setAssets(sterilized);
                     console.dir(sterilized)
                     setDateHeaders(getUniqueDateHeaders(sterilized.map(asset => asset.start_time)));
-                    setIsLoading(false);
+                    setTimeout(() => {
+                        setIsLoading(false);    //Added this to mitigate "flashing" when toggling assetType.
+                    }, 150) 
                 }
             }
         );
-    }, []); // The empty array specifies run only once (during render phase)
+    }, [assetType]); //Re-trigger this every time the listview is toggled
 
     return (
         isLoading ? (
