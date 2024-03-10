@@ -5,6 +5,9 @@ import "react-resizable/css/styles.css";
 const DraggableSlot = ({ selectedSlot, setSelectedSlot, onResize, onRelease, resourceName}) => {
     const slotHeight = 24; // Extracted variable for slot height
 
+    const maxSlot = selectedSlot.lastAvailableSlot - selectedSlot.index + 1;
+    console.log(maxSlot);
+
     return (
         <ResizableBox
             className="draggable-slot column-booking-card overflow-hidden flex flex-col justify-center rounded-[12px] shadow-custom pl-8 pr-10 py-0 bg-orange-300 text-sm"
@@ -14,7 +17,8 @@ const DraggableSlot = ({ selectedSlot, setSelectedSlot, onResize, onRelease, res
             )} // Initial height based on the slot duration
             axis="y"
             minConstraints={[Infinity, slotHeight]} // Minimum size of 15 minutes
-            maxConstraints={[Infinity, slotHeight * 4 * 13]} // Maximum size of 13 hours
+            // Maximum size is equal to all avaliable hours in 15 min increments - the current slot where the user clicked, limits going off the column
+            maxConstraints={[Infinity, slotHeight * maxSlot]}
             resizeHandles={["s"]}
             onResize={onResize}
             draggableOpts={{ grid: [slotHeight, slotHeight] }} // Snap to 24px grid
