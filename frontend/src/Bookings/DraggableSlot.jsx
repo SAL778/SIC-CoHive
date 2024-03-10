@@ -23,7 +23,9 @@ const DraggableSlot = ({ selectedSlot, setSelectedSlot, onResize, onRelease, res
             }}
             onMouseUp={() => {
                 onRelease({ resources_name: resourceName, ...selectedSlot });
-                setSelectedSlot();
+                setTimeout(() => {
+                    setSelectedSlot();
+                }, 200);
             }}
         >
             {/* Content for the booking slot, e.g., time range */}

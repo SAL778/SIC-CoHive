@@ -49,10 +49,10 @@ const Signout = () => {
 					timingFunction: "ease-in-out",
 				}}
 			>
-            <div className="modalContent p-5">
+            <div className="modalContent py-5 px-8">
                 <p>Are you sure you want to sign out?</p>
-                <div className = "flex justify-end gap-3 mt-4">
-                    <button onClick={() => setIsModalOpen(false)} className = "text-neutral-600 hover:text-neutral-800">Cancel</button>
+                <div className = "flex justify-center gap-8 mt-6">
+                    <button onClick={() => setIsModalOpen(false)} className = "button-grey-hover shadow-custom">Cancel</button>
                     <button onClick={handleSignout} className = "button-orange" >Confirm</button>
                 </div>
             </div>

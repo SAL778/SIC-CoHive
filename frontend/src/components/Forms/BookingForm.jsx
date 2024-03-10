@@ -138,12 +138,12 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     return (
         // values represents the booking object
         <form onSubmit = {form.onSubmit((values) => {onSubmit(values)})}> 
-            <div className = "upperSection flex">
+            <div className = "upperSection flex justify-between gap-4">
                 <img 
                 src = {currentBooking?.image ?? fallbackAssetImage}
-                className = "rounded-md h-64 w-64 object-cover mr-4"
+                className = "rounded-md w-[325px] h-[325px] object-cover"
                 />
-                <div className = "flex flex-col space-between w-72 h-64 justify-between">
+                <div className = "w-[300px] flex flex-col space-between justify-between">
                     <div className= "roomInfo"> 
                         <h1 className="capitalize text-xl font-bold">{currentBooking?.resources_name || "Book an Asset"}</h1>
 
@@ -181,14 +181,15 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                     <DatePickerInput
                         label={isToday(form.values.date) ? "Today" : null}
                         hideOutsideDates
-                        disabled = {!currentUserMatchesBooking()}
-                        pointer = "default"
+                        disabled={!currentUserMatchesBooking()}
+                        pointer="default"
                         allowSingleDateInRange
-                        allowDeselect= {false}
+                        allowDeselect={false}
                         firstDayOfWeek={0}
                         defaultDate={form.values.date} //Automatically go to the month of current booking
-                        rightSection={<i className="fa fa-calendar text-orange-600"/>}
+                        rightSection={<i className="fa fa-calendar text-orange-600" />}
                         {...form.getInputProps('date')}
+                        className="mt-4"
                     />
 
                     <div className = "timeSelector flex gap-3">
@@ -216,46 +217,45 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             {...form.getInputProps('end_time')}
                         />
                     </div>
+                    {/* If the currentBooking matches the currentUser, show the visibility toggle */}
+                    {   currentUser.id == form?.values.user?.id &&
+                        <Checkbox
+                            label = "Display booking details publicly"
+                            color = "rgba(234, 88, 12, 1)"
+                            {...form.getInputProps('visibility', {type: 'checkbox'})}
+                            className={`mt-3 ${form.values?.visibility ? 'text-neutral-800' : 'text-neutral-400'}`}
+                        />
+                    }
                 </div>
             </div>
 
-            {/* If the currentBooking matches the currentUser, show the visibility toggle */}
-            {   currentUser.id == form?.values.user?.id &&
-                <Checkbox
-                    label = "Display booking details publicly"
-                    color = "rgba(234, 88, 12, 1)"
-                    {...form.getInputProps('visibility', {type: 'checkbox'})}
-                    className={`mt-3 ${form.values?.visibility ? 'text-neutral-800' : 'text-neutral-400'}`}
-                />
-            }
-
             {/* If currentBooking is private, user information will not be present */}
-            <div className = "lowerSection flex justify-between mt-4">
+            <div className = "lowerSection flex justify-between mt-8 gap-8">
                 { isShowDetails() &&
                     //TODO: load user info here
-                    <div className = "bookerInfo flex gap-3">
+                    <div className = "bookerInfo flex items-center gap-3">
                         <img 
                         src = { form.values?.user?.profileImage ?? fallbackProfileImage }
                         className = "rounded-md w-16 h-16 object-cover"
                         />
-                        <div>
-                            <p className = "text-neutral-400 text-sm">{currentUserMatchesBooking() ? "Booking as" : "Booked by"}</p>
-                            <p className = "text-orange-600 text-lg font-semibold">{form.values?.user?.first_name}</p>
-                            <p className = "text-neutral-400 text-sm">{form.values?.user?.email}</p>
+                        <div className="max-w-[180px] overflow-hidden">
+                            <p className = "text-neutral-700 text-sm truncate">{currentUserMatchesBooking() ? "Booking as" : "Booked by"}</p>
+                            <p className = "text-orange-600 text-xl font-semibold truncate leading-[1]">{form.values?.user?.first_name}</p>
+                            <p className = "text-neutral-400 text-sm truncate">{form.values?.user?.email}</p>
                         </div>
                     </div>
                 }
                 <div className ="flex gap-3 pt-3">
-                    <button type="button" className = "p-3 text-neutral-400 rounded-md" onClick = {onClose}>Close</button>
+                    <button type="button" className = "button-grey-hover modal-button" onClick = {onClose}>Close</button>
                     
                     { currentBooking?.user?.id == currentUser?.id && // Booking belongs to the current user
                         <>
-                            <button type="button" className ="button-orange" onClick = {() => onDelete(currentBooking)}>Delete</button>
-                            <button type = "submit" className ="button-orange">Edit</button>
+                            <button type="button" className ="button-orange modal-button" onClick = {() => onDelete(currentBooking)}>Delete</button>
+                            <button type = "submit" className ="button-orange modal-button">Edit</button>
                         </>
                     }
                     { currentUser?.id && !currentBooking?.id &&     // Booking does not yet exist, but is being added by current user                
-                        <button type = "submit" className ="button-orange">Submit</button>
+                        <button type = "submit" className ="button-orange modal-button">Submit</button>
                     }           
                 </div>
             </div>
@@ -305,7 +305,7 @@ const deserializeTime = (timestring) => {
     } else if (ampm === "AM" && hours === 24) {
         hour24 = 12;
     }
-    
+
     return [hour24, minutes];
 }
 

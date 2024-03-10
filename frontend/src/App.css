@@ -335,10 +335,30 @@ button.button-orange {
 
 button.button-orange:hover,
 button.button-orange:focus {
-	padding: 0.75rem;
 	color: var(--primary-orange);
 	background: #fff;
 	box-shadow: 0px 2px 6px #00000080;
+}
+
+button.button-grey-hover {
+	font-weight: 500;
+	padding: 0.75rem;
+	color: var(--charcoal);
+	background: none;
+	border-radius: var(--border-radius);
+	transition: background-color 0.3s ease, color 0.3s ease;
+	/* box-shadow: 0px 2px 6px #00000022; */
+}
+
+button.button-grey-hover:hover,
+button.button-grey-hover:focus {
+	background: #e9ecef;
+}
+
+button.modal-button {
+	height: 46px;
+	width: 100px;
+	padding: 0.25rem 0.75rem;
 }
 
 .filter-container {
@@ -446,6 +466,11 @@ button.button-orange:focus {
 
 .booking-column-container .embla__slide:nth-child(2n) .open-booking-slot {
 	background: #fff;
+}
+
+.booking-column-container .embla__slide:nth-child(2n + 1) .booking-column:not(.currentlyBooking) .open-booking-slot:hover,
+.booking-column-container .embla__slide:nth-child(2n) .booking-column:not(.currentlyBooking) .open-booking-slot:hover {
+	background: rgb(249, 115, 22, 70%);
 }
 
 .column-booking-card::after {
