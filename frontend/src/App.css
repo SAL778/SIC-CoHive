@@ -351,24 +351,6 @@ button.modal-button {
 	height: 46px;
 	width: 100px;
 	padding: 0.25rem 0.75rem;
-
-button.button-red {
-	font-weight: 500;
-	padding: 0.75rem;
-	color: #fff;
-	background: #e52c03; /* --cancel-red */
-	border-radius: var(--border-radius);
-	/* transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease; */
-	transition: background-color 0.3s ease, color 0.3s ease;
-	cursor: pointer;
-}
-
-button.button-red:hover,
-button.button-red:focus {
-	color: #e52c03;
-	background: #fff;
-	box-shadow: 0px 2px 6px #00000080;
-
 }
 
 .filter-container {
