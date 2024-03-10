@@ -14,6 +14,7 @@ import ColumnView from "./Bookings/BookingColumnView.jsx";
 import BookingHeader from "./Bookings/BookingHeader.jsx";
 import { httpRequest } from "./utils.js";
 import { getCookieValue } from "./utils.js";
+import DateSelector from "./Bookings/DateSelector.jsx";
 // import { checkUserLoggedIn } from "./utils.js";
 
 function Bookings() {
@@ -21,6 +22,7 @@ function Bookings() {
 	const [availableRooms, setAvailableRooms] = useState([]);
 	const [availableEquipment, setAvailableEquipment] = useState([]);
 	const [currentAssetViewIsRoom, setCurrentAssetViewIsRoom] = useState(true);
+	const [currentDay, setCurrentDay] = useState(new Date)
 
 	const { host } = useContext(HostContext);
 	const { currentUser, setCurrentUser } =  useContext(UserContext);
@@ -148,8 +150,16 @@ function Bookings() {
 
 	return (
 		<div className="h-full overflow-clip flex-grow">
-			<BookingHeader setColumnView={setIsColumnView} onBookClick={onClickBooking} onToggleRooms={setCurrentAssetViewIsRoom}/>
+			<DateSelector
+				onSetDate = {setCurrentDay}
+				currentDate = {currentDay}
+			/>
 
+			<BookingHeader
+			  	setColumnView={setIsColumnView}
+			  	onBookClick={onClickBooking}
+			  	onToggleRooms={setCurrentAssetViewIsRoom}
+			/>
 			{!isColumnView ? (
 				<BookingListView 
 				onItemClick={onClickBooking} 
@@ -159,6 +169,7 @@ function Bookings() {
 				<ColumnView
 				onBookingEdit={onClickBooking}
 				assetType={currentAssetViewIsRoom ? "room" : "equipment"}
+				currentDate={currentDay}
 				/>
 			)}
 

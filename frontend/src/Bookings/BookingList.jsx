@@ -20,7 +20,6 @@ function BookingListView({onItemClick, assetType}) {
     //(Get the list of booking (in theory)
     useEffect(() => {
         console.log(assetType)
-        setIsLoading(true) //Wait for the new items to come in
         httpRequest({
                 endpoint: `${host}/bookings/?type=${assetType}`,
                 onSuccess: (data) => {

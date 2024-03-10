@@ -5,7 +5,15 @@ import Column from "./Column.jsx";
 import EmblaCarousel from "../components/Carousel/Carousel.jsx";
 import { Loader } from "@mantine/core";
 
-export default function ColumnView({onBookingEdit, assetType}) {
+
+/** Function that returns a view of the ColumnView.
+ * 
+ * @param {function} onBookingEdit - A callable that triggers when a booking is edited
+ * @param {string} assetType - A string of either "room" or "equipment" that specifies the asset requested
+ * @param {date} currentDate - A string that specifies which day to get the bookings for
+ * @returns 
+ */
+export default function ColumnView({onBookingEdit, assetType, currentDate}) {
 	//const [userData, setUserData] = useState(null);
 	const { host } = useContext(HostContext);
 
@@ -14,15 +22,16 @@ export default function ColumnView({onBookingEdit, assetType}) {
 
 	useEffect(() => {
 		httpRequest({
-			endpoint: `${host}/bookings/columns/filter?type=${assetType}`,
+			endpoint: `${host}/bookings/columns/filter?type=${assetType}&start_time=${currentDate.toISOString()}`,
 			onSuccess: (columnsData) => {
+				console.dir(columnsData)
 				setColumnView(columnsData);
 				setTimeout(() => {
 					setIsLoading(false); // Added this to mitigate "flashing" when toggling assetType.
 				}, 150);
 			}
 		});
-	}, [assetType]);
+	}, [assetType, currentDate]);
 
 	return (
 		<>
