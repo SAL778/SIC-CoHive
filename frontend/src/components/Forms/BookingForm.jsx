@@ -154,13 +154,23 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
 
             {/* If currentBooking is private, description will not be present. */}
             { isShowDetails() && //Booking belongs to user
-             <Textarea
-                 label = "Description"
-                 withAsterisk
-                 placeholder = "Add a brief description of this booking"
-                 rows={3}
-                 {...form.getInputProps('title')}
-             />
+                <Textarea
+                    label = "Description"
+                    withAsterisk
+                    placeholder = "Add a brief description of this booking"
+                    rows={1}
+                    {...form.getInputProps('title')}
+                />
+            }
+
+            {/* If the currentBooking matches the currentUser, show the visibility toggle */}
+            {   currentUser.id == form?.values.user?.id &&
+                <Checkbox
+                    label = "Display booking details publicly"
+                    color = "rgba(234, 88, 12, 1)"
+                    {...form.getInputProps('visibility', {type: 'checkbox'})}
+                    className={`mt-3 flex justify-end ${form.values?.visibility ? 'text-neutral-800' : 'text-neutral-400'}`}
+                />
             }
 
             {/* If currentBooking is private, user information will not be present */}

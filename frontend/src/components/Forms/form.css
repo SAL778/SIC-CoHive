@@ -51,3 +51,9 @@
     padding-top: 0;
 }
 
+.mantine-Checkbox-input {
+    border: 2px solid var(--primary-orange);
+}
+
+
+
