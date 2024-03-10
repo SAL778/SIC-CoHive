@@ -6,18 +6,29 @@ import { getCookieValue } from "../utils.js";
  * @param {Array} props.roles - An array containing role strings
  * @returns {JSX.Element} - Returns a JSX element representing the user roles.
  */
-function UserRoles({ roles }) {
-	roles = ["VFX Artist", "Producer", "Animator", "Graphic Designer"];
 
-	if (roles?.length) {
+function UserRoles({ accessTypes }) {
+	const getRandomColor = () => {
+		// Generates a random hex color.
+		const letters = "0123456789ABCDEF";
+		let color = "#";
+		for (let i = 0; i < 6; i++) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		return color;
+	};
+
+	if (accessTypes?.length) {
 		return (
 			<ul className="flex flex-wrap gap-2">
-				{roles.map((role) => (
+				{accessTypes.map((accessType, index) => (
 					<li
-						key={role}
-						className="roleTag flex flex-row items-center justify-center py-[6px] px-[8px]"
+						key={accessType.name}
+						// style={{ "--tag-color": getRandomColor() }}   //uncomment for random colors
+						style={{ "--tag-color": "#EA580C" }}
+						className="roleTag flex flex-row items-center justify-center"
 					>
-						{role}
+						{accessType.name}
 					</li>
 				))}
 			</ul>
@@ -185,7 +196,7 @@ function ProfileHeader({ user }) {
 							<i className="fa-solid fa-circle-info"></i>
 						</h6>
 						{user.roles ? (
-							<UserRoles roles={user.roles} />
+							<UserRoles accessTypes={user.accessType} />
 						) : (
 							<p className="text-neutral-500">
 								This person has no assigned roles yet
