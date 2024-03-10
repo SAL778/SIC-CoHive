@@ -459,6 +459,11 @@ button.button-orange:focus {
 	background: var(--primary-orange);
 }
 
+.column-booking-card.short-booking-card {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
 .booking-column .draggable-slot {
 	width: 260px;
 	position: absolute;

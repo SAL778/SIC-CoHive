@@ -37,7 +37,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             // start and end times are split from their standard date formatting so that
             // date/time pickers are useable. They will be recombined on (valid) submit.
             id: currentBooking?.id,
-            resources: currentBooking?.resources ?? 1, //The ID of the resource asset for backend
+            resources: currentBooking?.resources ?? "", //The ID of the resource asset for backend
             resources_name: currentBooking?.resources_name ?? "",
             date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             start_time: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "",
@@ -52,7 +52,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                 !(value)
                 ? 'Start time must be selected'
                 : timeIsGreaterThan(deserializeTime(value), deserializeTime(values.end_time)) //Checks if start time exceeds end time
-                ? 'Start time must come after end time'
+                ? 'Start time must come before the end time'
                 : null
                     
             ),
@@ -229,14 +229,17 @@ const deserializeTime = (timestring) => {
     // Split the time string by ':' to separate hours and minutes (12 hour format + [AP]M)
     const [time, ampm] = timestring.split(/(?=[AP]M)/i);
     const [hours, minutes] = time.split(':').map(num => parseInt(num, 10));
-    
+
     // Convert hours to 24-hour format if necessary
-    let hour24 = hours
+    let hour24 = hours;
 
-    if (ampm == "PM") {
-        hour24 += 12
+    if (ampm === "PM" && hours !== 12) {
+        hour24 += 12;
+    // Added to fix the 12AM bug where it would treat it as 24
+    } else if (ampm === "AM" && hours === 24) {
+        hour24 = 12;
     }
-
+    
     return [hour24, minutes];
 }
 

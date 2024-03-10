@@ -13,7 +13,7 @@ import { notifications } from "@mantine/notifications";
 import ColumnView from "./Bookings/BookingColumnView.jsx";
 import BookingHeader from "./Bookings/BookingHeader.jsx";
 import { httpRequest } from "./utils.js";
-
+import { getCookieValue } from "./utils.js";
 // import { checkUserLoggedIn } from "./utils.js";
 
 function Bookings() {
@@ -23,12 +23,40 @@ function Bookings() {
 	const [currentAssetViewIsRoom, setCurrentAssetViewIsRoom] = useState(true);
 
 	const { host } = useContext(HostContext);
-	const { currentUser } =  useContext(UserContext); //alias user as currentUser
+	const { currentUser, setCurrentUser } =  useContext(UserContext);
 
 	const [opened, { open, close }] = useDisclosure(false);
 
 	const [clickedBooking, setClickedBooking] = useState(null);
 	const [isColumnView, setIsColumnView] = useState(true);
+
+	// Fetch user data to set the current user context to fill user's data on the bookings page
+	// Need to fetch user data to get the user's ID, image, and other details to display on the page
+	useEffect(() => {
+		const fetchUserData = async () => {
+			try {
+				const accessToken = getCookieValue("access_token");
+				const response = await fetch("http://localhost:8000/users/profile/", {
+					method: "GET",
+					credentials: "include",
+					headers: {
+						Authorization: `Token ${accessToken}`,
+					},
+				});
+
+				if (response.ok) {
+					const user = await response.json();
+					setCurrentUser(user);
+				} else {
+					console.error("Failed to fetch user data:", response.statusText);
+				}
+			} catch (error) {
+				console.error("Unexpected error:", error);
+			}
+		};
+
+		fetchUserData();
+	}, []);
 
 	useEffect(() => {
 			httpRequest({
@@ -57,7 +85,7 @@ function Bookings() {
 	//Send the updated booking (not necessarily the one that was clicked)
 	const onModalSubmitBooking = (bookingInfo) => {
 		console.dir(bookingInfo)
-		//If bookingInfo has an ID, it is a PATCH (frontend doesn't assign this)
+		// If bookingInfo has an ID, it is a PATCH (frontend doesn't assign this)
 		if (!!bookingInfo.id) {
 			httpRequest({
 				endpoint: `${host}/bookings/${bookingInfo.id}/`,
@@ -74,7 +102,7 @@ function Bookings() {
 				}
 			})
 		}
-		//New booking posted
+		// If bookingInfo has no ID, it is a POST for a new booking
 		else {
 			httpRequest({
 				endpoint: `${host}/bookings/user/${currentUser?.id}/`,
