@@ -151,9 +151,15 @@ function Bookings() {
 			<BookingHeader setColumnView={setIsColumnView} onBookClick={onClickBooking} onToggleRooms={setCurrentAssetViewIsRoom}/>
 
 			{!isColumnView ? (
-				<BookingListView onItemClick={onClickBooking} />
+				<BookingListView 
+				onItemClick={onClickBooking} 
+				assetType={currentAssetViewIsRoom ? "room" : "equipment"}
+				/>
 			) : (
-				<ColumnView onBookingEdit={onClickBooking} />
+				<ColumnView
+				onBookingEdit={onClickBooking}
+				assetType={currentAssetViewIsRoom ? "room" : "equipment"}
+				/>
 			)}
 
 			<Modal
