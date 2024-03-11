@@ -6,7 +6,6 @@ function parseTimeRange(timeRange) {
 	const [startStr, endStr] = timeRange.split(" - ");
 	const startTime = parseTime(startStr);
 	const endTime = parseTime(endStr);
-	console.log(startTime, endTime);
 
 	return [startTime, endTime];
 }
@@ -176,7 +175,7 @@ const Column = ({ column, onBookingEdit }) => {
 									)}
 								</div>
 							) : (
-								<div className="open-booking-slot cursor-pointer rounded-[12px] overflow-hidden px-4 py-2 text-sm" key={slot} style={{ height: `${slotHeight}px` }} onClick={() => onSlotClick(slot)}>
+								<div className="open-booking-slot cursor-pointer rounded-[12px] overflow-hidden px-4 py-2 text-sm" key={slot} style={{ height: `${slotHeight}px` }} onClick={() => onSlotClick(slot, timeslots)}>
 									{/* <p>{slot.display_time}</p> */}
 								</div>
 							)}
@@ -193,12 +192,27 @@ const Column = ({ column, onBookingEdit }) => {
 	const [selectedSlot, setSelectedSlot] = useState(null);
 
 	// Function to handle click on a time slot
-	const handleSlotClick = (timeSlot) => {
+	const handleSlotClick = (timeSlot, timeslots) => {
 		const startTime = parseTimeRange(timeSlot.display_time)[0];
+		
+		// Loop through the timeslots and find the index_number of the selected slot until we hit a booking which will not have this
+		console.log(timeSlot);
+		console.log(timeslots);
+
+		const indexOfNextBooking = timeslots.findIndex((slot) => {
+			const slotStartTime = parseTimeRange(slot.display_time)[0];
+			return slotStartTime > parseTimeRange(timeSlot.display_time)[0] && slot.booking;
+		});
+
+		// If there is a booking after the selected slot, set the lastAvailableSlot to the index_number of the slot before the booking
+		// If there is no booking after the selected slot, set the lastAvailableSlot to 51 (the last slot in the day)
+		const lastAvailableSlot = indexOfNextBooking !== -1 ? timeslots[indexOfNextBooking - 1].index_number : 51;
+
 		setSelectedSlot({
 			index: timeSlot.index_number,
 			start_time: startTime,
 			end_time: new Date(startTime.getTime() + 15 * 60000), // default to 15 minutes length for now
+			lastAvailableSlot: lastAvailableSlot
 		});
 	};
 
@@ -212,7 +226,7 @@ const Column = ({ column, onBookingEdit }) => {
 	};
 
 	return (
-		<div key={column.id} className="booking-column h-full flex flex-col relative">
+		<div key={column.id} className={`booking-column h-full flex flex-col relative ${selectedSlot ? 'currentlyBooking' : ''}`}>
 			<div className="flex justify-center items-center min-h-[80px] h-[80px] mb-[20px] rounded-[12px] shadow-custom w-[100] py-2 px-4 bg-white">
 				<p className="text-lg font-bold capitalize">{column.name}</p>
 			</div>

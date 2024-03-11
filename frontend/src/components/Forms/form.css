@@ -46,8 +46,54 @@
     color: var(--light-grey);
 }
 
+.mantine-TextInput-label {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.6em;
+    color: var(--light-grey);
+}
+
 .mantine-Modal-header {
     padding-bottom: 0;
     padding-top: 0;
+    min-height: 46px;
 }
+
+.mantine-Checkbox-input {
+    border: 2px solid var(--primary-orange);
+}
+
+.mantine-Checkbox-input[data-checked] {
+    background-color: var(--primary-orange)
+}
+
+
+
+.mantine-DatePicker-day {
+    color: var(--charcoal);
+    font-size: 0.9em;
+}
+
+.mantine-DatePicker-day[data-weekend] {
+    color: var(--light-grey);
+    font-size: 0.9em;
+}
+
+.mantine-DatePicker-day[data-selected]  {
+    background-color: var(--primary-orange);
+    color: white
+}
+
+.mantine-DatePicker-weekday {
+    color: var(--charcoal);
+    font-weight: 400;
+    font-size: 1em;
+}
+
+.mantine-DatePicker-calendarHeaderLevel {
+    color: var(--navy-blue);
+    font-weight: 600;
+    font-size: 1em;
+}
+
 

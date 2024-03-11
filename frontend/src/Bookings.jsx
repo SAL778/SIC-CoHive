@@ -21,6 +21,7 @@ function Bookings() {
 	const [availableRooms, setAvailableRooms] = useState([]);
 	const [availableEquipment, setAvailableEquipment] = useState([]);
 	const [currentAssetViewIsRoom, setCurrentAssetViewIsRoom] = useState(true);
+	const [currentDay, setCurrentDay] = useState(new Date)
 
 	const { host } = useContext(HostContext);
 	const { currentUser, setCurrentUser } =  useContext(UserContext);
@@ -119,7 +120,10 @@ function Bookings() {
 				}
 			})
 		}
-		setClickedBooking(null)
+		//Wait until the modal transition has occurred before removing data
+		setTimeout(() => {
+			setClickedBooking(null);
+		}, 300)
 		close()
 	}
 
@@ -142,18 +146,34 @@ function Bookings() {
 	}
 
 	const onModalCloseBooking = () => {
-		setClickedBooking(null);
-		close();
+		//Wait until the modal transition has occurred before removing data
+		setTimeout(() => {
+			setClickedBooking(null);
+		}, 300)
+		close()
 	};
 
 	return (
 		<div className="h-full overflow-clip flex-grow">
-			<BookingHeader setColumnView={setIsColumnView} onBookClick={onClickBooking} onToggleRooms={setCurrentAssetViewIsRoom}/>
 
+			<BookingHeader
+			  	setColumnView={setIsColumnView}
+			  	onBookClick={onClickBooking}
+			  	onToggleRooms={setCurrentAssetViewIsRoom}
+				onSetDate = {setCurrentDay}
+				currentDate = {currentDay}
+			/>
 			{!isColumnView ? (
-				<BookingListView onItemClick={onClickBooking} />
+				<BookingListView 
+				onItemClick={onClickBooking} 
+				assetType={currentAssetViewIsRoom ? "room" : "equipment"}
+				/>
 			) : (
-				<ColumnView onBookingEdit={onClickBooking} />
+				<ColumnView
+				onBookingEdit={onClickBooking}
+				assetType={currentAssetViewIsRoom ? "room" : "equipment"}
+				currentDate={currentDay?.toLocaleString("en-CA", { timeZone: "America/Edmonton" }).split(',')[0]}
+				/>
 			)}
 
 			<Modal

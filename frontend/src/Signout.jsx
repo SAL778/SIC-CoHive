@@ -59,7 +59,7 @@ const Signout = () => {
 							setIsModalOpen(false);
 							navigate("/bookings");
 						}}
-						className="button-red"
+						className="button-grey-hover"
 					>
 						Cancel
 					</button>

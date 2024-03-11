@@ -8,8 +8,9 @@ import { httpRequest } from "../utils.js";
  * A component that returns the render of a list view.
  * @param {function} onItemClick - Callback for what end_time do when an item is clicked on (i.e. open modal)
  * @param {Array[Object]} displayAssets - An array of javascript objects that represent each item (i.e. Room or equipment)
+ * @param {string} assetType - A string of either "equipment" or "room" that specifies the asset requested.
  */
-function BookingListView({onItemClick}) {
+function BookingListView({onItemClick, assetType}) {
     //const dateHeaders = getUniqueDateHeaders(displayAssets.map(asset => asset.start_time))
     const { host } = useContext(HostContext)
     const [isLoading, setIsLoading] = useState(true)
@@ -18,29 +19,32 @@ function BookingListView({onItemClick}) {
 
     //(Get the list of booking (in theory)
     useEffect(() => {
+        console.log(assetType)
         httpRequest({
-                endpoint: `${host}/bookings/`,
+                endpoint: `${host}/bookings/?type=${assetType}`,
                 onSuccess: (data) => {
                     let sterilized = data.map(asset => convertToISO(asset)) //Date strings converted
                     setAssets(sterilized);
                     console.dir(sterilized)
                     setDateHeaders(getUniqueDateHeaders(sterilized.map(asset => asset.start_time)));
-                    setIsLoading(false);
+                    setTimeout(() => {
+                        setIsLoading(false);    //Added this to mitigate "flashing" when toggling assetType.
+                    }, 150) 
                 }
             }
         );
-    }, []); // The empty array specifies run only once (during render phase)
+    }, [assetType]); //Re-trigger this every time the listview is toggled
 
     return (
         isLoading ? (
             <Loader size={50} color="orange" />
         ) : (
             //Listview
-            <ul className="flex flex-col gap-5 px-[10px] py-8">
+            <ul className="flex flex-col gap-8 px-[10px] py-8">
                 {dateHeaders.map(dateHeader => (
                     <li key={dateHeader}>
                         <DateHeaderComponent date={dateHeader} />
-                        <ul className="flex flex-col gap-4">
+                        <ul className="day-list flex flex-col gap-4">
                             {assets
                                 .filter(asset => asset.start_time.getDay() === dateHeader.getDay()) //Apply more filters here
                                 .map(asset => (
@@ -61,7 +65,7 @@ function AssetComponent({asset, onItemClick}) {
 
     const { currentUser } = useContext(UserContext);
 
-    const greyOut = ( !asset.visibility && currentUser.id != asset.booker.id )
+    const greyOut = ( !asset.visibility && currentUser?.id != asset?.booker?.id )
 
     //Convert AM/PM date
     const formatTime= (date) => {
@@ -82,40 +86,42 @@ function AssetComponent({asset, onItemClick}) {
 
     return (
         //TODO: On private, grey everything out
-        <div className = {`flex items-center p-3 rounded-md cursor-pointer gap-10 ${!greyOut && "shadow-custom"}`} onClick = {() => onItemClick(asset)}>
+        <div className = {`flex items-center py-4 px-6 rounded-md cursor-pointer gap-10 ${greyOut ? "private-booking" : "shadow-custom"}`} onClick = {() => onItemClick(asset)}>
             <div className = "colA basis-2 flex-col flex-grow text-neutral-800">
-                <h3 className = "text-2xl font-semibold capitalize">{asset?.resources_name}</h3>
-                <p className = "text-base font-regular">{asset?.title}</p>
+                <h3 className = "text-2xl font-semibold capitalize leading-[1]" style={{ color: greyOut ? "#ABABAB" : "inherit" }}>{asset?.resources_name}</h3>
+                <p className = "text-base font-regular" style={{ color: greyOut ? "#ABABAB" : "inherit" }}>{greyOut ? "Booking" : asset?.title}</p>
             </div>
 
-            { asset?.type == "room" &&
-             <div className = "colB basis-1 flex flex-grow text-2xl">
-                <i className = "fa fa-location-dot mr-3" aria-hidden="true"/>
-                <p className = "font-light">{asset?.location}</p>
-             </div>
-            }
-            
-            <div className = "colC basis-1 flex flex-row flex-grow items-center ">
-                <i className = "fa fa-calendar mr-3 text-2xl text-neutral-800"/>
-                <div className = "timeSlot">
-                    <p className = "text-base font-medium text-orange-600">
-                        {formatTime(asset.start_time)} - {formatTime(asset.end_time)}
+            {asset?.type == "room" &&
+                <div className="colB basis-1 flex flex-grow text-2xl gap-4">
+                    <i className="fa fa-location-dot" aria-hidden="true" />
+                    <p className="font-light" style={{ color: greyOut ? "#ABABAB" : "inherit" }}>{asset?.location}</p>
+                </div>
+                }
+
+                <div className="colC basis-1 flex flex-row flex-grow items-center ">
+                <i className="fa fa-calendar mr-3 text-2xl text-neutral-800" style={{ color: greyOut ? "#ABABAB" : "inherit" }} />
+                <div className="timeSlot">
+                    <p className="text-base font-medium text-orange-600" style={{ color: greyOut ? "#ABABAB" : "inherit" }}>
+                    {formatTime(asset.start_time)} - {formatTime(asset.end_time)}
                     </p>
-                    <p className = "text-base font-medium text-neutral-800 flex gap-1">
-                        <span>{asset.start_time.toLocaleString('en-us', {weekday:'long'})}</span>
-                        <span>{asset.start_time.toLocaleString('en-us', {month:'short'})}</span>
-                        <span>{asset.start_time.getDate()}</span>
+                    <p className="text-base font-medium flex gap-1" style={{ color: greyOut ? "#ABABAB" : "inherit" }}>
+                    <span>{asset.start_time.toLocaleString('en-us', { weekday: 'long' })}</span>
+                    <span>{asset.start_time.toLocaleString('en-us', { month: 'short' })}</span>
+                    <span>{asset.start_time.getDate()}</span>
                     </p>
                 </div>
             </div>
 
+            <div className = "colD basis-1 flex-grow">
             { !greyOut &&
-             <div className = "colD basis-1 flex-grow">
-                {/* Booker not present on private posts */}
-                <p className = "text-base text-orange-600">{asset.user?.first_name}</p>
-                <p className = "text-neutral-800">{asset.user?.email}</p>
-             </div>
+                <>
+                    {/* Booker not present on private posts */}
+                    <p className = "text-base text-orange-600">{asset.user?.first_name}</p>
+                    <p className = "text-neutral-800">{asset.user?.email}</p>
+                </>
             }
+            </div>
         </div>
     )
 }
@@ -126,7 +132,7 @@ function AssetComponent({asset, onItemClick}) {
  */
 function DateHeaderComponent({date}) {
     return (
-        <div className = "dateHeader mb-4 flex items-center">
+        <div className = "dateHeader mb-2 flex items-center">
             <div className = "date flex gap-4 items-stretch mr-3">
                 <h2 className = "text-4xl font-bold text-orange-600 uppercase">
                     {date.toLocaleString('en-us', {weekday:'long'})}

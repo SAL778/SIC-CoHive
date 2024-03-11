@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
+import DateSelector from "./DateSelector";
 
 /**Component function that renders a booking header
  * 
@@ -9,15 +8,19 @@ import React, { useState } from 'react';
  * @returns 
  */
 
-const BookingHeader = ({ setColumnView, onBookClick, onToggleRooms }) => {
+const BookingHeader = ({ setColumnView, onBookClick, onToggleRooms, onSetDate, currentDate }) => {
     const [selectedTab, setSelectedTab] = useState('Rooms');
     const [selectedIcon, setSelectedIcon] = useState('columns');
 
     return (
         <div className="flex flex-col z-10 mt-[30px] px-[10px] w-full gap-8">
-            <div className="flex flex-col">
-                <span className="text-md font-regular mb-2">Today</span>
+            <div className="w-fit min-w-[250px]">
+                <DateSelector
+                    onSetDate = {onSetDate}
+                    currentDate = {currentDate}
+                />
             </div>
+            
             <div className="flex flex-row justify-between items-end">
                 <div>
                     <button type="button" onClick = {() => onBookClick(null)} className="bg-orange-600 hover:bg-orange-500 text-white font-regular py-4 px-8 rounded ">

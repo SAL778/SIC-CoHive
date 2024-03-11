@@ -1,18 +1,10 @@
-.logo{
+/* .logo{
   position: fixed;
   top: 20%;
   left: 70%;
   transform: translateY(-50%);
   z-index: 1;
-}
-
-.signInButtons {
-  position: fixed;
-  top: 50%;
-  left: 75%;
-  transform: translateY(-50%);
-  z-index: 1;
-}
+} */
 
 .background-container{
   position: fixed;
@@ -23,6 +15,14 @@
   background: url('./assets/background.png') no-repeat center center fixed; 
   background-size: cover;
   z-index: 1; 
+}
+/* 
+.signInButtons {
+  position: fixed;
+  top: 50%;
+  left: 75%;
+  transform: translateY(-50%);
+  z-index: 1;
 }
 
 .access-info {
@@ -55,4 +55,4 @@
 
 .white-button:hover {
   filter: brightness(90%);
-}
+} */
