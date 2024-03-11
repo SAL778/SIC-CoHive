@@ -39,7 +39,6 @@ class PortfolioItem(models.Model):
 class AccessType(models.Model):
     name = models.CharField(max_length=80, unique=True,help_text="The name of the access type")
     
-
     class Meta:
         verbose_name = 'access type'
         verbose_name_plural = 'access types'
@@ -101,23 +100,3 @@ class CustomUser(AbstractUser):
         return self.username
 
 
-# {
-#     "id": 1,
-#     "first_name": "",
-#     "last_name": "",
-#     "email": "kannan@gmail.com",
-#     "is_staff": true,
-#     "portfolioVisibility": true,
-#     "profileImage": null,
-#     "portfolio": 1,
-#     "education": {
-#         "field_of_study": "Computer Science2",
-#         "major": "Software Engineering2",
-#         "minor": "Data Science2"
-#     },
-#     "accessType": [
-#         {
-#             "name": "complete access granted"
-#         }
-#     ]
-# }
