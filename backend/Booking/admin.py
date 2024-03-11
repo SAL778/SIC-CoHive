@@ -10,6 +10,17 @@ class ResourcesAdmin(admin.ModelAdmin):
     list_filter = ('name', 'type')
     search_fields = ('id', 'name', 'room_number', 'type')
     ordering = ('id', 'name', 'description', 'room_number', 'type')
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'description', 'room_number', 'type')
+        }),
+        ('Access Type', {
+            'fields': ('access_type',)
+        }),
+    )
+    filter_horizontal = (
+        "access_type",
+    )
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
