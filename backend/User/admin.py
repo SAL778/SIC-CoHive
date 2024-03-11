@@ -30,12 +30,7 @@ class Education_FieldAdmin(admin.ModelAdmin):
     search_fields = ('id', 'user__username',)
     ordering = ('id', 'user',)
 
-@admin.register(AccessType)
-class CustomGroupAdmin(GroupAdmin):
-    model = AccessType
-    fieldsets = GroupAdmin.fieldsets
-    search_fields = ('name',)
-    ordering = ('name',)
+admin.site.register(AccessType)
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
