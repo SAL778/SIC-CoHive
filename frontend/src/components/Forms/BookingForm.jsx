@@ -35,9 +35,9 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     const interval = 15;
     const timeRange = [7, 20] //Opening times are between 7AM and 8PM
 
-
+    const allTimeSlots = getTimePeriods(interval, ...timeRange)
     //Initial booking time slots
-    const [availableTimeSlots, setAvailableTimeSlots] = useState(getTimePeriods(interval, ...timeRange))
+    const [availableTimeSlots, setAvailableTimeSlots] = useState(allTimeSlots)
     //Store booked slots for faster validation
     const [disabledTimeSlots, setDisabledTimeSlots] = useState([])
 
@@ -128,10 +128,16 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                         }
                         setDisabledTimeSlots(bookedTimeSlots)           //Store for future validation
 
-                        setAvailableTimeSlots(availableTimeSlots.map((timeSlot) => ({
-                            value: timeSlot,
-                            disabled: bookedTimeSlots.some(booked => booked == timeSlot)
-                        }))
+                        console.dir(availableTimeSlots)
+                        setAvailableTimeSlots([...availableTimeSlots.map((timeSlot) => 
+                            bookedTimeSlots.includes(timeSlot) 
+                            ? {value: timeSlot, label: timeSlot}
+                            : {value: timeSlot, label: timeSlot, disabled: false}
+                        )]
+                        // ({
+                        //     value: timeSlot,
+                        //     ...(bookedTimeSlots.includes(timeSlot) && { disabled: true })
+                        // }))
                     );
                 }
                 }
@@ -202,7 +208,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="from"
-                            data = {availableTimeSlots}
+                            data={allTimeSlots}
+                            //data = {availableTimeSlots}
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
@@ -214,7 +221,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="to"
-                            data = {availableTimeSlots}
+                            data = {allTimeSlots}
+                            //data = {availableTimeSlots}
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}

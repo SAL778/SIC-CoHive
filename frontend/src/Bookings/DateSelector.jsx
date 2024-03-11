@@ -23,7 +23,7 @@ export default function DateSelector({currentDate, onSetDate}) {
             <Popover.Dropdown>
                 <DatePicker
                 value = {currentDate}
-                onChange ={onSetDate}
+                onChange = {onSetDate}
                 />
             </Popover.Dropdown>
         </Popover>
