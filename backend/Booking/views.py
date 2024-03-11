@@ -20,6 +20,9 @@ from drf_yasg.utils import swagger_auto_schema
 User = get_user_model()
 
 def match_access_type(user, resource):
+    '''
+    Check if the user has access to the resource.
+    '''
     user_access_type = user.accessType.all()
     resource_access_type = resource.access_type.all()
     for access_type in user_access_type:
@@ -30,7 +33,7 @@ def match_access_type(user, resource):
 class ColumnsView(generics.ListAPIView):
     '''
     get:
-    Get all resources.
+    Get all resources. Example: /bookings/columns/filter?type=room&date=YYYY-MM-DD
     '''
     serializer_class = ResourcesSerializer
 
@@ -63,7 +66,7 @@ class AllBookingsView(generics.ListAPIView):
 class FilterBookingsView(generics.ListAPIView):
     '''
     get:
-    Get all bookings that fall within the given date range.
+    Get all bookings that fall within the given date range. Example: /booking/filter?start_time=YYYY-MM-DD&end_time=YYYY-MM-DD
     '''
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
@@ -208,7 +211,7 @@ class ViewBookingView(APIView):
 class ResourceListView(generics.ListAPIView):
     '''
     get:
-    Get all resources name with filter by type.
+    Get all resources name with filter by type. Example: /bookings/resources/filter?type=room
     '''
     serializer_class = ResourcesSerializer
 

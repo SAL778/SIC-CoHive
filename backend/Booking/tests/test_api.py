@@ -11,8 +11,12 @@ from Booking.models import Resources
 
 
 class BookingTests(APITestCase):
+    '''
+    Test the booking API
+    '''
 
     def setUp(self):
+        # Create a user
         self.user = CustomUser.objects.create(
             username="testuser",
             first_name="Test",
@@ -51,6 +55,9 @@ class BookingTests(APITestCase):
         self.resources2.save()
 
     def test_create_booking(self):
+        '''
+        Test creating a booking
+        '''
         url = reverse('booking-list', kwargs={'user_id': self.user.id})  # Include user_id in URL
         data1 = {
             "start_time": "2021-12-02T12:15",
@@ -87,6 +94,9 @@ class BookingTests(APITestCase):
         
     
     def test_create_booking_invalid(self):
+        '''
+        Test creating a booking with invalid data
+        '''
         url = reverse('booking-list', kwargs={'user_id': self.user.id})
         data = {
             "start_time": "2021-12-01T12:20",
@@ -112,6 +122,9 @@ class BookingTests(APITestCase):
         
     
     def test_get_booking(self):
+        '''
+        Test getting a booking
+        '''
         booking = Booking.objects.create(
             start_time="2021-12-01T12:15",
             end_time="2021-12-01T13:00",
@@ -136,7 +149,9 @@ class BookingTests(APITestCase):
     
     
     def test_edit_booking(self):
-        
+        '''
+        Test editing a booking
+        '''
         booking = Booking.objects.create(
             start_time="2021-12-01T12:15",
             end_time="2021-12-01T13:00",
@@ -167,6 +182,9 @@ class BookingTests(APITestCase):
         
     
     def test_delete_booking(self):
+        '''
+        Test deleting a booking
+        '''
         booking = Booking.objects.create(
             start_time="2021-12-01T12:15",
             end_time="2021-12-01T13:00",
@@ -182,6 +200,9 @@ class BookingTests(APITestCase):
         self.assertEqual(Booking.objects.count(), 0)
         
     def test_columns(self):
+        '''
+        Test getting columns
+        '''
         url = reverse('column-list')
         response=self.client.get(url, HTTP_AUTHORIZATION='Token ' + self.token.key)
         print(response.data)
@@ -196,6 +217,9 @@ class BookingTests(APITestCase):
         self.assertEqual(response.data[1]['type'], "equipment")
         
     def test_resources(self):
+        '''
+        Test getting resources
+        '''
         url=reverse('resource-list')
         response=self.client.get(url, HTTP_AUTHORIZATION='Token ' + self.token.key)
         self.assertEqual(response.status_code, 200)
