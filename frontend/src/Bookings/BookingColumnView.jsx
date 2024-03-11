@@ -24,7 +24,7 @@ export default function ColumnView({onBookingEdit, assetType, currentDate}) {
 		httpRequest({
 			endpoint: `${host}/bookings/columns/filter?type=${assetType}&date=${currentDate}`,
 			onSuccess: (columnsData) => {
-				console.dir(columnsData)
+				// console.dir(columnsData)
 				setColumnView(columnsData);
 				setTimeout(() => {
 					setIsLoading(false); // Added this to mitigate "flashing" when toggling assetType.

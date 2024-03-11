@@ -116,7 +116,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             httpRequest({
                 endpoint: `${host}/bookings/columns/${resourceId}`,
                 onSuccess: (data) => {
-                    console.log(data)
+                    // console.log(data);
                     const bookedTimeSlots = new Set()               //Unique 15 min intervals
                     for (const booking of data.bookings) {
                         const bookedTimes = getTimePeriods(interval, booking.start_time, booking.end_time)  //Booked 15 min intervals
@@ -231,9 +231,10 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
 
             {/* If currentBooking is private, user information will not be present */}
             <div className = "lowerSection flex justify-between mt-8 gap-8">
+                <div className = "bookerInfo flex items-center gap-3">
                 { isShowDetails() &&
                     //TODO: load user info here
-                    <div className = "bookerInfo flex items-center gap-3">
+                    <>
                         <img 
                         src = { form.values?.user?.profileImage ?? fallbackProfileImage }
                         className = "rounded-md w-16 h-16 object-cover"
@@ -243,8 +244,9 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             <p className = "text-orange-600 text-xl font-semibold truncate leading-[1]">{form.values?.user?.first_name}</p>
                             <p className = "text-neutral-400 text-sm truncate">{form.values?.user?.email}</p>
                         </div>
-                    </div>
+                    </>
                 }
+                </div>
                 <div className ="flex gap-3 pt-3">
                     <button type="button" className = "button-grey-hover modal-button" onClick = {onClose}>Close</button>
                     
