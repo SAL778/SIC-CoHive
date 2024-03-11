@@ -38,7 +38,7 @@ class PortfolioItem(models.Model):
   
 class AccessType(models.Model):
     name = models.CharField(max_length=80, unique=True,help_text="The name of the access type")
-    permissions = models.ManyToManyField(Permission, blank=True,help_text="The permissions of the access type")
+    
 
     class Meta:
         verbose_name = 'access type'
