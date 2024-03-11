@@ -12,11 +12,12 @@ class BookingSerializer(serializers.ModelSerializer):
     end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
     user = serializers.SerializerMethodField("get_user")
     resources_name = serializers.CharField(source="resources.name", read_only=True)
+    resource_type=serializers.CharField(source="resources.type", read_only=True)
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name', 'user', 'title', 'visibility']
-        read_only_fields = ["id", "user", "resources_name"]
+        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name','resource_type', 'user', 'title', 'visibility']
+        read_only_fields = ["id", "user", "resources_name","resource_type"]
 
     def validate(self, data):
 
