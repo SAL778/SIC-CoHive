@@ -478,6 +478,16 @@ button.button-red:focus {
 	background: #fff;
 }
 
+.booking-column-container .embla__slide .booking-column.no-permission-column .open-booking-slot {
+	background: rgb(209, 213, 219);
+	cursor: not-allowed;
+}
+
+.booking-column-container .embla__slide:nth-child(2n + 1) .booking-column.no-permission-column:not(.currentlyBooking) .open-booking-slot:hover,
+.booking-column-container .embla__slide:nth-child(2n) .booking-column.no-permission-column:not(.currentlyBooking) .open-booking-slot:hover {
+	background: rgb(209, 213, 219);
+}
+
 .booking-column-container .embla__slide:nth-child(2n + 1) .booking-column:not(.currentlyBooking) .open-booking-slot:hover,
 .booking-column-container .embla__slide:nth-child(2n) .booking-column:not(.currentlyBooking) .open-booking-slot:hover {
 	background: rgb(249, 115, 22, 70%);
