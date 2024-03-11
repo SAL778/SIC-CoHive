@@ -19,7 +19,8 @@ class Resources(models.Model):
     # room_code = models.CharField(max_length=100, blank=True, null=True,help_text="Room code of the asset")
     room_number = models.CharField(max_length=100, blank=True, null=True,help_text="Room number of the asset")
     type = models.CharField(max_length=100,choices=Type, blank=True, null=True,help_text="Type of the asset")
-    access_type=models.ManyToManyField(AccessType,help_text="The access type of the schedule")      
+    access_type=models.ManyToManyField(AccessType,help_text="The access type for the resource")   
+       
     def __str__(self):
         return self.name
 

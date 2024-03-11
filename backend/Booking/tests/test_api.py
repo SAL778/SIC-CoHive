@@ -5,7 +5,7 @@ from Booking.models import Booking
 from Booking.serializers import BookingSerializer
 import warnings
 
-from User.models import CustomUser
+from User.models import CustomUser,AccessType
 
 from Booking.models import Resources
 
@@ -41,15 +41,21 @@ class BookingTests(APITestCase):
             type="equipment"
         )
         self.resources2.save()
-        
-
+        self.accessType = AccessType.objects.create(
+            name="Test")
+        self.user.accessType.add(self.accessType)
+        self.user.save()
+        self.resource1.access_type.add(self.accessType)
+        self.resource1.save()
+        self.resources2.access_type.add(self.accessType)
+        self.resources2.save()
 
     def test_create_booking(self):
         url = reverse('booking-list', kwargs={'user_id': self.user.id})  # Include user_id in URL
         data1 = {
             "start_time": "2021-12-02T12:15",
             "end_time": "2021-12-02T13:00",
-            "resources": "Test Equipment",
+            "resources_name": "Test Equipment",
             "visibility": True,
             "title": "Test Booking"
         }
@@ -57,7 +63,7 @@ class BookingTests(APITestCase):
         data2 = {
             "start_time": "2021-12-02T12:15",
             "end_time": "2021-12-02T12:30",
-            "resources": "Test Equipment",
+            "resources_name": "Test Equipment",
             "visibility": True,
             "title": "Test Booking"
         }
