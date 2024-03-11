@@ -1,5 +1,4 @@
 import datetime
-
 from django.utils import timezone
 from rest_framework import serializers
 from .models import Resources, Booking
@@ -82,12 +81,13 @@ class BookingSerializer(serializers.ModelSerializer):
 class ResourcesSerializer(serializers.ModelSerializer):
     # bookings = BookingSerializer(many=True, read_only=True)
     bookings = serializers.SerializerMethodField("get_bookings")
+    access_type = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Resources
-        fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings']
+        fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings', 'access_type']
 
-    def get_bookings(self, obj):
+    def get_bookings(self, obj):    
         request = self.context.get("request")
         date = request.query_params.get('date')
         filter_date = None
