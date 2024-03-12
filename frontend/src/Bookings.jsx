@@ -189,6 +189,7 @@ function Bookings() {
 			>
 			<BookingFormComponent
 				currentBooking={clickedBooking}
+				currentDate={currentDay}
 				availableAssets={currentAssetViewIsRoom ? availableRooms : availableEquipment} //TODO: Fill this in
 				onSubmit={onModalSubmitBooking}
 				onClose={onModalCloseBooking}

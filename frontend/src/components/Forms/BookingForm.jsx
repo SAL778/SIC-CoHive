@@ -17,7 +17,7 @@ export default BookingFormComponent
  * @param {function} onSubmit - A callable that triggers upon form submission
  * @param {function} onDelete - A callable that triggers upon form deletion
  */
-function BookingFormComponent({currentBooking = null, availableAssets, onClose, onSubmit, onDelete}) {
+function BookingFormComponent({currentBooking = null, availableAssets, onClose, onSubmit, onDelete, currentDate}) {
 
     const fallbackProfileImage = "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?q=80&w=1828&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     const fallbackAssetImage = "https://images.unsplash.com/photo-1633633292416-1bb8e7b2832b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -49,7 +49,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             id: currentBooking?.id,
             resources: currentBooking?.resources ?? "", //The ID of the resource asset for backend
             resources_name: currentBooking?.resources_name ?? "",
-            date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
+            date: currentDate,
+            // date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             start_time: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "",
             end_time: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "",
             title: currentBooking?.title ?? "",
