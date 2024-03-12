@@ -10,31 +10,58 @@ import { httpRequest } from "../utils.js";
  * @param {Array[Object]} displayAssets - An array of javascript objects that represent each item (i.e. Room or equipment)
  * @param {string} assetType - A string of either "equipment" or "room" that specifies the asset requested.
  */
-function BookingListView({ onItemClick, assetType, filters }) {
+function BookingListView({
+	onItemClick,
+	assetType,
+	filters,
+	selectedDates,
+	selectedRooms,
+}) {
 	//const dateHeaders = getUniqueDateHeaders(displayAssets.map(asset => asset.start_time))
 	const { host } = useContext(HostContext);
 	const [isLoading, setIsLoading] = useState(true);
 	const [assets, setAssets] = useState([]); //An array of assets from the backend
 	const [dateHeaders, setDateHeaders] = useState([]); //An array of unique dates to be displayed as a header.
 
-	//(Get the list of booking (in theory)
 	useEffect(() => {
-		console.log(assetType);
+		const queryParams = new URLSearchParams();
+		if (selectedDates[0]) queryParams.append("start_time", selectedDates[0]);
+		if (selectedDates[1]) queryParams.append("end_time", selectedDates[1]);
+		selectedRooms.forEach((room) => queryParams.append("room", room));
+		console.log(queryParams.toString());
+
 		httpRequest({
-			endpoint: `${host}/bookings/?type=${assetType}`,
+			endpoint: `${host}/bookings/filter?${queryParams.toString()}`,
 			onSuccess: (data) => {
-				let sterilized = data.map((asset) => convertToISO(asset)); //Date strings converted
+				console.log(data);
+				let sterilized = data.map((asset) => convertToISO(asset));
 				setAssets(sterilized);
-				console.dir(sterilized);
 				setDateHeaders(
 					getUniqueDateHeaders(sterilized.map((asset) => asset.start_time))
 				);
-				setTimeout(() => {
-					setIsLoading(false); //Added this to mitigate "flashing" when toggling assetType.
-				}, 150);
+				setIsLoading(false);
 			},
 		});
-	}, [assetType]); //Re-trigger this every time the listview is toggled
+	}, [assetType, selectedDates, selectedRooms]);
+
+	// //(Get the list of booking (in theory)
+	// useEffect(() => {
+	// 	console.log(assetType);
+	// 	httpRequest({
+	// 		endpoint: `${host}/bookings/`,
+	// 		onSuccess: (data) => {
+	// 			let sterilized = data.map((asset) => convertToISO(asset)); //Date strings converted
+	// 			setAssets(sterilized);
+	// 			console.dir(sterilized);
+	// 			setDateHeaders(
+	// 				getUniqueDateHeaders(sterilized.map((asset) => asset.start_time))
+	// 			);
+	// 			setTimeout(() => {
+	// 				setIsLoading(false); //Added this to mitigate "flashing" when toggling assetType.
+	// 			}, 150);
+	// 		},
+	// 	});
+	// }, [assetType]); //Re-trigger this every time the listview is toggled
 
 	return isLoading ? (
 		<Loader size={50} color="orange" />

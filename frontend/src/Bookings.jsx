@@ -23,6 +23,9 @@ function Bookings() {
 	const [currentAssetViewIsRoom, setCurrentAssetViewIsRoom] = useState(true);
 	const [currentDay, setCurrentDay] = useState(new Date());
 
+	const [selectedDates, setSelectedDates] = useState([null, null]);
+	const [selectedRooms, setSelectedRooms] = useState([]);
+
 	const { host } = useContext(HostContext);
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 
@@ -32,8 +35,15 @@ function Bookings() {
 	const [isColumnView, setIsColumnView] = useState(true);
 
 	const [filters, setFilters] = useState([]); // state to hold filters; List View.
-	const handleFilterChange = (newFilters) => {
-		setFilters(newFilters);
+	const handleFilterChange = ({
+		selectedFilters,
+		fromDate,
+		toDate,
+		selectedRooms,
+	}) => {
+		setFilters(selectedFilters);
+		setSelectedDates([fromDate, toDate]);
+		setSelectedRooms(selectedRooms);
 	};
 
 	// Fetch user data to set the current user context to fill user's data on the bookings page
@@ -188,12 +198,17 @@ function Bookings() {
 					<BookingListView
 						onItemClick={onClickBooking}
 						assetType={currentAssetViewIsRoom ? "room" : "equipment"}
-						filters={filters} // check
+						filters={filters}
+						selectedDates={selectedDates}
+						selectedRooms={selectedRooms}
 					/>
+
 					<BookingsListFilter
 						// onSearch={handleSearch}
 						onFilterChange={handleFilterChange}
 						assetType={currentAssetViewIsRoom ? "room" : "equipment"}
+						selectedDates={selectedDates}
+						selectedRooms={selectedRooms}
 					/>
 				</div>
 			) : (
@@ -207,15 +222,6 @@ function Bookings() {
 					}
 				/>
 			)}
-			{/* {!isColumnView && (
-				<div className="filter-wrapper">
-					<BookingsListFilter
-						// onSearch={handleSearch}
-						onFilterChange={handleFilterChange}
-						assetType={currentAssetViewIsRoom ? "room" : "equipment"}
-					/>
-				</div>
-			)} */}
 
 			<Modal
 				opened={opened}

@@ -10,6 +10,9 @@ function Filter({ onFilterChange, assetType }) {
 
 	const [selectedDates, setSelectedDates] = useState([null, null]);
 	const [parsedDates, setParsedDates] = useState([null, null]);
+	const [fromDate, setFromDate] = useState(null);
+	const [toDate, setToDate] = useState(null);
+	const [selectedRooms, setSelectedRooms] = useState([]);
 
 	const [bookingFilter, setBookingFilter] = useState("All Bookings");
 
@@ -29,28 +32,42 @@ function Filter({ onFilterChange, assetType }) {
 			});
 	}, []);
 
+	//Notify parent
 	useEffect(() => {
-		// Notify parent component whenever selectedFilters change
-		onFilterChange(
-			Object.entries(selectedFilters)
+		const formattedFromDate = fromDate
+			? new Date(fromDate).toISOString().split("T")[0]
+			: null;
+		const formattedToDate = toDate
+			? new Date(toDate).toISOString().split("T")[0]
+			: null;
+
+		onFilterChange({
+			selectedFilters: Object.entries(selectedFilters)
 				.filter(([_, isSelected]) => isSelected)
-				.map(([filter, _]) => filter)
-		);
-	}, [selectedFilters]);
+				.map(([filter, _]) => filter),
+			fromDate: formattedFromDate,
+			toDate: formattedToDate,
+			selectedRooms,
+		});
+	}, [selectedFilters, fromDate, toDate, selectedRooms]);
 
 	const toggleFilter = (filter) => {
 		setSelectedFilters({
 			...selectedFilters,
 			[filter]: !selectedFilters[filter],
 		});
+
+		if (!selectedFilters[filter]) {
+			setSelectedRooms([...selectedRooms, filter]);
+		} else {
+			setSelectedRooms(selectedRooms.filter((room) => room !== filter));
+		}
 	};
 
 	// New handler for booking filters
 	const handleBookingFilterChange = (filter) => {
 		setBookingFilter(filter);
 	};
-	const [fromDate, setFromDate] = useState(null);
-	const [toDate, setToDate] = useState(null);
 
 	return (
 		<div className="px-[10px] py-8" style={{ minWidth: "300px" }}>
