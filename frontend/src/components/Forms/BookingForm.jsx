@@ -64,8 +64,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                 ? 'Start time must be selected'
                 : timeIsGreaterThan(deserializeTime(value), deserializeTime(values.end_time)) //Checks if start time exceeds end time
                 ? 'Start time must come before the end time'
-                : getTimePeriods(interval, dateToTimePeriod('T' + value), dateToTimePeriod('T' + values.end_time)).some(booking => disabledTimeSlots.includes(booking)) //Check if a booked time slot falls between
-                ? 'This room is already booked between these times'
+                //: getTimePeriods(interval, dateToTimePeriod('T' + value), dateToTimePeriod('T' + values.end_time)).some(booking => disabledTimeSlots.includes(booking)) //Check if a booked time slot falls between
+                //? 'This room is already booked between these times'
                 : null
             ),
             end_time: (value) => (
