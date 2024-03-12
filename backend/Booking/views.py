@@ -67,9 +67,25 @@ class FilterBookingsView(generics.ListAPIView):
     '''
     get:
     Get all bookings that fall within the given date range. Example: /booking/filter?start_time=YYYY-MM-DD&end_time=YYYY-MM-DD
+    New Example: /booking/filter?start_time=YYYY-MM-DD&end_time=YYYY-MM-DD&room=room1&room=room2
     '''
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        start_time = self.request.query_params.get('start_time')
+        end_time = self.request.query_params.get('end_time')
+        rooms = self.request.query_params.getlist('room')
+
+        if start_time:
+            queryset = queryset.filter(start_time__gte=start_time)
+        if end_time:
+            queryset = queryset.filter(end_time__lte=end_time)
+        if rooms:
+            queryset = queryset.filter(resources_name__in=rooms)
+
+        return queryset
 
     def get(self, request, *args, **kwargs):
         start_time = request.query_params.get('start_time')
