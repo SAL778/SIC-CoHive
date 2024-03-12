@@ -1,5 +1,4 @@
 import datetime
-
 from django.utils import timezone
 from rest_framework import serializers
 from .models import Resources, Booking
@@ -12,11 +11,12 @@ class BookingSerializer(serializers.ModelSerializer):
     end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
     user = serializers.SerializerMethodField("get_user")
     resources_name = serializers.CharField(source="resources.name", read_only=True)
+    resource_type=serializers.CharField(source="resources.type", read_only=True)
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name', 'user', 'title', 'visibility']
-        read_only_fields = ["id", "user", "resources_name"]
+        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name','resource_type', 'user', 'title', 'visibility']
+        read_only_fields = ["id", "user", "resources_name","resource_type"]
 
     def validate(self, data):
 
@@ -81,12 +81,13 @@ class BookingSerializer(serializers.ModelSerializer):
 class ResourcesSerializer(serializers.ModelSerializer):
     # bookings = BookingSerializer(many=True, read_only=True)
     bookings = serializers.SerializerMethodField("get_bookings")
+    access_type = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Resources
-        fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings']
+        fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings', 'access_type']
 
-    def get_bookings(self, obj):
+    def get_bookings(self, obj):    
         request = self.context.get("request")
         date = request.query_params.get('date')
         filter_date = None

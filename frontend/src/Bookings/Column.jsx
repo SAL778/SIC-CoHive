@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import DraggableSlot from "./DraggableSlot";
+import { UserContext } from "../App";
 
 // Helper function to parse time range string into Date objects
 function parseTimeRange(timeRange) {
@@ -37,6 +38,9 @@ function parseTime(timeStr) {
  * @returns {JSX.Element} The rendered Column component.
  */
 const Column = ({ column, onBookingEdit }) => {
+
+	const { currentUser } = useContext(UserContext);
+	console.log(currentUser);
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Generate all time slots for the day in 15-minute intervals (empty by default)
 	const generateTimeSlots = () => {
@@ -65,7 +69,7 @@ const Column = ({ column, onBookingEdit }) => {
 	};
 
 	// ---------------------------------------------------------------------------------------------------------------------
-	const BookingList = ({ bookings, generateTimeSlots, onSlotClick }) => {
+	const BookingList = ({ bookings, generateTimeSlots, onSlotClick, hasPermission }) => {
 		let timeslots = generateTimeSlots();
 		let realBookings = [];
 
@@ -167,7 +171,7 @@ const Column = ({ column, onBookingEdit }) => {
 								<div className={`column-booking-card ${isShortBooking ? 'short-booking-card justify-center' : 'justify-between'} cursor-pointer relative z-1 overflow-hidden flex flex-col rounded-[12px] shadow-custom pl-8 pr-10 py-4 bg-white text-sm capitalize`}
 									key={slot}
 									style={{ height: `${slotHeight}px` }}
-									onClick={() => onBookingEdit(slot)}
+									onClick={() => hasPermission && onBookingEdit(slot)}
 								>
 									<p className="font-bold">{slot.title || "Booking"}</p>
 									{!is15MinBooking && (
@@ -175,7 +179,8 @@ const Column = ({ column, onBookingEdit }) => {
 									)}
 								</div>
 							) : (
-								<div className="open-booking-slot cursor-pointer rounded-[12px] overflow-hidden px-4 py-2 text-sm" key={slot} style={{ height: `${slotHeight}px` }} onClick={() => onSlotClick(slot, timeslots)}>
+								<div className="open-booking-slot cursor-pointer rounded-[12px] overflow-hidden px-4 py-2 text-sm" key={slot} style={{ height: `${slotHeight}px` }}
+									onClick={() => hasPermission && onSlotClick(slot, timeslots)}>
 									{/* <p>{slot.display_time}</p> */}
 								</div>
 							)}
@@ -187,6 +192,9 @@ const Column = ({ column, onBookingEdit }) => {
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------
+
+	// Check if the user accessType contains at least 1 of the elements from the column.access_type
+	const hasPermission = column.access_type.some((permission) => currentUser.accessType.map((type) => type.name).includes(permission));
 
 	// State to manage the currently selected slot
 	const [selectedSlot, setSelectedSlot] = useState(null);
@@ -226,7 +234,7 @@ const Column = ({ column, onBookingEdit }) => {
 	};
 
 	return (
-		<div key={column.id} className={`booking-column h-full flex flex-col relative ${selectedSlot ? 'currentlyBooking' : ''}`}>
+		<div key={column.id} className={`booking-column h-full flex flex-col relative ${selectedSlot ? 'currentlyBooking' : ''} ${hasPermission ? '' : 'no-permission-column'}`}>
 			<div className="flex justify-center items-center min-h-[80px] h-[80px] mb-[20px] rounded-[12px] shadow-custom w-[100] py-2 px-4 bg-white">
 				<p className="text-lg font-bold capitalize">{column.name}</p>
 			</div>
@@ -235,6 +243,7 @@ const Column = ({ column, onBookingEdit }) => {
 					bookings={column.bookings}
 					generateTimeSlots={generateTimeSlots}
 					onSlotClick={handleSlotClick}
+					hasPermission={hasPermission}
 				/>
 				{selectedSlot && (
 					<DraggableSlot

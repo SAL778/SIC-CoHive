@@ -35,9 +35,11 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     const interval = 15;
     const timeRange = [7, 20] //Opening times are between 7AM and 8PM
 
-
+    const allTimeSlots = getTimePeriods(interval, ...timeRange)
     //Initial booking time slots
-    const [availableTimeSlots, setAvailableTimeSlots] = useState(getTimePeriods(interval, ...timeRange))
+    const [availableTimeSlots, setAvailableTimeSlots] = useState(allTimeSlots)
+    //Store booked slots for faster validation
+    const [disabledTimeSlots, setDisabledTimeSlots] = useState([])
 
     //TODO: Change the resources ID from 1 to something else later.
     const form = useForm({
@@ -61,8 +63,9 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                 ? 'Start time must be selected'
                 : timeIsGreaterThan(deserializeTime(value), deserializeTime(values.end_time)) //Checks if start time exceeds end time
                 ? 'Start time must come before the end time'
+                : getTimePeriods(interval, dateToTimePeriod('T' + value), dateToTimePeriod('T' + values.end_time)).some(booking => disabledTimeSlots.includes(booking)) //Check if a booked time slot falls between
+                ? 'This room is already booked between these times'
                 : null
-                    
             ),
             end_time: (value) => (
                 !(value)
@@ -109,27 +112,34 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             // THIS RELIES ON THE ASSET ID BEING THE INDEX OF THE ASSETS RETRIEVED
             // THIS ____MUST____ BE REPLACED AT THE EARLIEST AVAILABILITY BECAUSE OF ITS
             // FRAGILITY. A MORE ROBUST SOLUTION MUST BE FOUND.
-            // TODO: REPLACE THE LOGIC THAT MAPS RESOURCE NAME TO ITS ID.
+
             // TODO: ADD AN ADDITIONAL CHECK TO MATCH THE DAY (NEEDS BACKEND SUPPORT)
+
             const resourceId = availableAssets.indexOf(form.values.resources_name) + 1
-            console.log("Form value changed")
             httpRequest({
-                endpoint: `${host}/bookings/columns/${resourceId}`,
-                onSuccess: (data) => {
-                    // console.log(data);
-                    const bookedTimeSlots = new Set()               //Unique 15 min intervals
-                    for (const booking of data.bookings) {
-                        const bookedTimes = getTimePeriods(interval, booking.start_time, booking.end_time)  //Booked 15 min intervals
-                        bookedTimes.forEach((bookedTime) => {
-                            bookedTimeSlots.add(bookedTime)
-                        });
-                    }
-                    setAvailableTimeSlots(
-                        availableTimeSlots.map((timeSlot) => ({
-                            value: timeSlot,
-                            disabled: bookedTimeSlots.has(timeSlot) // Check if the time slot is in bookedTimeSlots
-                        }))
+                endpoint: `${host}/bookings/columns/${resourceId}/`,
+                onSuccess: (data) => {            //Unique 15 min intervals
+                    if (data.bookings)  {
+                        const todaysBookings = data.bookings.filter((booking) => isToday(new Date(booking.start_time)));
+                        const bookedTimeSlots = []
+                        for (const booking of todaysBookings) {
+                            const bookedTimes = getTimePeriods(interval, dateToTimePeriod(booking.start_time), dateToTimePeriod(booking.end_time));  //Booked 15 min intervals
+                            bookedTimeSlots.push(...bookedTimes)
+                        }
+                        setDisabledTimeSlots(bookedTimeSlots)           //Store for future validation
+
+                        console.dir(availableTimeSlots)
+                        setAvailableTimeSlots([...availableTimeSlots.map((timeSlot) => 
+                            bookedTimeSlots.includes(timeSlot) 
+                            ? {value: timeSlot, label: timeSlot}
+                            : {value: timeSlot, label: timeSlot, disabled: false}
+                        )]
+                        // ({
+                        //     value: timeSlot,
+                        //     ...(bookedTimeSlots.includes(timeSlot) && { disabled: true })
+                        // }))
                     );
+                }
                 }
             })
         }   
@@ -198,7 +208,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="from"
-                            data = {availableTimeSlots}
+                            data={allTimeSlots}
+                            //data = {availableTimeSlots}
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
@@ -210,7 +221,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="to"
-                            data = {availableTimeSlots}
+                            data = {allTimeSlots}
+                            //data = {availableTimeSlots}
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
@@ -228,7 +240,6 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                     }
                 </div>
             </div>
-
             {/* If currentBooking is private, user information will not be present */}
             <div className = "lowerSection flex justify-between mt-8 gap-8">
                 <div className = "bookerInfo flex items-center gap-3">
@@ -311,7 +322,16 @@ const deserializeTime = (timestring) => {
     return [hour24, minutes];
 }
 
-//Gets the time periods between a certain time range
+/** Gets the time periods between a certain time range
+ * 
+ * @param {integer} interval - the minute intervals (e.g 15 for 15 minute gaps)
+ * @param {number} startHour - A positive number that represents the start time in 24 hour format (e.g 8.5 = 8:30 AM)
+ * @param {number} endHour - A positive number that represents the start time in 24 hour format (e.g 15.5 = 3:30 PM)
+ * @see dateToHoursFloat - A helper function that can be used for date conversion.
+ * 
+ * @returns - An array of intervals, bookended by the start hour and end hour inclusive.
+ */
+
 const getTimePeriods = (interval, startHour, endHour) => {
     const periods = [];
 
@@ -319,7 +339,7 @@ const getTimePeriods = (interval, startHour, endHour) => {
     for (let i = startHour * 60; i <= endHour * 60; i += interval) {
         // Convert current interval to hours and minutes
         let hours = Math.floor(i / 60);
-        const minutes = i % 60;
+        const minutes = (i % 60 === 0) ? '00' : i % 60; // Adjusted for 15-minute intervals
 
         // Determine AM/PM
         const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -335,6 +355,30 @@ const getTimePeriods = (interval, startHour, endHour) => {
     return periods;
 }
 
+/** Distills a date down to its hour/minute components, and returns it as a 24 hour float
+ *  @param {date} date - a date object 
+ *  @param {string} date - a string representing the date convertable to a date object
+ *  @param {[hours, minutes]} date - An array representing the times as an hour minute array.
+ *  @see getTimePeriods - The function that consumes time periods as arguments.
+ * 
+ *  @returns hours, minutes
+ */
+const dateToTimePeriod = (date) => {
+    let transformed = date
+    //Convert dates to ISO strings, then isolate hours, minutes
+    if (transformed instanceof Date) {
+        transformed = date.toISOString()
+    }
+    //Then convert this ISO string to an array
+    if (typeof transformed == 'string') {
+        transformed = deserializeTime(transformed.split('T')[1])
+    }
+    //Finally, convert the date to its 24 hours representation
+    const [hours, minutes] = transformed
+    const hoursRep = hours + minutes / 60 
+
+    return hoursRep   //The final representation of a timeperiod
+}
 
 //Does an int-wise comparison of deserialized time (standard > symbol compares them as strings)
 //which causes 1x < y (where y is a single digit (AM)) 
