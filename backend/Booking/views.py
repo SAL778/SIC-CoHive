@@ -19,11 +19,21 @@ from drf_yasg.utils import swagger_auto_schema
 # Create your views here.
 User = get_user_model()
 
+def match_access_type(user, resource):
+    '''
+    Check if the user has access to the resource.
+    '''
+    user_access_type = user.accessType.all()
+    resource_access_type = resource.access_type.all()
+    for access_type in user_access_type:
+        if access_type in resource_access_type:
+            return True
+    return False
 
 class ColumnsView(generics.ListAPIView):
     '''
     get:
-    Get all resources.
+    Get all resources. Example: /bookings/columns/filter?type=room&date=YYYY-MM-DD
     '''
     serializer_class = ResourcesSerializer
 
@@ -56,7 +66,7 @@ class AllBookingsView(generics.ListAPIView):
 class FilterBookingsView(generics.ListAPIView):
     '''
     get:
-    Get all bookings that fall within the given date range.
+    Get all bookings that fall within the given date range. Example: /booking/filter?start_time=YYYY-MM-DD&end_time=YYYY-MM-DD
     '''
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
@@ -118,15 +128,20 @@ class UserBookingView(generics.ListCreateAPIView):
         if not resource:
             return Response({"error": f"No resource found with name {resource_name}."},
                             status=status.HTTP_400_BAD_REQUEST)
-
+        access=match_access_type(user, resource)
         # Add the resource's ID to the request data, front end only sends the name
-        request.data['resources'] = resource.id
-
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():   
-            serializer.save(user=user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        if access:
+            request.data['resources'] = resource.id
+            
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():   
+                serializer.save(user=user)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "You don't have permission to add a booking for this resource."},
+                            status=status.HTTP_403_FORBIDDEN)
 
 
 class ViewBookingView(APIView):
@@ -161,11 +176,17 @@ class ViewBookingView(APIView):
         if user != booking.user:
             return Response({"error": "You don't have permission to update this booking."},
                             status=status.HTTP_403_FORBIDDEN)
-        serializer = BookingSerializer(booking, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        resource=Resources.objects.get(id=booking.resources.id)
+        access=match_access_type(user, resource)
+        if access:
+            serializer = BookingSerializer(booking, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "You don't have permission to update this booking."},
+                            status=status.HTTP_403_FORBIDDEN)
 
     @swagger_auto_schema(operation_description="Delete a specific booking.", responses={204: "No Content"})
     def delete(self, request, pk, format=None):
@@ -190,7 +211,7 @@ class ViewBookingView(APIView):
 class ResourceListView(generics.ListAPIView):
     '''
     get:
-    Get all resources name with filter by type.
+    Get all resources name with filter by type. Example: /bookings/resources/filter?type=room
     '''
     serializer_class = ResourcesSerializer
 
@@ -204,3 +225,5 @@ class ResourceListView(generics.ListAPIView):
         queryset = self.filter_queryset(self.get_queryset())
         names = queryset.values_list('name', flat=True)
         return Response(names)
+    
+    

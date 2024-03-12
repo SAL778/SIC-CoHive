@@ -331,7 +331,6 @@ button.button-orange:focus {
 	box-shadow: 0px 2px 6px #00000080;
 }
 
-
 button.button-grey-hover {
 	font-weight: 500;
 	padding: 0.75rem;
@@ -478,6 +477,16 @@ button.button-red:focus {
 	background: #fff;
 }
 
+.booking-column-container .embla__slide .booking-column.no-permission-column .open-booking-slot {
+	background: rgb(209, 213, 219);
+	cursor: not-allowed;
+}
+
+.booking-column-container .embla__slide:nth-child(2n + 1) .booking-column.no-permission-column:not(.currentlyBooking) .open-booking-slot:hover,
+.booking-column-container .embla__slide:nth-child(2n) .booking-column.no-permission-column:not(.currentlyBooking) .open-booking-slot:hover {
+	background: rgb(209, 213, 219);
+}
+
 .booking-column-container .embla__slide:nth-child(2n + 1) .booking-column:not(.currentlyBooking) .open-booking-slot:hover,
 .booking-column-container .embla__slide:nth-child(2n) .booking-column:not(.currentlyBooking) .open-booking-slot:hover {
 	background: rgb(249, 115, 22, 70%);
@@ -507,7 +516,38 @@ button.button-red:focus {
 }
 
 .day-list .private-booking {
-	color: #ABABAB;
+	color: #ababab;
 	background: rgb(171, 171, 171, 0.125);
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.bookings-filter {
+	margin-bottom: 10px;
+}
+
+.radio-button {
+	height: 20px;
+	width: 20px;
+	background-color: #747474;
+	border: 1px solid transparent;
+	border-radius: 50%;
+	margin-right: 10px;
+	cursor: pointer;
+	position: relative;
+}
+
+.radio-button.selected {
+	background-color: #ea580c;
+}
+
+.radio-button.selected::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	height: 12px;
+	width: 12px;
+	background-color: #ea580c;
+	border-radius: 50%;
 }

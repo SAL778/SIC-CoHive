@@ -17,6 +17,9 @@ from google.oauth2 import id_token
 
 @api_view(['POST'])
 def verify_google_jwt(request):
+    '''
+    This function verifies the JWT token provided by Google and creates a new user if it doesn't exist.
+    '''
     # Replace 'your-client-id-from-google-console' with your actual Google client ID
     client_id = '738911792381-du1hc1l4go32tj2iunbnufo6qf9h0u7v.apps.googleusercontent.com'
     
@@ -66,7 +69,7 @@ def get_user_from_token(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
-
+@swagger_auto_schema(method='post', operation_description="Sign out the authenticated user.", responses={200: 'Logged out'})
 @api_view(['POST'])
 def signout_view(request):
     try:
