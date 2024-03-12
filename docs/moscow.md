@@ -19,6 +19,7 @@
 - US 4.01 As an admin, I want to collect analytics, so that all users can view usage hours, peak times, and the popularity of different technologies and rooms.
 - US 5.02 As an admin, I want to send Email notifications to users, so that they can be informed about the latest updates, events, and opportunities related to the center.
 - US 6.01 As an admin, I want to collect feedback and manage the Feedback Form, so that I can review feedback from my users.
+- US 7.02 As an admin, I want to manage my Google Suite links, so that I can keep the feedback and other forms up to date.
 
 ## Should Do
 - US 1.05 As a user, I want to look up other users by using the search bar, so that I can find information about my friends, organizations, and admins.
