@@ -6,7 +6,7 @@ function CommunityCard({ userID, firstName, lastName, imageUrl }) {
 	return (
 		<a href={`/users/${userID}`} className="community-card bg-white rounded-lg">
 			<img
-				className="w-full"
+				className="w-full shadow-custom"
 				src={imageUrl || defaultImage}
 				alt={`${firstName} ${lastName}`}
 			/>

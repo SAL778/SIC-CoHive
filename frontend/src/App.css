@@ -40,7 +40,7 @@ h1 {
 }
 
 h2 {
-	font-size: 22px !important;
+	font-size: 22px /*!important*/;
 }
 
 h3 {
@@ -89,11 +89,7 @@ h3 {
 	background: none;
 	color: var(--charcoal);
 	border-radius: var(--border-radius);
-	transition: color 0.4s ease;
-}
-
-.nav-container .nav-item.active {
-	color: #fff;
+	transition: background-color 0.3s ease;
 }
 
 .nav-container .nav-item:hover,
@@ -101,10 +97,12 @@ h3 {
 	background: rgb(249 115 22 / 80%);
 }
 
+.nav-container .nav-item.active,
 .nav-container .nav-item.active:hover,
-.nav-container .nav-item.active:focus {
+.nav-container .nav-item.active:focus,
+.nav-container .nav-item[aria-current="page"] {
 	color: #fff;
-	background: none;
+	background: var(--primary-orange);
 }
 
 .nav-container p {
@@ -114,7 +112,8 @@ h3 {
 
 .nav-underlay {
 	position: absolute;
-	width: calc(282px + 14px);
+	min-width: calc(282px + 14px);
+	max-width: calc(282px + 14px);
 	object-fit: cover;
 	z-index: 0;
 	transition: top 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
@@ -132,7 +131,7 @@ h3 {
 	column-gap: 40px;
 	background: #fafafa;
 	color: var(--charcoal);
-	box-shadow: 4px 4px 10px 0px #0000000d;
+	box-shadow: 0px 2px 6px #00000029;
 }
 
 .community-card img {
@@ -146,7 +145,7 @@ h3 {
 
 .community-card .card-info {
 	width: 100%;
-	padding: 23px 23px 46px;
+	padding: 23px 23px 38px;
 }
 
 .community-card .card-info p {
@@ -189,27 +188,17 @@ h3 {
 	clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
 }
 
-.roleTag:nth-child(1) {
-	--tag-color: #9747ff;
-}
-.roleTag:nth-child(2) {
-	--tag-color: #31c1ca;
-}
-.roleTag:nth-child(3) {
-	--tag-color: #ff4794;
-}
-.roleTag:nth-child(4) {
-	--tag-color: #033eb0;
-}
-
 .roleTag {
 	font-size: 10px;
 	font-weight: 700;
-	color: var(--tag-color);
-	border: 3px solid var(--tag-color);
+	color: white;
 	border-radius: 8px;
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
+	padding: 6px 8px;
+	margin-right: 4px;
+	margin-bottom: 4px;
+	background-color: var(--tag-color, #333); /* Default */
 }
 
 .education-input {
@@ -332,12 +321,51 @@ button.button-orange {
 	background: var(--primary-orange);
 	border-radius: var(--border-radius);
 	transition: background-color 0.3s ease, color 0.3s ease;
+	cursor: pointer;
 }
 
 button.button-orange:hover,
 button.button-orange:focus {
-	padding: 0.75rem;
 	color: var(--primary-orange);
+	background: #fff;
+	box-shadow: 0px 2px 6px #00000080;
+}
+
+button.button-grey-hover {
+	font-weight: 500;
+	padding: 0.75rem;
+	color: var(--charcoal);
+	background: none;
+	border-radius: var(--border-radius);
+	transition: background-color 0.3s ease, color 0.3s ease;
+	/* box-shadow: 0px 2px 6px #00000022; */
+}
+
+button.button-grey-hover:hover,
+button.button-grey-hover:focus {
+	background: #e9ecef;
+}
+
+button.modal-button {
+	height: 46px;
+	width: 100px;
+	padding: 0.25rem 0.75rem;
+}
+
+button.button-red {
+	font-weight: 500;
+	padding: 0.75rem;
+	color: #fff;
+	background: #e52c03; /* --cancel-red */
+	border-radius: var(--border-radius);
+	/* transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease; */
+	transition: background-color 0.3s ease, color 0.3s ease;
+	cursor: pointer;
+}
+
+button.button-red:hover,
+button.button-red:focus {
+	color: #e52c03;
 	background: #fff;
 	box-shadow: 0px 2px 6px #00000080;
 }
@@ -351,8 +379,8 @@ button.button-orange:focus {
 
 .filter-wrapper {
 	position: absolute;
-	top: 20px;
-	right: 20px;
+	top: 30px;
+	right: 30px;
 	z-index: 1;
 }
 
@@ -418,7 +446,6 @@ button.button-orange:focus {
 	user-select: none;
 }
 
-
 .about-description,
 .about-description textarea {
 	background: none;
@@ -426,10 +453,101 @@ button.button-orange:focus {
 }
 
 .about-description textarea:focus {
-	outline: none ;
+	outline: none;
 }
 
 .about-description textarea.description-edit:focus {
 	outline: 2px solid var(--primary-orange);
 }
 
+.booking-column-container .embla__slide {
+	background: none;
+}
+
+/* Changed from box-shadow to border because box-shadow was consuming too much resources to render that many */
+.booking-column-container .embla__slide .open-booking-slot {
+	border-bottom: 1px solid rgb(228 228 228 / 70%);
+}
+
+.booking-column-container .embla__slide:nth-child(2n + 1) .open-booking-slot {
+	background: #f2f4f9;
+}
+
+.booking-column-container .embla__slide:nth-child(2n) .open-booking-slot {
+	background: #fff;
+}
+
+.booking-column-container .embla__slide .booking-column.no-permission-column .open-booking-slot {
+	background: rgb(209, 213, 219);
+	cursor: not-allowed;
+}
+
+.booking-column-container .embla__slide:nth-child(2n + 1) .booking-column.no-permission-column:not(.currentlyBooking) .open-booking-slot:hover,
+.booking-column-container .embla__slide:nth-child(2n) .booking-column.no-permission-column:not(.currentlyBooking) .open-booking-slot:hover {
+	background: rgb(209, 213, 219);
+}
+
+.booking-column-container .embla__slide:nth-child(2n + 1) .booking-column:not(.currentlyBooking) .open-booking-slot:hover,
+.booking-column-container .embla__slide:nth-child(2n) .booking-column:not(.currentlyBooking) .open-booking-slot:hover {
+	background: rgb(249, 115, 22, 70%);
+}
+
+.column-booking-card::after {
+	position: absolute;
+	display: block;
+	left: 0;
+	top: 0;
+	width: 10px;
+	height: 100%;
+	content: "";
+	background: var(--primary-orange);
+}
+
+.column-booking-card.short-booking-card {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.booking-column .draggable-slot {
+	width: 260px;
+	position: absolute;
+	left: 0;
+	z-index: 2;
+}
+
+.day-list .private-booking {
+	color: #ababab;
+	background: rgb(171, 171, 171, 0.125);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.bookings-filter {
+	margin-bottom: 10px;
+}
+
+.radio-button {
+	height: 20px;
+	width: 20px;
+	background-color: #747474;
+	border: 1px solid transparent;
+	border-radius: 50%;
+	margin-right: 10px;
+	cursor: pointer;
+	position: relative;
+}
+
+.radio-button.selected {
+	background-color: #ea580c;
+}
+
+.radio-button.selected::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	height: 12px;
+	width: 12px;
+	background-color: #ea580c;
+	border-radius: 50%;
+}

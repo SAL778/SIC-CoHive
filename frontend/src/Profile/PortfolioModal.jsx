@@ -1,6 +1,9 @@
-import React, {useState} from 'react';
-import Modal from 'react-modal';
-import { PortfolioItemDelete, PortfolioItemEdit } from "./PortfolioModalContent.jsx";
+import React, { useState } from "react";
+import Modal from "react-modal";
+import {
+	PortfolioItemDelete,
+	PortfolioItemEdit,
+} from "./PortfolioModalContent.jsx";
 
 /**
  * Modal Implementation that supports deletion and editing of portfolio items.
@@ -13,42 +16,45 @@ import { PortfolioItemDelete, PortfolioItemEdit } from "./PortfolioModalContent.
  * @param {props} rest - The other props handled by the base react-modal
  */
 function PortfolioModal(props) {
-    //extract these custom props
-    const {onEdit, onDelete, clickedItem, isDel, isOpen, onRequestClose, ...rest} = props
+	//extract these custom props
+	const {
+		onEdit,
+		onDelete,
+		clickedItem,
+		isDel,
+		isOpen,
+		onRequestClose,
+		...rest
+	} = props;
 
-    // Remove the unused variables 'content' and 'setContent'
-    // const [content, setContent] = useState(clickedItem) //For modifying form elements
-    //const [open, setOpen] = useState(isOpen)            //For closing the modal by clicking on a button
+	//Generic close for a modal
+	const terminateModal = (action) => {
+		if (typeof action === "function") {
+			action();
+		}
+		onRequestClose();
+	};
 
-    //Generic close for a modal
-    const terminateModal = (action) => {
-        if (typeof action === 'function') {
-            action();
-        }
-        onRequestClose();
-    };
-
-    return (
-        //NOTE: passing in the onClose property feels weird. Revisit.
-        isDel ? (
-            <Modal isOpen={isOpen} onRequestClose={onRequestClose} {...rest}>
-                <PortfolioItemDelete
-                    onDeleteSubmit={() => terminateModal(onDelete(clickedItem))}
-                    onDeleteCancel={terminateModal}
-                    portfolioItem={clickedItem}
-                />
-            </Modal>
-        ) : (
-            <Modal isOpen={isOpen} onRequestClose={onRequestClose} {...rest}>
-                <PortfolioItemEdit
-                    onEditSubmit={(e) => terminateModal(onEdit(e))}
-                    onEditCancel={terminateModal}
-                    portfolioItem={clickedItem}
-                />
-            </Modal>
-        )
-    );
+	return (
+		//NOTE: passing in the onClose property feels weird. Revisit.
+		isDel ? (
+			<Modal isOpen={isOpen} onRequestClose={onRequestClose} {...rest}>
+				<PortfolioItemDelete
+					onDeleteSubmit={() => terminateModal(onDelete(clickedItem))}
+					onDeleteCancel={terminateModal}
+					portfolioItem={clickedItem}
+				/>
+			</Modal>
+		) : (
+			<Modal isOpen={isOpen} onRequestClose={onRequestClose} {...rest}>
+				<PortfolioItemEdit
+					onEditSubmit={(e) => terminateModal(onEdit(e))}
+					onEditCancel={terminateModal}
+					portfolioItem={clickedItem}
+				/>
+			</Modal>
+		)
+	);
 }
 
 export default PortfolioModal;
-

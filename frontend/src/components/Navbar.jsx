@@ -10,11 +10,12 @@ import { Link, NavLink } from "react-router-dom";
  * @returns {void} - Nothing.
  * Changes the location of the underlay to the clicked element by setting the CSS top position.
  */
-function handleClick(rect) {
-	const yPos = rect.y;
-	const underlay = document.querySelector(".nav-underlay");
-	underlay.style.top = `${yPos}px`;
-}
+// TODO: fix the way the underlay is positioned when the page is resized, or attach it to the active nav item better
+// function handleClick(rect) {
+// 	const yPos = rect.y;
+// 	const underlay = document.querySelector(".nav-underlay");
+// 	underlay.style.top = `${yPos}px`;
+// }
 // -----------------------------------------------------------------------------
 
 /**
@@ -33,7 +34,7 @@ function NavItem({ content, href, icon }) {
 			to={href}
 			className="nav-item flex h-[65px] grow items-center justify-center gap-2 p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-6 md:py-3"
 			// Styling for the active navigation item and hovers are in the css file
-			onClick={(e) => handleClick(e.currentTarget.getBoundingClientRect())}
+			// onClick={(e) => handleClick(e.currentTarget.getBoundingClientRect())}
 		>
 			<i
 				className={`fa ${icon}`}
@@ -77,17 +78,17 @@ function Navigation() {
 		setActiveNavItem(index);
 	};
 
-	useEffect(() => {
-		// Set initial position of the underlay on page load
-		const underlay = document.querySelector(".nav-underlay");
-		const activeNavItem = document.querySelector(".nav-item.active");
-		if (underlay && activeNavItem) {
-			underlay.style.top = `${activeNavItem.getBoundingClientRect().y}px`;
-		}
-	}, []); // Empty dependency array means this effect runs once on mount (load)
+	// useEffect(() => {
+	// 	// Set initial position of the underlay on page load
+	// 	const underlay = document.querySelector(".nav-underlay");
+	// 	const activeNavItem = document.querySelector(".nav-item.active");
+	// 	if (underlay && activeNavItem) {
+	// 		underlay.style.top = `${activeNavItem.getBoundingClientRect().y}px`;
+	// 	}
+	// }, []); // Empty dependency array means this effect runs once on mount (load)
 
 	return (
-		<div className="flex-none md:w-[282px] py-[30px]">
+		<div className="flex-none md:w-[282px] py-[30px] fixed h-full left-[30px] z-10">
 			<div className="flex h-full flex-col bg-white rounded-[10px] shadow-custom">
 				<Link
 					href="/"
@@ -102,7 +103,8 @@ function Navigation() {
 					/>
 				</Link>
 				<div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0">
-					<img src={Underlay} className="nav-underlay" />
+					{/* NOTE: commented out until the positioning is fixed */}
+					{/* <img src={Underlay} className="nav-underlay" /> */}
 					<div className="nav-container">
 						{objects.map((object, index) => (
 							<NavItem

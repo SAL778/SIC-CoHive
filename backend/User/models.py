@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from allauth.socialaccount.models import SocialAccount
+# from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import Permission
 
 class Education_Field(models.Model):
@@ -38,8 +38,7 @@ class PortfolioItem(models.Model):
   
 class AccessType(models.Model):
     name = models.CharField(max_length=80, unique=True,help_text="The name of the access type")
-    permissions = models.ManyToManyField(Permission, blank=True,help_text="The permissions of the access type")
-
+    
     class Meta:
         verbose_name = 'access type'
         verbose_name_plural = 'access types'
@@ -75,15 +74,15 @@ class CustomUser(AbstractUser):
         # Call the "real" save() method.
         super().save(*args, **kwargs)
 
-        # Retrieve the social account object for the user.
-        socialaccount_obj = SocialAccount.objects.filter(provider='google', user_id=self.id)
-        picture = None
-        if len(socialaccount_obj):
-            picture = socialaccount_obj[0].extra_data['picture']
+        # # Retrieve the social account object for the user.
+        # socialaccount_obj = SocialAccount.objects.filter(provider='google', user_id=self.id)
+        # picture = None
+        # if len(socialaccount_obj):
+        #     picture = socialaccount_obj[0].extra_data['picture']
 
-        # Update the profile image field.
-        self.profileImage = picture
-        super().save(update_fields=['profileImage'])
+        # # Update the profile image field.
+        # self.profileImage = picture
+        # super().save(update_fields=['profileImage'])
 
         if not self.portfolio:
             # Create a new portfolio and assign it to the user.
@@ -101,23 +100,3 @@ class CustomUser(AbstractUser):
         return self.username
 
 
-# {
-#     "id": 1,
-#     "first_name": "",
-#     "last_name": "",
-#     "email": "kannan@gmail.com",
-#     "is_staff": true,
-#     "portfolioVisibility": true,
-#     "profileImage": null,
-#     "portfolio": 1,
-#     "education": {
-#         "field_of_study": "Computer Science2",
-#         "major": "Software Engineering2",
-#         "minor": "Data Science2"
-#     },
-#     "accessType": [
-#         {
-#             "name": "complete access granted"
-#         }
-#     ]
-# }

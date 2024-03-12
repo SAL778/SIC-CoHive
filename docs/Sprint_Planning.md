@@ -100,7 +100,7 @@ Tasks
 | User story                          | Story points |
 |-------------------------------------|--------------|
 | US 2.01 - View My Bookings          | 2            |
-| US 2.02 - Create Asset Fields       | 1            |
+| US 2.02 - Create Asset Fields       | 2            |
 | US 2.03 - Manage Assets             | 3            |
 | US 2.04 - Restrict Asset Access     | 2            |
 | US 2.05 - Admin Delete Bookings     | 2            |
@@ -109,21 +109,48 @@ Tasks
 
 Sprint 4
 Due: March 25, 2024
-Estimated Sprint Velocity: 14
+Estimated Sprint Velocity: 15
+
+
+Tasks
+| Task                           | Related US      | Assigned To       | Due Date |
+|--------------------------------|-----------------|-------------------|----------|
+| Cleint Google Drive Folder     | NON-US TASK     | Saahil Rachh      | Mar 14   |
+| Modal Disable Booked Times     | NON-US TASK     | Jonathan Lo       | Mar 15   |
+| Column View Sort By Permissions| NON-US TASK     | Yevhen Kaznovskyi | Mar 15   |
+| Admin Links Modal              | US 7.02         | Kannan Khosla     | Mar 15   |
+| Resource Image & Room Code     | US 2.02         | Saahil Rachh      | Mar 15   |
+| Create Event Form              | US 3.05         | Kenji Chiang      | Mar 15   |
+| Approve Events Admin           | US 3.01         | Kenji Chiang      | Mar 16   |
+| Submit Events UI               | US 3.02         | Yevhen Kaznovskyi | Mar 19   |
+| Integrate Google Calendar API  | US 3.04         | Saahil Rachh      | Mar 19   |
+| Integrate Google Calendar API  | US 3.04         | Yevhen Kaznovskyi | Mar 19   |
+| Admin Manage Events            | US 3.03         | Jonathan Lo       | Mar 21   |
+| Recurring Bookings API         | US 2.07         | Kannan Khosla     | Mar 22   |
+| Recurring Bookings API         | US 2.07         | Ruiyu Yuan        | Mar 22   |
+| Recurring Bookings Modal       | US 2.07         | Jonathan Lo       | Mar 22   |
+| Google Calendar Styling        | US 3.04         | Yevhen Kaznovskyi | Mar 23   |
+| Sprint 4 Testing UI/Stories    | NON-US TASK     | Kenji Chiang      | Mar 23   |
+| Sprint 4 Testing API           | NON-US TASK     | Kannan Khosla     | Mar 23   |
+| Sprint 4 Testing API           | NON-US TASK     | Ruiyu Yuan        | Mar 23   |
+
 
 | User story                          | Story points |
 |-------------------------------------|--------------|
+| US 2.02 - Create Asset Fields       | 2            |
 | US 2.07 - Recurring Bookings        | 2            |
-| US 3.01 - Approve Events            | 2            |
-| US 3.02 - Submit Events             | 2            |
+| US 3.01 - Approve Events            | 1            |
+| US 3.02 - Submit Events             | 1            |
 | US 3.03 - Admin Manage Events       | 2            |
 | US 3.04 - Integrate Google Calendar | 5            |
 | US 3.05 - Create Event Fields       | 1            |
+| US 7.02 - Admin Manage Links        | 1            | 
+
 
 
 Sprint 5
 Due: April 8, 2024
-Estimated Sprint Velocity: 14
+Estimated Sprint Velocity: 13
 
 | User story                          | Story points |
 |-------------------------------------|--------------|

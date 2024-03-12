@@ -40,16 +40,15 @@ class CustomUserSerializer(serializers.ModelSerializer):
         education_data = validated_data.get('education')
         if education_data is not None:
             education = instance.education
-            if education is None:
-                education = Education_Field.objects.create(user=instance)
-            else:
-                education = Education_Field.objects.get(user=instance)
-                
+# Comment the following out. Seems to be causing an error
+            # if education is None:
+            #     education = Education_Field.objects.create(user=instance)
+            # else:
+            #     education = Education_Field.objects.get(user=instance)
             education.field_of_study = education_data.get('field_of_study', education.field_of_study)
             education.major = education_data.get('major', education.major)
             education.minor = education_data.get('minor', education.minor)
             education.save()
-
         instance.save()
         return instance
 
@@ -68,9 +67,9 @@ class PortfolioItemSerializer(serializers.ModelSerializer):
         return instance
         
 class CompletePortfolioSerializer(serializers.ModelSerializer):
-    items = PortfolioItemSerializer(many=True)
+    items = PortfolioItemSerializer(read_only=True,many=True)
     
     class Meta:
         model = Complete_Portfolio
         fields = ('id', 'user', 'description', 'items')
-        read_only_fields = ["id","user"]
+        read_only_fields = ["id","user","items"]

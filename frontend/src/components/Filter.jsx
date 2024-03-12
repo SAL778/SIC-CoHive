@@ -17,7 +17,7 @@ function Filter({ onSearch, onFilterChange }) {
 
 	useEffect(() => {
 		// Fetch filters from the endpoint
-		fetch("http://127.0.0.1:8000/users/accessTypes")
+		fetch("http://127.0.0.1:8000/users/accessTypes/")
 			.then((response) => response.json())
 			.then((data) => {
 				// Initialize all filters to false
@@ -103,7 +103,7 @@ function Filter({ onSearch, onFilterChange }) {
 										></div>
 										<span onClick={() => toggleFilter(filter)}>{filter}</span>
 									</div>
-									{index === 2 && (
+									{index === 3 && (
 										<strong style={{ margin: "10px 0 5px 0" }}>SIC Role</strong>
 									)}
 								</React.Fragment>

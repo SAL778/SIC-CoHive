@@ -286,6 +286,16 @@ Acceptance Tests
 4. User cannot sign in with incorrect @ualberta.ca credentials.
 5. The integration provides a seamless and secure sign-up/in process using @ualberta.ca accounts.
 
+## US 7.02 - Admin Manage Links
+US 7.02 As an admin, I want to manage my Google Suite links, so that I can keep the feedback and other forms up to date.
+
+Acceptance Tests
+
+1. Admin can edit the URL of a link successfully.
+2. Link changes are reflected accurately on the website.
+3. Feedback form and asset image links are updated successfully.
+4. Admin can delete images and links successfully.
+
 ## US 8.01 - Submit Opportunities
 As a user, I want to submit entrepreneurial thinking placements, so that other users can view the opportunities available.
 
