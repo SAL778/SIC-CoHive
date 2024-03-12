@@ -158,31 +158,6 @@ function Portfolio({ isCurrentUser, portfolio }) {
 			console.error("Error adding item:", error);
 		}
 	};
-	// try {
-	//     const response = await fetch(`${host}/users/${user.id}/`, {
-	//         method: "PATCH",
-	//         credentials: "include",
-	//         headers: {
-	//             Authorization: `Token ${accessToken}`,
-	//             "Content-Type": "application/json"
-	//         },
-	//         body: JSON.stringify({ 'education' : {[fieldToChange] : education.toString()} })
-	//     });
-
-	//     if (response.ok) {
-	//         console.log("Sent successfully");
-	//         const data = await response.json();
-	//         if (data.fieldToChange === "minor") {
-	//             setMinor(minor);
-	//         } else {
-	//             setMajor(major);
-	//         }
-	//     } else {
-	//         console.log("Couldn't send", response.statusText);
-	//     }
-	// } catch (error) {
-	//     console.error("Error:", error);
-	// }
 
 	const onChangeAboutMe = async (updatedDescription) => {
 		setAboutText(updatedDescription);

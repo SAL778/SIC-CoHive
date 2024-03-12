@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-// import { DatePicker } from "@mantine/dates";
-// import DatePickerInput from "../components/Forms/DatePickerInput";
 import { DatePickerInput } from "@mantine/dates";
 import "../components/Forms/form.css";
 
-// function Filter({ onSearch, onFilterChange, assetType }) {
 function Filter({ onFilterChange, assetType }) {
 	const [selectedFilters, setSelectedFilters] = useState({});
 
@@ -16,6 +13,7 @@ function Filter({ onFilterChange, assetType }) {
 
 	const [bookingFilter, setBookingFilter] = useState("All Bookings");
 
+	// Fetch all the rooms and initialize the filters from the database
 	useEffect(() => {
 		fetch("http://127.0.0.1:8000/bookings/resources/filter?type=room")
 			.then((response) => response.json())
@@ -32,7 +30,7 @@ function Filter({ onFilterChange, assetType }) {
 			});
 	}, []);
 
-	//Notify parent
+	// Notify parent that the filters have changed for the sekected dates and rooms
 	useEffect(() => {
 		const formattedFromDate = fromDate
 			? new Date(fromDate).toISOString().split("T")[0]
@@ -51,6 +49,7 @@ function Filter({ onFilterChange, assetType }) {
 		});
 	}, [selectedFilters, fromDate, toDate, selectedRooms]);
 
+	// New handler for toggling filters
 	const toggleFilter = (filter) => {
 		setSelectedFilters({
 			...selectedFilters,
@@ -113,7 +112,7 @@ function Filter({ onFilterChange, assetType }) {
 					<div style={{ margin: "0 0 5px 0px" }}>
 						<strong>From Date:</strong>
 					</div>
-
+					
 					<DatePickerInput
 						label="Select a from date"
 						value={fromDate}
@@ -152,9 +151,9 @@ function Filter({ onFilterChange, assetType }) {
 										></div>
 										<span onClick={() => toggleFilter(filter)}>{filter}</span>
 									</div>
-									{index === 3 && (
+									{/* {index === 3 && (
 										<strong style={{ margin: "10px 0 5px 0" }}>SIC Role</strong>
-									)}
+									)} */}
 								</React.Fragment>
 								//react fragment is used to group a list of children without adding extra nodes to the DOM. It will group multiple elements.
 								//React Fragments can be replaced with <> and </> tags.

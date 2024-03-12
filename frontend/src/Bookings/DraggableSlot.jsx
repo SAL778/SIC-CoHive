@@ -2,6 +2,17 @@ import React from 'react';
 import { ResizableBox } from 'react-resizable';
 import "react-resizable/css/styles.css";
 
+/**
+ * DraggableSlot component represents a draggable and resizable booking slot.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.selectedSlot - The selected slot object.
+ * @param {Function} props.setSelectedSlot - The function to set the selected slot.
+ * @param {Function} props.onResize - The function to handle slot resizing.
+ * @param {Function} props.onRelease - The function to handle slot release.
+ * @param {string} props.resourceName - The name of the resource.
+ * @returns {JSX.Element} The DraggableSlot component.
+ */
 const DraggableSlot = ({ selectedSlot, setSelectedSlot, onResize, onRelease, resourceName}) => {
     const slotHeight = 24; // Extracted variable for slot height
 
