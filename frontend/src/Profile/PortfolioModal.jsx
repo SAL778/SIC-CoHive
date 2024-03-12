@@ -27,10 +27,6 @@ function PortfolioModal(props) {
 		...rest
 	} = props;
 
-	// Remove the unused variables 'content' and 'setContent'
-	// const [content, setContent] = useState(clickedItem) //For modifying form elements
-	//const [open, setOpen] = useState(isOpen)            //For closing the modal by clicking on a button
-
 	//Generic close for a modal
 	const terminateModal = (action) => {
 		if (typeof action === "function") {

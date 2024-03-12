@@ -44,25 +44,6 @@ function BookingListView({
 		});
 	}, [assetType, selectedDates, selectedRooms]);
 
-	// //(Get the list of booking (in theory)
-	// useEffect(() => {
-	// 	console.log(assetType);
-	// 	httpRequest({
-	// 		endpoint: `${host}/bookings/`,
-	// 		onSuccess: (data) => {
-	// 			let sterilized = data.map((asset) => convertToISO(asset)); //Date strings converted
-	// 			setAssets(sterilized);
-	// 			console.dir(sterilized);
-	// 			setDateHeaders(
-	// 				getUniqueDateHeaders(sterilized.map((asset) => asset.start_time))
-	// 			);
-	// 			setTimeout(() => {
-	// 				setIsLoading(false); //Added this to mitigate "flashing" when toggling assetType.
-	// 			}, 150);
-	// 		},
-	// 	});
-	// }, [assetType]); //Re-trigger this every time the listview is toggled
-
 	return isLoading ? (
 		<Loader size={50} color="orange" />
 	) : (
