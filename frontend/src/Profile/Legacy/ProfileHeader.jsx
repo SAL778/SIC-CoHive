@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
-import { HostContext, UserContext } from "../App.jsx";
-import { getCookieValue } from "../utils.js";
+import { HostContext, UserContext } from "../../App.jsx";
+import { getCookieValue } from "../../utils.js";
 /**
  * UserRoles component renders a list of user roles.
  * @param {Array} props.roles - An array containing role strings
