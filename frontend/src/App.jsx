@@ -5,6 +5,7 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
 import '@mantine/tiptap/styles.css';
+import '@mantine/carousel/styles.css';
 import Navigation from "./components/Navbar.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Bookings from "./Bookings.jsx";
