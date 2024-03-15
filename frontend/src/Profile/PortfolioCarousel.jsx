@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
+import { httpRequest } from "../utils.js";
+import { HostContext, UserContext } from "../App.jsx";
 import VerticalCarousel from "../components/Carousel/VerticalCarousel";
+import {ErrorNotification, SuccessNotification} from "../components/notificationFunctions.js";
 
 export default PortfolioCarousel
 
@@ -12,33 +15,113 @@ export default PortfolioCarousel
 
 //TODO: Rename this to portfolio
 function PortfolioCarousel({ portfolioItems, isEditable = false }) {
-    
-    const defaultIcon = 'fa fa-lightbulb' //Class name for a font-awesome icon
 
+    const {host} = useContext(HostContext);
+    const {currentUser} = useContext(UserContext);
+
+    const [openedModal, setOpenedModal] = useState(null) 
     const [clickedItem, setClickedItem] = useState(null)
     const [currentPortfolioList, setCurrentPortfolioList] = useState(portfolioItems)
 
-    const [openedModal, setOpenedModal] = useState(null) 
+    //Delete portfolio item
+    const onSubmitModalDelete = () => {
+        //Send to backend
+        httpRequest({
+            endpoint: `${host}/users/portfolio/items/${clickedItem.id}`,
+            method: 'DELETE',
+            onSuccess: () => {
+                new SuccessNotification(
+                    "Item deleted",
+                    `${clickedItem.title} was succesfully deleted!`
+                ).show();
+                setCurrentPortfolioList(currentPortfolioList.filter(item => item.id !== clickedItem.id));
+                setClickedItem(null)
+            },
+            onFailure: () => {
+                new ErrorNotification(
+                    "Item not deleted",
+                    `${clickedItem.title} could not be deleted`
+                )
+                setClickedItem(null)
+            }
+        })
+    }
+
+    //Edit portfolio item
+    const onSubmitModalEdit = (updatedItem) => { //Updated item != Clicked item
+        //Send to backend
+        httpRequest({
+            endpoint: `${host}/users/portfolio/items/${clickedItem.id}/`,
+            method: 'PATCH',
+            body: JSON.stringify(updatedItem),
+            onSuccess: () => {
+                new SuccessNotification(
+                    "Item edited",
+                    `${clickedItem.title} was succesfully edited!`
+                ).show();
+                const updatedItemList = currentPortfolioList;
+                updatedItemList[clickedItem.id] = updatedItem;
+                setCurrentPortfolioList(updatedItemList)
+                setClickedItem(null)
+            },
+            onFailure: () => {
+                new ErrorNotification(
+                    "Item not edited",
+                    `${clickedItem.title} could not be edited!`
+                )
+                setClickedItem(null)
+            }
+        })
+    }
+
+    //Add porfolio item
+    const onSubmitModalAdd = (addedItem) => {
+        httpRequest({
+            endpoint: `${host}/users/${currentUser.id}/portfolio/items/`,
+            method: 'POST',
+            body: JSON.stringify(addedItem),
+            onSuccess: () => {
+                new SuccessNotification(
+                    "Item added",
+                    `${clickedItem.title} was succesfully added!`
+                ).show();
+                setCurrentPortfolioList(...currentPortfolioList, addedItem)
+                setClickedItem(null)
+            },
+            onFailure: () => {
+                new ErrorNotification(
+                    "Item not edited",
+                    `${clickedItem.title} could not be edited!`
+                )
+                setClickedItem(null)
+            }
+        })
+    }
 
     return (
         <>
             <VerticalCarousel>
             {currentPortfolioList.map((portfolioItem) => {
-                <PortfolioCard>
-                    title = {portfolioItem.title}
-                    description = {portfolioItem.description}
-                    link = {portfolioItem.link}
-                    icon = {portfolioItem?.icon || defaultIcon}
-                    onClickEdit = {openEditModal}
-                    onClickDelete = {openDeleteModal}
-                </PortfolioCard>
+                <PortfolioCard
+                    key = {portfolioItem.id}
+                    portfolioItem = {portfolioItem}
+                    isEditable = {isEditable}
+                    onClickEdit = {() => {
+                        setClickedItem(portfolioItem);
+                        setOpenedModal("edit")
+                    }}
+                    onClickDelete = {() => {
+                        setClickedItem(portfolioItem);
+                        () => setOpenedModal("delete")
+                    }}
+                />
             })}
 
             {  isEditable &&
                 <button
                 type = "button"
                 className = "portfolio-card p-5 rounded-3xl h-64 w-56"
-                onClick = {() => openEditModal()}
+                onClick = {() => setOpenedModal("edit")}                //Clicked item is null so submit behaviour should be "add"
                 >
                     <i className="fa fa-plus"/>
                 </button>
@@ -60,29 +143,41 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
                 { openedModal == "edit" &&
                     <PortfolioForm 
                     currentPortfolioItem = {clickedItem} 
-                    onClose = {setOpenedModal(null)}
-                    onSubmit = {onModalSubmitPortfolioEdit(clickedItem)}
+                    onClose = {() => setOpenedModal(null)}
+                    onSubmit = {!!(clickedItem) ? onSubmitModalEdit : onSubmitModalAdd}
                     />
                 }
                 { openedModal == "redirect" &&
-                    <p>{`You are being redirected to an external site. ${clickedItem.link} Continue?`}</p>
+                    <>
+                        <p>{`You are being redirected to an external site. ${clickedItem.link} Continue?`}</p>
+                        <button type ="button">Delete</button>
+                    </>
                 }
                 { openedModal == "delete" &&
                     <p>{`Are you sure you want to delete ${clickedItem.title}?`}</p>
-
                 }
             </Modal>
         </>
     )
 }
 
-function PortfolioCard({title, description, link, icon, isEditable = false, onClickEdit, onClickDelete}) {
+/**Function that returns the render of a portfolio card.
+ * 
+ * @param {Object} portfolioItem - The portfolio item clicked on, including link, title, description, icon
+ * @param {Boolean} isEditable - Whether or not the clicked item can be edited
+ * @param {function} onClickEdit - Callable to execute when the portfolio item is edited
+ * @param {function} onClickDelete - Callable to execute when the portfolio item is deleted
+ * @returns {JSX}
+ */
+function PortfolioCard({portfolioItem, isEditable = false, onClickEdit, onClickDelete}) {
+    const defaultIcon = 'fa fa-lightbulb' //Class name for a font-awesome icon
+
     return (
         <div className="portfolio-card p-5 rounded-3xl h-64 w-56 flex flex-col place-content-between ease-out duration-200 shadow-custom hover:cursor-pointer">
-            <i className= {`card-icon ${icon}`} aria-label="Portfolio icon" />
+            <i className= {`card-icon ${portfolioItem?.icon || defaultIcon}`} aria-label="Portfolio icon" />
             <section>
-                <h3 className="text-[18px]">{title}</h3>
-                <p>{description}</p>
+                <h3 className="text-[18px]">{portfolioItem.title}</h3>
+                <p>{portfolioItem.description}</p>
             </section>
             <div className="portfolio-button-wrap flex flex-row place-content-between text-[20px]">
                 { isEditable && 
@@ -99,7 +194,7 @@ function PortfolioCard({title, description, link, icon, isEditable = false, onCl
                         </button>
                     </div>
                 }
-                <a href={link}>
+                <a href={portfolioItem.link}>
                     <i className="fa fa-arrow-right" />
                 </a>
             </div>

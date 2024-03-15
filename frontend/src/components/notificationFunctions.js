@@ -8,7 +8,7 @@ import { notifications } from '@mantine/notifications';
  * 
  * @param {string} title 
  * @param {string} message
- * @param {string}
+ * @param {string} color
  */
 class Notification {
     constructor(title, message, color) {
