@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import PortfolioForm from "../components/Forms/PortfolioForm.jsx";
 import { httpRequest } from "../utils.js";
 import { HostContext, UserContext } from "../App.jsx";
 import VerticalCarousel from "../components/Carousel/VerticalCarousel";
@@ -131,7 +132,7 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
             {/* Edit Portfolio Item Modal*/}
             <Modal
             opened = {!!openedModal}
-            onClose= {onModalClose}
+            onClose= {() => setOpenedModal(null)}
             centered
             size="auto"
             transitionProps={{
@@ -150,7 +151,7 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
                 { openedModal == "redirect" &&
                     <>
                         <p>{`You are being redirected to an external site. ${clickedItem.link} Continue?`}</p>
-                        <button type ="button">Delete</button>
+                        <button type ="button" onCLick={onSubmitModalDelete}>Delete</button>
                     </>
                 }
                 { openedModal == "delete" &&
