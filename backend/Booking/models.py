@@ -8,7 +8,8 @@ from User.models import AccessType
 class Resources(models.Model):
     Type=[
         ('room','Room'),
-        ('equipment','Equipment')
+        ('equipment','Equipment'),
+        ('maintenance','Maintenance'),
     #    ('other','Other')
     ]
 
@@ -18,7 +19,7 @@ class Resources(models.Model):
     # image = models.FilePathField(path="/resource/img", blank=True, null=True,help_text="Path to the image of the asset")
     # room_code = models.CharField(max_length=100, blank=True, null=True,help_text="Room code of the asset")
     room_number = models.CharField(max_length=100, blank=True, null=True,help_text="Room number of the asset")
-    type = models.CharField(max_length=100,choices=Type, blank=True, null=True,help_text="Type of the asset")
+    type = models.CharField(max_length=100,choices=Type,help_text="Type of the asset",default='maintenance')
     access_type=models.ManyToManyField(AccessType,help_text="The access type for the resource")   
        
     def __str__(self):

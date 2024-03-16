@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser , Complete_Portfolio, PortfolioItem, AccessType, Education_Field
+from .models import CustomUser , Complete_Portfolio, PortfolioItem, AccessType,Flair_Roles
 from django.contrib.auth.admin import UserAdmin,GroupAdmin
 
 # Register your models here.
@@ -23,14 +23,6 @@ class PortfolioItemAdmin(admin.ModelAdmin):
     list_filter = ('portfolio__user__username',)
     ordering = ('id', 'title',)
 
-@admin.register(Education_Field)
-class Education_FieldAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user')
-    list_filter = ('user',)
-    search_fields = ('id', 'user__username',)
-    ordering = ('id', 'user',)
-
-admin.site.register(AccessType)
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
@@ -42,3 +34,5 @@ class CustomUserAdmin(UserAdmin):
         "groups",
         "accessType",
     )
+
+admin.site.register(Flair_Roles)

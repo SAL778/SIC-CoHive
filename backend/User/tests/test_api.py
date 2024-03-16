@@ -359,7 +359,3 @@ class AccessTypeTestCase(APITestCase):
 
 
 
-
-
-
-

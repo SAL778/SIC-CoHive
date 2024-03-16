@@ -9,5 +9,6 @@ urlpatterns = [
     path("<int:user_id>/portfolio/items/", views.PortfolioItemList.as_view(), name="portfolio-item-list"),
     path("portfolio/items/<int:pk>/", views.PortfolioItemDetail.as_view(), name="portfolio-item-detail"),
     path("accessTypes/", views.AccessTypeList.as_view(), name="access-type-list"),
+    path("<int:user_id>/flair/", views.FlairList.as_view(), name="flair-list"),
     path('signout/', views.signout_view, name='signout'),
 ]
