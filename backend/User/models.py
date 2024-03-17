@@ -6,15 +6,13 @@ from django.db import models
 # from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import Permission
 
-class Education_Field(models.Model):
-    id = models.AutoField(primary_key=True,help_text="Unique identifier for the Education")
-    user= models.OneToOneField('CustomUser', on_delete=models.CASCADE, blank=True, null=True, help_text="The user to whom the education belongs")
-    field_of_study = models.CharField(max_length=100, blank =True, null=True, help_text="The field of study of the user")
-    major = models.CharField(max_length=100, blank=True, null=True, help_text="The major of the user")
-    minor = models.CharField(max_length=100, blank=True, null=True, help_text="The minor of the user")
+class Flair_Roles(models.Model):
+    id = models.AutoField(primary_key=True,help_text="Unique identifier for the role")
+    role_name = models.CharField(max_length=100,null=True,help_text="The name of the role")
 
     def __str__(self):
-        return self.user.username
+        return self.role_name
+
 
 class Complete_Portfolio(models.Model):
     id = models.AutoField(primary_key=True,help_text="Unique identifier for the portfolio")
@@ -66,35 +64,20 @@ class CustomUser(AbstractUser):
     profileImage = models.URLField(max_length=100, blank=True, null=True,help_text="URL to the profile image")
     portfolioVisibility = models.BooleanField(default=True,help_text="decides if the portfolio is visible to others")
     portfolio = models.OneToOneField(Complete_Portfolio, on_delete=models.CASCADE, blank=True, null=True,help_text="The portfolio of the user")
-    education = models.OneToOneField(Education_Field, on_delete=models.CASCADE, blank=True, null=True,help_text="The education of the user")
     accessType = models.ManyToManyField(AccessType, blank=True,related_name="accessType",help_text="The access type of the user")
     accessPermissions = models.ManyToManyField(Permission, blank=True)
+    flair_roles = models.ManyToManyField(Flair_Roles, blank=True, related_name="users")
 
     def save(self, *args, **kwargs):
         # Call the "real" save() method.
         super().save(*args, **kwargs)
 
-        # # Retrieve the social account object for the user.
-        # socialaccount_obj = SocialAccount.objects.filter(provider='google', user_id=self.id)
-        # picture = None
-        # if len(socialaccount_obj):
-        #     picture = socialaccount_obj[0].extra_data['picture']
-
-        # # Update the profile image field.
-        # self.profileImage = picture
-        # super().save(update_fields=['profileImage'])
 
         if not self.portfolio:
             # Create a new portfolio and assign it to the user.
             portfolio = Complete_Portfolio.objects.create(user=self)
             self.portfolio = portfolio
             super().save(update_fields=['portfolio'])
-
-        if not self.education:
-            # Create a new education and assign it to the user.
-            education = Education_Field.objects.create(user=self)
-            self.education = education
-            super().save(update_fields=['education'])
 
     def __str__(self):
         return self.username

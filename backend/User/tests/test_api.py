@@ -3,8 +3,8 @@ from django.urls import reverse
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from rest_framework import status
-from ..models import CustomUser, Education_Field, Complete_Portfolio, PortfolioItem, AccessType
-from ..serializers import CustomUserSerializer, EducationSerializer
+from ..models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType,Flair_Roles
+from ..serializers import CustomUserSerializer,FlairRoleSerializer
 from rest_framework.test import force_authenticate
 
 class CustomUserTestCase(APITestCase):
@@ -20,10 +20,8 @@ class CustomUserTestCase(APITestCase):
             portfolioVisibility=True,
             profileImage="http://example.com/image.jpg",
         )
-        self.user.education.field_of_study = "Computer Science"
-        self.user.education.major = "Software Engineering"
-        self.user.education.minor = "Data Science"
-        self.user.education.save()
+        self.user.flair_roles.create(role_name="Admin")
+        self.user.flair_roles.create(role_name="Organization")
         self.token = Token.objects.create(user=self.user)
     '''
     US 1.03 As an admin, I want to include additional information in my profile like innovation center role, so it can be visible on my profile.
@@ -35,16 +33,15 @@ class CustomUserTestCase(APITestCase):
         Test the API endpoint for retrieving a list of all users.
         '''
         response = self.client.get(reverse('user_list'), format='json', HTTP_AUTHORIZATION=self.token.key)
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['first_name'], 'Test')
         self.assertEqual(response.data[0]['last_name'], 'User')
         self.assertEqual(response.data[0]['email'], 'testuser@example.com')
         self.assertEqual(response.data[0]['portfolioVisibility'], True)
         self.assertEqual(response.data[0]['profileImage'], "http://example.com/image.jpg")
-        self.assertEqual(response.data[0]['education']['field_of_study'], 'Computer Science')
-        self.assertEqual(response.data[0]['education']['major'], 'Software Engineering')
-        self.assertEqual(response.data[0]['education']['minor'], 'Data Science')
         self.assertEqual(response.data[0]['roles'], 'User')
+        self.assertEqual(response.data[0]['flair_roles'][0]['role_name'], 'Admin')
 
     '''
     US 1.01 As an admin, I want to be able to assign roles to users, so that I can control their access to features.
@@ -65,27 +62,32 @@ class CustomUserTestCase(APITestCase):
                 'email': 'updateduser@example.com',
                 'portfolioVisibility': False,
                 'profileImage': 'http://example.com/updated_image.jpg',
-                'education': {
-                    'field_of_study': 'Updated Field',
-                    'major': 'Updated Major',
-                    'minor': 'Updated Minor'
-                }
+                'flair_roles': [{'role_name': 'User'}, {'role_name': 'Organization'}, {'role_name': 'Admin'}]
             },
             format='json',
            # headers={'AUTHORIZATION':self.token.key}
            HTTP_AUTHORIZATION = "Token " + self.token.key
-           
-            # print(response.data)
         )
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['first_name'], 'Updated')
         self.assertEqual(response.data['last_name'], 'User')
         self.assertEqual(response.data['email'], 'testuser@example.com')  # Email should not be updated
         self.assertEqual(response.data['portfolioVisibility'], False)
         self.assertEqual(response.data['profileImage'], 'http://example.com/updated_image.jpg')
-        self.assertEqual(response.data['education']['field_of_study'], 'Updated Field')
-        self.assertEqual(response.data['education']['major'], 'Updated Major')
-        self.assertEqual(response.data['education']['minor'], 'Updated Minor')
+        self.assertEqual(response.data['flair_roles'][0]['role_name'], 'Admin')
+        self.assertEqual(response.data['flair_roles'][1]['role_name'], 'Organization')
+        self.assertEqual(response.data['flair_roles'][2]['role_name'], 'User')
+
+        response = self.client.patch(
+            reverse('user_detail', kwargs={'pk': self.user.pk}),
+            {'flair_roles': []},
+            format='json',
+            HTTP_AUTHORIZATION = "Token " + self.token.key
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['flair_roles'], [])
+
 
     def test_user_patch_failure(self):
         '''
@@ -126,7 +128,8 @@ class CustomUserTestCase(APITestCase):
         response = self.client.delete(reverse('user_detail', kwargs={'pk': self.user.pk},),HTTP_AUTHORIZATION = "Token " + self.token.key)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(CustomUser.objects.count(), 0)
-        self.assertEqual(Education_Field.objects.count(), 0)
+        self.assertEqual(Flair_Roles.objects.count(), 0)
+        print(Flair_Roles.objects.all())
 
 
 class CompletePortfolioTestCase(APITestCase):
@@ -143,10 +146,8 @@ class CompletePortfolioTestCase(APITestCase):
             portfolioVisibility=True,
             profileImage="http://example.com/image.jpg",
         )
-        self.user.education.field_of_study = "Computer Science"
-        self.user.education.major = "Software Engineering"
-        self.user.education.minor = "Data Science"
-        self.user.education.save()
+        self.user.flair_roles.create(role_name="Admin")
+        self.user.flair_roles.create(role_name="Organization")
         self.token = Token.objects.create(user=self.user)
 
     def test_complete_portfolio_get(self):
@@ -210,12 +211,9 @@ class PortfolioItemTestCase(APITestCase):
             portfolioVisibility=True,
             profileImage="http://example.com/image.jpg",
         )
-        self.user.education.field_of_study = "Computer Science"
-        self.user.education.major = "Software Engineering"
-        self.user.education.minor = "Data Science"
-        self.user.education.save()
+        self.user.flair_roles.create(role_name="Admin")
+        self.user.flair_roles.create(role_name="Organization")
         self.token = Token.objects.create(user=self.user)
-
 #     '''
 #     US 1.04 As a user, I want to upload text and link to a portfolio in my profile, so that prospective employers will see my capabilities.
 #     '''
@@ -351,10 +349,6 @@ class AccessTypeTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['name'], 'Some Access Type')
         self.assertEqual(response.data[1]['name'], 'Another Access Type')
-
-
-
-
 
 
 

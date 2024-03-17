@@ -5,7 +5,6 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType
 from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer, AccessTypeSerializer
-from django.db.models import Q
 from rest_framework import generics,status
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.http import HttpResponse
@@ -218,7 +217,8 @@ def user_detail(request, pk):
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
     elif request.method == 'DELETE':
-        user.delete()
+        serializer = CustomUserSerializer(user)
+        serializer.delete(user)
         return Response(status=204)
     # except Exception as e:
     #     return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
@@ -374,4 +374,18 @@ class AccessTypeList(generics.ListAPIView):
     serializer_class = AccessTypeSerializer
     
     
-    
+class FlairList(generics.CreateAPIView):
+    '''
+    post:
+    API view to create a new flair.
+    '''
+    serializer_class = AccessTypeSerializer
+    queryset = AccessType.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        user = get_user_from_token(request)
+        if user.is_staff:
+            return super().post(request, *args, **kwargs)
+        else:
+            return Response({'error': 'You do not have permission to create a flair.'}, status=status.HTTP_401_UNAUTHORIZED)
+
