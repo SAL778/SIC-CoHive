@@ -217,7 +217,8 @@ def user_detail(request, pk):
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
     elif request.method == 'DELETE':
-        user.delete()
+        serializer = CustomUserSerializer(user)
+        serializer.delete(user)
         return Response(status=204)
     # except Exception as e:
     #     return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)

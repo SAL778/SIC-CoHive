@@ -15,7 +15,7 @@ class AccessTypeSerializer(serializers.ModelSerializer):
         
 class CustomUserSerializer(serializers.ModelSerializer):
     accessType = AccessTypeSerializer(read_only=True, many=True)
-    flair_roles = FlairRoleSerializer(read_only=True, many=True)
+    flair_roles = FlairRoleSerializer(many=True)
     
     class Meta:
         model = CustomUser
@@ -28,28 +28,45 @@ class CustomUserSerializer(serializers.ModelSerializer):
         roles_data = validated_data.pop('flair_roles', [])
         user = CustomUser.objects.create(**validated_data)
         for role_data in roles_data:
-            Flair_Roles.objects.create(user=user, **role_data)
+            flair_role = Flair_Roles.objects.create(**role_data)
+            user.flair_roles.add(flair_role)
         return user
 
     def update(self, instance, validated_data):
-        with transaction.atomic():
-            roles_data = validated_data.pop('flair_roles', None)
-            
-            instance.username = validated_data.get('username', instance.username)
-            instance.first_name = validated_data.get('first_name', instance.first_name)
-            instance.last_name = validated_data.get('last_name', instance.last_name)
-            instance.email = validated_data.get('email', instance.email)
-            instance.is_active = validated_data.get('is_active', instance.is_active)
-            instance.portfolioVisibility = validated_data.get('portfolioVisibility', instance.portfolioVisibility)
-            instance.profileImage = validated_data.get('profileImage', instance.profileImage)
-            instance.save()
+        incoming_roles_data = validated_data.pop('flair_roles', None)
+        instance.username = validated_data.get('username', instance.username)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.email = validated_data.get('email', instance.email)
+        instance.is_active = validated_data.get('is_active', instance.is_active)
+        instance.portfolioVisibility = validated_data.get('portfolioVisibility', instance.portfolioVisibility)
+        instance.profileImage = validated_data.get('profileImage', instance.profileImage)
+        instance.save()
 
-            if roles_data is not None:
-                instance.flair_roles.all().delete()
-                for role_data in roles_data:
-                    Flair_Roles.objects.create(user=instance, **role_data)
+        if incoming_roles_data is not None:
+            existing_roles = list(instance.flair_roles.values_list('role_name', flat=True))
+            incoming_roles = [role_data['role_name'] for role_data in incoming_roles_data]
 
-            return instance
+            for role_name in incoming_roles:
+                if role_name not in existing_roles:
+                    role, created = Flair_Roles.objects.get_or_create(role_name=role_name)
+                    instance.flair_roles.add(role)
+                    existing_roles.append(role_name)
+
+            for role_name in existing_roles:
+                if role_name not in incoming_roles:
+                    role = Flair_Roles.objects.get(role_name=role_name)
+                    instance.flair_roles.remove(role)
+
+        return instance
+
+    def delete(self, instance):
+        # Delete all flair_roles associated with the user
+        for role in instance.flair_roles.all():
+            role.delete()
+        # Delete the user
+        instance.delete()
+        return instance
 
 class PortfolioItemSerializer(serializers.ModelSerializer):
     class Meta:
