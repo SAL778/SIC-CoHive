@@ -19,8 +19,6 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    # Oauth
-    path("auth/", include("drf_social_oauth2.urls", namespace="drf")),
     path('api/verify_google_jwt/', verify_google_jwt, name='verify_google_jwt'),
     # Project URLs 
     path("admin/", admin.site.urls),
