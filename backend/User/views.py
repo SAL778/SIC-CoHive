@@ -206,7 +206,8 @@ def user_detail(request, pk):
         
         # user = get_object_or_404(CustomUser, pk=pk)
 
-    user = get_user_from_token(request)
+    # user = get_user_from_token(request)
+    user = get_object_or_404(CustomUser, pk=pk)
    # print("user",user)
     if request.method == 'GET':
         serializer = CustomUserSerializer(user)
