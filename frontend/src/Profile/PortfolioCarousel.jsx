@@ -28,25 +28,28 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
     //Delete portfolio item
     const onSubmitModalDelete = () => {
         //Send to backend
-        httpRequest({
-            endpoint: `${host}/users/portfolio/items/${clickedItem.id}`,
-            method: 'DELETE',
-            onSuccess: () => {
-                new SuccessNotification(
-                    "Item deleted",
-                    `${clickedItem.title} was succesfully deleted!`
-                ).show();
-                setCurrentPortfolioList(currentPortfolioList.filter(item => item.id !== clickedItem.id));
-                setClickedItem(null)
-            },
-            onFailure: () => {
-                new ErrorNotification(
-                    "Item not deleted",
-                    `${clickedItem.title} could not be deleted`
-                )
-                setClickedItem(null)
-            }
-        })
+        // httpRequest({
+        //     endpoint: `${host}/users/portfolio/items/${clickedItem.id}`,
+        //     method: 'DELETE',
+        //     onSuccess: () => {
+        //         console.log('deleted')
+        //         new SuccessNotification(
+        //             "Item deleted",
+        //             `${clickedItem.title} was succesfully deleted!`
+        //         ).show();
+        //         setCurrentPortfolioList(currentPortfolioList.filter(item => item.id !== clickedItem.id));
+        //         setClickedItem(null)
+        //     },
+        //     onFailure: () => {
+        //         new ErrorNotification(
+        //             "Item not deleted",
+        //             `${clickedItem.title} could not be deleted`
+        //         )
+        //         setClickedItem(null)
+        //     }
+        // })
+        setCurrentPortfolioList(currentPortfolioList.filter(item => item.id !== clickedItem.id));
+        setClickedItem(null)
     }
 
     //Edit portfolio item
@@ -62,7 +65,7 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
                     `${clickedItem.title} was succesfully edited!`
                 ).show();
                 const updatedItemList = currentPortfolioList;
-                updatedItemList[clickedItem.id] = updatedItem;
+                updatedItemList[currentPortfolioList.findIndex(_ => _.id == clickedItem.id)] = updatedItem;
                 setCurrentPortfolioList(updatedItemList)
                 setClickedItem(null)
             },
@@ -134,10 +137,10 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
                 {  isEditable &&
                     <button
                     type = "button"
-                    className = "portfolio-card p-5 rounded-3xl h-64 w-56"
+                    className = "bg-neutral-200 text-orange-600 p-5 rounded-3xl h-64 w-56"
                     onClick = {() => setOpenedModal("edit")}                //Clicked item is null so submit behaviour should be "add"
                     >
-                        <i className="fa fa-plus"/>
+                        <i className="text-3xl fa fa-plus"/>
                     </button>
                 }
             </VerticalCarousel>
@@ -156,23 +159,40 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
             >   
                 { openedModal == "edit" &&
                     <PortfolioForm 
-                    portfolioItem = {clickedItem}
-                    onSubmit = {!!(clickedItem) ? onSubmitModalEdit : onSubmitModalAdd}
+                        portfolioItem = {clickedItem}
+                        onClose = {() => setOpenedModal(null)}
+                        onSubmit = {!!(clickedItem) ? onSubmitModalEdit : onSubmitModalAdd}
                     />
                 }
                 { openedModal == "redirect" &&
                     <>
                         <p>You are being redirected to an external site
-                            <span className = "text-orange-600"> {clickedItem.link} </span> 
+                            <span className = "block text-orange-600"> {clickedItem.link}</span> 
                         </p>
-                        {/* Opens the link in a new window */}
-                        <button type= "button" onClick={() => window.open(clickedItem.link, '_blank')}>Continue</button>
+
+                        <div className = "mt-3 flex justify-end gap-3">
+                            <button type="button" onClick={() => setOpenedModal(null)}>Close</button>
+                            {/* Opens the link in a new window */}
+                            <button 
+                            type= "button" 
+                            className="button-orange"
+                            onClick={() => {
+                                window.open(clickedItem.link, '_blank');
+                                setOpenedModal(null);
+                            }}>
+                                Continue
+                            </button>
+                        </div>
+                        
                     </>
                 }
                 { openedModal == "delete" &&
                     <>
-                        <p>{`Are you sure you want to delete ${clickedItem.title}?`}</p>
-                        <button type ="button" onClick={onSubmitModalDelete}>Delete</button>
+                        <p>{`Are you sure you want to delete ${clickedItem?.title}?`}</p>
+                        <div className = "mt-3 flex justify-end gap-3">
+                            <button type="button" onClick={() => setOpenedModal(null)}>Close</button>
+                            <button type ="button" className="button-orange"onClick={() => onSubmitModalDelete()}>Delete</button>
+                        </div>
                     </>
                 }
             </Modal>

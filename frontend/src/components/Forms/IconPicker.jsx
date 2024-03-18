@@ -15,7 +15,7 @@ export default function IconPicker({data, value, onChange}) {
     return (
         <Popover position = "bottom-start" trapFocus>
             <Popover.Target>
-                <button className = "relative">
+                <button type="button" className = "relative">
                     <i className = {`text-5xl text-orange-600 ${value}`}/>
                     {/* Small indicator to show that this is changeable */}
                     <i className = "fa fa-caret-down absolute bottom-0 right-0"/>

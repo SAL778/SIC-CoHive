@@ -5,6 +5,8 @@ import { Routes, Route, useParams } from 'react-router-dom';
 import { Loader } from '@mantine/core';
 import { TextEditor } from './TextEditor.jsx';
 import Portfolio from './PortfolioCarousel.jsx'
+import {ErrorNotification, SuccessNotification} from "../components/notificationFunctions.js";
+
 
 export default function Profile() {
 
@@ -22,6 +24,23 @@ export default function Profile() {
 
 	const onTextSubmit = (value) => {
 		console.log(value)
+		httpRequest({
+			endpoint: `${host}/users/${currentUser.id}/portfolio/`,
+			method: "PATCH",
+			body: JSON.stringify({description: value}),
+			onSuccess: () => {
+				new SuccessNotification(
+                    "Saved",
+                    `New description was succesfully saved!`
+                ).show();
+			},
+			onFailure: () => {
+				new ErrorNotification(
+                    "Failed",
+                    `New description couldn't be saved`
+                ).show();
+			}
+		})
 	}
 
 	//Get the user data 
@@ -64,7 +83,7 @@ export default function Profile() {
 			  </div> */}
 	  
 			  {/* Sidebar carousel */}
-			  	<Portfolio portfolioItems= {portfolio.items} isEditable={true} />
+			  	<Portfolio portfolioItems = {portfolio.items} isEditable={true} />
 	
 				<TextEditor initialValue = {portfolio.description} onValueSubmit = {onTextSubmit}/>
 			</>

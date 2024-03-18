@@ -13,7 +13,7 @@ export default PortfolioForm
  * @param {Array[Object]} availableIcons - A list of icons available to be used.
 
  */
-function PortfolioForm(portfolioItem) {
+function PortfolioForm({portfolioItem, onSubmit, onClose}) {
     console.log(portfolioItem)
     const defaultIcon = "fa fa-lightbulb"
     const [availableIcons, setAvailableIcons] = useState([]) //To be retrieved from the backend eventually
@@ -34,21 +34,21 @@ function PortfolioForm(portfolioItem) {
             icon: portfolioItem?.icon ?? defaultIcon,       //The fontawesome icon className(s)
         },
         validate: {
-            title: (value) => {
-                (value.length < 15 || value.length < 1) 
+            title: (value) => (
+                (value.length > 15 || value.length < 1) 
                     ? 'Title must be between 1 and 15 characters'
                     : null
-            },
-            description: (value) => {
-                (value.length < 50 || value.length < 1)
+            ),
+            description: (value) => (
+                (value.length > 50 || value.length < 1)
                     ? 'Title must be between 1 and 50 characters'
                     : null
-            },
-            link: (value) => {
-                !(matchesHttpPattern(value) || matchesWwwPattern(value) || matchesDomainPattern(value))
+            ),
+            link: (value) => (
+                (!(matchesHttpPattern(value) || matchesWwwPattern(value) || matchesDomainPattern(value)) || value.length == 0)
                     ? 'The link must be a valid url'
                     : null
-            }
+            )
       },
       transformValues: (values) => {
         //Transfrom links to match the expected src for an <a> tag
@@ -66,9 +66,8 @@ function PortfolioForm(portfolioItem) {
 
     return (
         <form onSubmit = {form.onSubmit((values) => {onSubmit(values)})}>
-            {/* TODO: Implement this */}
             <IconPicker
-                data = {availableIcons}     //Extends the Input base class
+                data = {availableIcons}
                 value = {form.values.icon}
                 {...form.getInputProps('icon')}
             />
@@ -87,6 +86,11 @@ function PortfolioForm(portfolioItem) {
                 placeholder="Enter a link"
                 {...form.getInputProps('link')}
             />
+            <div className ="flex gap-3 pt-3">
+                <button type="button" className = "button-grey-hover modal-button" onClick = {onClose}>Close</button>
+                <button type="submit" className = "button-orange modal-button">Submit</button>
+            </div>
+
         </form>
     )
 }
