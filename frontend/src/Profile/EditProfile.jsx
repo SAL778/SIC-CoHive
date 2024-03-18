@@ -16,11 +16,12 @@ export default function Profile() {
 	const { host } = useContext(HostContext);
 
 	const [portfolio, setPortfolio] = useState([])
+	const [portfolioVisibility, setPortfolioVisibility] = useState(profileUser.portfolioVisibility) 	//visibility toggle controls (only shows if current user is profile user)
 	const [isLoading, setLoading] = useState(true)
 
-	const matchesCurrentUser = () => {
+	const matchesCurrentUser = () => (
 		currentUser?.id == profileUser?.id
-	}
+	)
 
 	const onTextSubmit = (value) => {
 		console.log(value)
@@ -41,6 +42,29 @@ export default function Profile() {
                 ).show();
 			}
 		})
+	}
+
+	const onUpdateVisibility = (visibility) => {
+		if (visibility == !portfolioVisibility) {	//Conditional check to avoid spamming backend unnecessarily
+			setPortfolioVisibility(visibility)
+			httpRequest({
+				endpoint: `${host}/users/${currentUser.id}/`,
+				method: 'PATCH',
+				body: JSON.stringify({portfolioVisibility: portfolioVisibility}),
+				onSuccess: () => {
+					new SuccessNotification(
+						'Changed visibility', 
+						`Portfolio set to ${portfolioVisibility ? "Public" : "Private"}`)
+						.show()
+				},
+				onError: () => {
+					new SuccessNotification(
+						'Visibility unchanged', 
+						"Portfolio visibility couldn't be changed")
+						.show()
+				}
+			})
+		}
 	}
 
 	//Get the user data 
@@ -65,11 +89,23 @@ export default function Profile() {
 		  {isLoading ? (
 			<Loader />
 		  ) : (
-			<>
-			  {/* {matchesCurrentUser() && (
-				<div>
-				  <button>Private</button>
-				  <button>Public</button>
+			<div className="flex flex-col">
+			  {matchesCurrentUser() && (
+				<div className = "buttonToggleGroup w-16 flex gap-3 m-3 content-center">
+					<button 
+					className = {`flex items-center gap-3 ${portfolioVisibility ? "button-orange" : ""}`}
+					onClick = {() => onUpdateVisibility(true)}
+					>
+						Public 
+						<i className={`fa fa-eye`}/>
+					</button>
+					<button 
+					className = {`flex items-center gap-3 ${!portfolioVisibility ? "button-orange" : ""}`}
+					onClick = {() => onUpdateVisibility(false)}
+					>
+						Private
+						<i className={`fa fa-eye-slash`}/>
+					</button>
 				</div>
 			  )}
 	  
@@ -77,16 +113,17 @@ export default function Profile() {
 				<img
 				  src={profileUser.profileImage}
 				  alt={`Image of ${profileUser.first_name}`}
+				  className={"rounded-md"}
 				/>
 				<h2>{profileUser.first_name + ' ' + profileUser.last_name}</h2>
 				<h3>{profileUser.email}</h3>
-			  </div> */}
+			  </div>
 	  
 			  {/* Sidebar carousel */}
 			  	<Portfolio portfolioItems = {portfolio.items} isEditable={true} />
 	
 				<TextEditor initialValue = {portfolio.description} onValueSubmit = {onTextSubmit}/>
-			</>
+			</div>
 		  )}
 		</>
 	  );

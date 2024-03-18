@@ -5,8 +5,9 @@ export default function VerticalCarousel({ children, ...props }) {
         <Carousel 
         withIndicators 
         align="start"
-        orientation="vertical"
-        slideGap="sm"
+        orientation="horizontal"
+        containScroll='trimSnaps'
+        slideGap="md"
          {...props}>
             {children}
         </Carousel>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { RichTextEditor } from '@mantine/tiptap';
-import { Transition } from '@mantine/core';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor } from '@tiptap/react';
 import { StarterKit } from '@tiptap/starter-kit';
@@ -19,7 +18,7 @@ export function TextEditor({ initialValue, onValueSubmit }) {
     })
 
     return (
-            <>
+            <div>
               <RichTextEditor editor={editor}>
                 <RichTextEditor.Toolbar sticky>
                   <RichTextEditor.ControlsGroup className="headings">
@@ -56,17 +55,15 @@ export function TextEditor({ initialValue, onValueSubmit }) {
                 <RichTextEditor.Content />
               </RichTextEditor>
       
-              {/* Only show the save button when value has been changed */}
-              <Transition
-                mounted={true}
-                transition="fade"
-                duration={300}
-                timingFunction="linear"
-              >
-                {(styles) => (
-                  <button type="button" onClick={() => onValueSubmit(editor.getHTML())}>Save</button>
-                )}
-              </Transition>
-            </>
+              {/* Only show the save button when value has been changed and editor has been loaded */}
+              { (editor && editor.getHTML() !== initialValue) &&
+                <button 
+                type="button" 
+                className="button-orange"
+                onClick={() => onValueSubmit(editor.getHTML())}>
+                  Save
+                </button>
+              }
+            </div>
           )
 }

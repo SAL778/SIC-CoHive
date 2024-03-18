@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import PortfolioForm from "../components/Forms/PortfolioForm.jsx";
 import { httpRequest } from "../utils.js";
 import { HostContext, UserContext } from "../App.jsx";
-import VerticalCarousel from "../components/Carousel/VerticalCarousel";
+import VerticalCarousel from "../components/Carousel/VerticalCarousel.jsx";
 import {ErrorNotification, SuccessNotification} from "../components/notificationFunctions.js";
 import { Modal } from "@mantine/core";
 
