@@ -4,13 +4,9 @@ import "../components/Forms/form.css";
 
 function Filter({ onFilterChange, assetType }) {
 	const [selectedFilters, setSelectedFilters] = useState({});
-
-	const [selectedDates, setSelectedDates] = useState([null, null]);
-	const [parsedDates, setParsedDates] = useState([null, null]);
 	const [fromDate, setFromDate] = useState(null);
 	const [toDate, setToDate] = useState(null);
 	const [selectedRooms, setSelectedRooms] = useState([]);
-
 	const [bookingFilter, setBookingFilter] = useState("All Bookings");
 
 	// Fetch all the rooms and initialize the filters from the database
@@ -32,22 +28,18 @@ function Filter({ onFilterChange, assetType }) {
 
 	// Notify parent that the filters have changed for the sekected dates and rooms
 	useEffect(() => {
-		const formattedFromDate = fromDate
-			? new Date(fromDate).toISOString().split("T")[0]
-			: null;
-		const formattedToDate = toDate
-			? new Date(toDate).toISOString().split("T")[0]
-			: null;
-
 		onFilterChange({
 			selectedFilters: Object.entries(selectedFilters)
 				.filter(([_, isSelected]) => isSelected)
-				.map(([filter, _]) => filter),
-			fromDate: formattedFromDate,
-			toDate: formattedToDate,
+				.map(([filter]) => filter),
+			fromDate: fromDate
+				? new Date(fromDate).toISOString().split("T")[0]
+				: null,
+			toDate: toDate ? new Date(toDate).toISOString().split("T")[0] : null,
 			selectedRooms,
+			bookingFilter,
 		});
-	}, [selectedFilters, fromDate, toDate, selectedRooms]);
+	}, [selectedFilters, fromDate, toDate, selectedRooms, bookingFilter]);
 
 	// New handler for toggling filters
 	const toggleFilter = (filter) => {
@@ -112,7 +104,7 @@ function Filter({ onFilterChange, assetType }) {
 					<div style={{ margin: "0 0 5px 0px" }}>
 						<strong>From Date:</strong>
 					</div>
-					
+
 					<DatePickerInput
 						label="Select a from date"
 						value={fromDate}
@@ -151,9 +143,6 @@ function Filter({ onFilterChange, assetType }) {
 										></div>
 										<span onClick={() => toggleFilter(filter)}>{filter}</span>
 									</div>
-									{/* {index === 3 && (
-										<strong style={{ margin: "10px 0 5px 0" }}>SIC Role</strong>
-									)} */}
 								</React.Fragment>
 								//react fragment is used to group a list of children without adding extra nodes to the DOM. It will group multiple elements.
 								//React Fragments can be replaced with <> and </> tags.
