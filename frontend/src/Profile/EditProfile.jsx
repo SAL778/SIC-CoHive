@@ -1,32 +1,28 @@
 import React, { useState, useEffect, useContext } from "react";
 import { HostContext, UserContext } from "../App.jsx";
 import { httpRequest } from "../utils.js";
-import { Routes, Route, useParams } from 'react-router-dom';
 import { Loader } from '@mantine/core';
 import { TextEditor } from './TextEditor.jsx';
 import Portfolio from './PortfolioCarousel.jsx'
 import {ErrorNotification, SuccessNotification} from "../components/notificationFunctions.js";
+import ProfileHeader from "./ProfileHeader.jsx";
 
 
-export default function Profile() {
+export default function EditProfile() {
 
-	const { profileUserId } = useParams();									//Used to GET the profile
-	const { currentUser } = useContext(UserContext);						//Who's accessing the profile
-	const [profileUser, setProfileUser] = useState(currentUser)				//Whose profile it is		
+	// const { profileUserId } = useParams();										//Used to GET the profile
+	// const currentUserId = JSON.parse(localStorage.getItem('currentUser'))["id"];	//Who's accessing the profile
+	const [profileUser, setProfileUser] = useState({})								//Current user's profile		
 	const { host } = useContext(HostContext);
 
 	const [portfolio, setPortfolio] = useState([])
 	const [portfolioVisibility, setPortfolioVisibility] = useState(profileUser.portfolioVisibility) 	//visibility toggle controls (only shows if current user is profile user)
 	const [isLoading, setLoading] = useState(true)
 
-	const matchesCurrentUser = () => (
-		currentUser?.id == profileUser?.id
-	)
-
 	const onTextSubmit = (value) => {
 		console.log(value)
 		httpRequest({
-			endpoint: `${host}/users/${currentUser.id}/portfolio/`,
+			endpoint: `${host}/users/${currentUserId}/portfolio/`,
 			method: "PATCH",
 			body: JSON.stringify({description: value}),
 			onSuccess: () => {
@@ -48,13 +44,13 @@ export default function Profile() {
 		if (visibility == !portfolioVisibility) {	//Conditional check to avoid spamming backend unnecessarily
 			setPortfolioVisibility(visibility)
 			httpRequest({
-				endpoint: `${host}/users/${currentUser.id}/`,
+				endpoint: `${host}/users/${currentUserId}/`,
 				method: 'PATCH',
-				body: JSON.stringify({portfolioVisibility: portfolioVisibility}),
+				body: JSON.stringify({portfolioVisibility: visibility}),
 				onSuccess: () => {
 					new SuccessNotification(
 						'Changed visibility', 
-						`Portfolio set to ${portfolioVisibility ? "Public" : "Private"}`)
+						`Portfolio set to ${visibility ? "Public" : "Private"}`)
 						.show()
 				},
 				onError: () => {
@@ -70,11 +66,12 @@ export default function Profile() {
 	//Get the user data 
 	useEffect(() => {
 		httpRequest({
-			endpoint: `${host}/users/profile/`, // Get the profile
+			endpoint: `${host}/users/profile/`,
 			onSuccess: (userData) => {
+				console.log(location)
 				setProfileUser(userData);
 				httpRequest({
-					endpoint: `${host}/users/${userData.id}/portfolio/`, // Get the portfolio if visible
+					endpoint: `${host}/users/${userData.id}/portfolio/`, // Always get portfolio
 					onSuccess: (portfolioData) => {
 						setPortfolio(portfolioData); // Expected: List
 						setLoading(false);
@@ -90,7 +87,6 @@ export default function Profile() {
 			<Loader />
 		  ) : (
 			<div className="flex flex-col">
-			  {matchesCurrentUser() && (
 				<div className = "buttonToggleGroup w-16 flex gap-3 m-3 content-center">
 					<button 
 					className = {`flex items-center gap-3 ${portfolioVisibility ? "button-orange" : ""}`}
@@ -107,17 +103,8 @@ export default function Profile() {
 						<i className={`fa fa-eye-slash`}/>
 					</button>
 				</div>
-			  )}
 	  
-			  <div className="profileHeader">
-				<img
-				  src={profileUser.profileImage}
-				  alt={`Image of ${profileUser.first_name}`}
-				  className={"rounded-md"}
-				/>
-				<h2>{profileUser.first_name + ' ' + profileUser.last_name}</h2>
-				<h3>{profileUser.email}</h3>
-			  </div>
+				<ProfileHeader profileUser = {profileUser}/>
 	  
 			  {/* Sidebar carousel */}
 			  	<Portfolio portfolioItems = {portfolio.items} isEditable={true} />

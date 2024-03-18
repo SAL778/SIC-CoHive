@@ -16,7 +16,7 @@ export default PortfolioCarousel
  */
 
 //TODO: Rename this to portfolio
-function PortfolioCarousel({ portfolioItems, isEditable = false }) {
+function PortfolioCarousel({ portfolioItems, isEditable}) {
 
     const {host} = useContext(HostContext);
     const {currentUser} = useContext(UserContext);
@@ -117,7 +117,7 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
                     <PortfolioCard
                     key = {portfolioItem.id}
                     portfolioItem = {portfolioItem}
-                    isEditable = {true}
+                    isEditable = {isEditable}
                     onClickEdit = {() => {
                         console.log(portfolioItem)
                         setClickedItem(portfolioItem);

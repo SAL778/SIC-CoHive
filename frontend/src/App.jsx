@@ -63,6 +63,7 @@ function App() {
 										<Route path="/profile" element={<EditProfile />} />
 										<Route path="/feedback" element={<Feedback />} />
 										<Route path="/signout" element={<Signout />} />
+										<Route path="/users/:profileUserId" element={<EditProfile/>} />
 									</Routes>
 								</div>
 							</Router>
