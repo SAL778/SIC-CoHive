@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext, HostContext } from "../../App.jsx";
 import { useForm } from "@mantine/form";
 import { TextInput } from "@mantine/core";
+import IconPicker from "./IconPicker.jsx";
 import './form.css';
 
 export default PortfolioForm
@@ -13,12 +14,13 @@ export default PortfolioForm
 
  */
 function PortfolioForm(portfolioItem) {
+    console.log(portfolioItem)
     const defaultIcon = "fa fa-lightbulb"
     const [availableIcons, setAvailableIcons] = useState([]) //To be retrieved from the backend eventually
 
-    const matchesHttpPattern = (string) = (/^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/).test(string)
-    const matchesWwwPattern = (string) = (/^www\.\w+(\.\w+)+$/).test(string)
-    const matchesDomainPattern = (string) = (/^(\w+\.)+\w+$/).test(string)
+    const matchesHttpPattern = (string) => (/^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/).test(string)
+    const matchesWwwPattern = (string) => (/^www\.\w+(\.\w+)+$/).test(string)
+    const matchesDomainPattern = (string) => (/^(\w+\.)+\w+$/).test(string)
 
     useEffect(() => {
         setAvailableIcons(getIcons())
@@ -27,9 +29,9 @@ function PortfolioForm(portfolioItem) {
     const form = useForm({
         initialValues: {
             title: portfolioItem?.title ?? "",
-            description: portfolioItem.description ?? "",
+            description: portfolioItem?.description ?? "",
             link: portfolioItem?.link ?? "",
-            icon: portfolioItem?.icon ?? defaultIcon,       //The name of the icon className
+            icon: portfolioItem?.icon ?? defaultIcon,       //The fontawesome icon className(s)
         },
         validate: {
             title: (value) => {
@@ -51,12 +53,12 @@ function PortfolioForm(portfolioItem) {
       transformValues: (values) => {
         //Transfrom links to match the expected src for an <a> tag
         const normalized = values
-        if (matchesDomainPattern(values.link)) {
-            normalized.link = 'www.' + values.link
+        if (matchesDomainPattern(normalized.link)) {
+            normalized.link = 'www.' + normalized.link
         }
             
-        if (matchesWwwPattern(values.link)) {
-            normalized.link = 'https://' + values.link
+        if (matchesWwwPattern(normalized.link)) {
+            normalized.link = 'http://' + normalized.link
         }
         return normalized
       }
@@ -66,7 +68,8 @@ function PortfolioForm(portfolioItem) {
         <form onSubmit = {form.onSubmit((values) => {onSubmit(values)})}>
             {/* TODO: Implement this */}
             <IconPicker
-                availableIcons = {availableIcons}     //Extends the Input base class
+                data = {availableIcons}     //Extends the Input base class
+                value = {form.values.icon}
                 {...form.getInputProps('icon')}
             />
             <TextInput
@@ -80,8 +83,8 @@ function PortfolioForm(portfolioItem) {
                 {...form.getInputProps('description')}
             />
             <TextInput
-                label="Description"
-                placeholder="Enter a link (https://www...)"
+                label="Link"
+                placeholder="Enter a link"
                 {...form.getInputProps('link')}
             />
         </form>
@@ -109,7 +112,7 @@ const getIcons = () => {
             'fa-brands fa-youtube',
             'fa-brands fa-discord',
             'fa-brands fa-linkedin',
-            'fa-brands fa-dribble',
+            'fa-brands fa-dribbble',
             'fa-brands fa-figma',
             'fa-brands fa-codepen',
             'fa-brands fa-instagram',

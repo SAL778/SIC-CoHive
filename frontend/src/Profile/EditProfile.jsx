@@ -4,6 +4,7 @@ import { httpRequest } from "../utils.js";
 import { Routes, Route, useParams } from 'react-router-dom';
 import { Loader } from '@mantine/core';
 import { TextEditor } from './TextEditor.jsx';
+import Portfolio from './PortfolioCarousel.jsx'
 
 export default function Profile() {
 
@@ -14,6 +15,10 @@ export default function Profile() {
 
 	const [portfolio, setPortfolio] = useState([])
 	const [isLoading, setLoading] = useState(true)
+
+	const matchesCurrentUser = () => {
+		currentUser?.id == profileUser?.id
+	}
 
 	const onTextSubmit = (value) => {
 		console.log(value)
@@ -59,7 +64,7 @@ export default function Profile() {
 			  </div> */}
 	  
 			  {/* Sidebar carousel */}
-			  {/* <Portfolio portfolioItems={portfolio} isEditable={matchesCurrentUser()} /> */}
+			  	<Portfolio portfolioItems= {portfolio.items} isEditable={true} />
 	
 				<TextEditor initialValue = {portfolio.description} onValueSubmit = {onTextSubmit}/>
 			</>

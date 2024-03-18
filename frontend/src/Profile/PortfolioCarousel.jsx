@@ -4,6 +4,7 @@ import { httpRequest } from "../utils.js";
 import { HostContext, UserContext } from "../App.jsx";
 import VerticalCarousel from "../components/Carousel/VerticalCarousel";
 import {ErrorNotification, SuccessNotification} from "../components/notificationFunctions.js";
+import { Modal } from "@mantine/core";
 
 export default PortfolioCarousel
 
@@ -99,34 +100,46 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
         })
     }
 
+    //Close the modal with a delay to change after modal is unmounted
+    // const modalClose = () => {
+    //     setTimeout(() => {
+    //         setOpenedModal(null);
+    //         }, 200);
+    // }
+
     return (
         <>
             <VerticalCarousel>
-            {currentPortfolioList.map((portfolioItem) => {
-                <PortfolioCard
+                {currentPortfolioList.map((portfolioItem) => (
+                    <PortfolioCard
                     key = {portfolioItem.id}
                     portfolioItem = {portfolioItem}
-                    isEditable = {isEditable}
+                    isEditable = {true}
                     onClickEdit = {() => {
+                        console.log(portfolioItem)
                         setClickedItem(portfolioItem);
                         setOpenedModal("edit")
                     }}
                     onClickDelete = {() => {
                         setClickedItem(portfolioItem);
-                        () => setOpenedModal("delete")
+                        setOpenedModal("delete")
                     }}
-                />
-            })}
+                    onClickRedirect = {() => {
+                        setClickedItem(portfolioItem);
+                        setOpenedModal("redirect");
+                    }}
+                    />
+                ))}
 
-            {  isEditable &&
-                <button
-                type = "button"
-                className = "portfolio-card p-5 rounded-3xl h-64 w-56"
-                onClick = {() => setOpenedModal("edit")}                //Clicked item is null so submit behaviour should be "add"
-                >
-                    <i className="fa fa-plus"/>
-                </button>
-            }
+                {  isEditable &&
+                    <button
+                    type = "button"
+                    className = "portfolio-card p-5 rounded-3xl h-64 w-56"
+                    onClick = {() => setOpenedModal("edit")}                //Clicked item is null so submit behaviour should be "add"
+                    >
+                        <i className="fa fa-plus"/>
+                    </button>
+                }
             </VerticalCarousel>
 
             {/* Edit Portfolio Item Modal*/}
@@ -143,19 +156,24 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
             >   
                 { openedModal == "edit" &&
                     <PortfolioForm 
-                    currentPortfolioItem = {clickedItem} 
-                    onClose = {() => setOpenedModal(null)}
+                    portfolioItem = {clickedItem}
                     onSubmit = {!!(clickedItem) ? onSubmitModalEdit : onSubmitModalAdd}
                     />
                 }
                 { openedModal == "redirect" &&
                     <>
-                        <p>{`You are being redirected to an external site. ${clickedItem.link} Continue?`}</p>
-                        <button type ="button" onCLick={onSubmitModalDelete}>Delete</button>
+                        <p>You are being redirected to an external site
+                            <span className = "text-orange-600"> {clickedItem.link} </span> 
+                        </p>
+                        {/* Opens the link in a new window */}
+                        <button type= "button" onClick={() => window.open(clickedItem.link, '_blank')}>Continue</button>
                     </>
                 }
                 { openedModal == "delete" &&
-                    <p>{`Are you sure you want to delete ${clickedItem.title}?`}</p>
+                    <>
+                        <p>{`Are you sure you want to delete ${clickedItem.title}?`}</p>
+                        <button type ="button" onClick={onSubmitModalDelete}>Delete</button>
+                    </>
                 }
             </Modal>
         </>
@@ -170,7 +188,7 @@ function PortfolioCarousel({ portfolioItems, isEditable = false }) {
  * @param {function} onClickDelete - Callable to execute when the portfolio item is deleted
  * @returns {JSX}
  */
-function PortfolioCard({portfolioItem, isEditable = false, onClickEdit, onClickDelete}) {
+function PortfolioCard({portfolioItem, isEditable = false, onClickEdit, onClickDelete, onClickRedirect}) {
     const defaultIcon = 'fa fa-lightbulb' //Class name for a font-awesome icon
 
     return (
@@ -195,9 +213,9 @@ function PortfolioCard({portfolioItem, isEditable = false, onClickEdit, onClickD
                         </button>
                     </div>
                 }
-                <a href={portfolioItem.link}>
-                    <i className="fa fa-arrow-right" />
-                </a>
+                <button onClick = {onClickRedirect}>
+                    <i className="fa fa-arrow-right" alt={portfolioItem.link}/>
+                </button>
             </div>
         </div>
     )
