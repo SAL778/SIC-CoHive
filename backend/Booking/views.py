@@ -15,6 +15,7 @@ from User.views import get_user_from_token
 from rest_framework.views import APIView
 from django.http import Http404
 from drf_yasg.utils import swagger_auto_schema
+from urllib.parse import unquote
 
 # Create your views here.
 User = get_user_model()
@@ -83,7 +84,9 @@ class FilterBookingsView(generics.ListAPIView):
         if end_time:
             queryset = queryset.filter(end_time__lte=end_time)
         if rooms:
-            queryset = queryset.filter(resources_name__in=rooms)
+            decoded_rooms = [unquote(room) for room in rooms]
+            queryset = queryset.filter(resources_name__in=decoded_rooms)
+            # queryset = queryset.filter(resources_name__in=rooms)
 
         return queryset
 

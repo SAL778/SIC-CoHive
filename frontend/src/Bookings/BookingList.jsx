@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import Filter from "../components/Filter.jsx";
 import { HostContext, UserContext } from "../App.jsx";
 import { Loader, isOptionsGroup } from "@mantine/core";
 import { httpRequest } from "../utils.js";
@@ -17,46 +16,48 @@ function BookingListView({
 	selectedDates,
 	selectedRooms,
 }) {
-	//const dateHeaders = getUniqueDateHeaders(displayAssets.map(asset => asset.start_time))
 	const { host } = useContext(HostContext);
 	const [isLoading, setIsLoading] = useState(true);
-	const [assets, setAssets] = useState([]); //An array of assets from the backend
-	const [dateHeaders, setDateHeaders] = useState([]); //An array of unique dates to be displayed as a header.
+	const [assets, setAssets] = useState([]);
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams();
 		if (selectedDates[0]) queryParams.append("start_time", selectedDates[0]);
 		if (selectedDates[1]) queryParams.append("end_time", selectedDates[1]);
 		selectedRooms.forEach((room) => queryParams.append("room", room));
-		console.log(queryParams.toString());
 
 		httpRequest({
 			endpoint: `${host}/bookings/filter?${queryParams.toString()}`,
 			onSuccess: (data) => {
-				console.log(data);
 				let sterilized = data.map((asset) => convertToISO(asset));
 				setAssets(sterilized);
-				setDateHeaders(
-					getUniqueDateHeaders(sterilized.map((asset) => asset.start_time))
-				);
 				setIsLoading(false);
 			},
 		});
 	}, [assetType, selectedDates, selectedRooms]);
 
+	const filteredAssets =
+		selectedRooms.length > 0
+			? assets.filter((asset) => selectedRooms.includes(asset.resources_name))
+			: assets;
+
+	const dateHeaders = getUniqueDateHeaders(
+		filteredAssets.map((asset) => asset.start_time)
+	);
+
 	return isLoading ? (
 		<Loader size={50} color="orange" />
 	) : (
-		//Listview
 		<ul className="flex flex-col gap-8 px-[10px] py-8 flex-grow">
 			{dateHeaders.map((dateHeader) => (
-				<li key={dateHeader}>
+				<li key={dateHeader.toISOString()}>
 					<DateHeaderComponent date={dateHeader} />
 					<ul className="day-list flex flex-col gap-4">
-						{assets
+						{filteredAssets
 							.filter(
-								(asset) => asset.start_time.getDay() === dateHeader.getDay()
-							) //Apply more filters here
+								(asset) =>
+									asset.start_time.toDateString() === dateHeader.toDateString()
+							)
 							.map((asset) => (
 								<AssetComponent
 									key={asset.id}

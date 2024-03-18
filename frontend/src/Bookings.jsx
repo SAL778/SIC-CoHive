@@ -234,14 +234,16 @@ function Bookings() {
 					timingFunction: "ease-in-out",
 				}}
 			>
-			<BookingFormComponent
-				currentBooking={clickedBooking}
-				currentDate={currentDay}
-				availableAssets={currentAssetViewIsRoom ? availableRooms : availableEquipment} //TODO: Fill this in
-				onSubmit={onModalSubmitBooking}
-				onClose={onModalCloseBooking}
-				onDelete={onModalDeleteBooking}
-			/>
+				<BookingFormComponent
+					currentBooking={clickedBooking}
+					currentDate={currentDay}
+					availableAssets={
+						currentAssetViewIsRoom ? availableRooms : availableEquipment
+					} //TODO: Fill this in
+					onSubmit={onModalSubmitBooking}
+					onClose={onModalCloseBooking}
+					onDelete={onModalDeleteBooking}
+				/>
 			</Modal>
 		</div>
 	);
