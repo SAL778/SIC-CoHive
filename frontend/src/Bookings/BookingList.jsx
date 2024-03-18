@@ -15,26 +15,36 @@ function BookingListView({
 	filters,
 	selectedDates,
 	selectedRooms,
+	bookingFilter, // all bookings or my bookings
 }) {
 	const { host } = useContext(HostContext);
+	const { currentUser } = useContext(UserContext); // Current logged-in user
 	const [isLoading, setIsLoading] = useState(true);
 	const [assets, setAssets] = useState([]);
 
 	useEffect(() => {
+		let endpoint = `${host}/bookings/filter?`;
 		const queryParams = new URLSearchParams();
-		if (selectedDates[0]) queryParams.append("start_time", selectedDates[0]);
-		if (selectedDates[1]) queryParams.append("end_time", selectedDates[1]);
-		selectedRooms.forEach((room) => queryParams.append("room", room));
+
+		if (bookingFilter === "My Bookings" && currentUser) {
+			// Fetch only the current user's bookings
+			endpoint = `${host}/bookings/user/${currentUser.id}/`;
+		} else {
+			// Fetch all bookings, with date and room filters
+			if (selectedDates[0]) queryParams.append("start_time", selectedDates[0]);
+			if (selectedDates[1]) queryParams.append("end_time", selectedDates[1]);
+			selectedRooms.forEach((room) => queryParams.append("room", room));
+		}
 
 		httpRequest({
-			endpoint: `${host}/bookings/filter?${queryParams.toString()}`,
+			endpoint: endpoint + queryParams.toString(),
 			onSuccess: (data) => {
 				let sterilized = data.map((asset) => convertToISO(asset));
 				setAssets(sterilized);
 				setIsLoading(false);
 			},
 		});
-	}, [assetType, selectedDates, selectedRooms]);
+	}, [host, currentUser, bookingFilter, selectedDates, selectedRooms]);
 
 	const filteredAssets =
 		selectedRooms.length > 0

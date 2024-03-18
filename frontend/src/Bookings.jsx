@@ -25,6 +25,7 @@ function Bookings() {
 
 	const [selectedDates, setSelectedDates] = useState([null, null]);
 	const [selectedRooms, setSelectedRooms] = useState([]);
+	const [bookingFilter, setBookingFilter] = useState("All Bookings");
 
 	const { host } = useContext(HostContext);
 	const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -40,10 +41,12 @@ function Bookings() {
 		fromDate,
 		toDate,
 		selectedRooms,
+		bookingFilter: updatedBookingFilter,
 	}) => {
 		setFilters(selectedFilters);
 		setSelectedDates([fromDate, toDate]);
 		setSelectedRooms(selectedRooms);
+		setBookingFilter(updatedBookingFilter);
 	};
 
 	// Fetch user data to set the current user context to fill user's data on the bookings page
@@ -201,6 +204,7 @@ function Bookings() {
 						filters={filters}
 						selectedDates={selectedDates}
 						selectedRooms={selectedRooms}
+						bookingFilter={bookingFilter}
 					/>
 
 					<BookingsListFilter
