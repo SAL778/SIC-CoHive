@@ -14,6 +14,7 @@ export default function EditProfile() {
 	// const currentUserId = JSON.parse(localStorage.getItem('currentUser'))["id"];	//Who's accessing the profile
 	const [profileUser, setProfileUser] = useState({})								//Current user's profile		
 	const { host } = useContext(HostContext);
+	const { setCurrentUser } = useContext(UserContext);
 
 	const [portfolio, setPortfolio] = useState([])
 	const [portfolioVisibility, setPortfolioVisibility] = useState(profileUser.portfolioVisibility) 	//visibility toggle controls (only shows if current user is profile user)
@@ -22,7 +23,7 @@ export default function EditProfile() {
 	const onTextSubmit = (value) => {
 		console.log(value)
 		httpRequest({
-			endpoint: `${host}/users/${currentUserId}/portfolio/`,
+			endpoint: `${host}/users/${profileUser.id}/portfolio/`,
 			method: "PATCH",
 			body: JSON.stringify({description: value}),
 			onSuccess: () => {
@@ -44,7 +45,7 @@ export default function EditProfile() {
 		if (visibility == !portfolioVisibility) {	//Conditional check to avoid spamming backend unnecessarily
 			setPortfolioVisibility(visibility)
 			httpRequest({
-				endpoint: `${host}/users/${currentUserId}/`,
+				endpoint: `${host}/users/${profileUser.id}/`,
 				method: 'PATCH',
 				body: JSON.stringify({portfolioVisibility: visibility}),
 				onSuccess: () => {
@@ -70,6 +71,7 @@ export default function EditProfile() {
 			onSuccess: (userData) => {
 				console.log(location)
 				setProfileUser(userData);
+				setCurrentUser(userData); //Add to the context so nested components can access
 				httpRequest({
 					endpoint: `${host}/users/${userData.id}/portfolio/`, // Always get portfolio
 					onSuccess: (portfolioData) => {

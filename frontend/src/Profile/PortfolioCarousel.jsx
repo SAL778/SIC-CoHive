@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import PortfolioForm from "../components/Forms/PortfolioForm.jsx";
 import { httpRequest } from "../utils.js";
 import { HostContext, UserContext } from "../App.jsx";
-import VerticalCarousel from "../components/Carousel/VerticalCarousel.jsx";
+import MantineCarousel from "../components/Carousel/MantineCarousel.jsx";
 import {ErrorNotification, SuccessNotification} from "../components/notificationFunctions.js";
+import { useDisclosure } from "@mantine/hooks";
 import { Modal } from "@mantine/core";
 
 export default PortfolioCarousel
@@ -20,6 +21,7 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
 
     const {host} = useContext(HostContext);
     const {currentUser} = useContext(UserContext);
+    const [opened, {open, close}] = useDisclosure(false);
 
     const [openedModal, setOpenedModal] = useState(null) 
     const [clickedItem, setClickedItem] = useState(null)
@@ -49,7 +51,7 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
         //     }
         // })
         setCurrentPortfolioList(currentPortfolioList.filter(item => item.id !== clickedItem.id));
-        setClickedItem(null)
+        modalClose()
     }
 
     //Edit portfolio item
@@ -67,14 +69,14 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                 const updatedItemList = currentPortfolioList;
                 updatedItemList[currentPortfolioList.findIndex(_ => _.id == clickedItem.id)] = updatedItem;
                 setCurrentPortfolioList(updatedItemList)
-                setClickedItem(null)
+                modalClose()
             },
             onFailure: () => {
                 new ErrorNotification(
                     "Item not edited",
                     `${clickedItem.title} could not be edited!`
                 )
-                setClickedItem(null)
+                modalClose()
             }
         })
     }
@@ -91,64 +93,75 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                     `${clickedItem.title} was succesfully added!`
                 ).show();
                 setCurrentPortfolioList(...currentPortfolioList, addedItem)
-                setClickedItem(null)
+                modalClose()
             },
             onFailure: () => {
                 new ErrorNotification(
                     "Item not edited",
                     `${clickedItem.title} could not be edited!`
                 )
-                setClickedItem(null)
+                modalClose()
             }
         })
     }
 
     //Close the modal with a delay to change after modal is unmounted
-    // const modalClose = () => {
-    //     setTimeout(() => {
-    //         setOpenedModal(null);
-    //         }, 200);
-    // }
+    const modalClose = () => {
+        close()
+        setTimeout(() => {
+            setOpenedModal(null);
+            setClickedItem(null)
+        }, 200);
+    }
 
     return (
         <>
-            <VerticalCarousel>
-                {currentPortfolioList.map((portfolioItem) => (
+            {(currentPortfolioList.length == 0 && !isEditable) ? (
+                <p>This person has no portfolio items</p>
+            ) : (
+                <MantineCarousel>
+                { currentPortfolioList.map((portfolioItem) => (
                     <PortfolioCard
-                    key = {portfolioItem.id}
-                    portfolioItem = {portfolioItem}
-                    isEditable = {isEditable}
-                    onClickEdit = {() => {
-                        console.log(portfolioItem)
-                        setClickedItem(portfolioItem);
-                        setOpenedModal("edit")
-                    }}
-                    onClickDelete = {() => {
-                        setClickedItem(portfolioItem);
-                        setOpenedModal("delete")
-                    }}
-                    onClickRedirect = {() => {
-                        setClickedItem(portfolioItem);
-                        setOpenedModal("redirect");
-                    }}
+                        key={portfolioItem.id}
+                        portfolioItem={portfolioItem}
+                        isEditable={isEditable}
+                        onClickEdit={() => {
+                            console.log(portfolioItem);
+                            setClickedItem(portfolioItem);
+                            setOpenedModal("edit");
+                            open();
+                        }}
+                        onClickDelete={() => {
+                            setClickedItem(portfolioItem);
+                            setOpenedModal("delete");
+                            open();
+                        }}
+                        onClickRedirect={() => {
+                            setClickedItem(portfolioItem);
+                            setOpenedModal("redirect");
+                            open();
+                        }}
                     />
                 ))}
-
                 {  isEditable &&
                     <button
                     type = "button"
                     className = "bg-neutral-200 text-orange-600 p-5 rounded-3xl h-64 w-56"
-                    onClick = {() => setOpenedModal("edit")}                //Clicked item is null so submit behaviour should be "add"
+                    onClick = {() => {
+                        setOpenedModal("edit")
+                        open()
+                    }}                //Clicked item is null so submit behaviour should be "add"
                     >
                         <i className="text-3xl fa fa-plus"/>
                     </button>
                 }
-            </VerticalCarousel>
+                </MantineCarousel>
+                )
+            }
 
-            {/* Edit Portfolio Item Modal*/}
             <Modal
-            opened = {!!openedModal}
-            onClose= {() => setOpenedModal(null)}
+            opened = {opened}
+            onClose= {modalClose}
             centered
             size="auto"
             transitionProps={{
@@ -160,7 +173,7 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                 { openedModal == "edit" &&
                     <PortfolioForm 
                         portfolioItem = {clickedItem}
-                        onClose = {() => setOpenedModal(null)}
+                        onClose = {modalClose}
                         onSubmit = {!!(clickedItem) ? onSubmitModalEdit : onSubmitModalAdd}
                     />
                 }
@@ -171,14 +184,14 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                         </p>
 
                         <div className = "mt-3 flex justify-end gap-3">
-                            <button type="button" onClick={() => setOpenedModal(null)}>Close</button>
+                            <button type="button" onClick={modalClose}>Close</button>
                             {/* Opens the link in a new window */}
                             <button 
                             type= "button" 
                             className="button-orange"
                             onClick={() => {
                                 window.open(clickedItem.link, '_blank');
-                                setOpenedModal(null);
+                                modalClose();
                             }}>
                                 Continue
                             </button>
@@ -190,8 +203,8 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                     <>
                         <p>{`Are you sure you want to delete ${clickedItem?.title}?`}</p>
                         <div className = "mt-3 flex justify-end gap-3">
-                            <button type="button" onClick={() => setOpenedModal(null)}>Close</button>
-                            <button type ="button" className="button-orange"onClick={() => onSubmitModalDelete()}>Delete</button>
+                            <button type="button" onClick={() => modalClose()}>Close</button>
+                            <button type ="button" className="button-orange" onClick={() => onSubmitModalDelete()}>Delete</button>
                         </div>
                     </>
                 }

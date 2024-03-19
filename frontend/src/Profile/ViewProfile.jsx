@@ -11,14 +11,15 @@ import ProfileHeader from "./ProfileHeader.jsx";
 export default function ViewProfile() {
 
 	const { profileUserId } = useParams();										    //Used to GET the profile
-	const [profileUser, setProfileUser] = useState({})								//Current user's profile		
+	const [profileUser, setProfileUser] = useState({})								//Current user's profile
+    const [isLoading, setLoading] = useState(true)		
 	const { host } = useContext(HostContext);
     const [portfolio, setPortfolio] = useState([])
 
     //Get the user data 
 	useEffect(() => {
         httpRequest({
-            endpoint: `${host}/users/${profileUserId}`,
+            endpoint: `${host}/users/${profileUserId}/`,
             onSuccess: (userData) => {
                 setProfileUser(userData);
                 if (userData.portfolioVisibility) {                          //Another request is portfolio is set to visible
@@ -36,3 +37,18 @@ export default function ViewProfile() {
             }
         });
     }, []);
+
+    return (
+        isLoading ? (
+            <Loader />
+        ) : (
+            <div>
+                <ProfileHeader profileUser={profileUser} />
+                {/* Sidebar carousel */}
+
+                <Portfolio portfolioItems={portfolio.items} isEditable={false} />
+                <TextEditor initialValue={portfolio.description} readOnly={true}/>
+            </div>
+        )
+    );
+}

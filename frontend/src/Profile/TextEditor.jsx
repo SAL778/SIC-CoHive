@@ -5,14 +5,22 @@ import { useEditor } from '@tiptap/react';
 import { StarterKit } from '@tiptap/starter-kit';
 import { TextAlign } from '@tiptap/extension-text-align';
 
-export function TextEditor({ initialValue, onValueSubmit }) {
+export function TextEditor({ initialValue, onValueSubmit, readOnly}) {
 
     const placeholder = "Fill in a brief description"
     const editor = useEditor({
+        editable: !readOnly,
         extensions: [
             StarterKit,
-            Placeholder.configure({placeholder: placeholder}),
-            TextAlign.configure({types: ['heading', 'paragraph']})  //Text align only applies to these elements
+            Placeholder.configure(
+              {placeholder: () => (
+                readOnly ? 'No description' : 'Enter a brief description'
+              ),
+              showOnlyWhenEditable: false,
+              }
+              
+              ),
+            TextAlign.configure({types: ['heading', 'paragraph']}),  //Text align only applies to these elements
         ],
         content: initialValue
     })
@@ -20,43 +28,45 @@ export function TextEditor({ initialValue, onValueSubmit }) {
     return (
             <div>
               <RichTextEditor editor={editor}>
-                <RichTextEditor.Toolbar sticky>
-                  <RichTextEditor.ControlsGroup className="headings">
-                    <RichTextEditor.H1 />
-                    <RichTextEditor.H2 />
-                    <RichTextEditor.H3 />
-                  </RichTextEditor.ControlsGroup>
-      
-                  <RichTextEditor.ControlsGroup className="textModifiers">
-                    <RichTextEditor.Bold />
-                    <RichTextEditor.Italic />
-                    <RichTextEditor.Code />
-                    <RichTextEditor.ClearFormatting />
-                  </RichTextEditor.ControlsGroup>
-      
-                  <RichTextEditor.ControlsGroup className="structures">
-                    <RichTextEditor.Blockquote />
-                    <RichTextEditor.Hr />
-                    <RichTextEditor.BulletList />
-                  </RichTextEditor.ControlsGroup>
-      
-                  <RichTextEditor.ControlsGroup className="textAlignment">
-                    <RichTextEditor.AlignLeft />
-                    <RichTextEditor.AlignCenter />
-                    <RichTextEditor.AlignRight />
-                  </RichTextEditor.ControlsGroup>
-      
-                  <RichTextEditor.ControlsGroup className="controls">
-                    <RichTextEditor.Undo />
-                    <RichTextEditor.Redo />
-                  </RichTextEditor.ControlsGroup>
-                </RichTextEditor.Toolbar>
+                {!readOnly &&
+                  <RichTextEditor.Toolbar sticky>
+                    <RichTextEditor.ControlsGroup className="headings">
+                      <RichTextEditor.H1 />
+                      <RichTextEditor.H2 />
+                      <RichTextEditor.H3 />
+                    </RichTextEditor.ControlsGroup>
+        
+                    <RichTextEditor.ControlsGroup className="textModifiers">
+                      <RichTextEditor.Bold />
+                      <RichTextEditor.Italic />
+                      <RichTextEditor.Code />
+                      <RichTextEditor.ClearFormatting />
+                    </RichTextEditor.ControlsGroup>
+        
+                    <RichTextEditor.ControlsGroup className="structures">
+                      <RichTextEditor.Blockquote />
+                      <RichTextEditor.Hr />
+                      <RichTextEditor.BulletList />
+                    </RichTextEditor.ControlsGroup>
+        
+                    <RichTextEditor.ControlsGroup className="textAlignment">
+                      <RichTextEditor.AlignLeft />
+                      <RichTextEditor.AlignCenter />
+                      <RichTextEditor.AlignRight />
+                    </RichTextEditor.ControlsGroup>
+        
+                    <RichTextEditor.ControlsGroup className="controls">
+                      <RichTextEditor.Undo />
+                      <RichTextEditor.Redo />
+                    </RichTextEditor.ControlsGroup>
+                  </RichTextEditor.Toolbar>
+                }
       
                 <RichTextEditor.Content />
               </RichTextEditor>
       
               {/* Only show the save button when value has been changed and editor has been loaded */}
-              { (editor && editor.getHTML() !== initialValue) &&
+              { (!readOnly && editor && editor.getHTML() !== initialValue) &&
                 <button 
                 type="button" 
                 className="button-orange"

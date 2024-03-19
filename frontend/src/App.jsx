@@ -12,6 +12,7 @@ import Bookings from "./Bookings.jsx";
 import Events from "./Events.jsx";
 import Statistics from "./Statistics.jsx";
 import EditProfile from "./Profile/EditProfile.jsx";
+import ViewProfile from "./Profile/ViewProfile.jsx";
 import Signout from "./Signout.jsx";
 import Community from "./Community.jsx";
 import Feedback from "./Feedback.jsx";
@@ -63,7 +64,7 @@ function App() {
 										<Route path="/profile" element={<EditProfile />} />
 										<Route path="/feedback" element={<Feedback />} />
 										<Route path="/signout" element={<Signout />} />
-										<Route path="/users/:profileUserId" element={<EditProfile/>} />
+										<Route path="/users/:profileUserId" element={<ViewProfile />} />
 									</Routes>
 								</div>
 							</Router>
