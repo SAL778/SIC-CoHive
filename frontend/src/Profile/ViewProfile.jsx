@@ -44,8 +44,6 @@ export default function ViewProfile() {
         ) : (
             <div>
                 <ProfileHeader profileUser={profileUser} />
-                {/* Sidebar carousel */}
-
                 <Portfolio portfolioItems={portfolio.items} isEditable={false} />
                 <TextEditor initialValue={portfolio.description} readOnly={true}/>
             </div>

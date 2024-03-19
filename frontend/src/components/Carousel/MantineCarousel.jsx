@@ -13,7 +13,7 @@ export default function VerticalCarousel({ children, ...props }) {
         containScroll='trimSnaps'
          {...props}>
             {React.Children.map(children, (child) => (
-                <CarouselSlide>{child}</CarouselSlide>
+                <CarouselSlide className="my-2">{child}</CarouselSlide>
             ))}
             {/* {children} */}
         </Carousel>

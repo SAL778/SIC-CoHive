@@ -14,7 +14,6 @@ export default PortfolioForm
 
  */
 function PortfolioForm({portfolioItem, onSubmit, onClose}) {
-    console.log(portfolioItem)
     const defaultIcon = "fa fa-lightbulb"
     const [availableIcons, setAvailableIcons] = useState([]) //To be retrieved from the backend eventually
 
@@ -86,7 +85,7 @@ function PortfolioForm({portfolioItem, onSubmit, onClose}) {
                 placeholder="Enter a link"
                 {...form.getInputProps('link')}
             />
-            <div className ="flex gap-3 pt-3">
+            <div className ="flex gap-3 pt-3 justify-end">
                 <button type="button" className = "button-grey-hover modal-button" onClick = {onClose}>Close</button>
                 <button type="submit" className = "button-orange modal-button">Submit</button>
             </div>

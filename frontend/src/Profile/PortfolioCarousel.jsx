@@ -115,7 +115,21 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
     }
 
     return (
-        <>
+        <>  
+            <h1 className="text-orange-600 text-4xl font-bold">Portfolio</h1>
+
+            {isEditable &&
+                <button 
+                type="button" 
+                className="button-orange w-24" 
+                onClick={() => {
+                    setOpenedModal("edit")
+                    open()
+                }}>
+                    Add Item
+                </button>
+            }
+
             {(currentPortfolioList.length == 0 && !isEditable) ? (
                 <p>This person has no portfolio items</p>
             ) : (
@@ -146,7 +160,7 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                 {  isEditable &&
                     <button
                     type = "button"
-                    className = "bg-neutral-200 text-orange-600 p-5 rounded-3xl h-64 w-56"
+                    className = "bg-white text-orange-600 p-5 rounded-3xl h-64 w-56 shadow-custom hover:bg-neutral-200 ease-out duration-200"
                     onClick = {() => {
                         setOpenedModal("edit")
                         open()
@@ -163,13 +177,14 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
             opened = {opened}
             onClose= {modalClose}
             centered
-            size="auto"
+            size="md"
             transitionProps={{
                 transition: "slide-up",
                 duration: 200,
                 timingFunction: "ease-in-out",
             }}
             >   
+                <h1 className="text-orange-600 font-semibold text-lg">Portfolio Item</h1>
                 { openedModal == "edit" &&
                     <PortfolioForm 
                         portfolioItem = {clickedItem}
@@ -196,7 +211,6 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                                 Continue
                             </button>
                         </div>
-                        
                     </>
                 }
                 { openedModal == "delete" &&
@@ -228,7 +242,7 @@ function PortfolioCard({portfolioItem, isEditable = false, onClickEdit, onClickD
         <div className="portfolio-card p-5 rounded-3xl h-64 w-56 flex flex-col place-content-between ease-out duration-200 shadow-custom hover:cursor-pointer">
             <i className= {`card-icon ${portfolioItem?.icon || defaultIcon}`} aria-label="Portfolio icon" />
             <section>
-                <h3 className="text-[18px]">{portfolioItem.title}</h3>
+                <h3 className="text-[18px] font-semibold">{portfolioItem.title}</h3>
                 <p>{portfolioItem.description}</p>
             </section>
             <div className="portfolio-button-wrap flex flex-row place-content-between text-[20px]">

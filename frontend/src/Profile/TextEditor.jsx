@@ -4,10 +4,11 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor } from '@tiptap/react';
 import { StarterKit } from '@tiptap/starter-kit';
 import { TextAlign } from '@tiptap/extension-text-align';
+import "./textEditor.css";
 
 export function TextEditor({ initialValue, onValueSubmit, readOnly}) {
 
-    const placeholder = "Fill in a brief description"
+    const [lastEdited, setLastEdited] = useState(initialValue) //Used to hide save button until change
     const editor = useEditor({
         editable: !readOnly,
         extensions: [
@@ -17,61 +18,61 @@ export function TextEditor({ initialValue, onValueSubmit, readOnly}) {
                 readOnly ? 'No description' : 'Enter a brief description'
               ),
               showOnlyWhenEditable: false,
-              }
-              
-              ),
+              }),
             TextAlign.configure({types: ['heading', 'paragraph']}),  //Text align only applies to these elements
         ],
         content: initialValue
     })
 
     return (
-            <div>
+            <div className = "relative">
               <RichTextEditor editor={editor}>
                 {!readOnly &&
-                  <RichTextEditor.Toolbar sticky>
+                  <RichTextEditor.Toolbar sticky className="flex gap-8">
                     <RichTextEditor.ControlsGroup className="headings">
-                      <RichTextEditor.H1 />
-                      <RichTextEditor.H2 />
-                      <RichTextEditor.H3 />
+                      <RichTextEditor.H1 icon={() => <i className="fa fa-heading text-xl"/>}/>
+                      <RichTextEditor.H2 icon={() => <i className="fa fa-heading text-md"/>}/>
+                      <RichTextEditor.H3 icon={() => <i className="fa fa-heading text-sm"/>}/>
                     </RichTextEditor.ControlsGroup>
         
                     <RichTextEditor.ControlsGroup className="textModifiers">
-                      <RichTextEditor.Bold />
-                      <RichTextEditor.Italic />
-                      <RichTextEditor.Code />
-                      <RichTextEditor.ClearFormatting />
+                      <RichTextEditor.Bold icon={() => <i className="fa fa-bold text-xl"/>} />
+                      <RichTextEditor.Italic icon={() => <i className="fa fa-italic text-xl"/>} />
+                      <RichTextEditor.Code icon={() => <i className="fa fa-code text-xl"/>}/>
+                      <RichTextEditor.ClearFormatting icon={() => <i className="fa fa-broom text-xl"/>} />
                     </RichTextEditor.ControlsGroup>
         
                     <RichTextEditor.ControlsGroup className="structures">
-                      <RichTextEditor.Blockquote />
-                      <RichTextEditor.Hr />
-                      <RichTextEditor.BulletList />
+                      <RichTextEditor.Blockquote icon={() => <i className="fa fa-quote-left text-xl"/>}/>
+                      <RichTextEditor.Hr icon={() => <i className="fa fa-left-right text-xl"/>}/>
+                      <RichTextEditor.BulletList icon={() => <i className="fa fa-list text-xl"/>}/>
                     </RichTextEditor.ControlsGroup>
         
                     <RichTextEditor.ControlsGroup className="textAlignment">
-                      <RichTextEditor.AlignLeft />
-                      <RichTextEditor.AlignCenter />
-                      <RichTextEditor.AlignRight />
+                      <RichTextEditor.AlignLeft icon={() => <i className="fa fa-align-left text-xl"/>}/>
+                      <RichTextEditor.AlignCenter icon={() => <i className="fa fa-align-center text-xl"/>}/>
+                      <RichTextEditor.AlignRight icon={() => <i className="fa fa-align-right text-xl"/>}/>
                     </RichTextEditor.ControlsGroup>
         
-                    <RichTextEditor.ControlsGroup className="controls">
-                      <RichTextEditor.Undo />
-                      <RichTextEditor.Redo />
+                    <RichTextEditor.ControlsGroup className="controls ml-auto"> {/*Justfies this section to the right */}
+                      <RichTextEditor.Undo icon={() => <i className="fa fa-rotate-left text-xl"/>}/>
+                      <RichTextEditor.Redo icon={() => <i className="fa fa-rotate-right text-xl"/>}/>
                     </RichTextEditor.ControlsGroup>
                   </RichTextEditor.Toolbar>
                 }
-      
                 <RichTextEditor.Content />
               </RichTextEditor>
       
               {/* Only show the save button when value has been changed and editor has been loaded */}
-              { (!readOnly && editor && editor.getHTML() !== initialValue) &&
+              { (!readOnly && editor && editor.getHTML() !== lastEdited) &&
                 <button 
                 type="button" 
-                className="button-orange"
-                onClick={() => onValueSubmit(editor.getHTML())}>
-                  Save
+                className="button-orange absolute bottom-6 right-6 shadow-custom"
+                onClick={() => {
+                  setLastEdited(editor.getHTML()); //Remove save button to limit backend spam
+                  onValueSubmit(editor.getHTML());
+                }}>
+                  Save Content
                 </button>
               }
             </div>

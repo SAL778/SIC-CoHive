@@ -88,8 +88,8 @@ export default function EditProfile() {
 		  {isLoading ? (
 			<Loader />
 		  ) : (
-			<div className="flex flex-col">
-				<div className = "buttonToggleGroup w-16 flex gap-3 m-3 content-center">
+			<div className="flex flex-col gap-8">
+				<div className = "buttonToggleGroup w-auto flex gap-3 m-3 justify-end">
 					<button 
 					className = {`flex items-center gap-3 ${portfolioVisibility ? "button-orange" : ""}`}
 					onClick = {() => onUpdateVisibility(true)}
