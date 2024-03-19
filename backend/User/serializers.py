@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType, Flair_Roles
+from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType, Flair_Roles, AppLink
 from django.db import transaction
+
+class AppLinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppLink
+        fields = ['feedback_form_link', 'google_drive_link', 'google_calendar_link']
 
 class FlairRoleSerializer(serializers.ModelSerializer):
     class Meta:
