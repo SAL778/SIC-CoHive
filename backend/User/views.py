@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404, HttpResponse
 from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
-from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType
-from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer, AccessTypeSerializer
+from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType, AppLink
+from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer, AccessTypeSerializer, AppLinkSerializer
 from rest_framework import generics,status
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.http import HttpResponse
@@ -389,3 +389,11 @@ class FlairList(generics.CreateAPIView):
         else:
             return Response({'error': 'You do not have permission to create a flair.'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+class AppLinkList(generics.ListAPIView):
+    '''
+    get:
+    API view to retrieve the list of all app links.
+    '''
+    serializer_class = AppLinkSerializer
+    queryset = AppLink.objects.all()

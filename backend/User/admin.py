@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType, Flair_Roles
+from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType, Flair_Roles, AppLink
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 import csv
 from django.http import HttpResponse
@@ -58,3 +58,5 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(Flair_Roles)
+
+admin.site.register(AppLink)
