@@ -21,7 +21,8 @@ class Resources(models.Model):
     room_number = models.CharField(max_length=100, blank=True, null=True,help_text="Room number of the asset")
     type = models.CharField(max_length=100,choices=Type,help_text="Type of the asset",default='maintenance')
     access_type=models.ManyToManyField(AccessType,help_text="The access type for the resource")   
-       
+    image = models.URLField(max_length=100, blank=True, null=True,help_text="URL to the image of the asset")
+
     def __str__(self):
         return self.name
 

@@ -48,11 +48,12 @@ export_to_csv.short_description = 'Export to CSV'
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     fieldsets = UserAdmin.fieldsets + (
-        ('Basic Information', {'fields': ('roles', 'profileImage', 'portfolioVisibility', 'portfolio', 'accessType')}),
+        ('Basic Information', {'fields': ('roles', 'profileImage', 'portfolioVisibility', 'portfolio', 'accessType','flair_roles')}),
     )
     filter_horizontal = (
         "groups",
         "accessType",
+        'flair_roles'
     )
     actions = [export_to_csv]
 
