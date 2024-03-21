@@ -239,7 +239,7 @@ class ResourceListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        names = queryset.values_list('name', flat=True)
-        return Response(names)
+        names_and_ids = queryset.values('id', 'name')
+        return Response(list(names_and_ids))
     
     
