@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import logo from "../assets/sic.png";
 import Underlay from "../assets/Underlay.svg";
 import { Link, NavLink } from "react-router-dom";
+import { showNotification } from "@mantine/notifications";
+import Signout from "../Signout";
 
 // -----------------------------------------------------------------------------
 /**
@@ -69,8 +71,9 @@ function Navigation() {
 	const additionalLinks = [
 		{ content: "Profile", href: "/profile", icon: "fa-user-circle" },
 		{ content: "Contact", href: "/feedback", icon: "fa-paper-plane" },
-		{ content: "Sign Out", href: "/signout", icon: "fa-sign-out-alt" },
 	];
+
+	const signOut = { content: "Sign Out", href: "/signout", icon: "fa-sign-out-alt" }
 
 	// The active navigation item state and setter.
 	const [activeNavItem, setActiveNavItem] = useState(null);
@@ -78,58 +81,69 @@ function Navigation() {
 		setActiveNavItem(index);
 	};
 
-	// useEffect(() => {
-	// 	// Set initial position of the underlay on page load
-	// 	const underlay = document.querySelector(".nav-underlay");
-	// 	const activeNavItem = document.querySelector(".nav-item.active");
-	// 	if (underlay && activeNavItem) {
-	// 		underlay.style.top = `${activeNavItem.getBoundingClientRect().y}px`;
-	// 	}
-	// }, []); // Empty dependency array means this effect runs once on mount (load)
+	const [showModal, setShowModal] = useState(false)
 
 	return (
-		<div className="flex-none md:w-[282px] py-[30px] fixed h-full left-[30px] z-10">
-			<div className="flex h-full flex-col bg-white rounded-[10px] shadow-custom">
-				<Link
-					href="/"
-					className="mb-2 flex h-30 items-end rounded-[10px] bg-white p-4 justify-center"
-				>
-					<img
-						className="object-center"
-						src={logo}
-						alt="SIC logo"
-						width={250}
-						height={40}
-					/>
-				</Link>
-				<div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0">
-					{/* NOTE: commented out until the positioning is fixed */}
-					{/* <img src={Underlay} className="nav-underlay" /> */}
-					<div className="nav-container">
-						{objects.map((object, index) => (
-							<NavItem
-								key={object.content}
-								content={object.content}
-								href={object.href}
-								icon={object.icon}
-								onClick={() => handleClick(index)}
-							/>
-						))}
-					</div>
-					<div className="nav-container">
-						{additionalLinks.map((link, index) => (
-							<NavItem
-								key={link.content}
-								content={link.content}
-								href={link.href}
-								icon={link.icon}
-								onClick={() => handleClick(index)}
-							/>
-						))}
+		<>
+		{/* Navigation */}
+			<div className="flex-none md:w-[282px] py-[30px] fixed h-full left-[30px] z-10">
+				<div className="flex h-full flex-col bg-white rounded-[10px] shadow-custom">
+					<Link
+						href="/"
+						className="mb-2 flex h-30 items-end rounded-[10px] bg-white p-4 justify-center"
+					>
+						<img
+							className="object-center"
+							src={logo}
+							alt="SIC logo"
+							width={250}
+							height={40}
+						/>
+					</Link>
+					<div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0">
+						{/* NOTE: commented out until the positioning is fixed */}
+						{/* <img src={Underlay} className="nav-underlay" /> */}
+						<div className="nav-container">
+							{objects.map((object, index) => (
+								<>
+									<NavItem
+										key={object.content}
+										content={object.content}
+										href={object.href}
+										icon={object.icon}
+										onClick={() => handleClick(index)}
+									/>
+								</>
+							))}
+						</div>
+						<div className="nav-container">
+							{additionalLinks.map((link, index) => (
+								<NavItem
+									key={link.content}
+									content={link.content}
+									href={link.href}
+									icon={link.icon}
+									onClick={() => handleClick(index)}
+								/>
+							))}
+							<button
+								onClick = {() => setShowModal(true)}
+								className = "nav-item flex h-[65px] grow items-center justify-center gap-2 p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-6 md:py-3"
+							>
+								<i className="fa fa-sign-out-alt" style={{ fontSize: "20px", width: "30px", textAlign: "center" }}/>
+								Sign Out
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		{/* Signout */}
+			<Signout
+				opened = {showModal}
+				onClose = {() => setShowModal(false)}
+			/>
+
+		</>
 	);
 }
 // -----------------------------------------------------------------------------
