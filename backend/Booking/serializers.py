@@ -20,13 +20,20 @@ class BookingSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
 
-        print(data['start_time'])
+        print("date: ",data['start_time'])
+        print("time: ",timezone.localtime(timezone.now()))
 
         if data['start_time'] > data['end_time']:
             raise serializers.ValidationError("End time must be after start time.")
 
         if data['start_time'].minute % 15 != 0 or data['end_time'].minute % 15 != 0:
             raise serializers.ValidationError("Time must be in 15-minute intervals.")
+
+        if data['start_time'] < timezone.localtime(timezone.now()):
+            raise serializers.ValidationError("Start time must be in the future.")
+
+        if data['end_time'] < timezone.localtime(timezone.now()):
+            raise serializers.ValidationError("End time must be in the future.")
 
         # get booking objects that is in the same day and has the same resources
         overlapping_bookings = Booking.objects.filter(

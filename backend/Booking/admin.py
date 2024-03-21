@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.contrib.admin import DateFieldListFilter
 
 from .models import Resources, Booking
+from User.models import AccessType
 
-# Register your models here.
 @admin.register(Resources)
 class ResourcesAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'type')
