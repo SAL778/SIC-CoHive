@@ -25,11 +25,6 @@ class BookingTests(APITestCase):
             portfolioVisibility=True,
             profileImage="http://example.com/image.jpg",
         )
-        self.user.education.field_of_study = "Computer Science"
-        self.user.education.major = "Software Engineering"
-        self.user.education.minor = "Data Science"
-        self.user.education.save()
-        self.token = Token.objects.create(user=self.user)
 
         self.resource1 = Resources.objects.create(
             name="Test Room",
@@ -53,6 +48,7 @@ class BookingTests(APITestCase):
         self.resource1.save()
         self.resources2.access_type.add(self.accessType)
         self.resources2.save()
+        self.token = Token.objects.create(user=self.user)
 
     def test_create_booking(self):
         '''

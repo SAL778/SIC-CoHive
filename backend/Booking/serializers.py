@@ -62,20 +62,7 @@ class BookingSerializer(serializers.ModelSerializer):
             return user_info
         return {}
     
-    # # Removed for now, can add back if we have description
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     request = self.context.get("request")
-    #     user = None
-    #     try:
-    #         access_token = request.META['HTTP_AUTHORIZATION']
-    #         token_obj = Token.objects.get(key=access_token)
-    #         user = token_obj.user
-    #     except:
-    #         pass
-    #     if not instance.visibility and (user is None or not user.is_authenticated):
-    #         representation['description'] = None
-    #     return representation
+  
 
 
 class ResourcesSerializer(serializers.ModelSerializer):
@@ -87,7 +74,7 @@ class ResourcesSerializer(serializers.ModelSerializer):
         model = Resources
         fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings', 'access_type']
 
-    def get_bookings(self, obj):    
+    def get_bookings(self, obj):
         request = self.context.get("request")
         date = request.query_params.get('date')
         filter_date = None
@@ -97,4 +84,4 @@ class ResourcesSerializer(serializers.ModelSerializer):
             filter_date = timezone.make_aware(
                 datetime.datetime.strptime(date, "%Y-%m-%d").replace(hour=0, minute=0, second=0, microsecond=0))
         bookings = Booking.objects.filter(resources=obj, start_time__date=filter_date)
-        return BookingSerializer(bookings, many=True).data
+        return BookingSerializer(bookings, many=True,context={'request':request}).data

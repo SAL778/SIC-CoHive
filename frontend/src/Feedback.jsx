@@ -1,21 +1,28 @@
-import React from "react";
-// import { checkUserLoggedIn } from "./utils.js";
+import React, { useState, useEffect, useContext } from "react";
+import { httpRequest } from "./utils.js";
+import { HostContext } from "./App.jsx";
 
 function Feedback() {
+    const { host } = useContext(HostContext);
+    const [feedbackLink, setFeedbackLink] = useState("");
 
-	// checkUserLoggedIn();
+    useEffect(() => {
+        httpRequest({
+            endpoint: `${host}/applinks/`,
+            onSuccess: (data) => {
+                const feedbackLink = data[0]?.feedback_form_link || "";
+                setFeedbackLink(feedbackLink);
+            },
+        });
+    }, []);
 
-	return (
-		<div className="my-[30px] mx-auto">
-			<iframe
-				src="https://docs.google.com/forms/d/e/1FAIpQLSfK6d9aO-cOLS2mAmeYe7KdUHxZq9cq2i4H4mqdbrVE4dxTlw/viewform?usp=sf_link``d=true"
-				width="1000"
-				height="100%"
-			>
-				Loading…
-			</iframe>
-		</div>
-	);
+    return (
+        <div className="flex justify-center my-[30px] mx-auto">
+            {feedbackLink && (
+                <iframe src={feedbackLink} width="1000" height="1000">Loading...</iframe>
+            )}
+        </div>
+    );
 }
 
 export default Feedback;
