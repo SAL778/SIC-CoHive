@@ -128,7 +128,7 @@ function Navigation() {
 							))}
 							<button
 								onClick = {() => setShowModal(true)}
-								className = "nav-item flex h-[65px] grow items-center justify-center gap-2 p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-6 md:py-3"
+								className = "nav-item flex h-[65px] grow items-center justify-center gap-2 p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-6 md:py-3 w-100"
 							>
 								<i className="fa fa-sign-out-alt" style={{ fontSize: "20px", width: "30px", textAlign: "center" }}/>
 								Sign Out
