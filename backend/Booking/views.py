@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from .serializers import BookingSerializer, ResourcesSerializer
 from django.shortcuts import get_object_or_404
 from .models import Resources, Booking
-from .serializers import ResourcesSerializer, BookingSerializer
+from .serializers import ResourcesSerializer, BookingSerializer, BookingStatisticsSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 from User.views import get_user_from_token
@@ -16,7 +16,7 @@ from rest_framework.views import APIView
 from django.http import Http404
 from drf_yasg.utils import swagger_auto_schema
 from urllib.parse import unquote
-
+from datetime import timedelta
 # Create your views here.
 User = get_user_model()
 
@@ -237,9 +237,44 @@ class ResourceListView(generics.ListAPIView):
             return Resources.objects.filter(type=type)
         return Resources.objects.all()
 
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     names_and_ids = queryset.values('id', 'name')
+    #     return Response(list(names_and_ids))
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        names_and_ids = queryset.values('id', 'name')
-        return Response(list(names_and_ids))
+        names = queryset.values_list('name', flat=True)
+        return Response(list(names))
     
     
+
+class BookingAnalyticsView(APIView):
+    def get(self, request, format=None):
+        booking_duration=Booking.average_booking_duration()
+        total_minutes = round(booking_duration['average_duration'].total_seconds() / 60)
+        print(total_minutes)
+        
+        
+        analytics_data = {
+            'bookings_per_day': Booking.bookings_per_day(),
+            'booking_frequencies_by_resource': Booking.booking_frequencies_by_resource(),
+            'peak_booking_times': Booking.peak_booking_times(),
+            'average_booking_duration': total_minutes,
+        }
+        return Response(analytics_data)
+
+
+
+class BookingStatisticsView(APIView):
+    def get(self, request, *args, **kwargs):
+        serializer = BookingStatisticsSerializer(data=request.query_params)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            scope = data.get('scope', 'all')
+            year = data.get('year', timezone.now().year)  # Default to current year if not specified
+            month = data.get('month')
+            week = data.get('week')
+            stats = Booking.get_bookings_by_day_of_week(scope=scope, year=year, month=month, week=week)
+            return Response(stats)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

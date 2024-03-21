@@ -12,11 +12,12 @@ class BookingSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField("get_user")
     resources_name = serializers.CharField(source="resources.name", read_only=True)
     resource_type=serializers.CharField(source="resources.type", read_only=True)
+    resource_booking_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name','resource_type', 'user', 'title', 'visibility']
-        read_only_fields = ["id", "user", "resources_name","resource_type"]
+        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name','resource_type', 'user', 'title', 'visibility',"resource_booking_count"]
+        read_only_fields = ["id", "user", "resources_name","resource_type","resource_booking_count"]
 
     def validate(self, data):
 
@@ -69,7 +70,9 @@ class BookingSerializer(serializers.ModelSerializer):
             return user_info
         return {}
     
-  
+    def get_resource_booking_count(self, obj):
+        # Example: Count bookings for the same resource
+        return Booking.objects.filter(resources=obj.resources).count()
 
 
 class ResourcesSerializer(serializers.ModelSerializer):
@@ -92,3 +95,12 @@ class ResourcesSerializer(serializers.ModelSerializer):
                 datetime.datetime.strptime(date, "%Y-%m-%d").replace(hour=0, minute=0, second=0, microsecond=0))
         bookings = Booking.objects.filter(resources=obj, start_time__date=filter_date)
         return BookingSerializer(bookings, many=True,context={'request':request}).data
+
+
+
+
+class BookingStatisticsSerializer(serializers.Serializer):
+    scope = serializers.ChoiceField(choices=['all', 'week', 'month', 'year'], required=False, default='all')
+    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
+    month = serializers.IntegerField(required=False, min_value=1, max_value=12,default=timezone.now().month)
+    week = serializers.IntegerField(required=False, min_value=1, max_value=53)
