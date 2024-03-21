@@ -73,20 +73,18 @@ class FilterBookingsView(generics.ListAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
 
-    def get_queryset(self):
+    def get_queryset(self, start_time=None, end_time=None):
         queryset = super().get_queryset()
-        start_time = self.request.query_params.get('start_time')
-        end_time = self.request.query_params.get('end_time')
-        rooms = self.request.query_params.getlist('room')
-
+        # start_time = self.request.query_params.get('start_time')
+        # end_time = self.request.query_params.get('end_time')
+        resources = self.request.query_params.getlist('resource')
         if start_time:
             queryset = queryset.filter(start_time__gte=start_time)
         if end_time:
             queryset = queryset.filter(end_time__lte=end_time)
-        if rooms:
-            decoded_rooms = [unquote(room) for room in rooms]
-            queryset = queryset.filter(resources_name__in=decoded_rooms)
-            # queryset = queryset.filter(resources_name__in=rooms)
+        if resources:
+            decoded_resources = [unquote(resource) for resource in resources]
+            queryset = queryset.filter(resources__name__in=decoded_resources)
 
         return queryset
 
@@ -112,9 +110,8 @@ class FilterBookingsView(generics.ListAPIView):
                 datetime.datetime.strptime(end_time, "%Y-%m-%d").replace(hour=23, minute=59, second=59,
                                                                          microsecond=999999))
 
-        print(start_time, end_time)
-        return Response(self.get_serializer(Booking.objects.filter(start_time__gte=start_time, end_time__lte=end_time),
-                                            many=True).data)
+        get_filter = self.get_queryset(start_time, end_time)
+        return Response(self.get_serializer(get_filter, many=True).data)
 
 
 class UserBookingView(generics.ListCreateAPIView):
@@ -242,7 +239,7 @@ class ResourceListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        names = queryset.values_list('name', flat=True)
-        return Response(names)
+        names_and_ids = queryset.values('id', 'name')
+        return Response(list(names_and_ids))
     
     
