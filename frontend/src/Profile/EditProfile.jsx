@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { HostContext, UserContext } from "../App.jsx";
 import { httpRequest } from "../utils.js";
-import { Loader } from '@mantine/core';
+import { Loader, Tooltip } from '@mantine/core';
 import { TextEditor } from './TextEditor.jsx';
 import Portfolio from './PortfolioCarousel.jsx'
 import {ErrorNotification, SuccessNotification} from "../components/notificationFunctions.js";
 import ProfileHeader from "./ProfileHeader.jsx";
+import FlairList from "./Flairs.jsx";
 
 
 export default function EditProfile() {
@@ -107,6 +108,14 @@ export default function EditProfile() {
 				</div>
 	  
 				<ProfileHeader profileUser = {profileUser}/>
+
+				<FlairList flairs = {profileUser.flair_roles.map(type => type.role_name)} isEditable={true} />
+				<h2 className = "text-lg text-neutral-800 font-medium">Student Innovation Center Roles
+					<Tooltip label = "This is what the user does at the SIC and controls room access.">
+						<i className = "fa fa-info-circle ml-2"/>
+					</Tooltip>
+				</h2>
+				<FlairList flairs = {profileUser.accessType.map(type => type.name)} isEditable={false} pseudorandom/>
 	  
 			  {/* Sidebar carousel */}
 			  	<Portfolio portfolioItems = {portfolio.items} isEditable={true} />
