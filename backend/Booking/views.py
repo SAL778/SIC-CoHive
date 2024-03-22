@@ -77,15 +77,16 @@ class FilterBookingsView(generics.ListAPIView):
         queryset = super().get_queryset()
         start_time = self.request.query_params.get('start_time')
         end_time = self.request.query_params.get('end_time')
-        rooms = self.request.query_params.getlist('room')
+        resources = self.request.query_params.getlist('resource')
 
+        # print("hereeee", resources)
         if start_time:
             queryset = queryset.filter(start_time__gte=start_time)
         if end_time:
             queryset = queryset.filter(end_time__lte=end_time)
-        if rooms:
-            decoded_rooms = [unquote(room) for room in rooms]
-            queryset = queryset.filter(resources_name__in=decoded_rooms)
+        if resources:
+            decoded_resources = [unquote(resource) for resource in resources]
+            queryset = queryset.filter(resources__name__in=decoded_resources)
             # queryset = queryset.filter(resources_name__in=rooms)
 
         return queryset
@@ -113,8 +114,9 @@ class FilterBookingsView(generics.ListAPIView):
                                                                          microsecond=999999))
 
         print(start_time, end_time)
-        return Response(self.get_serializer(Booking.objects.filter(start_time__gte=start_time, end_time__lte=end_time),
-                                            many=True).data)
+        # return Response(self.get_serializer(Booking.objects.filter(start_time__gte=start_time, end_time__lte=end_time),
+                                            # many=True).data)
+        return Response(self.get_serializer(self.get_queryset(), many=True).data)
 
 
 class UserBookingView(generics.ListCreateAPIView):
