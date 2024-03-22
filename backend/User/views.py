@@ -5,6 +5,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from .models import CustomUser, Complete_Portfolio, PortfolioItem, AccessType, AppLink
 from .serializers import CustomUserSerializer, PortfolioItemSerializer, CompletePortfolioSerializer, AccessTypeSerializer, AppLinkSerializer
+from django.db.models import Q
 from rest_framework import generics,status
 from django.http import HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.http import HttpResponse
@@ -177,6 +178,7 @@ def user_list(request):
     return Response(serializer.data)
 
 
+
 # ONE USER
 @swagger_auto_schema(method='get', operation_description="Get a user by ID.", responses={200: CustomUserSerializer})
 @swagger_auto_schema(method='patch', operation_description="Update a user by ID.", request_body=CustomUserSerializer, responses={200: CustomUserSerializer, 400: 'Invalid data'})
@@ -205,7 +207,8 @@ def user_detail(request, pk):
         
         # user = get_object_or_404(CustomUser, pk=pk)
 
-    user = get_user_from_token(request)
+    # user = get_user_from_token(request)
+    user = get_object_or_404(CustomUser, pk=pk)
    # print("user",user)
     if request.method == 'GET':
         serializer = CustomUserSerializer(user)
