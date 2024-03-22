@@ -110,15 +110,10 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     //Gets all unique 15 minute intervals that are already booked (and therefore should be disabled)
     useEffect(() => {
         if (form?.values.resources_name) {
-            // THIS RELIES ON THE ASSET ID BEING THE INDEX OF THE ASSETS RETRIEVED
-            // THIS ____MUST____ BE REPLACED AT THE EARLIEST AVAILABILITY BECAUSE OF ITS
-            // FRAGILITY. A MORE ROBUST SOLUTION MUST BE FOUND.
+            const selectedAsset = availableAssets.find(asset => asset.name === form.values.resources_name)
 
-            // TODO: ADD AN ADDITIONAL CHECK TO MATCH THE DAY (NEEDS BACKEND SUPPORT)
-
-            const resourceId = availableAssets.indexOf(form.values.resources_name) + 1
             httpRequest({
-                endpoint: `${host}/bookings/columns/${resourceId}/`,
+                endpoint: `${host}/bookings/columns/${selectedAsset.id}/`,
                 onSuccess: (data) => {            //Unique 15 min intervals
                     if (data.bookings)  {
                         const todaysBookings = data.bookings.filter((booking) => isToday(new Date(booking.start_time)));
@@ -130,15 +125,12 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                         setDisabledTimeSlots(bookedTimeSlots)           //Store for future validation
 
                         console.dir(availableTimeSlots)
-                        setAvailableTimeSlots([...availableTimeSlots.map((timeSlot) => 
+                        setAvailableTimeSlots(availableTimeSlots.map((timeSlot) => (
                             bookedTimeSlots.includes(timeSlot) 
-                            ? {value: timeSlot, label: timeSlot}
+                            ? {value: timeSlot, label: timeSlot, disabled: true}
                             : {value: timeSlot, label: timeSlot, disabled: false}
-                        )]
-                        // ({
-                        //     value: timeSlot,
-                        //     ...(bookedTimeSlots.includes(timeSlot) && { disabled: true })
-                        // }))
+                            )
+                        )
                     );
                 }
                 }
@@ -182,7 +174,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                         <Select
                             label="Select an Asset"
                             placeholder="Pick an asset"
-                            data = {availableAssets}
+                            data = {availableAssets.map(asset => asset.name)}
                             searchable
                             withScrollArea={false}
                             styles={{ dropdown: { maxHeight: 140, overflowY: 'auto' } }}
@@ -209,8 +201,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="from"
-                            data={allTimeSlots}
-                            //data = {availableTimeSlots}
+                            //data={allTimeSlots}
+                            data = {availableTimeSlots}
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
