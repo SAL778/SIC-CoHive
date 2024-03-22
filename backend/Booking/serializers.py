@@ -104,3 +104,9 @@ class BookingStatisticsSerializer(serializers.Serializer):
     year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
     month = serializers.IntegerField(required=False, min_value=1, max_value=12,default=timezone.now().month)
     week = serializers.IntegerField(required=False, min_value=1, max_value=53)
+    
+    
+class BookingFrequencyFilterSerializer(serializers.Serializer):
+    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
+    month = serializers.IntegerField(required=False, min_value=1, max_value=12)
+    week = serializers.IntegerField(required=False, min_value=1, max_value=53)

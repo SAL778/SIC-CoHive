@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from .serializers import BookingSerializer, ResourcesSerializer
 from django.shortcuts import get_object_or_404
 from .models import Resources, Booking
-from .serializers import ResourcesSerializer, BookingSerializer, BookingStatisticsSerializer
+from .serializers import ResourcesSerializer, BookingSerializer, BookingStatisticsSerializer, BookingFrequencyFilterSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 from User.views import get_user_from_token
@@ -256,8 +256,6 @@ class BookingAnalyticsView(APIView):
         
         
         analytics_data = {
-            'bookings_per_day': Booking.bookings_per_day(),
-            'booking_frequencies_by_resource': Booking.booking_frequencies_by_resource(),
             'peak_booking_times': Booking.peak_booking_times(),
             'average_booking_duration': total_minutes,
         }
@@ -276,5 +274,22 @@ class BookingStatisticsView(APIView):
             week = data.get('week')
             stats = Booking.get_bookings_by_day_of_week(scope=scope, year=year, month=month, week=week)
             return Response(stats)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+class BookingFrequenciesView(APIView):
+    def get(self, request, *args, **kwargs):
+        serializer = BookingFrequencyFilterSerializer(data=request.query_params)
+        if serializer.is_valid():
+            data=serializer.validated_data
+            scope=data.get('scope','all')
+            year = serializer.validated_data.get('year', timezone.now().year)
+            month = serializer.validated_data.get('month')
+            week = serializer.validated_data.get('week')
+            
+            frequencies = Booking.booking_frequencies_by_resource(scope=scope,year=year, month=month, week=week)
+            print(year)
+            return Response(frequencies)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

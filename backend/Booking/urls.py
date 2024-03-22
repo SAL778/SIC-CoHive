@@ -12,6 +12,8 @@ urlpatterns = [
     path('columns/<int:pk>/', views.ColumnView.as_view(), name='column-detail'),
     path('<int:pk>/', views.ViewBookingView.as_view(), name='booking-detail'),
     path('resources/filter', views.ResourceListView.as_view(), name='resource-list'),
-    path('analytics/bookings/', views.BookingAnalyticsView.as_view(), name='booking-analytics'),
-    path('booking-statistics/', views.BookingStatisticsView.as_view(), name='booking-statistics'),
+    path('analytics/', views.BookingAnalyticsView.as_view(), name='booking-analytics'),
+    path('statistics/', views.BookingStatisticsView.as_view(), name='booking-statistics'),
+    path('frequencies/', views.BookingFrequenciesView.as_view(), name='booking-frequencies'),
 ]
+

@@ -95,8 +95,23 @@ class Booking(models.Model):
         return readable_bookings
     
     
-    def booking_frequencies_by_resource():
-        return Booking.objects.values('resources__name').annotate(count=Count('resources')).order_by('-count')
+    def booking_frequencies_by_resource(scope="all",year=None, month=None, week=None):
+        bookings = Booking.objects.all()
+        
+        if year:
+            bookings = bookings.filter(start_time__year=year)
+            print(bookings)
+        if month:
+            bookings = bookings.filter(start_time__month=month)
+        
+        if week:
+            # Assuming you have a similar method to `get_week_of_month_range` for calculating the week range
+            start_of_week, end_of_week = Booking.get_week_of_month_range(int(year), int(month), int(week))
+            bookings = bookings.filter(start_time__date__range=(start_of_week, end_of_week))
+
+        frequencies = bookings.values('resources__name').annotate(count=Count('id')).order_by('-count')
+        print(frequencies)
+        return frequencies
     
     
     def peak_booking_times():
