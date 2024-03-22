@@ -11,21 +11,30 @@ export default function FlairList({flairs, isEditable, pseudorandom = false}) {
     const [renderedFlairs, setRenderedFlairs] = useState(flairs) //The live list of flairs
     const [pillText, setPillText] = useState("")
 
-    const removeFlair = (indexToRemove) => {
-        //Update list
-        setRenderedFlairs(prevFlairs => prevFlairs.filter((_, index) => index !== indexToRemove))
+    //Send PATCH to backend
+    useEffect(() => {
+        if (isEditable) {
+            httpRequest({
+                endpoint: `${host}/users/${currentUser?.id}/`,
+                method: 'PATCH',
+                body: JSON.stringify({flair_roles: renderedFlairs.map(flair => ({role_name: flair}))}),    //Access type roles are not user-editable
+                onSuccess: () => {
+                    setPillText("") //Reset the pill text
+                }
+            })
+        }
+    }, [renderedFlairs])
 
-        //Patch to backend
-        httpRequest({
-            endpoint: `${host}/users/${currentUser.id}/`,
-            method: 'PATCH',
-            body: JSON.stringify({flair_roles: renderedFlairs}),    //Access type roles are not user-editable
-        })
+    const removeFlair = (indexToRemove) => {
+        //Update list with deleted item
+        console.log(prevFlairs => prevFlairs.filter((_, index) => index !== indexToRemove))
+        setRenderedFlairs(prevFlairs => prevFlairs.filter((_, index) => index !== indexToRemove))        
     }
 
     const handleAdd = (value) => {
+        //Update list with added item
+        console.log([...renderedFlairs, value])
         setRenderedFlairs([...renderedFlairs, value])
-        setPillText("")
     }
 
     return (

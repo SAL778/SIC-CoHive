@@ -30,26 +30,26 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
     //Delete portfolio item
     const onSubmitModalDelete = () => {
         //Send to backend
-        // httpRequest({
-        //     endpoint: `${host}/users/portfolio/items/${clickedItem.id}`,
-        //     method: 'DELETE',
-        //     onSuccess: () => {
-        //         console.log('deleted')
-        //         new SuccessNotification(
-        //             "Item deleted",
-        //             `${clickedItem.title} was succesfully deleted!`
-        //         ).show();
-        //         setCurrentPortfolioList(currentPortfolioList.filter(item => item.id !== clickedItem.id));
-        //         setClickedItem(null)
-        //     },
-        //     onFailure: () => {
-        //         new ErrorNotification(
-        //             "Item not deleted",
-        //             `${clickedItem.title} could not be deleted`
-        //         )
-        //         setClickedItem(null)
-        //     }
-        // })
+        httpRequest({
+            endpoint: `${host}/users/portfolio/items/${clickedItem.id}`,
+            method: 'DELETE',
+            onSuccess: () => {
+                console.log('deleted')
+                new SuccessNotification(
+                    "Item deleted",
+                    `${clickedItem.title} was succesfully deleted!`
+                ).show();
+                setCurrentPortfolioList(currentPortfolioList.filter(item => item.id !== clickedItem.id));
+                setClickedItem(null)
+            },
+            onFailure: () => {
+                new ErrorNotification(
+                    "Item not deleted",
+                    `${clickedItem.title} could not be deleted`
+                )
+                setClickedItem(null)
+            }
+        })
         setCurrentPortfolioList(currentPortfolioList.filter(item => item.id !== clickedItem.id));
         modalClose()
     }
@@ -90,15 +90,15 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
             onSuccess: () => {
                 new SuccessNotification(
                     "Item added",
-                    `${clickedItem.title} was succesfully added!`
+                    `${addedItem.title} was succesfully added!`
                 ).show();
-                setCurrentPortfolioList(...currentPortfolioList, addedItem)
+                setCurrentPortfolioList([...currentPortfolioList, addedItem])
                 modalClose()
             },
             onFailure: () => {
                 new ErrorNotification(
                     "Item not edited",
-                    `${clickedItem.title} could not be edited!`
+                    `${addedItem.title} could not be edited!`
                 )
                 modalClose()
             }

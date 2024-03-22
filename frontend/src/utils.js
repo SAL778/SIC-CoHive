@@ -48,11 +48,14 @@ export async function httpRequest({
         
         const res = await fetch(endpoint, options)
 
-        if (res.ok) {
+        if (res.status == 204) {
+            //No data to operate on.
+            onSuccess()
+        }
+        else if (res.ok) {
             res.json().then(data => {
                 onSuccess(data)
             });
-            
         }
         else {
             onFailure(res)
