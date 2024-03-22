@@ -25,7 +25,6 @@ function BookingListView({
 	useEffect(() => {
 		let endpoint = `${host}/bookings/filter?`;
 		const queryParams = new URLSearchParams();
-		
 
 		if (bookingFilter === "My Bookings" && currentUser) {
 			// Fetch only the current user's bookings
@@ -48,11 +47,12 @@ function BookingListView({
 			},
 		});
 	}, [host, currentUser, bookingFilter, selectedDates, selectedAssets]);
-
+	
+	//Filters based on types
 	const filteredAssets =
 		selectedAssets.length > 0
-			? assets.filter((asset) => selectedAssets.includes(asset.resources_name))
-			: assets;
+			? assets.filter((asset) => (selectedAssets.includes(asset.resources_name) && asset.resource_type == assetType))
+			: assets.filter((asset) => (asset.resource_type == assetType));
 
 	const dateHeaders = getUniqueDateHeaders(
 		filteredAssets.map((asset) => asset.start_time)
