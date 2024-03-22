@@ -24,7 +24,7 @@ function Bookings() {
 	const [currentDay, setCurrentDay] = useState(new Date());
 
 	const [selectedDates, setSelectedDates] = useState([null, null]);
-	const [selectedRooms, setSelectedRooms] = useState([]);
+	const [selectedAssets, setselectedAssets] = useState([]);
 	const [bookingFilter, setBookingFilter] = useState("All Bookings");
 
 	const { host } = useContext(HostContext);
@@ -40,12 +40,12 @@ function Bookings() {
 		selectedFilters,
 		fromDate,
 		toDate,
-		selectedRooms,
+		selectedAssets,
 		bookingFilter: updatedBookingFilter,
 	}) => {
 		setFilters(selectedFilters);
 		setSelectedDates([fromDate, toDate]);
-		setSelectedRooms(selectedRooms);
+		setselectedAssets(selectedAssets);
 		setBookingFilter(updatedBookingFilter);
 	};
 
@@ -203,7 +203,7 @@ function Bookings() {
 						assetType={currentAssetViewIsRoom ? "room" : "equipment"}
 						filters={filters}
 						selectedDates={selectedDates}
-						selectedRooms={selectedRooms}
+						selectedAssets={selectedAssets}
 						bookingFilter={bookingFilter}
 					/>
 
@@ -212,7 +212,7 @@ function Bookings() {
 						onFilterChange={handleFilterChange}
 						assetType={currentAssetViewIsRoom ? "room" : "equipment"}
 						selectedDates={selectedDates}
-						selectedRooms={selectedRooms}
+						selectedAssets={selectedAssets}
 					/>
 				</div>
 			) : (

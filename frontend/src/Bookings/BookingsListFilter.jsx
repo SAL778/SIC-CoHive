@@ -6,25 +6,25 @@ function Filter({ onFilterChange, assetType }) {
 	const [selectedFilters, setSelectedFilters] = useState({});
 	const [fromDate, setFromDate] = useState(null);
 	const [toDate, setToDate] = useState(null);
-	const [selectedRooms, setSelectedRooms] = useState([]);
+	const [selectedAssets, setselectedAssets] = useState([]);
 	const [bookingFilter, setBookingFilter] = useState("All Bookings");
 
 	// Fetch all the rooms and initialize the filters from the database
 	useEffect(() => {
-		fetch("http://127.0.0.1:8000/bookings/resources/filter?type=room")
+		fetch(`http://127.0.0.1:8000/bookings/resources/filter?type=${assetType}`)
 			.then((response) => response.json())
 			.then((data) => {
 				// Initialize all filters to false
 				const initialFilters = {};
 				data.forEach((filterObj) => {
-					initialFilters[filterObj] = false;
+					initialFilters[filterObj.name] = false;
 				});
 				setSelectedFilters(initialFilters);
 			})
 			.catch((error) => {
 				console.error("Error:", error);
 			});
-	}, []);
+	}, [assetType]);
 
 	// Notify parent that the filters have changed for the sekected dates and rooms
 	useEffect(() => {
@@ -36,10 +36,10 @@ function Filter({ onFilterChange, assetType }) {
 				? new Date(fromDate).toISOString().split("T")[0]
 				: null,
 			toDate: toDate ? new Date(toDate).toISOString().split("T")[0] : null,
-			selectedRooms,
+			selectedAssets,
 			bookingFilter,
 		});
-	}, [selectedFilters, fromDate, toDate, selectedRooms, bookingFilter]);
+	}, [selectedFilters, fromDate, toDate, selectedAssets, bookingFilter]);
 
 	// New handler for toggling filters
 	const toggleFilter = (filter) => {
@@ -49,9 +49,9 @@ function Filter({ onFilterChange, assetType }) {
 		});
 
 		if (!selectedFilters[filter]) {
-			setSelectedRooms([...selectedRooms, filter]);
+			setselectedAssets([...selectedAssets, filter]);
 		} else {
-			setSelectedRooms(selectedRooms.filter((room) => room !== filter));
+			setselectedAssets(selectedAssets.filter((room) => room !== filter));
 		}
 	};
 
