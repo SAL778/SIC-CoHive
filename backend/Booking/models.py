@@ -4,12 +4,16 @@ from datetime import datetime
 from django.utils import timezone
 from User.models import AccessType
 from django.db.models import Count, Avg, ExpressionWrapper, F, fields
-from django.db.models.functions import TruncDay, ExtractHour
+from django.db.models.functions import TruncDay, ExtractHour,ExtractMinute
 
 from django.db.models.functions import ExtractWeekDay
 from django.utils import timezone
 from django.db.models.functions import ExtractWeek, ExtractMonth
 from datetime import datetime, timedelta
+from django.db.models.expressions import RawSQL
+from collections import defaultdict
+from collections import Counter
+import heapq
 # Create your models here.
 class Resources(models.Model):
     Type=[
@@ -113,14 +117,57 @@ class Booking(models.Model):
         print(frequencies)
         return frequencies
     
-    
-    def peak_booking_times():
-        return Booking.objects.annotate(hour=ExtractHour('start_time')).values('hour').annotate(count=Count('id')).order_by('-count')[:1]
-    
-    
-    def average_booking_duration():
-        output=Booking.objects.annotate(duration=ExpressionWrapper(F('end_time') - F('start_time'), output_field=fields.DurationField())).aggregate(average_duration=Avg('duration'))
-        return output
+    def peak_booking_times(scope="all",year=None, month=None, week=None):
+        bookings=Booking.objects.all()
+        
+        if year:
+            print("year:",year)
+            bookings = bookings.filter(start_time__year=year)
+            print(bookings)
+        if month:
+            print("month:",month)
+            bookings = bookings.filter(start_time__month=month)
+            print(bookings)
+        if week:
+            print("week:",week)
+            start_of_week, end_of_week = Booking.get_week_of_month_range(int(year), int(month), int(week))
+            bookings = bookings.filter(start_time__date__range=(start_of_week, end_of_week))
+            print(bookings)
+            
+        bookings=bookings.annotate(start_hour=ExtractHour('start_time'), start_minute=ExtractMinute('start_time'), end_hour=ExtractHour('end_time'), end_minute=ExtractMinute('end_time'))
+        print(bookings)
+        time_slots = defaultdict(list)
+        for booking in bookings:
+            start = f"{booking.start_hour}:{str(booking.start_minute).zfill(2)}"
+            end = f"{booking.end_hour}:{str(booking.end_minute).zfill(2)}"
+            time_slots[start].append(end)
+        peak_times = sorted(time_slots.keys(), key=lambda x: len(time_slots[x]), reverse=True)[:3]
+        result = []
+        for start in peak_times:
+            # Find the most common end time for each start time slot
+            most_common_end = Counter(time_slots[start]).most_common(1)[0][0]
+            count = len(time_slots[start])
+            result.append(f"{start} to {most_common_end} with {count} bookings")
+        return result
+    def average_booking_duration(scope="all",year=None, month=None, week=None):
+        if year:
+            bookings = Booking.objects.filter(start_time__year=year)
+        if month:
+            bookings = Booking.objects.filter(start_time__month=month)
+        if week:
+            start_of_week, end_of_week = Booking.get_week_of_month_range(int(year), int(month), int(week))
+            bookings = Booking.objects.filter(start_time__date__range=(start_of_week, end_of_week))
+            
+        
+        bookings = bookings.annotate(duration=ExpressionWrapper(F('end_time') - F('start_time'), output_field=fields.DurationField()))
+        print(bookings)
+        print("kannan")
+        for booking in bookings:
+            print(f"Booking ID: {booking.id}, Duration: {booking.duration}")
+
+        avg_duration = bookings.aggregate(avg_duration=Avg('duration'))
+        return avg_duration
+        
 
     
     

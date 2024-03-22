@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from .serializers import BookingSerializer, ResourcesSerializer
 from django.shortcuts import get_object_or_404
 from .models import Resources, Booking
-from .serializers import ResourcesSerializer, BookingSerializer, BookingStatisticsSerializer, BookingFrequencyFilterSerializer
+from .serializers import ResourcesSerializer, BookingSerializer, BookingStatisticsSerializer, BookingFrequencyFilterSerializer, AverageBookingDurationSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 from User.views import get_user_from_token
@@ -248,22 +248,25 @@ class ResourceListView(generics.ListAPIView):
     
     
 
-class BookingAnalyticsView(APIView):
+class AverageBookingView(APIView):
     def get(self, request, format=None):
-        booking_duration=Booking.average_booking_duration()
-        total_minutes = round(booking_duration['average_duration'].total_seconds() / 60)
-        print(total_minutes)
-        
-        
-        analytics_data = {
-            'peak_booking_times': Booking.peak_booking_times(),
-            'average_booking_duration': total_minutes,
-        }
-        return Response(analytics_data)
+        serializer = AverageBookingDurationSerializer(data=request.query_params)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            scope = data.get('scope', 'all')
+            year = data.get('year', timezone.now().year)
+            month = data.get('month')
+            week = data.get('week')
+            stats = Booking.average_booking_duration(scope=scope, year=year, month=month, week=week)
+            print(stats)
+            total_minutes = round(stats['avg_duration'].total_seconds() / 60)
+            return Response({"average_duration": f"{total_minutes} minutes"})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
-class BookingStatisticsView(APIView):
+class BookingDaysView(APIView):
     def get(self, request, *args, **kwargs):
         serializer = BookingStatisticsSerializer(data=request.query_params)
         if serializer.is_valid():
@@ -273,6 +276,7 @@ class BookingStatisticsView(APIView):
             month = data.get('month')
             week = data.get('week')
             stats = Booking.get_bookings_by_day_of_week(scope=scope, year=year, month=month, week=week)
+            
             return Response(stats)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -291,5 +295,22 @@ class BookingFrequenciesView(APIView):
             frequencies = Booking.booking_frequencies_by_resource(scope=scope,year=year, month=month, week=week)
             print(year)
             return Response(frequencies)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+        
+class PeakBookingHours(APIView):
+    def get(self, request, *args, **kwargs):
+        serializer = BookingFrequencyFilterSerializer(data=request.query_params)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            scope = data.get('scope', 'all')
+            year = data.get('year', timezone.now().year)
+            month = data.get('month')
+            week = data.get('week')
+            
+            peak_times = Booking.peak_booking_times(scope=scope,year=year, month=month, week=week)
+            return Response(peak_times)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
