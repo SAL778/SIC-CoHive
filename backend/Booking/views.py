@@ -237,14 +237,14 @@ class ResourceListView(generics.ListAPIView):
             return Resources.objects.filter(type=type)
         return Resources.objects.all()
 
-    # def list(self, request, *args, **kwargs):
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     names_and_ids = queryset.values('id', 'name')
-    #     return Response(list(names_and_ids))
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        names = queryset.values_list('name', flat=True)
-        return Response(list(names))
+        names_and_ids = queryset.values('id', 'name')
+        return Response(list(names_and_ids))
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     names = queryset.values_list('name', flat=True)
+    #     return Response(list(names))
     
     
 
