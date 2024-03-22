@@ -4,7 +4,7 @@ import { NavigationContext } from "./App.jsx";
 import { getCookieValue } from "./utils.js";
 import { Modal } from "@mantine/core";
 
-const Signout = ({opened, onClose}) => {
+const Signout = ({ opened, onClose }) => {
 	// checkUserLoggedIn();
 
 	const navigate = useNavigate();
@@ -52,10 +52,7 @@ const Signout = ({opened, onClose}) => {
 					Are you sure you want to sign out?
 				</p>
 				<div className="flex justify-end gap-4">
-					<button
-						onClick={onClose}
-						className="button-grey-hover"
-					>
+					<button onClick={onClose} className="button-grey-hover">
 						Cancel
 					</button>
 					<button onClick={handleSignout} className="button-orange">
