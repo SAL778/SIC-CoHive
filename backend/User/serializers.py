@@ -25,7 +25,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
        # fields = '__all__'
-        fields = ["id", "first_name", "last_name", "email","roles", "is_staff","portfolioVisibility","profileImage","portfolio","accessType","flair_roles"]
+        fields = ["id", "first_name", "last_name", "email", "is_staff","portfolioVisibility","profileImage","portfolio","accessType","flair_roles","education"]
         read_only_fields = ["id","is_staff","portfolio","email","accessType"]
         
     def create(self, validated_data):
@@ -46,6 +46,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.portfolioVisibility = validated_data.get('portfolioVisibility', instance.portfolioVisibility)
         instance.profileImage = validated_data.get('profileImage', instance.profileImage)
+        instance.education = validated_data.get('education', instance.education)
         instance.save()
 
         if incoming_roles_data is not None:
