@@ -5,7 +5,7 @@ import { UserContext } from "../App.jsx";
  * A component that returns the render of a list item to be displayed.
  * @param {Object} asset - The object representation of an asset (room or equipment)
  */
-export function AssetComponent({ asset, onItemClick }) {
+export function BookingListComponent({ asset, onItemClick }) {
 	const { currentUser } = useContext(UserContext);
 
 	const greyOut = !asset.visibility && currentUser?.id != asset?.booker?.id;

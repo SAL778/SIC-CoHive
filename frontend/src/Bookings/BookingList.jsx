@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { HostContext, UserContext } from "../App.jsx";
 import { Loader, isOptionsGroup } from "@mantine/core";
 import { httpRequest } from "../utils.js";
-import { AssetComponent } from "./AssetComponent.jsx";
+import { BookingListComponent } from "./BookingListComponent.jsx";
 
 /**
  * A component that returns the render of a list view.
@@ -17,7 +17,7 @@ function BookingListView({
 	selectedDates,
 	selectedAssets,
 	bookingFilter, // all bookings or my bookings
-	isUpdated //Re-render
+	isUpdated, //Re-render
 }) {
 	const { host } = useContext(HostContext);
 	const { currentUser } = useContext(UserContext); // Current logged-in user
@@ -38,7 +38,7 @@ function BookingListView({
 			selectedAssets.forEach((asset) => queryParams.append("resource", asset));
 		}
 
-		console.log(endpoint + queryParams.toString())
+		console.log(endpoint + queryParams.toString());
 
 		httpRequest({
 			endpoint: endpoint + queryParams.toString(),
@@ -48,13 +48,24 @@ function BookingListView({
 				setIsLoading(false);
 			},
 		});
-	}, [host, currentUser, bookingFilter, selectedDates, selectedAssets, isUpdated]);
-	
+	}, [
+		host,
+		currentUser,
+		bookingFilter,
+		selectedDates,
+		selectedAssets,
+		isUpdated,
+	]);
+
 	//Filters based on types
 	const filteredAssets =
 		selectedAssets.length > 0
-			? assets.filter((asset) => (selectedAssets.includes(asset.resources_name) && asset.resource_type == assetType))
-			: assets.filter((asset) => (asset.resource_type == assetType));
+			? assets.filter(
+					(asset) =>
+						selectedAssets.includes(asset.resources_name) &&
+						asset.resource_type == assetType
+			  )
+			: assets.filter((asset) => asset.resource_type == assetType);
 
 	const dateHeaders = getUniqueDateHeaders(
 		filteredAssets.map((asset) => asset.start_time)
@@ -74,7 +85,7 @@ function BookingListView({
 									asset.start_time.toDateString() === dateHeader.toDateString()
 							)
 							.map((asset) => (
-								<AssetComponent
+								<BookingListComponent
 									key={asset.id}
 									asset={asset}
 									onItemClick={onItemClick}
