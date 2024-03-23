@@ -29,6 +29,10 @@ dist-ssr
 # local env files
 .env*.local
 
+
+#credentials
+credentials
+
 # vercel
 .vercel
 
