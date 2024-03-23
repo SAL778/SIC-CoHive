@@ -86,10 +86,12 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             date: (value) => {
                 const today = new Date();
                 today.setHours(0, 0, 0 ,0) //Rewind to very beginning of the day
-
-                value <= today     //Booking cannot be from yesterday backwards
+                
+                return (
+                    value <= today     //Booking cannot be from yesterday backwards
                     ? 'Chosen date has already passed'
                     : null
+                )
             },
         },
 
