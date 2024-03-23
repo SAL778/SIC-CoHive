@@ -201,7 +201,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="from"
-                            //data={allTimeSlots}
+                            // data={allTimeSlots}
                             data = {availableTimeSlots}
                             searchable
                             withAsterisk

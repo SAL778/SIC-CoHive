@@ -16,6 +16,7 @@ function BookingListView({
 	selectedDates,
 	selectedAssets,
 	bookingFilter, // all bookings or my bookings
+	isUpdated //Re-render
 }) {
 	const { host } = useContext(HostContext);
 	const { currentUser } = useContext(UserContext); // Current logged-in user
@@ -46,7 +47,7 @@ function BookingListView({
 				setIsLoading(false);
 			},
 		});
-	}, [host, currentUser, bookingFilter, selectedDates, selectedAssets]);
+	}, [host, currentUser, bookingFilter, selectedDates, selectedAssets, isUpdated]);
 	
 	//Filters based on types
 	const filteredAssets =
