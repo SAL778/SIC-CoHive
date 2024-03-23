@@ -130,7 +130,7 @@ function Filter({ onFilterChange, assetType }) {
 					/>
 
 					<div style={{ margin: "10px 0 5px 0px" }}>
-						<strong>Rooms:</strong>
+						<strong>{assetType == "room" ? "Rooms" : "Equipment"}</strong>
 					</div>
 					<div className="filters">
 						{Object.entries(selectedFilters).map(

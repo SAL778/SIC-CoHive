@@ -7,18 +7,15 @@ import '../components/Forms/form.css';
 
 export default function DateSelector({currentDate, onSetDate}) {
 
-    const [opened, {toggle}] = useDisclosure(false);
+    const [opened, {open, close}] = useDisclosure(false);
 
     return (
         <Popover
         position = "bottom"
-        opened = {opened}
         trapFocus
-        onMouseLeave = {close}
-        // width = "target"
         >
             <Popover.Target>
-                {getDisplayDate({date: currentDate, onShow: toggle, isExpanded: opened})}
+                {getDisplayDate({date: currentDate, onShow: open, isExpanded: opened})}
             </Popover.Target>
             <Popover.Dropdown>
                 <DatePicker

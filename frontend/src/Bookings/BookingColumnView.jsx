@@ -13,7 +13,7 @@ import { Loader } from "@mantine/core";
  * @param {date} currentDate - A string that specifies which day to get the bookings for
  * @returns 
  */
-export default function ColumnView({onBookingEdit, assetType, currentDate}) {
+export default function ColumnView({onBookingEdit, assetType, currentDate, isUpdated}) {
 	//const [userData, setUserData] = useState(null);
 	const { host } = useContext(HostContext);
 
@@ -30,7 +30,7 @@ export default function ColumnView({onBookingEdit, assetType, currentDate}) {
 				}, 150);
 			}
 		});
-	}, [assetType, currentDate]);
+	}, [assetType, currentDate, isUpdated]);
 
 	return (
 		<>

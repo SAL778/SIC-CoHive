@@ -18,6 +18,7 @@ import { getCookieValue } from "./utils.js";
 
 function Bookings() {
 	// checkUserLoggedIn();
+	const [isUpdated, setIsUpdated] = useState(0)
 	const [availableRooms, setAvailableRooms] = useState([]);
 	const [availableEquipment, setAvailableEquipment] = useState([]);
 	const [currentAssetViewIsRoom, setCurrentAssetViewIsRoom] = useState(true);
@@ -110,6 +111,7 @@ function Bookings() {
 				body: JSON.stringify(bookingInfo),
 				onSuccess: () => {
 					console.log("Success");
+					setIsUpdated(isUpdated + 1); //Trigger the re-render
 					new SuccessNotification(
 						"Booking modified",
 						`${bookingInfo.resources_name} was succesfully edited!`
@@ -133,6 +135,7 @@ function Bookings() {
 				body: JSON.stringify(bookingInfo),
 				onSuccess: () => {
 					console.log("Success");
+					setIsUpdated(isUpdated + 1); //Trigger the re-render
 					new SuccessNotification(
 						"Booking added",
 						`${bookingInfo.resources_name} was succesfully booked!`
@@ -161,6 +164,7 @@ function Bookings() {
 			method: "DELETE",
 			onSuccess: () => {
 				console.log("Success");
+				setIsUpdated(isUpdated + 1)
 				new SuccessNotification(
 					"Booking deleted",
 					`${bookingInfo.resources_name} was succesfully deleted!`
@@ -205,6 +209,7 @@ function Bookings() {
 						selectedDates={selectedDates}
 						selectedAssets={selectedAssets}
 						bookingFilter={bookingFilter}
+						isUpdated={isUpdated} //Triggers re-render
 					/>
 
 					<BookingsListFilter
@@ -224,6 +229,7 @@ function Bookings() {
 							?.toLocaleString("en-CA", { timeZone: "America/Edmonton" })
 							.split(",")[0]
 					}
+					isUpdated={isUpdated}
 				/>
 			)}
 
@@ -243,7 +249,7 @@ function Bookings() {
 					currentDate={currentDay}
 					availableAssets={
 						currentAssetViewIsRoom ? availableRooms : availableEquipment
-					} //TODO: Fill this in
+					}
 					onSubmit={onModalSubmitBooking}
 					onClose={onModalCloseBooking}
 					onDelete={onModalDeleteBooking}
