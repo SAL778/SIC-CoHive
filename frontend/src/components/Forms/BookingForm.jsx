@@ -225,7 +225,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                         />
                     </div>
                     {/* If the currentBooking matches the currentUser, show the visibility toggle */}
-                    {   currentUser.id == form?.values.user?.id &&
+                    {   currentUser?.id == form?.values.user?.id &&
                         <Checkbox
                             label = "Display booking details publicly"
                             color = "rgba(234, 88, 12, 1)"
