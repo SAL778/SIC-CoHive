@@ -1,7 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import EventsList from "./components/EventsList";
+import DateSelector from "./components/DateSelector";
 
 function Events() {
-	const fetchAndLogEvents = async () => {
+	const [currentDate, setCurrentDate] = useState(new Date());
+	const [eventsData, setEventsData] = useState([]);
+
+	const fetchEvents = async (selectedDate) => {
 		try {
 			const icalUrl =
 				"https://calendar.google.com/calendar/ical/6d3dcedc29c2a223c343cce8ec9ed5f309fd197f0805cb7f4bd79852d304d57c%40group.calendar.google.com/public/basic.ics";
@@ -11,7 +16,11 @@ function Events() {
 			const data = await response.text();
 
 			const events = parseICalData(data);
-			console.log(events);
+			// Filter events for the selected date
+			const filteredEvents = events.filter((event) =>
+				isSameDay(new Date(event.start), selectedDate)
+			);
+			setEventsData(filteredEvents);
 		} catch (error) {
 			console.error("Failed to fetch events:", error);
 		}
@@ -19,7 +28,9 @@ function Events() {
 
 	const parseICalData = (data) => {
 		const eventRegex = /BEGIN:VEVENT(.+?)END:VEVENT/gs;
-		const detailRegex = /(SUMMARY|DTSTART|DTEND|LOCATION):(.+)/g;
+		// const detailRegex = /(SUMMARY|DTSTART|DTEND|LOCATION):(.+)/g;
+		const detailRegex =
+			/(SUMMARY|DTSTART|DTEND|LOCATION):([\s\S]*?)(?=(?:\r?\n[A-Z]+:|\r?\n$))/g;
 		const events = [];
 
 		let eventMatch;
@@ -34,7 +45,7 @@ function Events() {
 
 		return events.map((event) => ({
 			title: event.SUMMARY,
-			location: event.LOCATION || null,
+			location: event.LOCATION ? event.LOCATION.split("\\")[0] : null, // only the building name or null
 			start: parseDateTime(event.DTSTART),
 			end: parseDateTime(event.DTEND),
 			date: parseDayDate(event.DTSTART),
@@ -42,7 +53,7 @@ function Events() {
 	};
 
 	const parseDateTime = (icalDate) => {
-		// Assuming the format is always like: 20240320T220000Z
+		// format: 20240320T220000Z
 		const date = new Date(
 			icalDate.substring(0, 4) +
 				"-" +
@@ -60,7 +71,6 @@ function Events() {
 	};
 
 	const parseDayDate = (icalDate) => {
-		// Extracting and formatting the day and date
 		const date = new Date(
 			icalDate.substring(0, 4) +
 				"-" +
@@ -82,8 +92,21 @@ function Events() {
 		});
 	};
 
+	const isSameDay = (date1, date2) => {
+		return (
+			date1.getDate() === date2.getDate() &&
+			date1.getMonth() === date2.getMonth() &&
+			date1.getFullYear() === date2.getFullYear()
+		);
+	};
+
+	const handleDateChange = (selectedDate) => {
+		setCurrentDate(selectedDate);
+		fetchEvents(selectedDate);
+	};
+
 	useEffect(() => {
-		fetchAndLogEvents();
+		fetchEvents(currentDate);
 	}, []);
 
 	return (
@@ -96,6 +119,14 @@ function Events() {
 					style={{ width: "100%", height: "1800px", border: "none" }}
 					data-cy="calendar-embed-iframe"
 				></iframe>
+			</div>
+			<div className="w-fit min-w-[250px]">
+				<DateSelector onSetDate={handleDateChange} currentDate={currentDate} />
+			</div>
+			<div className="event-list">
+				{eventsData.map((event, index) => (
+					<EventsList key={index} event={event} />
+				))}
 			</div>
 		</div>
 	);
