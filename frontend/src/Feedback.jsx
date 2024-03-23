@@ -5,6 +5,8 @@ import { HostContext } from "./App.jsx";
 function Feedback() {
 	const { host } = useContext(HostContext);
 	const [feedbackLink, setFeedbackLink] = useState("");
+	const [iframeWidth, setIframeWidth] = useState(1000);
+	const [iframeHeight, setIframeHeight] = useState(window.innerHeight - 60);
 
 	useEffect(() => {
 		httpRequest({
@@ -16,10 +18,37 @@ function Feedback() {
 		});
 	}, []);
 
+	useEffect(() => {
+		const handleResize = () => {
+			const screenWidth = window.innerWidth;
+			const screenHeight = window.innerHeight;
+			if (screenWidth > 1400) {
+				setIframeWidth(1000);
+			} else if (screenWidth > 1120) {
+				setIframeWidth(700);
+			} else {
+				setIframeWidth(screenWidth - 60);
+			}
+
+			if (screenWidth > 1120) {
+				setIframeHeight(screenHeight - 60);
+			} else {
+				setIframeHeight(screenHeight - 130);
+			}
+			
+		};
+
+		window.addEventListener("resize", handleResize);
+		handleResize();
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
 	return (
-		<div className="flex justify-center my-[30px] mx-auto">
+		<div className="iframeForm flex justify-center my-[30px] mx-auto rounded-[12px] overflow-auto">
 			{feedbackLink && (
-				<iframe src={feedbackLink} width="1000" height="1000">
+				<iframe src={feedbackLink} width={iframeWidth} height={iframeHeight}>
 					Loading...
 				</iframe>
 			)}

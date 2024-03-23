@@ -40,7 +40,7 @@ function parseTime(timeStr) {
 const Column = ({ column, onBookingEdit }) => {
 
 	const { currentUser } = useContext(UserContext);
-	console.log(currentUser);
+
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Generate all time slots for the day in 15-minute intervals (empty by default)
 	const generateTimeSlots = () => {
@@ -179,7 +179,7 @@ const Column = ({ column, onBookingEdit }) => {
 									)}
 								</div>
 							) : (
-								<div className="open-booking-slot cursor-pointer rounded-[12px] overflow-hidden px-4 py-2 text-sm" key={slot} style={{ height: `${slotHeight}px` }}
+								<div className="open-booking-slot cursor-pointer overflow-hidden px-4 py-2 text-sm" key={slot} style={{ height: `${slotHeight}px` }}
 									onClick={() => hasPermission && onSlotClick(slot, timeslots)}>
 									{/* <p>{slot.display_time}</p> */}
 								</div>

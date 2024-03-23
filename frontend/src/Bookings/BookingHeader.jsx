@@ -39,18 +39,18 @@ const BookingHeader = ({
 						className={`${
 							isBeforeToday()
 								? "bg-gray-300 cursor-not-allowed"
-								: "bg-orange-600 hover:bg-orange-500"
-						} text-white font-regular py-4 px-8 rounded`}
+								: "button-orange"
+						} button-wide h-[64px]`}
 					>
-						Book a Room
+						New Booking
 					</button>
 				</div>
 				<div className="flex flex-row justify-between items-center gap-6">
-					<div className="flex flex-row justify-between items-center bg-white py-0 px-5 shadow-custom rounded-[5px] h-[56px]">
+					<div className="flex flex-row justify-between gap-3 items-center bg-white py-0 px-5 shadow-custom rounded-[5px] h-[64px]">
 						<button
 							className={`${
-								selectedTab === "Rooms" ? "bg-orange-600" : "bg-gray-300"
-							} hover:bg-orange-500 text-sm text-white font-regular py-2 px-4 rounded mr-2`}
+								selectedTab === "Rooms" ? "button-orange" : "button-clear"
+							} flex items-center gap-3 p-3 button-thin`}
 							onClick={() => {
 								onToggleRooms(true);
 								setSelectedTab("Rooms");
@@ -60,8 +60,8 @@ const BookingHeader = ({
 						</button>
 						<button
 							className={`${
-								selectedTab === "Equipment" ? "bg-orange-600" : "bg-gray-300"
-							} hover:bg-orange-500 text-sm text-white font-regular py-2 px-4 rounded`}
+								selectedTab === "Equipment" ? "button-orange" : "button-clear"
+							} flex items-center gap-3 p-3 button-thin`}
 							onClick={() => {
 								onToggleRooms(false);
 								setSelectedTab("Equipment");
@@ -70,11 +70,11 @@ const BookingHeader = ({
 							Equipment
 						</button>
 					</div>
-					<div className="flex flex-row justify-between items-center bg-white py-0 px-5 shadow-custom rounded-[5px] h-[56px]">
+					<div className="flex flex-row justify-between gap-3 items-center bg-white py-0 px-5 shadow-custom rounded-[5px] h-[64px]">
 						<button
 							className={`${
-								selectedIcon === "columns" ? "text-orange-600" : "text-gray-300"
-							} hover:text-orange-500 font-regular py-2 px-4 rounded mr-2`}
+								selectedIcon === "columns" ? "button-orange" : "button-clear"
+							} flex items-center gap-3 p-3 button-thin`}
 							onClick={() => {
 								setColumnView(true);
 								setSelectedIcon("columns");
@@ -84,8 +84,8 @@ const BookingHeader = ({
 						</button>
 						<button
 							className={`${
-								selectedIcon === "rows" ? "text-orange-600" : "text-gray-300"
-							} hover:text-orange-500  font-regular py-2 px-4 rounded`}
+								selectedIcon === "rows" ? "button-orange" : "button-clear"
+							} flex items-center gap-3 p-3 button-thin`}
 							onClick={() => {
 								setColumnView(false);
 								setSelectedIcon("rows");

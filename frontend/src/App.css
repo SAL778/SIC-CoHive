@@ -40,6 +40,10 @@ body {
 	background-size: auto;
 }
 
+.app-container-padding {
+	padding-left: 30px;
+}
+
 h1 {
 	font-size: 30px;
 }
@@ -81,6 +85,33 @@ h3 {
 }
 
 /* ------------------------------------------- */
+
+#mobile-nav {
+	position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    padding: 0.5rem 1rem;
+    left: 40px;
+    top: 30px;
+    height: 48px;
+}
+
+#app-nav {
+	position: fixed;
+	left: 30px;
+	width: 282px;
+	height: 100%;
+	padding: 30px 0;
+	transform: translateX(calc(-100% - 30px));
+	transition: transform 0.3s ease;
+}
+
+#app-nav.mobileOpen {
+	transform: translateX(0);
+}
 
 .nav-container {
 	background: none;
@@ -346,6 +377,10 @@ button.button-thin {
 	height: 2.5rem;
 }
 
+button.button-wide {
+	padding: 0.75rem 1.5rem;
+}
+
 button.button-orange:hover,
 button.button-orange:focus {
 	color: var(--primary-orange);
@@ -504,6 +539,14 @@ button.button-red:focus {
 /* Changed from box-shadow to border because box-shadow was consuming too much resources to render that many */
 .booking-column-container .embla__slide .open-booking-slot {
 	border-bottom: 1px solid rgb(228 228 228 / 70%);
+}
+
+.booking-column-container .embla__slide div:first-of-type > .open-booking-slot {
+	border-radius: 12px 12px 0 0;
+}
+
+.booking-column-container .embla__slide div:last-of-type > .open-booking-slot {
+	border-radius: 0 0 12px 12px;
 }
 
 .booking-column-container .embla__slide:nth-child(2n + 1) .open-booking-slot {
@@ -699,4 +742,27 @@ div .mantine-RichTextEditor-control:focus {
 div .mantine-RichTextEditor-content {
 	min-height: revert;
 	height: 100%;
+}
+
+.app-container .iframeForm {
+	margin-top: 100px;
+}
+
+@media (min-width: 1120px) {
+	.app-container-padding {
+		padding-left: 350px;
+	}
+
+	#mobile-nav {
+		display: none;
+	}
+
+	#app-nav,
+	#app-nav.mobileOpen {
+		transform: translateX(0);
+	}
+
+	.app-container .iframeForm {
+		margin-top: 30px;
+	}
 }

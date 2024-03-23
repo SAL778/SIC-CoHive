@@ -94,7 +94,6 @@ function Bookings() {
 	}, []); // The empty array specifies run only once (during render phase)
 
 	const onClickBooking = (bookingInfo) => {
-		console.log("click");
 		console.dir(bookingInfo);
 		setClickedBooking(bookingInfo);
 		open();

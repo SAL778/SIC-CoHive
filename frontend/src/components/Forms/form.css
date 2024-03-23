@@ -3,7 +3,8 @@
 
 .mantine-Popover-dropdown {
 	border-radius: var(--border-radius);
-	background-color: var(--digital-white);
+	/* background-color: var(--digital-white); */
+	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 .mantine-DatePickerInput-day {

@@ -28,7 +28,7 @@ export function TextEditor({ initialValue, onValueSubmit, readOnly}) {
             <div className = "relative px-[10px]">
               <RichTextEditor editor={editor}>
                 {!readOnly &&
-                  <RichTextEditor.Toolbar sticky className="flex items-end gap-8 h-[70px]">
+                  <RichTextEditor.Toolbar sticky className="flex items-end gap-8 min-h-[70px]">
                     <RichTextEditor.ControlsGroup className="headings">
                       <RichTextEditor.H1 icon={() => <i className="fa fa-heading text-xl"/>}/>
                       <RichTextEditor.H2 icon={() => <i className="fa fa-heading text-md"/>}/>
