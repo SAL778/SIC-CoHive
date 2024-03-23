@@ -13,7 +13,7 @@ function PortfolioCard({
 }) {
 	return (
 		//Card container
-		<div className="portfolio-card p-5 rounded-3xl h-64 w-56 flex flex-col place-content-between ease-out duration-200 shadow-custom hover:cursor-pointer">
+		<div className="portfolio-card p-5 m-5 rounded-3xl h-64 w-56 flex flex-col place-content-between ease-out duration-200 shadow-custom hover:cursor-pointer">
 			<i className="card-icon fa fa-lightbulb" aria-label="Portfolio icon" />
 			<section>
 				<h3 className="text-[18px">{title}</h3>

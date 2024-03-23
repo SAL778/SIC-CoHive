@@ -273,6 +273,7 @@ h3 {
 
 .portfolio-card {
 	color: var(--primary-orange);
+	background: var(--white);
 }
 
 .portfolio-card p {

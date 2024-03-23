@@ -4,12 +4,15 @@ import "./output.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
+import '@mantine/tiptap/styles.css';
+import '@mantine/carousel/styles.css';
 import Navigation from "./components/Navbar.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Bookings from "./Bookings.jsx";
 import Events from "./Events.jsx";
 import Statistics from "./Statistics.jsx";
-import Profile from "./Profile/Profile.jsx";
+import EditProfile from "./Profile/EditProfile.jsx";
+import ViewProfile from "./Profile/ViewProfile.jsx";
 import Signout from "./Signout.jsx";
 import Community from "./Community.jsx";
 import Feedback from "./Feedback.jsx";
@@ -58,9 +61,10 @@ function App() {
 										<Route path="/events" element={<Events />} />
 										<Route path="/community" element={<Community />} />
 										<Route path="/statistics" element={<Statistics />} />
-										<Route path="/profile" element={<Profile />} />
+										<Route path="/profile" element={<EditProfile />} />
 										<Route path="/feedback" element={<Feedback />} />
 										<Route path="/signout" element={<Signout />} />
+										<Route path="/users/:profileUserId" element={<ViewProfile />} />
 									</Routes>
 								</div>
 							</Router>

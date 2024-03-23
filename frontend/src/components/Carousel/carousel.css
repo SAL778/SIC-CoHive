@@ -1,0 +1,13 @@
+/* .mantine-Carousels-control[data-inactive] {
+    opacity: 0;
+    cursor: default;
+  } */
+
+.mantine-Carousel-controls {
+  transition: opacity 150ms ease;
+  opacity: 0;
+}
+  
+.mantine-Carousel-root:hover .controls{
+  opacity: 1;
+}

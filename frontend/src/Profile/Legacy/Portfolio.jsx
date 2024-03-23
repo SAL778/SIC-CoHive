@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
-import Carousel from "../components/Carousel/Carousel.jsx";
+import Carousel from "../../components/Carousel/Carousel.jsx";
 import PortfolioModal from "./PortfolioModal.jsx";
-import PortfolioCard from "./PortfolioCard.jsx";
+import PortfolioCard from "../PortfolioCard.jsx";
 import AboutMe from "./About.jsx";
-import { HostContext, UserContext } from "../App.jsx";
-import { getCookieValue } from "../utils.js";
+import { HostContext, UserContext } from "../../App.jsx";
+import { getCookieValue } from "../../utils.js";
 
 export default Portfolio;
 
