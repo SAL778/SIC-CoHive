@@ -86,10 +86,12 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             date: (value) => {
                 const today = new Date();
                 today.setHours(0, 0, 0 ,0) //Rewind to very beginning of the day
-
-                value <= today     //Booking cannot be from yesterday backwards
+                
+                return (
+                    value <= today     //Booking cannot be from yesterday backwards
                     ? 'Chosen date has already passed'
                     : null
+                )
             },
         },
 
@@ -201,7 +203,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="from"
-                            //data={allTimeSlots}
+                            // data={allTimeSlots}
                             data = {availableTimeSlots}
                             searchable
                             withAsterisk
@@ -223,7 +225,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                         />
                     </div>
                     {/* If the currentBooking matches the currentUser, show the visibility toggle */}
-                    {   currentUser.id == form?.values.user?.id &&
+                    {   currentUser?.id == form?.values.user?.id &&
                         <Checkbox
                             label = "Display booking details publicly"
                             color = "rgba(234, 88, 12, 1)"
