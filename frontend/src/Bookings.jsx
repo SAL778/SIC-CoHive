@@ -18,7 +18,7 @@ import { getCookieValue } from "./utils.js";
 
 function Bookings() {
 	// checkUserLoggedIn();
-	const [isUpdated, setIsUpdated] = useState(0)
+	const [isUpdated, setIsUpdated] = useState(0);
 	const [availableRooms, setAvailableRooms] = useState([]);
 	const [availableEquipment, setAvailableEquipment] = useState([]);
 	const [currentAssetViewIsRoom, setCurrentAssetViewIsRoom] = useState(true);
@@ -164,7 +164,7 @@ function Bookings() {
 			method: "DELETE",
 			onSuccess: () => {
 				console.log("Success");
-				setIsUpdated(isUpdated + 1)
+				setIsUpdated(isUpdated + 1);
 				new SuccessNotification(
 					"Booking deleted",
 					`${bookingInfo.resources_name} was succesfully deleted!`

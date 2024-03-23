@@ -45,7 +45,7 @@ function Events() {
 
 		return events.map((event) => ({
 			title: event.SUMMARY,
-			location: event.LOCATION || null,
+			location: event.LOCATION ? event.LOCATION.split("\\")[0] : null, // only the building name or null
 			start: parseDateTime(event.DTSTART),
 			end: parseDateTime(event.DTEND),
 			date: parseDayDate(event.DTSTART),

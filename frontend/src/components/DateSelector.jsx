@@ -24,7 +24,6 @@ export default function DateSelector({ currentDate, onSetDate }) {
 						isToday(date) ? "mantine-DatePicker-day[data-today]" : ""
 					}
 				/>
-				{/* <DatePicker value={currentDate} onChange={onSetDate} /> */}
 			</Popover.Dropdown>
 		</Popover>
 	);
