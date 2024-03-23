@@ -12,6 +12,12 @@ const BookingHeader = ({ setColumnView, onBookClick, onToggleRooms, onSetDate, c
     const [selectedTab, setSelectedTab] = useState('Rooms');
     const [selectedIcon, setSelectedIcon] = useState('columns');
 
+    const isBeforeToday = () => {
+        const today = new Date();
+        today.setHours(0,0,0,0);             //Rewind to beginning of day
+        return (currentDate < today)
+    }
+
     return (
         <div className="flex flex-col z-10 mt-[30px] px-[10px] w-full gap-8">
             <div className="w-fit min-w-[250px]">
@@ -23,7 +29,12 @@ const BookingHeader = ({ setColumnView, onBookClick, onToggleRooms, onSetDate, c
             
             <div className="flex flex-row justify-between items-end">
                 <div>
-                    <button type="button" onClick = {() => onBookClick(null)} className="bg-orange-600 hover:bg-orange-500 text-white font-regular py-4 px-8 rounded ">
+                    <button 
+                        type="button"
+                        disabled = {isBeforeToday()}
+                        onClick = {() => onBookClick(null)} 
+                        className={`${isBeforeToday() ? "bg-gray-300 cursor-not-allowed" : "bg-orange-600 hover:bg-orange-500"} text-white font-regular py-4 px-8 rounded`}
+                    >
                         Book a Room
                     </button>
                 </div>

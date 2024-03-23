@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { HostContext, UserContext } from "../App.jsx";
 import { Loader, isOptionsGroup } from "@mantine/core";
 import { httpRequest } from "../utils.js";
+import { AssetComponent } from "./AssetComponent.jsx";
 
 /**
  * A component that returns the render of a list view.
@@ -14,8 +15,9 @@ function BookingListView({
 	assetType,
 	filters,
 	selectedDates,
-	selectedRooms,
+	selectedAssets,
 	bookingFilter, // all bookings or my bookings
+	isUpdated //Re-render
 }) {
 	const { host } = useContext(HostContext);
 	const { currentUser } = useContext(UserContext); // Current logged-in user
@@ -33,8 +35,10 @@ function BookingListView({
 			// Fetch all bookings, with date and room filters
 			if (selectedDates[0]) queryParams.append("start_time", selectedDates[0]);
 			if (selectedDates[1]) queryParams.append("end_time", selectedDates[1]);
-			selectedRooms.forEach((room) => queryParams.append("room", room));
+			selectedAssets.forEach((asset) => queryParams.append("resource", asset));
 		}
+
+		console.log(endpoint + queryParams.toString())
 
 		httpRequest({
 			endpoint: endpoint + queryParams.toString(),
@@ -44,12 +48,13 @@ function BookingListView({
 				setIsLoading(false);
 			},
 		});
-	}, [host, currentUser, bookingFilter, selectedDates, selectedRooms]);
-
+	}, [host, currentUser, bookingFilter, selectedDates, selectedAssets, isUpdated]);
+	
+	//Filters based on types
 	const filteredAssets =
-		selectedRooms.length > 0
-			? assets.filter((asset) => selectedRooms.includes(asset.resources_name))
-			: assets;
+		selectedAssets.length > 0
+			? assets.filter((asset) => (selectedAssets.includes(asset.resources_name) && asset.resource_type == assetType))
+			: assets.filter((asset) => (asset.resource_type == assetType));
 
 	const dateHeaders = getUniqueDateHeaders(
 		filteredAssets.map((asset) => asset.start_time)
@@ -79,109 +84,6 @@ function BookingListView({
 				</li>
 			))}
 		</ul>
-	);
-}
-
-/**
- * A component that returns the render of a list item to be displayed.
- * @param {Object} asset - The object representation of an asset (room or equipment)
- */
-function AssetComponent({ asset, onItemClick }) {
-	const { currentUser } = useContext(UserContext);
-
-	const greyOut = !asset.visibility && currentUser?.id != asset?.booker?.id;
-
-	//Convert AM/PM date
-	const formatTime = (date) => {
-		let hours = date.getHours();
-		let minutes = date.getMinutes();
-
-		//Convert to 24 Hour format
-		const ampm = hours >= 12 ? "PM" : "AM";
-		hours = hours % 12;
-		hours = hours ? hours : 12; //Handle midnight
-
-		//Pad minutes with zeroes if needed
-		minutes = minutes >= 10 ? minutes : "0" + minutes;
-
-		//Formatted Time
-		return `${hours}:${minutes} ${ampm}`;
-	};
-
-	return (
-		//TODO: On private, grey everything out
-		<div
-			className={`flex items-center py-4 px-6 rounded-md cursor-pointer gap-10 ${
-				greyOut ? "private-booking" : "shadow-custom"
-			}`}
-			onClick={() => onItemClick(asset)}
-		>
-			<div className="colA basis-2 flex-col flex-grow text-neutral-800">
-				<h3
-					className="text-2xl font-semibold capitalize leading-[1]"
-					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-				>
-					{asset?.resources_name}
-				</h3>
-				<p
-					className="text-base font-regular"
-					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-				>
-					{greyOut ? "Booking" : asset?.title}
-				</p>
-			</div>
-
-			{asset?.type == "room" && (
-				<div className="colB basis-1 flex flex-grow text-2xl gap-4">
-					<i className="fa fa-location-dot" aria-hidden="true" />
-					<p
-						className="font-light"
-						style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-					>
-						{asset?.location}
-					</p>
-				</div>
-			)}
-
-			<div className="colC basis-1 flex flex-row flex-grow items-center ">
-				<i
-					className="fa fa-calendar mr-3 text-2xl text-neutral-800"
-					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-				/>
-				<div className="timeSlot">
-					<p
-						className="text-base font-medium text-orange-600"
-						style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-					>
-						{formatTime(asset.start_time)} - {formatTime(asset.end_time)}
-					</p>
-					<p
-						className="text-base font-medium flex gap-1"
-						style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-					>
-						<span>
-							{asset.start_time.toLocaleString("en-us", { weekday: "long" })}
-						</span>
-						<span>
-							{asset.start_time.toLocaleString("en-us", { month: "short" })}
-						</span>
-						<span>{asset.start_time.getDate()}</span>
-					</p>
-				</div>
-			</div>
-
-			<div className="colD basis-1 flex-grow">
-				{!greyOut && (
-					<>
-						{/* Booker not present on private posts */}
-						<p className="text-base text-orange-600">
-							{asset.user?.first_name}
-						</p>
-						<p className="text-neutral-800">{asset.user?.email}</p>
-					</>
-				)}
-			</div>
-		</div>
 	);
 }
 

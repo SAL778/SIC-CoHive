@@ -11,36 +11,6 @@ export function getCookieValue(cookieName) {
     return null;
 }
 
-// export async function checkUserLoggedIn() {
-//     const navigate = useNavigate();
-
-//     try {
-//         const accessToken = getCookieValue("access_token");
-//         const response = await fetch("http://localhost:8000/users/verify-login/", {
-//             method: "GET",
-//             credentials: "include",
-//             headers: {
-//                 Authorization: `Token ${accessToken}`,
-//             },
-//         });
-
-//         if (response.ok) {
-//             const data = await response.json();
-//             console.log("User is authenticated:", data);
-//             // Add your application logic here based on the data received
-//         } else if (response.status === 401) {
-//             console.error("User not authenticated. Redirecting to login page.");
-//             navigate('/');  // Redirect to the login page
-//         } else {
-//             console.error("Error checking user authentication:", response.status, response.statusText);
-//             // Handle other authentication errors or general errors
-//         }
-//     } catch (error) {
-//         console.error("Error during fetch:", error);
-//         // Handle general fetch error
-//     }
-// }
-
 /**
  * Makes an HTTP request.
  * @param {Object} httpRequestOptions - The options for the HTTP request.
@@ -78,11 +48,14 @@ export async function httpRequest({
         
         const res = await fetch(endpoint, options)
 
-        if (res.ok) {
+        if (res.status == 204) {
+            //No data to operate on.
+            onSuccess()
+        }
+        else if (res.ok) {
             res.json().then(data => {
                 onSuccess(data)
             });
-            
         }
         else {
             onFailure(res)
@@ -91,4 +64,25 @@ export async function httpRequest({
     catch (e) {
         onError(e)
     } 
+}
+
+
+/**
+ * PRNG Color Generator based on a string
+ */
+export function genHexColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+    for (let i = 0; i < 3; i++) {
+        let value = (hash >> (i * 8)) & 0xFF;
+        // Adjust the value to avoid colors too close to 0 or 255
+        value = Math.max(30, Math.min(value, 225));
+        color += value.toString(16).padStart(2, '0'); // Ensure each component is two characters
+    }
+
+    return color;
 }
