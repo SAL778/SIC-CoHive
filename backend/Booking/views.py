@@ -73,7 +73,7 @@ class FilterBookingsView(generics.ListAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
 
-    def get_queryset(self):
+    def get_queryset(self, start_time=None, end_time=None):
         queryset = super().get_queryset()
         start_time = self.request.query_params.get('start_time')
         end_time = self.request.query_params.get('end_time')
@@ -244,7 +244,7 @@ class ResourceListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        names = queryset.values_list('name', flat=True)
-        return Response(names)
+        names_and_ids = queryset.values('id', 'name')
+        return Response(list(names_and_ids))
     
     

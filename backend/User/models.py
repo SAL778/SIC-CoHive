@@ -25,7 +25,7 @@ class Complete_Portfolio(models.Model):
 class PortfolioItem(models.Model):
 
     id = models.AutoField(primary_key=True,help_text="Unique identifier for the portfolio item")
-    icon = models.URLField(max_length=100, blank=True, null=True,help_text="URL to the icon image")
+    icon = models.CharField(max_length=100, blank=True, null=True,help_text="Icon of the portfolio item")
     title = models.CharField(max_length=100,help_text="Title of the portfolio item")
     description = models.TextField(help_text="Description of the portfolio item")
     link= models.URLField(max_length=100, blank=True, null=True,help_text="URL to the portfolio item")
@@ -54,20 +54,20 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    ROLES_CHOICES = [
-        ('User', 'User'),
-        ('Organization', 'Organization'),
-        ('Admin', 'Admin'),
-    ]
-
-    roles = models.CharField(max_length=100, choices=ROLES_CHOICES, default='User',help_text="The role of the user")
+    # ROLES_CHOICES = [
+    #     ('User', 'User'),
+    #     ('Organization', 'Organization'),
+    #     ('Admin', 'Admin'),
+    # ]
+    #
+    # roles = models.CharField(max_length=100, choices=ROLES_CHOICES, default='User',help_text="The role of the user")
     profileImage = models.URLField(max_length=100, blank=True, null=True,help_text="URL to the profile image")
     portfolioVisibility = models.BooleanField(default=True,help_text="decides if the portfolio is visible to others")
     portfolio = models.OneToOneField(Complete_Portfolio, on_delete=models.CASCADE, blank=True, null=True,help_text="The portfolio of the user")
     accessType = models.ManyToManyField(AccessType, blank=True,related_name="accessType",help_text="The access type of the user")
     accessPermissions = models.ManyToManyField(Permission, blank=True)
     flair_roles = models.ManyToManyField(Flair_Roles, blank=True, related_name="users")
-
+    education = models.TextField(blank=True, null=True,help_text="The education of the user")
     def save(self, *args, **kwargs):
         # Call the "real" save() method.
         super().save(*args, **kwargs)
