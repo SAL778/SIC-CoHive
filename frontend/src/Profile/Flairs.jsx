@@ -4,7 +4,7 @@ import {Pill, TextInput } from '@mantine/core';
 import { HostContext, UserContext } from "../App.jsx";
 
 
-export default function FlairList({flairs, isEditable, pseudorandom = false}) {
+export default function FlairList({flairs, isEditable, isAccessRoles = false}) {
     const { host } = useContext(HostContext);
     const { currentUser } = useContext(UserContext);
     
@@ -38,15 +38,15 @@ export default function FlairList({flairs, isEditable, pseudorandom = false}) {
     }
 
     return (
-        <Pill.Group>
+        <Pill.Group className="user-tags mb-[32px]">
             {  renderedFlairs.map((flair, index) => (
                     <Pill
                     key = {index}
                     withRemoveButton = {isEditable}
                     onRemove = {() => removeFlair(index)}
-                    className = {"text-white bg-orange-600"}
-                    styles = { pseudorandom 
-                                ? {root: {backgroundColor: genHexColor(flair)}} 
+                    className = {"button-orange"}
+                    styles = { isAccessRoles 
+                                ? {root:{backgroundColor: '#e92c20'}} 
                                 : {}
                              }
                     > 
@@ -57,7 +57,7 @@ export default function FlairList({flairs, isEditable, pseudorandom = false}) {
             { (isEditable && renderedFlairs.length < 10) &&
                 <TextInput
                     variant="unstyled"
-                    placeholder = "Add tags" 
+                    leftSection={<i className="fa fa-plus text-orange-600"/>}
                     value = {pillText}
                     onKeyDown={(event) => {
                         if (event.key === "Enter" && pillText !== "") {

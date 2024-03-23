@@ -25,10 +25,10 @@ export function TextEditor({ initialValue, onValueSubmit, readOnly}) {
     })
 
     return (
-            <div className = "relative">
+            <div className = "relative px-[10px]">
               <RichTextEditor editor={editor}>
                 {!readOnly &&
-                  <RichTextEditor.Toolbar sticky className="flex gap-8">
+                  <RichTextEditor.Toolbar sticky className="flex items-end gap-8 h-[70px]">
                     <RichTextEditor.ControlsGroup className="headings">
                       <RichTextEditor.H1 icon={() => <i className="fa fa-heading text-xl"/>}/>
                       <RichTextEditor.H2 icon={() => <i className="fa fa-heading text-md"/>}/>
@@ -67,7 +67,7 @@ export function TextEditor({ initialValue, onValueSubmit, readOnly}) {
               { (!readOnly && editor && editor.getHTML() !== lastEdited) &&
                 <button 
                 type="button" 
-                className="button-orange absolute bottom-6 right-6 shadow-custom"
+                className="button-orange absolute bottom-4 right-[42px] shadow-custom"
                 onClick={() => {
                   setLastEdited(editor.getHTML()); //Remove save button to limit backend spam
                   onValueSubmit(editor.getHTML());

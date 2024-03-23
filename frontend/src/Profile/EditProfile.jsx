@@ -89,37 +89,41 @@ export default function EditProfile() {
 		  {isLoading ? (
 			<Loader />
 		  ) : (
-			<div className="flex flex-col gap-8">
-				<div className = "buttonToggleGroup w-auto flex gap-3 m-3 justify-end">
-					<button 
-					className = {`flex items-center gap-3 ${portfolioVisibility ? "button-orange" : ""}`}
-					onClick = {() => onUpdateVisibility(true)}
-					>
-						Public 
-						<i className={`fa fa-eye`}/>
-					</button>
-					<button 
-					className = {`flex items-center gap-3 ${!portfolioVisibility ? "button-orange" : ""}`}
-					onClick = {() => onUpdateVisibility(false)}
-					>
-						Private
-						<i className={`fa fa-eye-slash`}/>
-					</button>
+			<div className="flex flex-col gap-8 w-full my-[30px] max-w-[1600px] mx-auto">
+				<div className = "buttonToggleGroup w-auto flex justify-end px-[10px]">
+					<div className="flex flex-row justify-between gap-3 items-center bg-white py-0 px-5 shadow-custom rounded-[5px] h-[64px]">
+						<button 
+						className = {`flex items-center gap-3 p-3 button-thin ${!portfolioVisibility ? "button-orange" : "button-clear"}`}
+						onClick = {() => onUpdateVisibility(false)}
+						>
+							Private
+							<i className={`fa fa-eye-slash`}/>
+						</button>
+						<button 
+						className = {`flex items-center gap-3 p-3 button-thin ${portfolioVisibility ? "button-orange" : "button-clear"}`}
+						onClick = {() => onUpdateVisibility(true)}
+						>
+							Public 
+							<i className={`fa fa-eye`}/>
+						</button>
+					</div>
 				</div>
 	  
 				<ProfileHeader profileUser = {profileUser}/>
 
-				<FlairList flairs = {profileUser.flair_roles.map(type => type.role_name)} isEditable={true} />
-				<h2 className = "text-lg text-neutral-800 font-medium">Student Innovation Center Roles
-					<Tooltip label = "This is what the user does at the SIC and controls room access.">
-						<i className = "fa fa-info-circle ml-2"/>
-					</Tooltip>
-				</h2>
-				<FlairList flairs = {profileUser.accessType.map(type => type.name)} isEditable={false} pseudorandom/>
+				<div className="px-[10px]">
+					<FlairList flairs = {profileUser.flair_roles.map(type => type.role_name)} isEditable={true} />
+						<h2 className = "text-lg text-neutral-800 font-medium mb-[10px]">Student Innovation Center Roles
+							<Tooltip label = "This is what the user does at the SIC and controls room access.">
+								<i className = "fa fa-info-circle ml-2"/>
+							</Tooltip>
+						</h2>
+					<FlairList flairs = {profileUser.accessType.map(type => type.name)} isEditable={false} isAccessRoles/>
+				</div>
 	  
-			  {/* Sidebar carousel */}
+			  	{/* Sidebar carousel */}
 			  	<Portfolio portfolioItems = {portfolio.items} isEditable={true} />
-	
+
 				<TextEditor initialValue = {portfolio.description} onValueSubmit = {onTextSubmit}/>
 			</div>
 		  )}

@@ -115,13 +115,13 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
     }
 
     return (
-        <>  
+        <div className="flex flex-col justify-between gap-4 px-[10px]">  
             <h1 className="text-orange-600 text-4xl font-bold">Portfolio</h1>
 
             {isEditable &&
                 <button 
                 type="button" 
-                className="button-orange w-24" 
+                className="button-orange w-24 mt-4" 
                 onClick={() => {
                     setOpenedModal("edit")
                     open()
@@ -134,41 +134,41 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                 <p>This person has no portfolio items</p>
             ) : (
                 <MantineCarousel>
-                { currentPortfolioList.map((portfolioItem) => (
-                    <PortfolioCard
-                        key={portfolioItem.id}
-                        portfolioItem={portfolioItem}
-                        isEditable={isEditable}
-                        onClickEdit={() => {
-                            console.log(portfolioItem);
-                            setClickedItem(portfolioItem);
-                            setOpenedModal("edit");
-                            open();
-                        }}
-                        onClickDelete={() => {
-                            setClickedItem(portfolioItem);
-                            setOpenedModal("delete");
-                            open();
-                        }}
-                        onClickRedirect={() => {
-                            setClickedItem(portfolioItem);
-                            setOpenedModal("redirect");
-                            open();
-                        }}
-                    />
-                ))}
-                {  isEditable &&
-                    <button
-                    type = "button"
-                    className = "bg-white text-orange-600 p-5 rounded-3xl h-64 w-56 shadow-custom hover:bg-neutral-200 ease-out duration-200"
-                    onClick = {() => {
-                        setOpenedModal("edit")
-                        open()
-                    }}                //Clicked item is null so submit behaviour should be "add"
-                    >
-                        <i className="text-3xl fa fa-plus"/>
-                    </button>
-                }
+                    { currentPortfolioList.map((portfolioItem) => (
+                        <PortfolioCard
+                            key={portfolioItem.id}
+                            portfolioItem={portfolioItem}
+                            isEditable={isEditable}
+                            onClickEdit={() => {
+                                console.log(portfolioItem);
+                                setClickedItem(portfolioItem);
+                                setOpenedModal("edit");
+                                open();
+                            }}
+                            onClickDelete={() => {
+                                setClickedItem(portfolioItem);
+                                setOpenedModal("delete");
+                                open();
+                            }}
+                            onClickRedirect={() => {
+                                setClickedItem(portfolioItem);
+                                setOpenedModal("redirect");
+                                open();
+                            }}
+                        />
+                    ))}
+                    {  isEditable &&
+                        <button
+                        type = "button"
+                        className = "portfolio-card-add bg-neutral-100 text-orange-600 p-5 rounded-3xl h-64 w-56 shadow-custom ease-out duration-200"
+                        onClick = {() => {
+                            setOpenedModal("edit")
+                            open()
+                        }}                //Clicked item is null so submit behaviour should be "add"
+                        >
+                            <i className="text-3xl fa fa-plus"/>
+                        </button>
+                    }
                 </MantineCarousel>
                 )
             }
@@ -198,12 +198,12 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                             <span className = "block text-orange-600"> {clickedItem.link}</span> 
                         </p>
 
-                        <div className = "mt-3 flex justify-end gap-3">
-                            <button type="button" onClick={modalClose}>Close</button>
+                        <div className = "flex gap-3 pt-3 justify-end">
+                            <button type="button" className = "button-grey-hover modal-button" onClick={modalClose}>Close</button>
                             {/* Opens the link in a new window */}
                             <button 
                             type= "button" 
-                            className="button-orange"
+                            className = "button-orange modal-button"
                             onClick={() => {
                                 window.open(clickedItem.link, '_blank');
                                 modalClose();
@@ -216,14 +216,14 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                 { openedModal == "delete" &&
                     <>
                         <p>{`Are you sure you want to delete ${clickedItem?.title}?`}</p>
-                        <div className = "mt-3 flex justify-end gap-3">
-                            <button type="button" onClick={() => modalClose()}>Close</button>
-                            <button type ="button" className="button-orange" onClick={() => onSubmitModalDelete()}>Delete</button>
+                        <div className = "flex gap-3 pt-3 justify-end">
+                            <button type="button" className = "button-grey-hover modal-button" onClick={() => modalClose()}>Close</button>
+                            <button type ="button" className = "button-orange modal-button" onClick={() => onSubmitModalDelete()}>Delete</button>
                         </div>
                     </>
                 }
             </Modal>
-        </>
+        </div>
     )
 }
 
