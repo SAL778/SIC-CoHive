@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import EventsList from "./components/EventsList"; // Assuming the EventsList is in a separate file
 
 function Events() {
 	const fetchAndLogEvents = async () => {
@@ -19,7 +20,9 @@ function Events() {
 
 	const parseICalData = (data) => {
 		const eventRegex = /BEGIN:VEVENT(.+?)END:VEVENT/gs;
-		const detailRegex = /(SUMMARY|DTSTART|DTEND|LOCATION):(.+)/g;
+		// const detailRegex = /(SUMMARY|DTSTART|DTEND|LOCATION):(.+)/g;
+		const detailRegex =
+			/(SUMMARY|DTSTART|DTEND|LOCATION):([\s\S]*?)(?=(?:\r?\n[A-Z]+:|\r?\n$))/g;
 		const events = [];
 
 		let eventMatch;
@@ -86,6 +89,24 @@ function Events() {
 		fetchAndLogEvents();
 	}, []);
 
+	const eventsData = [
+		{
+			title: "SIC event",
+			location: null,
+			start: "3/20/2024, 4:00:00 PM",
+			end: "3/20/2024, 6:00:00 PM",
+			date: "Wednesday, March 20, 2024",
+		},
+		{
+			title: "meet again test",
+			location:
+				"Students' Union Building\\, 8900 114 St NW\\, Edmonton\\, AB T6G 2J7\\\r\n , Canada",
+			start: "3/21/2024, 1:00:00 PM",
+			end: "3/21/2024, 3:00:00 PM",
+			date: "Thursday, March 21, 2024",
+		},
+	];
+
 	return (
 		<div className="parentContainer">
 			<div className="calendarContainer">
@@ -96,6 +117,11 @@ function Events() {
 					style={{ width: "100%", height: "1800px", border: "none" }}
 					data-cy="calendar-embed-iframe"
 				></iframe>
+			</div>
+			<div className="event-list">
+				{eventsData.map((event, index) => (
+					<EventsList key={index} event={event} />
+				))}
 			</div>
 		</div>
 	);
