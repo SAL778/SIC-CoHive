@@ -14,7 +14,7 @@ function BookingListView({
 	assetType,
 	filters,
 	selectedDates,
-	selectedRooms,
+	selectedAssets,
 	bookingFilter, // all bookings or my bookings
 }) {
 	const { host } = useContext(HostContext);
@@ -33,8 +33,10 @@ function BookingListView({
 			// Fetch all bookings, with date and room filters
 			if (selectedDates[0]) queryParams.append("start_time", selectedDates[0]);
 			if (selectedDates[1]) queryParams.append("end_time", selectedDates[1]);
-			selectedRooms.forEach((room) => queryParams.append("room", room));
+			selectedAssets.forEach((asset) => queryParams.append("resource", asset));
 		}
+
+		console.log(endpoint + queryParams.toString())
 
 		httpRequest({
 			endpoint: endpoint + queryParams.toString(),
@@ -44,12 +46,13 @@ function BookingListView({
 				setIsLoading(false);
 			},
 		});
-	}, [host, currentUser, bookingFilter, selectedDates, selectedRooms]);
-
+	}, [host, currentUser, bookingFilter, selectedDates, selectedAssets]);
+	
+	//Filters based on types
 	const filteredAssets =
-		selectedRooms.length > 0
-			? assets.filter((asset) => selectedRooms.includes(asset.resources_name))
-			: assets;
+		selectedAssets.length > 0
+			? assets.filter((asset) => (selectedAssets.includes(asset.resources_name) && asset.resource_type == assetType))
+			: assets.filter((asset) => (asset.resource_type == assetType));
 
 	const dateHeaders = getUniqueDateHeaders(
 		filteredAssets.map((asset) => asset.start_time)
