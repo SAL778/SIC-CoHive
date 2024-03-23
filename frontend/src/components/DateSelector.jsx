@@ -5,7 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import "./Forms/form.css";
 
 export default function DateSelector({ currentDate, onSetDate }) {
-	const [opened, { open, close }] = useDisclosure(false);
+	const [opened, { open }] = useDisclosure(false);
 
 	return (
 		<Popover position="bottom" trapFocus>
@@ -17,13 +17,19 @@ export default function DateSelector({ currentDate, onSetDate }) {
 				})}
 			</Popover.Target>
 			<Popover.Dropdown>
-				<DatePicker value={currentDate} onChange={onSetDate} />
+				<DatePicker
+					value={currentDate}
+					onChange={onSetDate}
+					dayClassName={(date) =>
+						isToday(date) ? "mantine-DatePicker-day[data-today]" : ""
+					}
+				/>
+				{/* <DatePicker value={currentDate} onChange={onSetDate} /> */}
 			</Popover.Dropdown>
 		</Popover>
 	);
 }
 
-//
 function getDisplayDate({ date, onShow, isExpanded }) {
 	return (
 		<button type="button" onClick={onShow}>

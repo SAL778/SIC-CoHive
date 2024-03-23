@@ -100,3 +100,7 @@
 	font-weight: 600;
 	font-size: 1em;
 }
+
+.mantine-DatePicker-day[data-today] {
+	border: 2px solid var(--primary-orange);
+}
