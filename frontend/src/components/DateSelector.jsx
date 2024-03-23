@@ -2,7 +2,7 @@ import React from "react";
 import { DatePicker } from "@mantine/dates";
 import { Popover } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import "../components/Forms/form.css";
+import "./Forms/form.css";
 
 export default function DateSelector({ currentDate, onSetDate }) {
 	const [opened, { open, close }] = useDisclosure(false);
@@ -50,6 +50,9 @@ function getDisplayDate({ date, onShow, isExpanded }) {
 }
 
 const isToday = (date) => {
+	if (!date) {
+		return false;
+	}
 	const today = new Date();
 	return (
 		date.getDate() === today.getDate() &&

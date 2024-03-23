@@ -1,8 +1,12 @@
-import React, { useEffect } from "react";
-import EventsList from "./components/EventsList"; // Assuming the EventsList is in a separate file
+import React, { useState, useEffect } from "react";
+import EventsList from "./components/EventsList";
+import DateSelector from "./components/DateSelector";
 
 function Events() {
-	const fetchAndLogEvents = async () => {
+	const [currentDate, setCurrentDate] = useState(new Date());
+	const [eventsData, setEventsData] = useState([]);
+
+	const fetchEvents = async (selectedDate) => {
 		try {
 			const icalUrl =
 				"https://calendar.google.com/calendar/ical/6d3dcedc29c2a223c343cce8ec9ed5f309fd197f0805cb7f4bd79852d304d57c%40group.calendar.google.com/public/basic.ics";
@@ -12,7 +16,11 @@ function Events() {
 			const data = await response.text();
 
 			const events = parseICalData(data);
-			console.log(events);
+			// Filter events for the selected date
+			const filteredEvents = events.filter((event) =>
+				isSameDay(new Date(event.start), selectedDate)
+			);
+			setEventsData(filteredEvents);
 		} catch (error) {
 			console.error("Failed to fetch events:", error);
 		}
@@ -45,7 +53,7 @@ function Events() {
 	};
 
 	const parseDateTime = (icalDate) => {
-		// Assuming the format is always like: 20240320T220000Z
+		// format: 20240320T220000Z
 		const date = new Date(
 			icalDate.substring(0, 4) +
 				"-" +
@@ -63,7 +71,6 @@ function Events() {
 	};
 
 	const parseDayDate = (icalDate) => {
-		// Extracting and formatting the day and date
 		const date = new Date(
 			icalDate.substring(0, 4) +
 				"-" +
@@ -85,27 +92,22 @@ function Events() {
 		});
 	};
 
-	useEffect(() => {
-		fetchAndLogEvents();
-	}, []);
+	const isSameDay = (date1, date2) => {
+		return (
+			date1.getDate() === date2.getDate() &&
+			date1.getMonth() === date2.getMonth() &&
+			date1.getFullYear() === date2.getFullYear()
+		);
+	};
 
-	const eventsData = [
-		{
-			title: "SIC event",
-			location: null,
-			start: "3/20/2024, 4:00:00 PM",
-			end: "3/20/2024, 6:00:00 PM",
-			date: "Wednesday, March 20, 2024",
-		},
-		{
-			title: "meet again test",
-			location:
-				"Students' Union Building\\, 8900 114 St NW\\, Edmonton\\, AB T6G 2J7\\\r\n , Canada",
-			start: "3/21/2024, 1:00:00 PM",
-			end: "3/21/2024, 3:00:00 PM",
-			date: "Thursday, March 21, 2024",
-		},
-	];
+	const handleDateChange = (selectedDate) => {
+		setCurrentDate(selectedDate);
+		fetchEvents(selectedDate);
+	};
+
+	useEffect(() => {
+		fetchEvents(currentDate);
+	}, []);
 
 	return (
 		<div className="parentContainer">
@@ -117,6 +119,9 @@ function Events() {
 					style={{ width: "100%", height: "1800px", border: "none" }}
 					data-cy="calendar-embed-iframe"
 				></iframe>
+			</div>
+			<div className="w-fit min-w-[250px]">
+				<DateSelector onSetDate={handleDateChange} currentDate={currentDate} />
 			</div>
 			<div className="event-list">
 				{eventsData.map((event, index) => (
