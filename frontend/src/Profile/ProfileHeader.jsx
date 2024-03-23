@@ -1,12 +1,11 @@
 export default function ProfileHeader({profileUser}) {
-    console.log(profileUser)
 
     return (
         <div className="profileHeader flex px-[10px]">
             <img
                 src={profileUser.profileImage}
                 alt={`Image of ${profileUser.first_name}`}
-                className={"rounded-lg mr-6"}
+                className={"rounded-lg mr-6 h-[96px] w-[96px] object-cover"}
             />
             <div className="flex flex-col justify-between">
                 <div className="flex flex-col">

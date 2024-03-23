@@ -14,7 +14,6 @@ const Signout = ({ opened, onClose }) => {
 		try {
 			const accessToken = getCookieValue("access_token");
 
-			console.log(accessToken);
 			const response = await fetch("http://localhost:8000/users/signout/", {
 				method: "POST",
 				credentials: "include",

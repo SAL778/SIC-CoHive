@@ -4,7 +4,6 @@ import "./Login.css";
 import { NavigationContext } from "./App.jsx";
 import axiousInstance from "./axios.js";
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 
 import { HostContext, UserContext } from "./App.jsx";
@@ -15,17 +14,6 @@ export default function Login({}) {
 
     // const { user, setUser } = useContext(UserContext);
     const { host } = useContext(HostContext)
-
-	const decodeJWT = (credentialJWT) => {
-		try {
-			// Decode the JWT using jwt-decode
-			const decodedToken = jwtDecode(credentialJWT);
-
-			console.log("Decoded JWT:", decodedToken);
-		} catch (error) {
-			console.error("Error decoding JWT:", error);
-		}
-	};
 
 	const handleGoogleLogin = async (credentialResponse) => {
 		try {
@@ -43,13 +31,11 @@ export default function Login({}) {
 				}
 			);
 
-            console.log(response.data); // Log the response data
             // Redirect to /bookings if the request is successful
             if (response.status === 302 || response.status === 200) {
                 httpRequest({
                     endpoint: `${host}/users/profile/`, //Add the current user to localStorage
                     onSuccess: (userData) => {
-                        console.log("recieved", userData)
                         localStorage.setItem("currentUser", JSON.stringify(userData));
                         window.location.href = '/bookings';
                     }

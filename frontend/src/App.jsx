@@ -38,6 +38,7 @@ function App() {
 	const [host] = useState("http://localhost:8000"); //Replace host here
 	const [currentUser, setCurrentUser] = useState(null); //User gets added to context on login
 	const [showNavigation, setShowNavigation] = useState(true);
+	const [mobileNav, setMobileNav] = useState(false);
 
 	return (
 		<GoogleOAuthProvider clientId="738911792381-du1hc1l4go32tj2iunbnufo6qf9h0u7v.apps.googleusercontent.com">
@@ -50,11 +51,21 @@ function App() {
 							<Notifications />
 							<Router>
 								<div
-									className={`app-container flex min-h-screen h-full w-[100%] flex-col md:flex-row body-white py-0 ${
-										showNavigation ? "pl-[350px]" : "pl-[30px]"
+									className={`app-container flex min-h-screen h-full w-[100%] flex-row body-white py-0 ${
+										showNavigation ? "app-container-padding" : "pl-[30px]"
 									} pr-[30px] gap-[40px]`}
-								>
-									{showNavigation && <Navigation />}
+								>	
+									<button
+										id="mobile-nav"
+										className="button-orange"
+										onClick={(e) => {
+											setMobileNav(!mobileNav);
+											e.stopPropagation(); // Prevent event propagation
+										}}
+									>
+										<i className="fa fa-bars"></i> Menu
+									</button>
+									{showNavigation && <Navigation mobileNav={mobileNav} setMobileNav={setMobileNav} />}
 									<Routes>
 										<Route path="/" element={<Login />} />
 										<Route path="/bookings" element={<Bookings />} />
