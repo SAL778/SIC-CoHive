@@ -50,7 +50,7 @@ function App() {
 							<Notifications />
 							<Router>
 								<div
-									className={`flex min-h-screen h-full w-[100%] flex-col md:flex-row body-white py-0 ${
+									className={`app-container flex min-h-screen h-full w-[100%] flex-col md:flex-row body-white py-0 ${
 										showNavigation ? "pl-[350px]" : "pl-[30px]"
 									} pr-[30px] gap-[40px]`}
 								>
