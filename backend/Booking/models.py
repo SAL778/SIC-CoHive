@@ -38,8 +38,8 @@ class Resources(models.Model):
 
 class Booking(models.Model):
     id = models.AutoField(primary_key=True,help_text="Unique identifier for the schedule")
-    start_time = models.DateTimeField(help_text="Start time of the schedule",default=timezone.now())
-    end_time = models.DateTimeField(help_text="End time of the schedule",default=timezone.now())
+    start_time = models.DateTimeField(help_text="Start time of the schedule")
+    end_time = models.DateTimeField(help_text="End time of the schedule")
     resources = models.ForeignKey(Resources, on_delete=models.CASCADE,related_name='bookings',help_text="Resource that the schedule is for")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,help_text="User that the schedule is for")
     visibility = models.BooleanField(help_text="Visibility of the schedule",default=True)
@@ -178,6 +178,24 @@ class Booking(models.Model):
         return str(self.id)
     
     
+class Event(models.Model):#temperory
+    id = models.AutoField(primary_key=True,help_text="Unique identifier for the event")
+    start_time = models.DateTimeField(help_text="Start time of the event")
+    end_time = models.DateTimeField(help_text="End time of the event")
+    resources = models.ForeignKey(Resources, on_delete=models.CASCADE,related_name='events',help_text="Resource that the event is for")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,help_text="User that the event is for")
+    visibility = models.BooleanField(help_text="Visibility of the event",default=True)
+    title = models.CharField(max_length=100, blank=True, null=True,help_text="Title of the event")
+    description = models.TextField(help_text="Description of the event")
     
-# class Analytics(models.Model):
+    
+    
+    def __str__(self):
+        return str(self.id) 
+
+class EventCalender(model.Model):#temporary
+    id = models.AutoField(primary_key=True,help_text="Unique identifier for the event calender")
+    events = models.ManyToManyField(Event,help_text="Events in the calender")
+    resources = models.ForeignKey(Resources, on_delete=models.CASCADE,related_name='event_calenders',help_text="Resource that the event calender is for")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,help_text="User that the event calender is for")
     
