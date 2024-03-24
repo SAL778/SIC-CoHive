@@ -1,10 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import EventsList from "./components/EventsList";
 import DateSelector from "./components/DateSelector";
+import  EventsCarousel from "./EventsPage/EventsCarousel.jsx";
+import { Modal } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { HostContext } from "./App";
+import { httpRequest } from "./utils";
 
 function Events() {
+
+	const fallbackImage = "https://www.ualberta.ca/science/media-library/news/2018/sep/student-innovation-centre-launch.jpg";
+
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [eventsData, setEventsData] = useState([]);
+	const [events, setEvents] = useState([]);				//Populates carousel
+	const [isLoading, setIsLoading] = useState([]);
+	const { host } = useContext(HostContext);
+	const [opened, {open, close}] = useDisclosure(false);	//Used for modal control
+	const [clickedEvent, setClickedEvent] = null;			//Populates modal
+	
+    const modalClose = () => {
+        close()
+        setTimeout(() => {
+            setClickedEvent(null)
+        }, 200);
+    }
 
 	const fetchEvents = async (selectedDate) => {
 		try {
@@ -107,7 +127,15 @@ function Events() {
 
 	useEffect(() => {
 		fetchEvents(currentDate);
+		httpRequest({
+			endpoint: `${host}/google_drive_integration/events`,
+			onSuccess: (eventsData) => {
+				setEvents(eventsData)
+				setIsLoading(false)
+			}
+		})
 	}, []);
+
 
 	return (
 		<div className="parentContainer">
@@ -128,8 +156,58 @@ function Events() {
 					<EventsList key={index} event={event} />
 				))}
 			</div>
+
+			<EventsCarousel 
+				events={events} 
+				onItemClick={(event) => {
+					setClickedEvent(event)
+					open()
+				}}
+			/>
+
+			<Modal
+				opened={opened}
+				onClose={modalClose}
+				centered
+				size="auto"
+				transitionProps={{
+					transition: "slide-up",
+					duration: 200,
+					timingFunction: "ease-in-out",
+				}}
+			>
+				<div className = "modalContent">
+					<img src = {clickedEvent?.imageSrc || fallbackImage}/>
+					<h2>{clickedEvent?.title}</h2>
+
+					<section className="eventDetails grid grid-cols-2 gap-4">
+						<span className="location">
+							<i className="fa fa-location-arrow"/>
+							<p>{clickedEvent?.location}</p>
+						</span>
+						<span className="date">
+							<i className="fa fa-calendar"/>
+							<p>{clickedEvent?.date}</p>
+						</span>
+						<span className="organizer">
+							<i className="fa fa-person"/>
+							<p>{clickedEvent?.organizer}</p>
+						</span>
+						<span className="time">
+							<i className="fa fa-clock"/>
+							<p>{clickedEvent?.startTime - clickedEvent.endTime}</p>
+						</span>
+					</section>
+
+					<p>{clickedEvent?.details}</p>
+
+					<button onClick = {modalClose}>Close</button>
+				</div>
+			</Modal>
 		</div>
 	);
 }
+
+
 
 export default Events;
