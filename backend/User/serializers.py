@@ -63,6 +63,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
                 if role_name not in incoming_roles:
                     role = Flair_Roles.objects.get(role_name=role_name)
                     instance.flair_roles.remove(role)
+                    role.delete()
 
         return instance
 
