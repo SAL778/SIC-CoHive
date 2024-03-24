@@ -198,11 +198,11 @@ function Events() {
 								</span>
 								<span className="organizer">
 									<i className="fa fa-person"/>
-									<p>{clickedEvent?.organizer}</p>
+									<p>{clickedEvent?.email}</p>
 								</span>
 								<span className="time">
 									<i className="fa fa-clock"/>
-									<p>{clickedEvent?.startTime - clickedEvent?.endTime}</p>
+									<p>{clickedEvent?.startTime} - {clickedEvent?.endTime}</p>
 								</span>
 							</section>
 

@@ -58,7 +58,7 @@ def fetch_spreadsheet_events(request):
 
     spreadsheet_id = "15hVD2EytHBED3Ie6QzL8NrnEDWsNfrPHb7JggMgRdFw"
     spreadsheet_range = "Events!A1:Z" #Rows 2 onwards (Row 1 is headers), from columns A-Z. Empty columns will not be included, even if specified in range.
-    scheme = ["timestamp", "title", "date", "startTime", "endTime", "imgSrc", "approved"] #Camelcasing to follow google convention
+    scheme = ["timestamp", "title", "date", "startTime", "endTime", "imgSrc", "description", "email", "location", "approved"] #Camelcasing to follow google convention
 
     event_entries = client.spreadsheets().values().get(spreadsheetId = spreadsheet_id, range=spreadsheet_range).execute()
     parsed_events = parse_spreadsheet(event_entries, scheme=scheme)

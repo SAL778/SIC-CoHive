@@ -25,7 +25,7 @@ function EventCard({event, onClick}) {
 	return (
             <div
             onClick = {() => onClick(event)}
-            className="eventCard relative w-256 overflow-hidden group rounded-md p-3 bg-neutral-500 shadow-custom"
+            className="eventCard relative w-256 overflow-hidden group rounded-md p-3 bg-neutral-500 shadow-custom cursor-pointer"
             >
                 <img 
                 src = {properImageSource(event.imgSrc)}
@@ -41,12 +41,12 @@ function EventCard({event, onClick}) {
 
                     <div className="locationTimeSection flex flex-col gap-2">
                         <span className = "eventLocation block">
-                            <i className="fa fa-location-dot text-white mr-3 text-lg"/>
-                            <p>{event?.location}</p>
+                            <i className= "fa fa-location-dot text-white mr-3 text-lg"/>
+                            <p className= "inline">{event.location}</p>
                         </span>
                         <span className = "eventTime block">
-                            <i className="fa fa-clock text-white mr-3 text-lg"/>
-                            <p className="inline">{event.startTime} - {event.endTime}</p>
+                            <i className= "fa fa-clock text-white mr-3 text-lg"/>
+                            <p className= "inline">{event.startTime} - {event.endTime}</p>
                         </span>
                     </div>
                 </div>
