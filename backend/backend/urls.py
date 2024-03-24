@@ -28,4 +28,7 @@ urlpatterns = [
     path('accounts/profile/', custom_login_redirect, name='custom-login-redirect'),
     re_path(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path("applinks/", AppLinkList.as_view(), name="app-link-list"),
+
+    #gdrive
+    path('google_drive_integration/', include('Google_drive_integration.urls'))
 ]
