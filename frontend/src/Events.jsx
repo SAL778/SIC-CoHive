@@ -14,10 +14,10 @@ function Events() {
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [eventsData, setEventsData] = useState([]);
 	const [events, setEvents] = useState([]);				//Populates carousel
-	const [isLoading, setIsLoading] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 	const { host } = useContext(HostContext);
 	const [opened, {open, close}] = useDisclosure(false);	//Used for modal control
-	const [clickedEvent, setClickedEvent] = null;			//Populates modal
+	const [clickedEvent, setClickedEvent] = useState(null);			//Populates modal
 	
     const modalClose = () => {
         close()
@@ -129,8 +129,8 @@ function Events() {
 		fetchEvents(currentDate);
 		httpRequest({
 			endpoint: `${host}/google_drive_integration/events`,
-			onSuccess: (eventsData) => {
-				setEvents(eventsData)
+			onSuccess: (eventData) => {
+				setEvents(eventData.events)
 				setIsLoading(false)
 			}
 		})
@@ -157,13 +157,15 @@ function Events() {
 				))}
 			</div>
 
-			<EventsCarousel 
-				events={events} 
-				onItemClick={(event) => {
-					setClickedEvent(event)
-					open()
-				}}
-			/>
+			{ !isLoading && 
+				<EventsCarousel 
+					events={events} 
+					onItemClick={(event) => {
+						setClickedEvent(event)
+						open()
+					}}
+				/>
+			}
 
 			<Modal
 				opened={opened}
@@ -177,7 +179,7 @@ function Events() {
 				}}
 			>
 				<div className = "modalContent">
-					<img src = {clickedEvent?.imageSrc || fallbackImage}/>
+					<img src = {properImageSource(clickedEvent?.imgSrc) || fallbackImage}/>
 					<h2>{clickedEvent?.title}</h2>
 
 					<section className="eventDetails grid grid-cols-2 gap-4">
@@ -195,7 +197,7 @@ function Events() {
 						</span>
 						<span className="time">
 							<i className="fa fa-clock"/>
-							<p>{clickedEvent?.startTime - clickedEvent.endTime}</p>
+							<p>{clickedEvent?.startTime - clickedEvent?.endTime}</p>
 						</span>
 					</section>
 
@@ -209,5 +211,18 @@ function Events() {
 }
 
 
+function properImageSource(url) {
+	const pattern = /id=([\w-]+)/;  //Extract the ID from the imageURL
+
+	const match = url?.match(pattern);
+	const imageId = match ? match[1] : null;
+
+	const newUrl = imageId ? `https://drive.google.com/thumbnail?id=${imageId}` : null;
+	if (match) {
+		console.log(newUrl)
+	}
+		
+	return (newUrl)
+}
 
 export default Events;
