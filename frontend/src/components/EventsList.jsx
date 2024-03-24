@@ -4,7 +4,7 @@ export default function EventList({ event }) {
 	return (
 		<div
 			className={
-				"flex items-center py-4 px-6 rounded-md cursor-pointer gap-10 shadow-custom"
+				"list-booking-item flex items-center py-4 px-6 rounded-md cursor-pointer gap-10 shadow-custom"
 			}
 			// onClick={() => onItemClick(asset)}
 		>

@@ -31,7 +31,7 @@ export default function DateSelector({ currentDate, onSetDate }) {
 
 function getDisplayDate({ date, onShow, isExpanded }) {
 	return (
-		<button type="button" onClick={onShow}>
+		<button type="button" onClick={onShow} className="w-full">
 			<label className="block text-left">
 				{isToday(date) ? "Today" : "Date"}
 			</label>

@@ -27,7 +27,7 @@ const BookingHeader = ({
 	return (
 		<div className="flex flex-col z-10 mt-[30px] px-[10px] w-full gap-8">
 			<div className="w-fit min-w-[250px]">
-				<DateSelector onSetDate={onSetDate} currentDate={currentDate} />
+				<DateSelector onSetDate={onSetDate} currentDate={currentDate}/>
 			</div>
 
 			<div className="flex flex-row justify-between items-end">
@@ -38,9 +38,9 @@ const BookingHeader = ({
 						onClick={() => onBookClick(null)}
 						className={`${
 							isBeforeToday()
-								? "bg-gray-300 cursor-not-allowed"
-								: "button-orange"
-						} button-wide h-[64px]`}
+								? "cursor-not-allowed button-disabled"
+								: ""
+						} button-orange button-wide h-[64px]`}
 					>
 						New Booking
 					</button>

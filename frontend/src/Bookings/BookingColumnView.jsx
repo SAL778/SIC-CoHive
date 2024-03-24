@@ -37,7 +37,7 @@ export default function ColumnView({onBookingEdit, assetType, currentDate, isUpd
 			{isLoading ? (
 				<Loader size={50} color="orange" />
 			) : (
-				<div className="flex flex-row flex-grow overflow-clip px-[10px] my-8 h-full">
+				<div className="bounding-box flex flex-row flex-grow overflow-clip px-[10px] py-[20px] my-8 h-full rounded-[12px]">
 					<div className="flex flex-col mt-[100px] h-full mr-8">
 						{Array.from({ length: 52 }, (_, index) => {
 							const hour = Math.floor(index / 4) + 7;

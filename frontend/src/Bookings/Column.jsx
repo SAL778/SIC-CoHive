@@ -154,7 +154,7 @@ const Column = ({ column, onBookingEdit }) => {
 		});
 
 		return (
-			<div>
+			<div className="shadow-custom rounded-[12px]">
 				{timeslots.map((slot) => {
 					// Calculate the height of the slot based on the time range (in 15-minute increments) * 24px per slot
 					const slotHeight = Math.ceil((parseTime(slot.display_time.split(' - ')[1]) - parseTime(slot.display_time.split(' - ')[0])) / (15 * 60000)) * 24;

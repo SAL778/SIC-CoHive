@@ -442,6 +442,17 @@ button.button-red:focus {
 	box-shadow: 0px 2px 6px #00000080;
 }
 
+button.button-disabled,
+.button-disabled,
+button.button-disabled:hover,
+.button-disabled:hover,
+button.button-disabled:focus,
+.button-disabled:focus {
+	background: #d4d4d4;
+	color: var(--charcoal);
+	box-shadow: 0px 2px 6px #00000029;
+}
+
 .filter-container {
 	background: white;
 	border-radius: 4px;
@@ -550,7 +561,8 @@ button.button-red:focus {
 }
 
 .booking-column-container .embla__slide:nth-child(2n + 1) .open-booking-slot {
-	background: #f2f4f9;
+	background: #e5e5e5;
+    border-bottom: 1px solid #adadad;
 }
 
 .booking-column-container .embla__slide:nth-child(2n) .open-booking-slot {
@@ -561,8 +573,9 @@ button.button-red:focus {
 	.embla__slide
 	.booking-column.no-permission-column
 	.open-booking-slot {
-	background: rgb(209, 213, 219);
+	background: #e5e5e5;
 	cursor: not-allowed;
+	border-bottom: 1px solid #e5e5e5;
 }
 
 .booking-column-container
@@ -573,7 +586,7 @@ button.button-red:focus {
 	.embla__slide:nth-child(2n)
 	.booking-column.no-permission-column:not(.currentlyBooking)
 	.open-booking-slot:hover {
-	background: rgb(209, 213, 219);
+	background: #e5e5e5;
 }
 
 .booking-column-container
@@ -746,6 +759,14 @@ div .mantine-RichTextEditor-content {
 
 .app-container .iframeForm {
 	margin-top: 100px;
+}
+
+.bounding-box {
+	background: #f8f8f8;
+}
+
+div.list-booking-item {
+	background: #fff;
 }
 
 @media (min-width: 1120px) {
