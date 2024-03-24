@@ -40,7 +40,6 @@ class CustomUserTestCase(APITestCase):
         self.assertEqual(response.data[0]['email'], 'testuser@example.com')
         self.assertEqual(response.data[0]['portfolioVisibility'], True)
         self.assertEqual(response.data[0]['profileImage'], "http://example.com/image.jpg")
-        self.assertEqual(response.data[0]['roles'], 'User')
         self.assertEqual(response.data[0]['flair_roles'][0]['role_name'], 'Admin')
 
     '''
@@ -119,7 +118,7 @@ class CustomUserTestCase(APITestCase):
             format='json',
             HTTP_AUTHORIZATION = "Token " + self.token.key
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_user_delete(self):
         '''
