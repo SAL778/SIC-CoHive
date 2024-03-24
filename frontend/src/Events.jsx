@@ -171,57 +171,64 @@ function Events() {
 				opened={opened}
 				onClose={modalClose}
 				centered
-				size="auto"
+				size="lg"
 				transitionProps={{
 					transition: "slide-up",
 					duration: 200,
 					timingFunction: "ease-in-out",
 				}}
 			>
-				<div className = "modalContent">
-					<img src = {properImageSource(clickedEvent?.imgSrc) || fallbackImage}/>
-					<h2>{clickedEvent?.title}</h2>
+				<div className = "modalContent h-full w-full flex">
+					<img 
+					src = {properImageSource(clickedEvent?.imgSrc) || fallbackImage}
+					/>
 
-					<section className="eventDetails grid grid-cols-2 gap-4">
-						<span className="location">
-							<i className="fa fa-location-arrow"/>
-							<p>{clickedEvent?.location}</p>
-						</span>
-						<span className="date">
-							<i className="fa fa-calendar"/>
-							<p>{clickedEvent?.date}</p>
-						</span>
-						<span className="organizer">
-							<i className="fa fa-person"/>
-							<p>{clickedEvent?.organizer}</p>
-						</span>
-						<span className="time">
-							<i className="fa fa-clock"/>
-							<p>{clickedEvent?.startTime - clickedEvent?.endTime}</p>
-						</span>
-					</section>
+					<div className = "rightSide">
+						<div className = "textContent">
+							<h2>{clickedEvent?.title}</h2>
 
-					<p>{clickedEvent?.details}</p>
+							<section className="eventDetails grid grid-cols-2 gap-4">
+								<span className="location">
+									<i className="fa fa-location-arrow"/>
+									<p>{clickedEvent?.location}</p>
+								</span>
+								<span className="date">
+									<i className="fa fa-calendar"/>
+									<p>{clickedEvent?.date}</p>
+								</span>
+								<span className="organizer">
+									<i className="fa fa-person"/>
+									<p>{clickedEvent?.organizer}</p>
+								</span>
+								<span className="time">
+									<i className="fa fa-clock"/>
+									<p>{clickedEvent?.startTime - clickedEvent?.endTime}</p>
+								</span>
+							</section>
 
-					<button onClick = {modalClose}>Close</button>
+							<p>{clickedEvent?.details}</p>
+						</div>
+						<div className = "buttonFooter">
+							<button onClick = {modalClose} className="button-orange flex-end">Close</button>
+						</div>
+					</div>
+
+					
+					
 				</div>
 			</Modal>
 		</div>
 	);
 }
 
-
+//Change this so the link isn't broken
 function properImageSource(url) {
 	const pattern = /id=([\w-]+)/;  //Extract the ID from the imageURL
 
 	const match = url?.match(pattern);
 	const imageId = match ? match[1] : null;
-
 	const newUrl = imageId ? `https://drive.google.com/thumbnail?id=${imageId}` : null;
-	if (match) {
-		console.log(newUrl)
-	}
-		
+
 	return (newUrl)
 }
 
