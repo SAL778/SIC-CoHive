@@ -50,6 +50,7 @@ export default function EditProfile() {
 				method: 'PATCH',
 				body: JSON.stringify({portfolioVisibility: visibility}),
 				onSuccess: () => {
+					console.dir(JSON.stringify({portfolioVisibility: visibility}))
 					new SuccessNotification(
 						'Changed visibility', 
 						`Portfolio set to ${visibility ? "Public" : "Private"}`)
@@ -70,7 +71,7 @@ export default function EditProfile() {
 		httpRequest({
 			endpoint: `${host}/users/profile/`,
 			onSuccess: (userData) => {
-				console.log(location)
+				console.log(userData)
 				setProfileUser(userData);
 				setCurrentUser(userData); //Add to the context so nested components can access
 				httpRequest({
@@ -83,6 +84,11 @@ export default function EditProfile() {
 			},
 		});
 	}, []);
+
+	//Re-render when the portfolioData loads
+	useEffect(() => {
+		setPortfolioVisibility(profileUser.portfolioVisibility)
+	}, [portfolio])
 
 	return (
 		<>
