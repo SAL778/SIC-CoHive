@@ -121,7 +121,7 @@ function Events() {
 				></iframe>
 			</div>
 			<div className="w-fit min-w-[250px]">
-				<DateSelector onSetDate={handleDateChange} currentDate={currentDate} />
+				<DateSelector onSetDate={handleDateChange} currentDate={currentDate}/>
 			</div>
 			<div className="event-list">
 				{eventsData.map((event, index) => (
