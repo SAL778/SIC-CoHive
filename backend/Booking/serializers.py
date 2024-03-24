@@ -7,8 +7,8 @@ from rest_framework import serializers
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
-    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
+    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.now())
+    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.now())
     user = serializers.SerializerMethodField("get_user")
     resources_name = serializers.CharField(source="resources.name", read_only=True)
     resource_type=serializers.CharField(source="resources.type", read_only=True)

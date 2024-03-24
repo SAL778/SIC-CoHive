@@ -249,6 +249,10 @@ class ResourceListView(generics.ListAPIView):
     
 
 class AverageBookingView(APIView):
+    '''
+    get:
+    Get the average booking duration for a given scope and time period.
+    '''
     def get(self, request, format=None):
         serializer = AverageBookingDurationSerializer(data=request.query_params)
         if serializer.is_valid():
@@ -267,6 +271,7 @@ class AverageBookingView(APIView):
 
 
 class BookingDaysView(APIView):
+    
     def get(self, request, *args, **kwargs):
         serializer = BookingStatisticsSerializer(data=request.query_params)
         if serializer.is_valid():
