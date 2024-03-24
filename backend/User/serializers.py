@@ -49,6 +49,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         instance.education = validated_data.get('education', instance.education)
         instance.save()
 
+        # Update roles if they are provided in the request data and are different from the existing roles
         if incoming_roles_data is not None:
             existing_roles = list(instance.flair_roles.values_list('role_name', flat=True))
             incoming_roles = [role_data['role_name'] for role_data in incoming_roles_data]

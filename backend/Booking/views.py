@@ -253,6 +253,7 @@ class AverageBookingView(APIView):
     get:
     Get the average booking duration for a given scope and time period.
     '''
+
     def get(self, request, format=None):
         serializer = AverageBookingDurationSerializer(data=request.query_params)
         if serializer.is_valid():
@@ -271,7 +272,10 @@ class AverageBookingView(APIView):
 
 
 class BookingDaysView(APIView):
-    
+    '''
+    get:
+    Get the number of bookings for each day of the week.
+    '''
     def get(self, request, *args, **kwargs):
         serializer = BookingStatisticsSerializer(data=request.query_params)
         if serializer.is_valid():
@@ -288,6 +292,10 @@ class BookingDaysView(APIView):
         
         
 class BookingFrequenciesView(APIView):
+    '''
+    get:
+    Get the number of bookings for each resource.
+    '''
     def get(self, request, *args, **kwargs):
         serializer = BookingFrequencyFilterSerializer(data=request.query_params)
         if serializer.is_valid():
@@ -306,6 +314,10 @@ class BookingFrequenciesView(APIView):
         
         
 class PeakBookingHours(APIView):
+    '''
+    get:
+    Get the peak booking times for a given scope and time period.
+    '''
     def get(self, request, *args, **kwargs):
         serializer = BookingFrequencyFilterSerializer(data=request.query_params)
         if serializer.is_valid():

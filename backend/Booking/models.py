@@ -193,7 +193,7 @@ class Event(models.Model):#temperory
     def __str__(self):
         return str(self.id) 
 
-class EventCalender(model.Model):#temporary
+class EventCalender(models.Model):#temporary
     id = models.AutoField(primary_key=True,help_text="Unique identifier for the event calender")
     events = models.ManyToManyField(Event,help_text="Events in the calender")
     resources = models.ForeignKey(Resources, on_delete=models.CASCADE,related_name='event_calenders',help_text="Resource that the event calender is for")
