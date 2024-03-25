@@ -28,7 +28,7 @@ export function TextEditor({ initialValue, onValueSubmit, readOnly}) {
             <div className = "relative px-[10px]">
               <RichTextEditor editor={editor}>
                 {!readOnly &&
-                  <RichTextEditor.Toolbar sticky className="flex items-end gap-8 min-h-[70px]">
+                  <RichTextEditor.Toolbar sticky className="editor-header gap-8 min-h-[70px]">
                     <RichTextEditor.ControlsGroup className="headings">
                       <RichTextEditor.H1 icon={() => <i className="fa fa-heading text-xl"/>}/>
                       <RichTextEditor.H2 icon={() => <i className="fa fa-heading text-md"/>}/>
@@ -54,7 +54,7 @@ export function TextEditor({ initialValue, onValueSubmit, readOnly}) {
                       <RichTextEditor.AlignRight icon={() => <i className="fa fa-align-right text-xl"/>}/>
                     </RichTextEditor.ControlsGroup>
         
-                    <RichTextEditor.ControlsGroup className="controls ml-auto"> {/*Justfies this section to the right */}
+                    <RichTextEditor.ControlsGroup className="controls">
                       <RichTextEditor.Undo icon={() => <i className="fa fa-rotate-left text-xl"/>}/>
                       <RichTextEditor.Redo icon={() => <i className="fa fa-rotate-right text-xl"/>}/>
                     </RichTextEditor.ControlsGroup>
