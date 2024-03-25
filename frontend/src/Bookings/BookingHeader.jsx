@@ -25,12 +25,12 @@ const BookingHeader = ({
 	};
 
 	return (
-		<div className="flex flex-col z-10 mt-[30px] px-[10px] w-full gap-8">
-			<div className="w-fit min-w-[250px]">
+		<div id="booking-header" className="flex flex-col z-10 px-[10px] w-full gap-8">
+			<div className="w-fit min-w-[300px]">
 				<DateSelector onSetDate={onSetDate} currentDate={currentDate}/>
 			</div>
 
-			<div className="flex flex-row justify-between items-end">
+			<div className="mobile-column flex justify-between items-start gap-4">
 				<div>
 					<button
 						type="button"
@@ -45,7 +45,7 @@ const BookingHeader = ({
 						New Booking
 					</button>
 				</div>
-				<div className="flex flex-row justify-between items-center gap-6">
+				<div className="booking-options flex flex-row justify-between items-center gap-6">
 					<div className="flex flex-row justify-between gap-3 items-center bg-white py-0 px-5 shadow-custom rounded-[5px] h-[64px]">
 						<button
 							className={`${
@@ -56,7 +56,8 @@ const BookingHeader = ({
 								setSelectedTab("Rooms");
 							}}
 						>
-							Rooms
+							<p className="mobile-hidden">Rooms</p>
+							<i class="desktop-hidden fa-solid fa-chalkboard-user"></i>
 						</button>
 						<button
 							className={`${
@@ -67,7 +68,8 @@ const BookingHeader = ({
 								setSelectedTab("Equipment");
 							}}
 						>
-							Equipment
+							<p className="mobile-hidden">Equipment</p>
+							<i class="desktop-hidden fa-solid fa-vr-cardboard"></i>
 						</button>
 					</div>
 					<div className="flex flex-row justify-between gap-3 items-center bg-white py-0 px-5 shadow-custom rounded-[5px] h-[64px]">

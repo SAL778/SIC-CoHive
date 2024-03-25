@@ -154,7 +154,7 @@ const Column = ({ column, onBookingEdit }) => {
 		});
 
 		return (
-			<div className="shadow-custom rounded-[12px]">
+			<div className="shadow-lg rounded-[12px]">
 				{timeslots.map((slot) => {
 					// Calculate the height of the slot based on the time range (in 15-minute increments) * 24px per slot
 					const slotHeight = Math.ceil((parseTime(slot.display_time.split(' - ')[1]) - parseTime(slot.display_time.split(' - ')[0])) / (15 * 60000)) * 24;
@@ -236,12 +236,12 @@ const Column = ({ column, onBookingEdit }) => {
 	return (
 		<div key={column.id} className={`booking-column h-full flex flex-col relative ${selectedSlot ? 'currentlyBooking' : ''} ${hasPermission ? '' : 'no-permission-column'}`}>
 			<div className="flex justify-center items-center min-h-[80px] h-[80px] mb-[20px] rounded-[12px] shadow-custom w-[100] py-2 px-4 bg-white">
-				<p className="text-lg font-bold capitalize">{column.name}</p>
+				<p className="text-lg font-bold capitalize text-center">{column.name}</p>
 				{column.image && (
 					<img src={`https://drive.google.com/thumbnail?id=${column.image.split("/d/")[1].split("/view")[0]}`} alt="Resource Image" className="w-[50px] h-[50px] ml-4" />
 				)}
 			</div>
-			<div className="py-0 px-0 rounded-[12px] flex flex-col flex-grow min-w-[260px]">
+			<div className="booking-column-width py-0 px-0 rounded-[12px] flex flex-col flex-grow">
 				<BookingList
 					bookings={column.bookings}
 					generateTimeSlots={generateTimeSlots}

@@ -200,7 +200,7 @@ function Bookings() {
 				currentDate={currentDay}
 			/>
 			{!isColumnView ? (
-				<div className="flex flex-row gap-10 justify-between align-top">
+				<div className="flex flex-row gap-4 justify-between align-top">
 					<BookingListView
 						onItemClick={onClickBooking}
 						assetType={currentAssetViewIsRoom ? "room" : "equipment"}

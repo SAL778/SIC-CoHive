@@ -114,8 +114,8 @@ function Navigation({ mobileNav, setMobileNav }) {
 				className={`flex-none z-10 ${mobileNav ? "mobileOpen" : ""}`}
 			>
 				<div className="flex h-full flex-col bg-white rounded-[10px] shadow-custom">
-					<Link
-						href="/"
+					<a
+						href="/bookings"
 						className="mb-2 flex h-30 items-end rounded-[10px] bg-white p-4 justify-center"
 					>
 						<img
@@ -125,7 +125,7 @@ function Navigation({ mobileNav, setMobileNav }) {
 							width={250}
 							height={40}
 						/>
-					</Link>
+					</a>
 					<div className="flex grow justify-between flex-col">
 						{/* NOTE: commented out until the positioning is fixed */}
 						{/* <img src={Underlay} className="nav-underlay" /> */}

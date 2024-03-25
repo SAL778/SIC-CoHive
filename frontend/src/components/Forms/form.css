@@ -47,6 +47,10 @@
 	color: var(--navy-blue);
 }
 
+.filter-container .mantine-Input-input.mantine-DatePickerInput-input {
+	min-height: 42.5px;
+}
+
 .mantine-Select-label {
 	text-transform: uppercase;
 	font-weight: 700;
@@ -102,6 +106,7 @@
 	font-size: 1em;
 }
 
-.mantine-DatePicker-day[data-today] {
+.mantine-DatePicker-day[data-today],
+.mantine-DatePickerInput-day[data-today] {
 	border: 2px solid var(--primary-orange);
 }

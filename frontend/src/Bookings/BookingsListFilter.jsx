@@ -61,7 +61,7 @@ function Filter({ onFilterChange, assetType }) {
 	};
 
 	return (
-		<div className="px-[10px] py-8" style={{ minWidth: "300px" }}>
+		<div className="px-[10px] py-[30px]">
 			<div className="filter-container">
 				<div className="filter-section">
 					<div className="filter-bar-text">
@@ -77,7 +77,7 @@ function Filter({ onFilterChange, assetType }) {
 						<h1>Filter</h1>
 					</div>
 					<div className="bookings-filter">
-						<strong style={{ marginBottom: "5px" }}>Bookings:</strong>
+						<p style={{ marginBottom: "8px" }}><strong>Bookings:</strong></p>
 						<div className="filter-item">
 							<div
 								className={`radio-button ${
@@ -102,7 +102,7 @@ function Filter({ onFilterChange, assetType }) {
 						</div>
 					</div>
 					<div style={{ margin: "0 0 5px 0px" }}>
-						<strong>From Date:</strong>
+						<p><strong>From Date:</strong></p>
 					</div>
 
 					<DatePickerInput
@@ -115,8 +115,8 @@ function Filter({ onFilterChange, assetType }) {
 						}}
 					/>
 
-					<div style={{ margin: "10px 0 5px 0px" }}>
-						<strong>To Date:</strong>
+					<div style={{ margin: "20px 0 5px 0px" }}>
+						<p><strong>To Date:</strong></p>
 					</div>
 
 					<DatePickerInput
@@ -130,7 +130,7 @@ function Filter({ onFilterChange, assetType }) {
 					/>
 
 					<div style={{ margin: "10px 0 5px 0px" }}>
-						<strong>{assetType == "room" ? "Rooms" : "Equipment"}</strong>
+						<p><strong>{assetType == "room" ? "Rooms" : "Equipment"}</strong></p>
 					</div>
 					<div className="filters">
 						{Object.entries(selectedFilters).map(

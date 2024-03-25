@@ -51,9 +51,9 @@ function App() {
 							<Notifications />
 							<Router>
 								<div
-									className={`app-container flex min-h-screen h-full w-[100%] flex-row body-white py-0 ${
-										showNavigation ? "app-container-padding" : "pl-[30px]"
-									} pr-[30px] gap-[40px]`}
+									className={`app-container flex min-h-screen h-full w-[100%] flex-row body-white py-0 gap-[40px] ${
+										showNavigation ? "app-container-padding" : ""
+									}`}
 								>	
 									<button
 										id="mobile-nav"
