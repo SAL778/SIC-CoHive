@@ -40,7 +40,7 @@ body {
 	background-size: auto;
 }
 
-.app-container-padding {
+.app-container-pages {
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -89,7 +89,7 @@ h3 {
 
 #mobile-nav {
 	position: absolute;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     gap: 8px;
@@ -98,6 +98,10 @@ h3 {
     left: 20px;
     top: 30px;
     height: 48px;
+}
+
+.app-container-pages #mobile-nav {
+	display: flex;
 }
 
 #app-nav {
@@ -909,12 +913,12 @@ div .mantine-RichTextEditor-content {
 }
 
 @media (min-width: 650px) {
-	.app-container-padding {
+	.app-container-pages {
 		padding-left: 30px;
 		padding-right: 30px;
 	}
 
-	#mobile-nav {
+	.app-container-pages #mobile-nav {
 		left: 40px;
 	}
 
@@ -980,11 +984,11 @@ div .mantine-RichTextEditor-content {
 }
 
 @media (min-width: 1120px) {
-	.app-container-padding {
+	.app-container-pages {
 		padding-left: 350px;
 	}
 
-	#mobile-nav {
+	.app-container-pages #mobile-nav {
 		display: none;
 	}
 

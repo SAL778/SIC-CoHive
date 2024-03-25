@@ -52,7 +52,7 @@ function App() {
 							<Router>
 								<div
 									className={`app-container flex min-h-screen h-full w-[100%] flex-row body-white py-0 gap-[40px] ${
-										showNavigation ? "app-container-padding" : ""
+										showNavigation ? "app-container-pages" : ""
 									}`}
 								>	
 									<button
