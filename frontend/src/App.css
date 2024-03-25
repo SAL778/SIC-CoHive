@@ -705,13 +705,14 @@ button.button-disabled:focus,
 
 .user-tags .mantine-TextInput-input {
 	border: 2px solid var(--primary-orange);
+	font-size: 0.75rem;
 	font-weight: 500;
 	padding-left: 2rem;
 	padding-right: 1rem;
 	border-radius: 25px;
 	color: var(--charcoal);
 	background: none;
-	height: 42px;
+	height: 35px;
 }
 
 .user-tags .mantine-TextInput-input::placeholder {
@@ -722,12 +723,12 @@ button.button-disabled:focus,
 	color: #fff;
 	background: var(--primary-orange);
 	text-transform: uppercase;
-	font-size: 0.825rem;
+	font-size: 0.75rem;
 	font-weight: 500;
 	padding-left: 1rem;
 	padding-right: 1rem;
 	letter-spacing: 0.125px;
-	height: 42px;
+	height: 35px;
 }
 
 .user-tags .mantine-Pill-root[data-with-remove='true'] {
@@ -862,9 +863,13 @@ div.list-booking-item {
 	line-height: 1.25rem;
 }
 
-.text-for-mobile{
+.text-for-mobile {
 	font-size: 0.9rem;
 	line-height: 1.25rem;
+}
+
+.user-name-text {
+	font-size: 1.25rem;
 }
 
 @media (min-width: 500px) {
@@ -878,6 +883,10 @@ div.list-booking-item {
 
 	#community-container {
 		--number-of-columns: 2;
+	}
+
+	.user-name-text {
+		font-size: 1.5rem;
 	}
 }
 
@@ -912,11 +921,21 @@ div.list-booking-item {
 	#app-nav {
 		left: 30px;
 	}
+
+	.user-name-text {
+		font-size: 2.25rem;
+	}
 }
 
 @media (min-width: 700px) {
 	#community-container {
 		--number-of-columns: 3;
+	}
+
+	.user-tags .mantine-TextInput-input,
+	.user-tags .mantine-Pill-root {
+		font-size: 0.825rem;
+		height: 42px;
 	}
 }
 
