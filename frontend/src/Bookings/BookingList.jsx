@@ -87,8 +87,9 @@ function BookingListView({
 							.map((asset) => (
 								<BookingPopover
 									assetImage = {asset.image}
-									assetDescription = {asset.description}
-									assetPermissions = {asset.user_type}
+									assetDescription = {asset.resource_description}
+									assetCode = {asset.resource_room_code}
+									assetPermissions = {asset.resource_access_type}
 								>
 									<BookingListComponent
 										key={asset.id}
