@@ -1,0 +1,43 @@
+
+.background{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: url("./assets/404_bg.svg") no-repeat center center;
+	background-size: cover;
+    display: flex;
+}
+
+.container{    
+    width: 600px;
+    height: 300px; 
+    margin: auto; 
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 12px;
+}
+
+.left-col{
+    color: #EA580C;
+    font-size: 12rem;
+}
+
+.right-col {
+    display: flex;
+    font-size: 1.2rem;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: space-between; /* Aligns content to top and button to bottom */
+}
+
+.contact-button {
+    color: #EA580C;
+    align-self: flex-end; /* Aligns the button to the right (end) of the column */
+    padding: 10px 20px; /* Adjust button padding as needed */
+}
