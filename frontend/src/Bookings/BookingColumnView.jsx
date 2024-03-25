@@ -5,15 +5,19 @@ import Column from "./Column.jsx";
 import EmblaCarousel from "../components/Carousel/Carousel.jsx";
 import { Loader } from "@mantine/core";
 
-
 /** Function that returns a view of the ColumnView.
- * 
+ *
  * @param {function} onBookingEdit - A callable that triggers when a booking is edited
  * @param {string} assetType - A string of either "room" or "equipment" that specifies the asset requested
  * @param {date} currentDate - A string that specifies which day to get the bookings for
- * @returns 
+ * @returns
  */
-export default function ColumnView({onBookingEdit, assetType, currentDate, isUpdated}) {
+export default function ColumnView({
+	onBookingEdit,
+	assetType,
+	currentDate,
+	isUpdated,
+}) {
 	//const [userData, setUserData] = useState(null);
 	const { host } = useContext(HostContext);
 
@@ -28,7 +32,7 @@ export default function ColumnView({onBookingEdit, assetType, currentDate, isUpd
 				setTimeout(() => {
 					setIsLoading(false); // Added this to mitigate "flashing" when toggling assetType.
 				}, 150);
-			}
+			},
 		});
 	}, [assetType, currentDate, isUpdated]);
 
@@ -37,7 +41,10 @@ export default function ColumnView({onBookingEdit, assetType, currentDate, isUpd
 			{isLoading ? (
 				<Loader size={50} color="orange" />
 			) : (
-				<div id="bounding-box-columns" className="bounding-box-white flex flex-row flex-grow overflow-clip px-[10px] py-[20px] mx-[10px] my-[30px] h-full rounded-[12px] shadow-custom">
+				<div
+					id="bounding-box-columns"
+					className="bounding-box-white flex flex-row flex-grow overflow-clip px-[10px] py-[20px] mx-[10px] my-[30px] h-full rounded-[12px] shadow-custom"
+				>
 					<div className="booking-column-times-container flex flex-col mt-[100px] h-full">
 						{Array.from({ length: 52 }, (_, index) => {
 							const hour = Math.floor(index / 4) + 7;
@@ -67,9 +74,16 @@ export default function ColumnView({onBookingEdit, assetType, currentDate, isUpd
 						})}
 					</div>
 					<div className="booking-column-container overflow-x-hidden h-full p-[10px] m-[-10px]">
-						<EmblaCarousel slides={columnView.map((item, index) => (	
-							<Column key={index} column={item} onBookingEdit={onBookingEdit} />
-						))} options={{ align: "start", watchDrag: false }} />
+						<EmblaCarousel
+							slides={columnView.map((item, index) => (
+								<Column
+									key={index}
+									column={item}
+									onBookingEdit={onBookingEdit}
+								/>
+							))}
+							options={{ align: "start", watchDrag: false }}
+						/>
 					</div>
 				</div>
 			)}

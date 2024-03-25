@@ -38,7 +38,6 @@ function parseTime(timeStr) {
  * @returns {JSX.Element} The rendered Column component.
  */
 const Column = ({ column, onBookingEdit }) => {
-
 	const { currentUser } = useContext(UserContext);
 
 	// ---------------------------------------------------------------------------------------------------------------------
@@ -69,7 +68,12 @@ const Column = ({ column, onBookingEdit }) => {
 	};
 
 	// ---------------------------------------------------------------------------------------------------------------------
-	const BookingList = ({ bookings, generateTimeSlots, onSlotClick, hasPermission }) => {
+	const BookingList = ({
+		bookings,
+		generateTimeSlots,
+		onSlotClick,
+		hasPermission,
+	}) => {
 		let timeslots = generateTimeSlots();
 		let realBookings = [];
 
@@ -121,32 +125,38 @@ const Column = ({ column, onBookingEdit }) => {
 
 			booking.start_time = startTime;
 			booking.end_time = endTime;
-			realBookings.push({ overlapping_slots: unavailable, display_time: fullTimeRange, booking: true, ...booking }); //booking (backend)
+			realBookings.push({
+				overlapping_slots: unavailable,
+				display_time: fullTimeRange,
+				booking: true,
+				...booking,
+			}); //booking (backend)
 		});
-
 
 		// Helper function to update the timeslots array by removing the overlapping slots from the timeslots array
 		const updateTimeSlots = (timeslots, bookingSlot) => {
 			timeslots = timeslots.filter((slot) => {
 				return !bookingSlot.overlapping_slots.some(
 					// Check if the slot is in the overlapping slots
-					(overlappingSlot) => overlappingSlot.display_time === slot.display_time
+					(overlappingSlot) =>
+						overlappingSlot.display_time === slot.display_time
 				);
 			});
 			return timeslots;
-		}
+		};
 
 		// Go through the realBookings and insert into the timeslots array at the correct index
 		realBookings.forEach((bookingSlot) => {
-			const index = timeslots.findIndex((slot) =>
-				// The index to insert a booking is when the end time of the slot is the same as the start time of this booking
-				slot.display_time.split(" - ")[1] === bookingSlot.display_time.split(" - ")[0]
+			const index = timeslots.findIndex(
+				(slot) =>
+					// The index to insert a booking is when the end time of the slot is the same as the start time of this booking
+					slot.display_time.split(" - ")[1] ===
+					bookingSlot.display_time.split(" - ")[0]
 			);
 			if (index !== -1) {
 				timeslots = updateTimeSlots(timeslots, bookingSlot);
 				timeslots.splice(index + 1, 0, bookingSlot);
-			}
-			else if (bookingSlot.display_time.split(" - ")[0] == "7:00 AM") {
+			} else if (bookingSlot.display_time.split(" - ")[0] == "7:00 AM") {
 				// If the booking starts at 7:00 AM, insert at the beginning of the array
 				timeslots = updateTimeSlots(timeslots, bookingSlot);
 				timeslots.splice(0, 0, bookingSlot);
@@ -157,18 +167,28 @@ const Column = ({ column, onBookingEdit }) => {
 			<div className="shadow-lg rounded-[12px]">
 				{timeslots.map((slot) => {
 					// Calculate the height of the slot based on the time range (in 15-minute increments) * 24px per slot
-					const slotHeight = Math.ceil((parseTime(slot.display_time.split(' - ')[1]) - parseTime(slot.display_time.split(' - ')[0])) / (15 * 60000)) * 24;
+					const slotHeight =
+						Math.ceil(
+							(parseTime(slot.display_time.split(" - ")[1]) -
+								parseTime(slot.display_time.split(" - ")[0])) /
+								(15 * 60000)
+						) * 24;
 					// If the slot is 30 mins or less, make it a short booking card to remove some padding and fit the content
 					const isShortBooking = slotHeight / 24 <= 2;
 					// If the slot is 15 mins, don't show the time range
 					const is15MinBooking = slotHeight / 24 === 1;
-					
+
 					// TODO: Make the bookings that belong to the user have a different color by adding a class to the div
 
 					return (
 						<div key={slot.display_time}>
 							{slot.booking ? (
-								<div className={`column-booking-card ${isShortBooking ? 'short-booking-card justify-center' : 'justify-between'} cursor-pointer relative z-1 overflow-hidden flex flex-col rounded-[12px] shadow-custom pl-8 pr-10 py-4 bg-white text-sm capitalize`}
+								<div
+									className={`column-booking-card ${
+										isShortBooking
+											? "short-booking-card justify-center"
+											: "justify-between"
+									} cursor-pointer relative z-1 overflow-hidden flex flex-col rounded-[12px] shadow-custom pl-8 pr-10 py-4 bg-white text-sm capitalize`}
 									key={slot}
 									style={{ height: `${slotHeight}px` }}
 									onClick={() => hasPermission && onBookingEdit(slot)}
@@ -179,8 +199,12 @@ const Column = ({ column, onBookingEdit }) => {
 									)}
 								</div>
 							) : (
-								<div className="open-booking-slot cursor-pointer overflow-hidden px-4 py-2 text-sm" key={slot} style={{ height: `${slotHeight}px` }}
-									onClick={() => hasPermission && onSlotClick(slot, timeslots)}>
+								<div
+									className="open-booking-slot cursor-pointer overflow-hidden px-4 py-2 text-sm"
+									key={slot}
+									style={{ height: `${slotHeight}px` }}
+									onClick={() => hasPermission && onSlotClick(slot, timeslots)}
+								>
 									{/* <p>{slot.display_time}</p> */}
 								</div>
 							)}
@@ -189,12 +213,14 @@ const Column = ({ column, onBookingEdit }) => {
 				})}
 			</div>
 		);
-	}
+	};
 
 	// ---------------------------------------------------------------------------------------------------------------------
 
 	// Check if the user accessType contains at least 1 of the elements from the column.access_type
-	const hasPermission = column.access_type.some((permission) => currentUser.accessType.map((type) => type.name).includes(permission));
+	const hasPermission = column.access_type.some((permission) =>
+		currentUser.accessType.map((type) => type.name).includes(permission)
+	);
 
 	// State to manage the currently selected slot
 	const [selectedSlot, setSelectedSlot] = useState(null);
@@ -202,25 +228,30 @@ const Column = ({ column, onBookingEdit }) => {
 	// Function to handle click on a time slot
 	const handleSlotClick = (timeSlot, timeslots) => {
 		const startTime = parseTimeRange(timeSlot.display_time)[0];
-		
+
 		// Loop through the timeslots and find the index_number of the selected slot until we hit a booking which will not have this
 		console.log(timeSlot);
 		console.log(timeslots);
 
 		const indexOfNextBooking = timeslots.findIndex((slot) => {
 			const slotStartTime = parseTimeRange(slot.display_time)[0];
-			return slotStartTime > parseTimeRange(timeSlot.display_time)[0] && slot.booking;
+			return (
+				slotStartTime > parseTimeRange(timeSlot.display_time)[0] && slot.booking
+			);
 		});
 
 		// If there is a booking after the selected slot, set the lastAvailableSlot to the index_number of the slot before the booking
 		// If there is no booking after the selected slot, set the lastAvailableSlot to 51 (the last slot in the day)
-		const lastAvailableSlot = indexOfNextBooking !== -1 ? timeslots[indexOfNextBooking - 1].index_number : 51;
+		const lastAvailableSlot =
+			indexOfNextBooking !== -1
+				? timeslots[indexOfNextBooking - 1].index_number
+				: 51;
 
 		setSelectedSlot({
 			index: timeSlot.index_number,
 			start_time: startTime,
 			end_time: new Date(startTime.getTime() + 15 * 60000), // default to 15 minutes length for now
-			lastAvailableSlot: lastAvailableSlot
+			lastAvailableSlot: lastAvailableSlot,
 		});
 	};
 
@@ -234,11 +265,24 @@ const Column = ({ column, onBookingEdit }) => {
 	};
 
 	return (
-		<div key={column.id} className={`booking-column h-full flex flex-col relative ${selectedSlot ? 'currentlyBooking' : ''} ${hasPermission ? '' : 'no-permission-column'}`}>
+		<div
+			key={column.id}
+			className={`booking-column h-full flex flex-col relative ${
+				selectedSlot ? "currentlyBooking" : ""
+			} ${hasPermission ? "" : "no-permission-column"}`}
+		>
 			<div className="flex justify-center items-center min-h-[80px] h-[80px] mb-[20px] rounded-[12px] shadow-custom w-[100] py-2 px-4 bg-white">
-				<p className="text-lg font-bold capitalize text-center">{column.name}</p>
+				<p className="text-lg font-bold capitalize text-center">
+					{column.name}
+				</p>
 				{column.image && (
-					<img src={`https://drive.google.com/thumbnail?id=${column.image.split("/d/")[1].split("/view")[0]}`} alt="Resource Image" className="w-[50px] h-[50px] ml-4" />
+					<img
+						src={`https://drive.google.com/thumbnail?id=${
+							column.image.split("/d/")[1].split("/view")[0]
+						}`}
+						alt="Resource Image"
+						className="w-[50px] h-[50px] ml-4"
+					/>
 				)}
 			</div>
 			<div className="booking-column-width py-0 px-0 rounded-[12px] flex flex-col flex-grow">
