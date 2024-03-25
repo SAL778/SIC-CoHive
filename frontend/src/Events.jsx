@@ -149,6 +149,15 @@ function Events() {
 					}}
 				/>
 			}
+			<button
+				type="button"
+				onClick={() => {
+					window.open("https://docs.google.com/forms/d/e/1FAIpQLScYKmCIZ-luPldziOwUIxCbeQUbyROSl0MAlRXcFQW1ZJOMPQ/viewform?usp=sharing", "_blank");
+				}}
+				className="button-orange button-wide mt-[30px] h-[64px]"
+			>
+				Submit an Event
+			</button>
 			<div className="calendarContainer">
 				<iframe
 					src="https://embed.styledcalendar.com/#QsoYY1jHXbqoa6iOHxZi"
