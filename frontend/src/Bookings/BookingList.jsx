@@ -74,7 +74,7 @@ function BookingListView({
 	return isLoading ? (
 		<Loader size={50} color="orange" />
 	) : (
-		<ul className="bounding-box-white flex flex-col flex-grow gap-8 mx-[10px] my-[30px] px-[20px] py-[30px] rounded-[12px] shadow-custom">	
+		<ul className="bounding-box-white flex flex-col flex-grow overflow-hidden gap-8 mx-[10px] my-[30px] px-[20px] py-[30px] rounded-[12px] shadow-custom">	
 			{dateHeaders.map((dateHeader) => (
 				<li key={dateHeader.toISOString()}>
 					<DateHeaderComponent date={dateHeader} />

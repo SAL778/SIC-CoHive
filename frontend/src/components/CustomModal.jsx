@@ -18,7 +18,7 @@ function ModalComponent({ onAffirmative, onNegative, children, ...props }) {
 				<button
 					type="button"
 					onClick={onNegative}
-					className="text-neutral-500 hover:text-neutral-600 text-base p-3"
+					className="text-neutral-500 hover:text-neutral-600 text-for-mobile p-3"
 				>
 					{props.negativeText ?? "Cancel"}
 				</button>

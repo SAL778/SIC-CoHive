@@ -18,10 +18,10 @@ import Community from "./Community.jsx";
 import Feedback from "./Feedback.jsx";
 import Login from "./Login.jsx";
 import Modal from "react-modal";
+import FOF from "./404.jsx";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
 export const HostContext = createContext();
 export const UserContext = createContext();
 export const NavigationContext = createContext();
@@ -76,6 +76,7 @@ function App() {
 										<Route path="/feedback" element={<Feedback />} />
 										<Route path="/signout" element={<Signout />} />
 										<Route path="/users/:profileUserId" element={<ViewProfile />} />
+										<Route path="*" element={<FOF />} />
 									</Routes>
 								</div>
 							</Router>

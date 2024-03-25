@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DatePickerInput } from "@mantine/dates";
+import { Tooltip } from "@mantine/core";
 import "../components/Forms/form.css";
 
 function Filter({ onFilterChange, assetType }) {
@@ -8,6 +9,7 @@ function Filter({ onFilterChange, assetType }) {
 	const [toDate, setToDate] = useState(null);
 	const [selectedAssets, setselectedAssets] = useState([]);
 	const [bookingFilter, setBookingFilter] = useState("All Bookings");
+	const [isFilterExpanded, setIsFilterExpanded] = useState(true);
 
 	// Fetch all the rooms and initialize the filters from the database
 	useEffect(() => {
@@ -60,22 +62,32 @@ function Filter({ onFilterChange, assetType }) {
 		setBookingFilter(filter);
 	};
 
+	// Handler to toggle filter container
+    const toggleFilterContainer = () => {
+        setIsFilterExpanded(!isFilterExpanded);
+    };
+
 	return (
 		<div className="px-[10px] py-[30px]">
 			<div className="filter-container">
 				<div className="filter-section">
-					<div className="filter-bar-text">
-						<i
-							className="fa-solid fa-filter"
-							style={{
-								paddingRight: "12px",
-								color: "#FF7A00",
-								paddingBottom: "5px",
-								fontSize: "24px",
-							}}
-						></i>
-						<h1>Filter</h1>
-					</div>
+					<Tooltip label = "Click to toggle expanding the filters.">
+						<div className="filter-bar-text cursor-pointer" onClick={toggleFilterContainer}>
+							<i
+								className="fa-solid fa-filter"
+								style={{
+									paddingRight: "12px",
+									color: "#FF7A00",
+									paddingBottom: "5px",
+									fontSize: "24px",
+								}}
+							></i>
+							<h1>Filter</h1>
+							<i className="fa-solid fa-hand-pointer ml-auto text-[14px]"></i>
+						</div>
+					</Tooltip>
+					{isFilterExpanded && (
+					<>
 					<div className="bookings-filter">
 						<p style={{ marginBottom: "8px" }}><strong>Bookings:</strong></p>
 						<div className="filter-item">
@@ -144,11 +156,11 @@ function Filter({ onFilterChange, assetType }) {
 										<span onClick={() => toggleFilter(filter)}>{filter}</span>
 									</div>
 								</React.Fragment>
-								//react fragment is used to group a list of children without adding extra nodes to the DOM. It will group multiple elements.
-								//React Fragments can be replaced with <> and </> tags.
 							)
 						)}
 					</div>
+					</>
+					)}
 				</div>
 			</div>
 		</div>

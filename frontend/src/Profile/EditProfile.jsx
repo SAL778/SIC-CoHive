@@ -71,7 +71,6 @@ export default function EditProfile() {
 		httpRequest({
 			endpoint: `${host}/users/profile/`,
 			onSuccess: (userData) => {
-				console.log(userData)
 				setProfileUser(userData);
 				setCurrentUser(userData); //Add to the context so nested components can access
 				httpRequest({
@@ -102,14 +101,14 @@ export default function EditProfile() {
 						className = {`flex items-center gap-3 p-3 button-thin ${!portfolioVisibility ? "button-orange" : "button-clear"}`}
 						onClick = {() => onUpdateVisibility(false)}
 						>
-							Private
+							<p className="mobile-hidden">Private</p>
 							<i className={`fa fa-eye-slash`}/>
 						</button>
 						<button 
 						className = {`flex items-center gap-3 p-3 button-thin ${portfolioVisibility ? "button-orange" : "button-clear"}`}
 						onClick = {() => onUpdateVisibility(true)}
 						>
-							Public 
+							<p className="mobile-hidden">Public</p>
 							<i className={`fa fa-eye`}/>
 						</button>
 					</div>

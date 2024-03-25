@@ -54,10 +54,10 @@ export default function Login({}) {
 	return (
 		<>
 			<div className="background-container flex justify-end px-[100px]">
-				<div className="flex flex-col justify-between  h-full pt-[94px] pb-[94px] w-[30%]">
+				<div className="flex flex-col justify-between items-center h-full pt-[94px] pb-[94px] w-[30%]">
 					<img
 						src={placeholder}
-						className="logo object-none"
+						className="logo object-contain max-w-[300px]"
 						alt="Student Inovation Center"
 					/>
 					<div className="flex flex-col gap-40 items-center">
