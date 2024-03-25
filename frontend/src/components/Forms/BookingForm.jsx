@@ -49,8 +49,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             id: currentBooking?.id,
             resources: currentBooking?.resources ?? "", //The ID of the resource asset for backend
             resources_name: currentBooking?.resources_name ?? "",
-            date: currentDate,
-            // date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
+            //date: currentDate,
+            date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
             start_time: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "",
             end_time: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "",
             title: currentBooking?.title ?? "",
