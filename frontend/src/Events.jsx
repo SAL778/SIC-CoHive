@@ -139,7 +139,7 @@ function Events() {
 
 	return (
 		<div className="parent-container-events content-container max-w-[1600px] mx-auto px-[10px] pb-[10px] overflow-hidden">
-			<h1 class="text-orange-600 text-3xl font-bold mb-2">Upcoming Events</h1>
+			<h1 className="text-orange-600 text-3xl font-bold mb-2">Upcoming Events</h1>
 			{ !(isLoading && events) ?
 				<EventsCarousel 
 					events={events} 
@@ -151,7 +151,15 @@ function Events() {
 				:
 				<p> Nothing booked yet! Check back soon</p>
 			}
-
+			<button
+				type="button"
+				onClick={() => {
+					window.open("https://docs.google.com/forms/d/e/1FAIpQLScYKmCIZ-luPldziOwUIxCbeQUbyROSl0MAlRXcFQW1ZJOMPQ/viewform?usp=sharing", "_blank");
+				}}
+				className="button-orange button-wide mt-[30px] h-[64px]"
+			>
+				Submit an Event
+			</button>
 			<div className="calendarContainer">
 				<iframe
 					src="https://embed.styledcalendar.com/#QsoYY1jHXbqoa6iOHxZi"

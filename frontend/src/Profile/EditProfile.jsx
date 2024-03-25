@@ -101,14 +101,14 @@ export default function EditProfile() {
 						className = {`flex items-center gap-3 p-3 button-thin ${!portfolioVisibility ? "button-orange" : "button-clear"}`}
 						onClick = {() => onUpdateVisibility(false)}
 						>
-							Private
+							<p className="mobile-hidden">Private</p>
 							<i className={`fa fa-eye-slash`}/>
 						</button>
 						<button 
 						className = {`flex items-center gap-3 p-3 button-thin ${portfolioVisibility ? "button-orange" : "button-clear"}`}
 						onClick = {() => onUpdateVisibility(true)}
 						>
-							Public 
+							<p className="mobile-hidden">Public</p>
 							<i className={`fa fa-eye`}/>
 						</button>
 					</div>
@@ -118,7 +118,7 @@ export default function EditProfile() {
 
 				<div className="px-[10px]">
 					<FlairList flairs = {profileUser.flair_roles.map(type => type.role_name)} isEditable={true} />
-						<h2 className = "text-lg text-neutral-800 font-medium mb-[10px]">Student Innovation Center Roles
+						<h2 className = "text-lg text-neutral-800 font-medium mt-[32px] mb-[10px]">Student Innovation Center Roles
 							<Tooltip label = "This is what the user does at the SIC and controls room access.">
 								<i className = "fa fa-info-circle ml-2"/>
 							</Tooltip>

@@ -30,20 +30,20 @@ export function BookingListComponent({ asset, onItemClick }) {
 	return (
 		//TODO: On private, grey everything out
 		<div
-			className={`list-booking-item flex items-center py-4 px-6 rounded-md cursor-pointer gap-10 shadow-custom ${ 
+			className={`list-booking-item flex overflow-hidden py-4 px-[30px] rounded-md cursor-pointer ${ 
 				greyOut ? "private-booking" : "shadow-custom"
 			}`}
 			onClick={() => onItemClick(asset)}
 		>
-			<div className="colA basis-2 flex-col flex-grow text-neutral-800">
+			<div className="desktop-1-3 text-neutral-800">
 				<h3
-					className="text-2xl font-semibold capitalize leading-[1]"
+					className="large-text-mobile font-semibold capitalize leading-[1]"
 					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
 				>
 					{asset?.resources_name}
 				</h3>
 				<p
-					className="text-base font-regular"
+					className="text-for-mobile font-regular"
 					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
 				>
 					{greyOut ? "Booking" : asset?.title}
@@ -51,7 +51,7 @@ export function BookingListComponent({ asset, onItemClick }) {
 			</div>
 
 			{asset?.type == "room" && (
-				<div className="colB basis-1 flex flex-grow text-2xl gap-4">
+				<div className="desktop-1-3 flex large-text-mobile gap-4">
 					<i className="fa fa-location-dot" aria-hidden="true" />
 					<p
 						className="font-light"
@@ -62,20 +62,20 @@ export function BookingListComponent({ asset, onItemClick }) {
 				</div>
 			)}
 
-			<div className="colC basis-1 flex flex-row flex-grow items-center ">
+			<div className="desktop-1-3 flex flex-row items-center ">
 				<i
-					className="fa fa-calendar mr-3 text-2xl text-neutral-800"
+					className="fa fa-calendar mr-3 large-text-mobile text-neutral-800"
 					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
 				/>
 				<div className="timeSlot">
 					<p
-						className="text-base font-medium text-orange-600"
+						className="text-for-mobile font-medium text-orange-600"
 						style={{ color: greyOut ? "#ABABAB" : "inherit" }}
 					>
-						{formatTime(asset.start_time)} - {formatTime(asset.end_time)}
+						{formatTime(asset.start_time)} - {formatTime(asset.end_time)}&nbsp;&nbsp;
 					</p>
 					<p
-						className="text-base font-medium flex gap-1"
+						className="text-for-mobile font-medium flex gap-1"
 						style={{ color: greyOut ? "#ABABAB" : "inherit" }}
 					>
 						<span>
@@ -89,14 +89,14 @@ export function BookingListComponent({ asset, onItemClick }) {
 				</div>
 			</div>
 
-			<div className="colD basis-1 flex-grow">
+			<div className="desktop-1-3">
 				{!greyOut && (
 					<>
 						{/* Booker not present on private posts */}
-						<p className="text-base text-orange-600">
+						<p className="text-overflow-ellipsis text-for-mobile text-orange-600">
 							{asset.user?.first_name}
 						</p>
-						<p className="text-neutral-800">{asset.user?.email}</p>
+						<p className="text-overflow-ellipsis text-neutral-800">{asset.user?.email}</p>
 					</>
 				)}
 			</div>

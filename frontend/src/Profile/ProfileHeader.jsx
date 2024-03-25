@@ -9,8 +9,8 @@ export default function ProfileHeader({profileUser}) {
             />
             <div className="flex flex-col justify-between">
                 <div className="flex flex-col">
-                    <h2 className = "text-neutral-800 text-4xl font-bold">{profileUser.first_name + ' ' + profileUser.last_name}</h2>
-                    <h3 className = "text-neutral-600 text-lg">{profileUser.email}</h3>
+                    <h2 className = "text-large-desktop text-neutral-800 font-bold">{profileUser.first_name + ' ' + profileUser.last_name}</h2>
+                    <h3 className = "text-neutral-600 text-for-mobile">{profileUser.email}</h3>
                 </div>
                 {!profileUser.isStaff && 
                     <span className="text-orange-600 font-semibold">

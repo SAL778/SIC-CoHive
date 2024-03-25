@@ -57,7 +57,7 @@ const BookingHeader = ({
 							}}
 						>
 							<p className="mobile-hidden">Rooms</p>
-							<i class="desktop-hidden fa-solid fa-chalkboard-user"></i>
+							<i className="desktop-hidden fa-solid fa-chalkboard-user"></i>
 						</button>
 						<button
 							className={`${
@@ -69,7 +69,7 @@ const BookingHeader = ({
 							}}
 						>
 							<p className="mobile-hidden">Equipment</p>
-							<i class="desktop-hidden fa-solid fa-vr-cardboard"></i>
+							<i className="desktop-hidden fa-solid fa-vr-cardboard"></i>
 						</button>
 					</div>
 					<div className="flex flex-row justify-between gap-3 items-center bg-white py-0 px-5 shadow-custom rounded-[5px] h-[64px]">

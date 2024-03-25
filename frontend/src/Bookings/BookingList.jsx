@@ -73,7 +73,7 @@ function BookingListView({
 	return isLoading ? (
 		<Loader size={50} color="orange" />
 	) : (
-		<ul className="bounding-box-white flex flex-col flex-grow gap-8 mx-[10px] my-[30px] px-[20px] py-[30px] rounded-[12px] shadow-custom">	
+		<ul className="bounding-box-white flex flex-col flex-grow overflow-hidden gap-8 mx-[10px] my-[30px] px-[20px] py-[30px] rounded-[12px] shadow-custom">	
 			{dateHeaders.map((dateHeader) => (
 				<li key={dateHeader.toISOString()}>
 					<DateHeaderComponent date={dateHeader} />
@@ -113,7 +113,7 @@ function DateHeaderComponent({ date }) {
 	return (
 		<div className="dateHeader mb-2 flex items-center">
 			<div className="date flex gap-4 items-stretch mr-3">
-				<h2 className="text-4xl font-bold text-orange-600 uppercase">
+				<h2 className="text-large-desktop font-bold text-orange-600 uppercase">
 					{date.toLocaleString("en-us", { weekday: "long" })}
 				</h2>
 				<div className="flex flex-col justify-between">
