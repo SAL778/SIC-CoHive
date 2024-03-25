@@ -38,7 +38,7 @@ export default function FlairList({flairs, isEditable, isAccessRoles = false}) {
     }
 
     return (
-        <Pill.Group className="user-tags mb-[32px]">
+        <Pill.Group className="user-tags">
             {  renderedFlairs.map((flair, index) => (
                     <Pill
                     key = {index}
