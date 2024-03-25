@@ -14,11 +14,12 @@ class BookingSerializer(serializers.ModelSerializer):
     resource_type=serializers.CharField(source="resources.type", read_only=True)
     resource_room_code=serializers.CharField(source="resources.room_code", read_only=True)
     resource_description=serializers.CharField(source="resources.description", read_only=True)
+    resource_access_type=serializers.StringRelatedField(source="resources.access_type", read_only=True,many=True)
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name','resource_type', 'user', 'title', 'visibility','resource_room_code','resource_description']
-        read_only_fields = ["id", "user", "resources_name","resource_type","resource_room_code","resource_description"]
+        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name','resource_type', 'user', 'title', 'visibility','resource_room_code','resource_description','resource_access_type']
+        read_only_fields = ["id", "user", "resources_name","resource_type","resource_room_code","resource_description","resource_access_type"]
 
     def validate(self, data):
 
