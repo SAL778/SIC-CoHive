@@ -39,7 +39,7 @@ Run the frontend development server:
 Install the dependencies:
 
 ```bash
-npm install
+npm install --legacy-peer-deps or npm install --force
 ```
 
 Followed by running the server:
