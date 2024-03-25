@@ -20,7 +20,7 @@ export default function DateSelector({ currentDate, onSetDate }) {
 				<DatePicker
 					value={currentDate}
 					onChange={onSetDate}
-					dayClassName={(date) =>
+					dayclassname={(date) =>
 						isToday(date) ? "mantine-DatePicker-day[data-today]" : ""
 					}
 				/>

@@ -71,7 +71,6 @@ export default function EditProfile() {
 		httpRequest({
 			endpoint: `${host}/users/profile/`,
 			onSuccess: (userData) => {
-				console.log(userData)
 				setProfileUser(userData);
 				setCurrentUser(userData); //Add to the context so nested components can access
 				httpRequest({

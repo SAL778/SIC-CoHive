@@ -113,10 +113,10 @@ function Navigation({ mobileNav, setMobileNav }) {
 				id="app-nav"
 				className={`flex-none z-10 ${mobileNav ? "mobileOpen" : ""}`}
 			>
-				<div className="flex h-full flex-col bg-white rounded-[10px] shadow-custom">
+				<div className="flex h-full flex-col bg-white rounded-[12px] shadow-custom">
 					<a
 						href="/bookings"
-						className="mb-2 flex h-30 items-end rounded-[10px] bg-white p-4 justify-center"
+						className="mb-2 flex h-30 items-end rounded-[12px] bg-white p-4 justify-center"
 					>
 						<img
 							className="object-center"

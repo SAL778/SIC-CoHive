@@ -50,11 +50,11 @@ const Signout = ({ opened, onClose }) => {
 				<p className="font-sans text-lg mb-4">
 					Are you sure you want to sign out?
 				</p>
-				<div className="flex justify-end gap-4">
-					<button onClick={onClose} className="button-grey-hover">
+				<div className="flex justify-center gap-4">
+					<button onClick={onClose} className="button-grey-hover modal-button">
 						Cancel
 					</button>
-					<button onClick={handleSignout} className="button-orange">
+					<button onClick={handleSignout} className="button-orange modal-button">
 						Confirm
 					</button>
 				</div>
