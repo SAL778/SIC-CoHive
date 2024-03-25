@@ -50,7 +50,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             resources: currentBooking?.resources ?? "", //The ID of the resource asset for backend
             resources_name: currentBooking?.resources_name ?? "",
             //date: currentDate,
-            date: currentBooking?.start_time ? currentBooking.start_time : new Date, //Default to today
+            date: currentBooking?.start_time ? currentBooking.start_time : currentDate, //Default to today
             start_time: currentBooking?.start_time ? serializeTime(currentBooking.start_time) : "",
             end_time: currentBooking?.end_time ? serializeTime(currentBooking.end_time) : "",
             title: currentBooking?.title ?? "",
@@ -121,7 +121,15 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                         const todaysBookings = data.bookings.filter((booking) => (currentDate.getDay() === new Date(booking.start_time).getDay()));
                         const bookedTimeSlots = []
                         for (const booking of todaysBookings) {
-                            const bookedTimes = getTimePeriods(interval, dateToTimePeriod(booking.start_time), dateToTimePeriod(booking.end_time));  //Booked 15 min intervals
+                            let bookedTimes = getTimePeriods(interval, dateToTimePeriod(booking.start_time), dateToTimePeriod(booking.end_time));  //Booked 15 min intervals
+                            console.log(booking.start_time)
+                            if (selectedAsset.name == booking.resources_name && currentBooking) {
+                                const validBookingTimes = new Set(
+                                    getTimePeriods(interval, 
+                                        dateToTimePeriod('T' + serializeTime(currentBooking.start_time)), 
+                                        dateToTimePeriod('T' + serializeTime(currentBooking.end_time)))) //Timeslots taken by the item being edited.
+                                bookedTimes = bookedTimes.filter(timeSlot => !validBookingTimes.has(timeSlot))
+                            }
                             bookedTimeSlots.push(...bookedTimes)
                         }
                         setDisabledTimeSlots(bookedTimeSlots)           //Store for future validation
@@ -189,7 +197,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                         allowSingleDateInRange
                         allowDeselect={false}
                         firstDayOfWeek={0}
-                        defaultDate={form.values.date} //Automatically go to the month of current booking
+                        //defaultDate={form.values.date} //Automatically go to the month of current booking
                         rightSection={<i className="fa fa-calendar text-orange-600" />}
                         {...form.getInputProps('date')}
                         className="mt-4"
@@ -361,6 +369,7 @@ const dateToTimePeriod = (date) => {
     //Convert dates to ISO strings, then isolate hours, minutes
     if (transformed instanceof Date) {
         transformed = date.toISOString()
+        console.log("was date" + transformed)
     }
     //Then convert this ISO string to an array
     if (typeof transformed == 'string') {
