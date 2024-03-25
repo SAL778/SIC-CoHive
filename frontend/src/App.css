@@ -41,7 +41,8 @@ body {
 }
 
 .app-container-padding {
-	padding-left: 30px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 h1 {
@@ -94,14 +95,14 @@ h3 {
     gap: 8px;
     font-size: 20px;
     padding: 0.5rem 1rem;
-    left: 40px;
+    left: 20px;
     top: 30px;
     height: 48px;
 }
 
 #app-nav {
 	position: fixed;
-	left: 30px;
+	left: 20px;
 	width: 282px;
 	height: 100%;
 	padding: 30px 0;
@@ -370,6 +371,7 @@ button.button-orange {
 	border-radius: var(--border-radius);
 	transition: background-color 0.3s ease, color 0.3s ease;
 	cursor: pointer;
+	box-shadow: 0px 2px 3px #00000080;
 }
 
 button.button-thin {
@@ -454,9 +456,10 @@ button.button-disabled:focus,
 }
 
 .filter-container {
-	background: white;
-	border-radius: 4px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	min-width: 300px;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0px 2px 6px #00000029;
 	padding: 20px;
 }
 
@@ -479,9 +482,20 @@ button.button-disabled:focus,
 }
 
 .filter-bar-text {
+	position: relative;
 	display: flex;
 	align-items: center;
-	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+.filter-bar-text:after {
+	position: absolute;
+	content: "";
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 2px;
+	background: linear-gradient(90deg, #F0EFEF 2.73%, rgba(239, 239, 239, 0) 94.81%);
 }
 
 .search-input {
@@ -506,7 +520,7 @@ button.button-disabled:focus,
 .filter-item {
 	display: flex;
 	align-items: center;
-	margin-bottom: 10px;
+	margin-bottom: 6px;
 	padding: 5px;
 	cursor: pointer;
 }
@@ -514,19 +528,26 @@ button.button-disabled:focus,
 .checkbox {
 	height: 20px;
 	width: 20px;
-	background-color: #747474;
+	background-color: var(--light-grey);
 	border: 1px solid transparent;
 	border-radius: 4px;
 	margin-right: 10px;
+	transition: background-color 0.2s ease;
 }
 
 .checkbox.selected {
-	background-color: #ea580c;
-	border-color: #f97316;
+	background-color: var(--primary-orange);
+	border-color: var(--hover-orange);
+}
+
+.checkbox:hover,
+.checkbox:focus {
+	background-color: var(--hover-orange);
 }
 
 .filter-item span {
 	user-select: none;
+	letter-spacing: 0.25px;
 }
 
 .about-description,
@@ -616,11 +637,16 @@ button.button-disabled:focus,
 	padding-bottom: 0;
 }
 
+.booking-column-width,
 .booking-column .draggable-slot {
-	width: 260px;
+	width: 180px;
+}
+
+.booking-column .draggable-slot {
 	position: absolute;
 	left: 0;
 	z-index: 2;
+	cursor: pointer;
 }
 
 .day-list .private-booking {
@@ -630,47 +656,38 @@ button.button-disabled:focus,
 }
 
 .bookings-filter {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 .radio-button {
 	height: 20px;
 	width: 20px;
-	background-color: #747474;
+	background-color: var(--light-grey);
 	border: 1px solid transparent;
 	border-radius: 50%;
 	margin-right: 10px;
 	cursor: pointer;
 	position: relative;
+	transition: background-color 0.2s ease;
 }
 
 .radio-button.selected {
-	background-color: #ea580c;
+	background-color: var(--primary-orange)
 }
 
-.radio-button.selected::after {
-	content: "";
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	height: 12px;
-	width: 12px;
-	background-color: #ea580c;
-	border-radius: 50%;
+.radio-button:hover,
+.radio-button:focus {
+	background-color: var(--hover-orange)
 }
 
-.parentContainer {
-	width: 100vw;
-	height: 100vh;
+.parent-container-events {
+    flex-grow: 1;
+	margin: 30px 0;
 }
 .calendarContainer {
 	width: calc(100% - 20px);
 	height: 600px;
-	/* height: calc(100% - 100px); */
-	margin-top: 10px;
-	margin-left: 10px;
-	margin-right: 10px;
+	margin: 0;
 	overflow: hidden;
 }
 
@@ -761,12 +778,81 @@ div .mantine-RichTextEditor-content {
 	margin-top: 100px;
 }
 
-.bounding-box {
+.bounding-box-white {
 	background: #f8f8f8;
 }
 
 div.list-booking-item {
 	background: #fff;
+}
+
+#booking-header {
+	margin-top: 110px;
+}
+
+.mobile-column {
+	flex-direction: column;
+}
+
+.booking-options {
+	width: 100%;
+}
+
+.booking-column-times-container {
+	margin-left: 0;
+	margin-right: 1rem;
+}
+
+.desktop-hidden {
+	display: initial;
+}
+
+.mobile-hidden {
+	display: none;
+}
+
+@media (min-width: 500px) {
+	.desktop-hidden {
+		display: none;
+	}
+	
+	.mobile-hidden {
+		display: initial;
+	}
+}
+
+@media (min-width: 650px) {
+	.app-container-padding {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+
+	#mobile-nav {
+		left: 40px;
+	}
+
+	.mobile-column {
+		flex-direction: row;
+	}
+
+	.booking-options {
+		width: min-content;
+	}
+
+	.booking-column-times-container {
+		margin-left: 1rem;
+		margin-right: 2rem;
+	}
+
+	.booking-column-width,
+	.booking-column .draggable-slot {
+		width: 220px;
+	}
+
+	#app-nav {
+		left: 30px;
+	}
+
 }
 
 @media (min-width: 1120px) {
@@ -785,5 +871,14 @@ div.list-booking-item {
 
 	.app-container .iframeForm {
 		margin-top: 30px;
+	}
+
+	#booking-header {
+		margin-top: 30px;
+	}
+
+	.booking-column-width,
+	.booking-column .draggable-slot {
+		width: 260px;
 	}
 }

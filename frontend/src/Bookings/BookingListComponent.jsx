@@ -30,7 +30,7 @@ export function BookingListComponent({ asset, onItemClick }) {
 	return (
 		//TODO: On private, grey everything out
 		<div
-			className={`flex items-center py-4 px-6 rounded-md cursor-pointer gap-10 ${
+			className={`list-booking-item flex items-center py-4 px-6 rounded-md cursor-pointer gap-10 shadow-custom ${ 
 				greyOut ? "private-booking" : "shadow-custom"
 			}`}
 			onClick={() => onItemClick(asset)}

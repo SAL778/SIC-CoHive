@@ -21,7 +21,7 @@ const DraggableSlot = ({ selectedSlot, setSelectedSlot, onResize, onRelease, res
 
     return (
         <ResizableBox
-            className="draggable-slot column-booking-card overflow-hidden flex flex-col justify-center rounded-[12px] shadow-custom pl-8 pr-10 py-0 bg-orange-300 text-sm"
+            className="draggable-slot column-booking-card overflow-hidden flex flex-col justify-center rounded-[12px] shadow-custom px-2 py-0 bg-orange-300 text-sm"
             height={Math.max(
                 slotHeight,
                 ((selectedSlot.end_time - selectedSlot.start_time) / 60000 / 15) * slotHeight

@@ -110,17 +110,17 @@ function Events() {
 	}, []);
 
 	return (
-		<div className="parentContainer">
+		<div className="parent-container-events">
 			<div className="calendarContainer">
 				<iframe
 					src="https://embed.styledcalendar.com/#QsoYY1jHXbqoa6iOHxZi"
 					title="Styled Calendar"
 					className="calendarFrame styled-calendar-container"
-					style={{ width: "100%", height: "1800px", border: "none" }}
+					style={{ width: "100%", height: "1000px", border: "none" }}
 					data-cy="calendar-embed-iframe"
 				></iframe>
 			</div>
-			<div className="w-fit min-w-[250px]">
+			<div className="w-fit min-w-[300px]">
 				<DateSelector onSetDate={handleDateChange} currentDate={currentDate}/>
 			</div>
 			<div className="event-list">
