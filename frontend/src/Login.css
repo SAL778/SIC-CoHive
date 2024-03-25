@@ -1,58 +1,37 @@
-/* .logo{
-  position: fixed;
-  top: 20%;
-  left: 70%;
-  transform: translateY(-50%);
-  z-index: 1;
-} */
-
 .background-container {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background: url("./assets/background.png") no-repeat center center fixed;
-	background-size: cover;
-	z-index: 1;
-}
-/* 
-.signInButtons {
-  position: fixed;
-  top: 50%;
-  left: 75%;
-  transform: translateY(-50%);
-  z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    padding: 0 20px;
 }
 
 .access-info {
-  color: #ABABAB;
-  font-size: 13px;
-  width: 334px;
-  text-align: left;
-  position: fixed;
-  top: 80%;
-  left: 70%;
-  z-index: 1;
+    max-width: 500px;
+    color: #262626;
 }
 
-.white-button {
-  font-size: 24px;
-  width: 352px;
-  position: fixed;
-  top: 40%;
-  right: var(--spacing-padding-padding-pad-sm, 100px);
-  transform: translateY(-50%);
-  border-radius: var(--radii-rad-sm, 6px);
-  background-color: white;
-  color: black;
-  padding: var(--spacing-padding-padding-pad-sm, 16px);
-  cursor: pointer;
-  border: none;
-  outline: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.sign-in-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    padding: 62px 0;
+    width: 100%;
 }
 
-.white-button:hover {
-  filter: brightness(90%);
-} */
+@media (min-width: 1200px) {
+    .background-container {
+        background: url("./assets/background.png") no-repeat center center fixed;
+        background-size: cover;
+        padding: 0 100px;
+    }
+
+    .sign-in-column {
+        padding: 94px 0;
+        width: 30%;
+    }
+}

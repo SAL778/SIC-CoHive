@@ -53,8 +53,8 @@ export default function Login({}) {
 
 	return (
 		<>
-			<div className="background-container flex justify-end px-[100px]">
-				<div className="flex flex-col justify-between items-center h-full pt-[94px] pb-[94px] w-[30%]">
+			<div className="background-container flex justify-end">
+				<div className="sign-in-column">
 					<img
 						src={placeholder}
 						className="logo object-contain max-w-[300px]"
@@ -72,7 +72,7 @@ export default function Login({}) {
 								}}
 							/>
 						</div>
-						<p className="access-info text-neutral-400 text-center">
+						<p className="access-info text-center">
 							All registering users must first be approved by the Student
 							Innovation Center prior to accessing any amenities. The Student
 							Innovation Center is for University students, or University
