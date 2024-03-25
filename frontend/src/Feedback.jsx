@@ -46,7 +46,7 @@ function Feedback() {
 	}, []);
 
 	return (
-		<div id="feedback-form" className="iframeForm flex justify-center my-[30px] mx-auto rounded-[12px] overflow-auto">
+		<div id="feedback-form" className="content-container flex justify-center my-[30px] mx-auto rounded-[12px] overflow-auto">
 			{feedbackLink && (
 				<iframe src={feedbackLink} width={iframeWidth} height={iframeHeight}>
 					Loading...

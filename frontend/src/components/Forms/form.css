@@ -69,6 +69,11 @@
 	padding-bottom: 0;
 	padding-top: 0;
 	min-height: 46px;
+	z-index: 0;
+}
+
+.mantine-Modal-content {
+	border-radius: 10px;
 }
 
 .mantine-Checkbox-input {

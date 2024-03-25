@@ -160,7 +160,7 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
                     {  isEditable &&
                         <button
                         type = "button"
-                        className = "portfolio-card-add bg-neutral-100 text-orange-600 p-5 rounded-3xl h-64 w-56 shadow-custom ease-out duration-200"
+                        className = "portfolio-card-add bg-neutral-100 text-orange-600 p-5 rounded-[12px] h-64 w-56 shadow-custom ease-out duration-200"
                         onClick = {() => {
                             setOpenedModal("edit")
                             open()
@@ -239,7 +239,7 @@ function PortfolioCard({portfolioItem, isEditable = false, onClickEdit, onClickD
     const defaultIcon = 'fa fa-lightbulb' //Class name for a font-awesome icon
 
     return (
-        <div className="portfolio-card p-5 rounded-3xl h-64 w-56 flex flex-col place-content-between ease-out duration-200 shadow-custom hover:cursor-pointer">
+        <div className="portfolio-card p-5 rounded-[12px] h-64 w-56 flex flex-col place-content-between ease-out duration-200 shadow-custom hover:cursor-pointer">
             <i className= {`card-icon ${portfolioItem?.icon || defaultIcon}`} aria-label="Portfolio icon" />
             <section>
                 <h3 className="text-[18px] font-semibold">{portfolioItem.title}</h3>
