@@ -80,7 +80,8 @@ class ResourcesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resources
-        fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings', 'access_type', 'image']
+        fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings', 'access_type', 'image','room_code']
+        read_only_fields = ['id', 'bookings', 'access_type','room_code']
 
     def get_bookings(self, obj):
         request = self.context.get("request")
