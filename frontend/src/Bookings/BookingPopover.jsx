@@ -19,6 +19,9 @@ export default function BookingPopover({assetImage, assetCode, assetName, assetD
 
     const overlapPermissions = assetPermissions?.some(permission => userPermissions.includes(permission))
 
+    //URL added to backend is the Share link, not the thumbnail view.
+    const properURL = (sharedImageLink) => (`https://drive.google.com/thumbnail?id=${sharedImageLink?.split("/d/")[1]?.split("/view")[0]}` || null)
+
     return (
         <Popover position="top" withArrow shadow="md" opened={opened}>
             <Popover.Target>
@@ -28,7 +31,7 @@ export default function BookingPopover({assetImage, assetCode, assetName, assetD
             </Popover.Target>
             <Popover.Dropdown>
                 <div>
-                    <img className="w-24 h-24 rounded-md" src = {assetImage || imageFallback} alt = {assetName}/>
+                    <img className="w-24 h-24 rounded-md" src = {properURL(assetImage) || imageFallback} alt = {assetName}/>
                     <p className="text-lg font-medium">{assetDescription}</p>
 
                     {(overlapPermissions && !!assetCode) &&
