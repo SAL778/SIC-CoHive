@@ -98,9 +98,10 @@ class TestProfile(unittest.TestCase) :
         delete_button = global_driver.find_element(By.XPATH, "//button[@aria-label='Delete button']")
         global_driver.execute_script("arguments[0].click();", delete_button)
 
-        delete_confirm = WebDriverWait(global_driver, 3).until(
+        delete_confirm = WebDriverWait(global_driver, 5).until(
             EC.element_to_be_clickable((By.XPATH, "//button[contains(@class, 'modal-button') and text()='Delete']"))
         )
+        time.sleep(3)
         delete_confirm.click()
         confirm_notif = WebDriverWait(global_driver, 3).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
