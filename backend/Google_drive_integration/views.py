@@ -47,8 +47,11 @@ def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:
     
         keyed_values = []
         for row in values[1:]:
-            keyed_values.append({header_value: row_value for header_value, row_value in zip(headers, row)})
-
+            # keyed_values.append({header_value: row_value for header_value, row_value in zip(headers, row)})
+            row_values = {header_value: row_value for header_value, row_value in zip(headers, row)}
+            if row_values.get("approved") == 'TRUE' :
+                keyed_values.append(row_values)         #Only return the approved events
+                
         return keyed_values
     else:
         return values[1:]

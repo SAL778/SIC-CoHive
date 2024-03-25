@@ -6,7 +6,7 @@ import { UserContext } from "../App.jsx";
  * @param {Object} asset - The object representation of an asset (room or equipment)
  */
 export function BookingListComponent({ asset, onItemClick }) {
-	const { currentUser } = useContext(UserContext);
+	const { currentUser } = JSON.parse(localStorage.getItem("currentUser"));
 
 	const greyOut = !asset.visibility && currentUser?.id != asset?.booker?.id;
 

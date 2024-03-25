@@ -140,7 +140,7 @@ function Events() {
 	return (
 		<div className="parent-container-events content-container max-w-[1600px] mx-auto px-[10px] pb-[10px] overflow-hidden">
 			<h1 class="text-orange-600 text-3xl font-bold mb-2">Upcoming Events</h1>
-			{ !isLoading && 
+			{ !(isLoading && events) ?
 				<EventsCarousel 
 					events={events} 
 					onItemClick={(event) => {
@@ -148,6 +148,8 @@ function Events() {
 						open()
 					}}
 				/>
+				:
+				<p> Nothing booked yet! Check back soon</p>
 			}
 			<button
 				type="button"
