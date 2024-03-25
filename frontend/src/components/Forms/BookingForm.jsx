@@ -64,8 +64,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                 ? 'Start time must be selected'
                 : timeIsGreaterThan(deserializeTime(value), deserializeTime(values.end_time)) //Checks if start time exceeds end time
                 ? 'Start time must come before the end time'
-                //: getTimePeriods(interval, dateToTimePeriod('T' + value), dateToTimePeriod('T' + values.end_time)).some(booking => disabledTimeSlots.includes(booking)) //Check if a booked time slot falls between
-                //? 'This room is already booked between these times'
+                : getTimePeriods(interval, dateToTimePeriod('T' + value), dateToTimePeriod('T' + values.end_time)).some(booking => disabledTimeSlots.includes(booking)) //Check if a booked time slot falls between
+                ? 'This room is already booked between these times'
                 : null
             ),
             end_time: (value) => (
@@ -115,19 +115,17 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             const selectedAsset = availableAssets.find(asset => asset.name === form.values.resources_name)
 
             httpRequest({
-                endpoint: `${host}/bookings/columns/${selectedAsset.id}/`,
+                endpoint: `${host}/bookings/columns/${selectedAsset.id}/?date=${backendRepresentationOfDate(currentDate)}`,
                 onSuccess: (data) => {            //Unique 15 min intervals
                     if (data.bookings)  {
-                        const todaysBookings = data.bookings.filter((booking) => isToday(new Date(booking.start_time)));
+                        const todaysBookings = data.bookings.filter((booking) => (currentDate.getDay() === new Date(booking.start_time).getDay()));
                         const bookedTimeSlots = []
                         for (const booking of todaysBookings) {
                             const bookedTimes = getTimePeriods(interval, dateToTimePeriod(booking.start_time), dateToTimePeriod(booking.end_time));  //Booked 15 min intervals
                             bookedTimeSlots.push(...bookedTimes)
                         }
                         setDisabledTimeSlots(bookedTimeSlots)           //Store for future validation
-
-                        console.dir(availableTimeSlots)
-                        setAvailableTimeSlots(availableTimeSlots.map((timeSlot) => (
+                        setAvailableTimeSlots(allTimeSlots.map((timeSlot) => (
                             bookedTimeSlots.includes(timeSlot) 
                             ? {value: timeSlot, label: timeSlot, disabled: true}
                             : {value: timeSlot, label: timeSlot, disabled: false}
@@ -216,8 +214,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             disabled = {!currentUserMatchesBooking()}
                             checkIconPosition="right"
                             placeholder="to"
-                            data = {allTimeSlots}
-                            //data = {availableTimeSlots}
+                            //data = {allTimeSlots}
+                            data = {availableTimeSlots}
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
@@ -392,3 +390,22 @@ const timeIsGreaterThan = (deserializedTime1, deserializedTime2) => {
       }
       return true; //Times are equal
     }
+
+const backendRepresentationOfDate = (rawDate) => {
+    // Given date string
+    const dateString = rawDate;
+
+    // Create a new Date object from the given string
+    const date = new Date(dateString);
+
+    // Extract year, month, and day from the Date object
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Adding 1 to month because month index starts from 0
+    const day = ('0' + date.getDate()).slice(-2);
+
+    // Construct the year-month-day format string
+    const formattedDate = year + '-' + month + '-' + day;
+
+    // Output the result
+    return(formattedDate);
+}
