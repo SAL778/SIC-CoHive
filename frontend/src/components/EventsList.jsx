@@ -2,11 +2,11 @@ import React from "react";
 
 export default function EventList({ event }) {
 	return (
-		<div className="list-booking-item flex items-center py-4 px-[30px] rounded-md cursor-pointer gap-10 shadow-custom">
+		<div className="list-booking-item flex items-center py-4 px-[30px] rounded-md cursor-pointer gap-4 shadow-custom">
 			
 			<div className="colA basis-2 flex-col flex-grow text-neutral-800">
 				<h3
-					className="text-2xl font-semibold capitalize leading-[1]"
+					className="large-text-mobile font-semibold capitalize leading-[1]"
 					style={{ color: "inherit" }}
 				>
 					{event.title}
@@ -15,12 +15,12 @@ export default function EventList({ event }) {
 
 			<div className="colC basis-1 flex flex-row flex-grow items-center">
 				<i
-					className="fa fa-calendar mr-3 text-2xl text-neutral-800"
+					className="fa fa-calendar mr-3 large-text-mobile text-neutral-800"
 					style={{ color: "inherit" }}
 				/>
 				<div className="timeSlot">
 					<p
-						className="text-base font-medium text-orange-600"
+						className="text-for-mobile font-medium text-orange-600"
 						style={{ color: "inherit" }}
 					>
 						{/* {event.start} - {event.end} */}
@@ -37,7 +37,7 @@ export default function EventList({ event }) {
 						})}
 					</p>
 					<p
-						className="text-base font-medium flex gap-1"
+						className="text-for-mobile font-medium flex gap-1"
 						style={{ color: "inherit" }}
 					>
 						<span>
@@ -51,7 +51,7 @@ export default function EventList({ event }) {
 				</div>
 			</div>
 
-			<div className="colB basis-1 flex flex-grow text-2xl items-center">
+			<div className="colB basis-1 flex flex-grow large-text-mobile items-center">
 				<i className="fa fa-location-dot mr-3" aria-hidden="true" />
 				<p className="font-light" style={{ color: "inherit" }}>
 					{event.location || "No location"}

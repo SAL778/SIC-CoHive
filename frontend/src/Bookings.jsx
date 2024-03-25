@@ -200,7 +200,15 @@ function Bookings() {
 				currentDate={currentDay}
 			/>
 			{!isColumnView ? (
-				<div className="flex flex-row gap-4 justify-between align-top">
+				<div className="parent-container-booking-row flex gap-4 justify-between align-top">
+					<BookingsListFilter
+						// onSearch={handleSearch}
+						onFilterChange={handleFilterChange}
+						assetType={currentAssetViewIsRoom ? "room" : "equipment"}
+						selectedDates={selectedDates}
+						selectedAssets={selectedAssets}
+					/>
+
 					<BookingListView
 						onItemClick={onClickBooking}
 						assetType={currentAssetViewIsRoom ? "room" : "equipment"}
@@ -209,14 +217,6 @@ function Bookings() {
 						selectedAssets={selectedAssets}
 						bookingFilter={bookingFilter}
 						isUpdated={isUpdated} //Triggers re-render
-					/>
-
-					<BookingsListFilter
-						// onSearch={handleSearch}
-						onFilterChange={handleFilterChange}
-						assetType={currentAssetViewIsRoom ? "room" : "equipment"}
-						selectedDates={selectedDates}
-						selectedAssets={selectedAssets}
 					/>
 				</div>
 			) : (
