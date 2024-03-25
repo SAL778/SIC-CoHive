@@ -83,7 +83,7 @@ function Filter({ onFilterChange, assetType }) {
 								}}
 							></i>
 							<h1>Filter</h1>
-							<i class="fa-solid fa-hand-pointer ml-auto text-[14px]"></i>
+							<i className="fa-solid fa-hand-pointer ml-auto text-[14px]"></i>
 						</div>
 					</Tooltip>
 					{isFilterExpanded && (
