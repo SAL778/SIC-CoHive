@@ -62,7 +62,7 @@ export default function Login({}) {
 					/>
 					<div className="flex flex-col gap-40 items-center">
 						<div className="flex flex-col gap-6 items-center">
-							<h1 className="text-4xl font-bold text-center text-neutral-900">
+							<h1 className="text-large-desktop font-bold text-center text-neutral-900">
 								Sign In:
 							</h1>
 							<GoogleLogin

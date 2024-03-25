@@ -106,7 +106,7 @@ function DateHeaderComponent({ date }) {
 	return (
 		<div className="dateHeader mb-2 flex items-center">
 			<div className="date flex gap-4 items-stretch mr-3">
-				<h2 className="text-4xl font-bold text-orange-600 uppercase">
+				<h2 className="text-large-desktop font-bold text-orange-600 uppercase">
 					{date.toLocaleString("en-us", { weekday: "long" })}
 				</h2>
 				<div className="flex flex-col justify-between">
