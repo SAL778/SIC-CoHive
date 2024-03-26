@@ -30,12 +30,12 @@ export function BookingListComponent({ asset, onItemClick }) {
 	return (
 		//TODO: On private, grey everything out
 		<div
-			className={`list-booking-item flex items-center overflow-hidden py-4 px-[30px] rounded-md cursor-pointer gap-4 ${ 
+			className={`list-booking-item flex overflow-hidden py-4 px-[30px] rounded-md cursor-pointer ${ 
 				greyOut ? "private-booking" : "shadow-custom"
 			}`}
 			onClick={() => onItemClick(asset)}
 		>
-			<div className="basis-1/3 w-1/3 text-neutral-800">
+			<div className="desktop-1-3 text-neutral-800">
 				<h3
 					className="large-text-mobile font-semibold capitalize leading-[1]"
 					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
@@ -51,7 +51,7 @@ export function BookingListComponent({ asset, onItemClick }) {
 			</div>
 
 			{asset?.type == "room" && (
-				<div className="basis-1/3 w-1/3 flex large-text-mobile gap-4">
+				<div className="desktop-1-3 flex large-text-mobile gap-4">
 					<i className="fa fa-location-dot" aria-hidden="true" />
 					<p
 						className="font-light"
@@ -62,7 +62,7 @@ export function BookingListComponent({ asset, onItemClick }) {
 				</div>
 			)}
 
-			<div className="basis-1/3 w-1/3 flex flex-row items-center ">
+			<div className="desktop-1-3 flex flex-row items-center ">
 				<i
 					className="fa fa-calendar mr-3 large-text-mobile text-neutral-800"
 					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
@@ -72,7 +72,7 @@ export function BookingListComponent({ asset, onItemClick }) {
 						className="text-for-mobile font-medium text-orange-600"
 						style={{ color: greyOut ? "#ABABAB" : "inherit" }}
 					>
-						{formatTime(asset.start_time)} - {formatTime(asset.end_time)}
+						{formatTime(asset.start_time)} - {formatTime(asset.end_time)}&nbsp;&nbsp;
 					</p>
 					<p
 						className="text-for-mobile font-medium flex gap-1"
@@ -89,7 +89,7 @@ export function BookingListComponent({ asset, onItemClick }) {
 				</div>
 			</div>
 
-			<div className="basis-1/3 w-1/3">
+			<div className="desktop-1-3">
 				{!greyOut && (
 					<>
 						{/* Booker not present on private posts */}

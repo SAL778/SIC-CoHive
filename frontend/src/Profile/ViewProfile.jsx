@@ -49,7 +49,7 @@ export default function ViewProfile() {
 
                 <div className="px-[10px]">
                     <FlairList flairs = {profileUser.flair_roles.map(type => type.role_name)} isEditable={false} />
-                        <h2 className = "text-lg text-neutral-800 font-medium mb-[10px]">Student Innovation Center Roles
+                        <h2 className = "text-lg text-neutral-800 font-medium mt-[32px] mb-[10px]">Student Innovation Center Roles
                             <Tooltip label = "This is what the user does at the SIC and controls room access.">
                                 <i className = "fa fa-info-circle ml-2"/>
                             </Tooltip>

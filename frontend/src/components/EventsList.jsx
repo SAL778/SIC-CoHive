@@ -2,9 +2,9 @@ import React from "react";
 
 export default function EventList({ event }) {
 	return (
-		<div className="list-booking-item flex items-center py-4 px-[30px] rounded-md cursor-pointer gap-4 shadow-custom">
+		<div className="list-booking-item flex items-center py-4 px-[30px] rounded-md cursor-pointer shadow-custom">
 			
-			<div className="colA basis-2 flex-col flex-grow text-neutral-800">
+			<div className="desktop-1-3 text-neutral-800">
 				<h3
 					className="large-text-mobile font-semibold capitalize leading-[1]"
 					style={{ color: "inherit" }}
@@ -13,7 +13,7 @@ export default function EventList({ event }) {
 				</h3>
 			</div>
 
-			<div className="colC basis-1 flex flex-row flex-grow items-center">
+			<div className="desktop-1-3 flex flex-row items-center">
 				<i
 					className="fa fa-calendar mr-3 large-text-mobile text-neutral-800"
 					style={{ color: "inherit" }}
@@ -34,7 +34,7 @@ export default function EventList({ event }) {
 							hour: "numeric",
 							minute: "numeric",
 							hour12: true,
-						})}
+						})}&nbsp;&nbsp;
 					</p>
 					<p
 						className="text-for-mobile font-medium flex gap-1"
@@ -51,7 +51,7 @@ export default function EventList({ event }) {
 				</div>
 			</div>
 
-			<div className="colB basis-1 flex flex-grow large-text-mobile items-center">
+			<div className="desktop-1-3 flex large-text-mobile items-center">
 				<i className="fa fa-location-dot mr-3" aria-hidden="true" />
 				<p className="font-light" style={{ color: "inherit" }}>
 					{event.location || "No location"}

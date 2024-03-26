@@ -12,12 +12,14 @@ class BookingSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField("get_user")
     resources_name = serializers.CharField(source="resources.name", read_only=True)
     resource_type=serializers.CharField(source="resources.type", read_only=True)
-     
+    resource_room_code=serializers.CharField(source="resources.room_code", read_only=True)
+    resource_description=serializers.CharField(source="resources.description", read_only=True)
+    resource_access_type=serializers.StringRelatedField(source="resources.access_type", read_only=True,many=True)
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name','resource_type', 'user', 'title', 'visibility']
-        read_only_fields = ["id", "user", "resources_name","resource_type"]
+        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name','resource_type', 'user', 'title', 'visibility','resource_room_code','resource_description','resource_access_type']
+        read_only_fields = ["id", "user", "resources_name","resource_type","resource_room_code","resource_description","resource_access_type"]
 
     def validate(self, data):
 
@@ -80,7 +82,8 @@ class ResourcesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resources
-        fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings', 'access_type', 'image']
+        fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings', 'access_type', 'image','room_code']
+        read_only_fields = ['id', 'bookings', 'access_type','room_code']
 
     def get_bookings(self, obj):
         request = self.context.get("request")

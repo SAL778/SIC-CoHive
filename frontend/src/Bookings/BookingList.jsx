@@ -3,6 +3,7 @@ import { HostContext, UserContext } from "../App.jsx";
 import { Loader, isOptionsGroup } from "@mantine/core";
 import { httpRequest } from "../utils.js";
 import { BookingListComponent } from "./BookingListComponent.jsx";
+import BookingPopover from "./BookingPopover.jsx";
 
 /**
  * A component that returns the render of a list view.
@@ -37,8 +38,6 @@ function BookingListView({
 			if (selectedDates[1]) queryParams.append("end_time", selectedDates[1]);
 			selectedAssets.forEach((asset) => queryParams.append("resource", asset));
 		}
-
-		console.log(endpoint + queryParams.toString());
 
 		httpRequest({
 			endpoint: endpoint + queryParams.toString(),
@@ -79,17 +78,25 @@ function BookingListView({
 				<li key={dateHeader.toISOString()}>
 					<DateHeaderComponent date={dateHeader} />
 					<ul className="day-list flex flex-col gap-4">
+						{console.dir(filteredAssets)}
 						{filteredAssets
 							.filter(
 								(asset) =>
 									asset.start_time.toDateString() === dateHeader.toDateString()
 							)
 							.map((asset) => (
-								<BookingListComponent
-									key={asset.id}
-									asset={asset}
-									onItemClick={onItemClick}
-								/>
+								<BookingPopover
+									assetImage = {asset.image}
+									assetDescription = {asset.resource_description}
+									assetCode = {asset.resource_room_code}
+									assetPermissions = {asset.resource_access_type}
+								>
+									<BookingListComponent
+										key={asset.id}
+										asset={asset}
+										onItemClick={onItemClick}
+									/>
+								</BookingPopover>
 							))}
 					</ul>
 				</li>
@@ -106,7 +113,7 @@ function DateHeaderComponent({ date }) {
 	return (
 		<div className="dateHeader mb-2 flex items-center">
 			<div className="date flex gap-4 items-stretch mr-3">
-				<h2 className="text-4xl font-bold text-orange-600 uppercase">
+				<h2 className="text-large-desktop font-bold text-orange-600 uppercase">
 					{date.toLocaleString("en-us", { weekday: "long" })}
 				</h2>
 				<div className="flex flex-col justify-between">

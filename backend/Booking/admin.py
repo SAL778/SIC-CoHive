@@ -12,7 +12,7 @@ class ResourcesAdmin(admin.ModelAdmin):
     ordering = ('id', 'name', 'description', 'room_number', 'type')
     fieldsets = (
         (None, {
-            'fields': ('name', 'description', 'room_number', 'type', 'image')
+            'fields': ('name', 'description', 'room_number', 'type', 'image', 'room_code')
         }),
         ('Access Type', {
             'fields': ('access_type',)

@@ -116,12 +116,12 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
 
     return (
         <div className="flex flex-col justify-between gap-4 px-[10px]">  
-            <h1 className="text-orange-600 text-4xl font-bold">Portfolio</h1>
+            <h1 className="text-orange-600 text-3xl font-bold">Portfolio</h1>
 
             {isEditable &&
                 <button 
                 type="button" 
-                className="button-orange w-24 mt-4" 
+                className="button-orange w-24" 
                 onClick={() => {
                     setOpenedModal("edit")
                     open()
