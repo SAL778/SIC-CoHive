@@ -5,10 +5,10 @@ import "../components/Forms/form.css";
 
 function Filter({ onFilterChange, assetType }) {
 	const [selectedFilters, setSelectedFilters] = useState({});
-	// const [fromDate, setFromDate] = useState(null);
-	// const [toDate, setToDate] = useState(null);
-	const [fromDate, setFromDate] = useState(new Date()); // initial date is today
-	const [toDate, setToDate] = useState(new Date()); // initial date is today
+	const [fromDate, setFromDate] = useState(null);
+	const [toDate, setToDate] = useState(null);
+	// const [fromDate, setFromDate] = useState(new Date()); // initial date is today
+	// const [toDate, setToDate] = useState(new Date()); // initial date is today
 	const [selectedAssets, setselectedAssets] = useState([]);
 	const [bookingFilter, setBookingFilter] = useState("All Bookings");
 	const [isFilterExpanded, setIsFilterExpanded] = useState(true);
