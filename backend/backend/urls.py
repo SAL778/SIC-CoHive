@@ -3,7 +3,7 @@ from django.urls import path, include, re_path
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-from User.views import custom_login_redirect, verify_google_jwt
+from User.views import custom_login_redirect, verify_google_jwt, AppLinkList
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -19,8 +19,6 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    # Oauth
-    path("auth/", include("drf_social_oauth2.urls", namespace="drf")),
     path('api/verify_google_jwt/', verify_google_jwt, name='verify_google_jwt'),
     # Project URLs 
     path("admin/", admin.site.urls),
@@ -29,4 +27,8 @@ urlpatterns = [
     # path('accounts/', include('allauth.urls')),
     path('accounts/profile/', custom_login_redirect, name='custom-login-redirect'),
     re_path(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path("applinks/", AppLinkList.as_view(), name="app-link-list"),
+
+    #gdrive
+    path('google_drive_integration/', include('Google_drive_integration.urls'))
 ]

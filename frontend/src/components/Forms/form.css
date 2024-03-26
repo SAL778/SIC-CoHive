@@ -3,7 +3,8 @@
 
 .mantine-Popover-dropdown {
 	border-radius: var(--border-radius);
-	background-color: var(--digital-white);
+	/* background-color: var(--digital-white); */
+	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 .mantine-DatePickerInput-day {
@@ -46,6 +47,10 @@
 	color: var(--navy-blue);
 }
 
+.filter-container .mantine-Input-input.mantine-DatePickerInput-input {
+	min-height: 42.5px;
+}
+
 .mantine-Select-label {
 	text-transform: uppercase;
 	font-weight: 700;
@@ -64,6 +69,11 @@
 	padding-bottom: 0;
 	padding-top: 0;
 	min-height: 46px;
+	z-index: 0;
+}
+
+.mantine-Modal-content {
+	border-radius: 10px;
 }
 
 .mantine-Checkbox-input {
@@ -99,4 +109,9 @@
 	color: var(--navy-blue);
 	font-weight: 600;
 	font-size: 1em;
+}
+
+.mantine-DatePicker-day[data-today],
+.mantine-DatePickerInput-day[data-today] {
+	border: 2px solid var(--primary-orange);
 }

@@ -38,9 +38,9 @@ function Community() {
 	};
 
 	return (
-		<div className="container mx-auto p-4">
+		<div className="parent-container-community content-container flex max-w-[1600px] w-full mx-auto px-[10px] pb-[10px] gap-10 overflow-hidden">
 			<Filter onSearch={handleSearch} onFilterChange={handleFilterChange} />
-			<div className="flex flex-wrap justify-flex-start gap-[32px] py-[30px]">
+			<div id="community-container" className="py-[30px]">
 				{users.map((user, index) => (
 					<CommunityCard
 						key={index}

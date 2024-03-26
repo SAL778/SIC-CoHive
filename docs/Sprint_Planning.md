@@ -109,7 +109,7 @@ Tasks
 
 Sprint 4
 Due: March 25, 2024
-Estimated Sprint Velocity: 15
+Estimated Sprint Velocity: 13
 
 
 Tasks
@@ -126,10 +126,8 @@ Tasks
 | Integrate Google Calendar API  | US 3.04         | Saahil Rachh      | Mar 19   |
 | Integrate Google Calendar API  | US 3.04         | Yevhen Kaznovskyi | Mar 19   |
 | Admin Manage Events            | US 3.03         | Jonathan Lo       | Mar 21   |
-| Recurring Bookings API         | US 2.07         | Kannan Khosla     | Mar 22   |
-| Recurring Bookings API         | US 2.07         | Ruiyu Yuan        | Mar 22   |
-| Recurring Bookings Modal       | US 2.07         | Jonathan Lo       | Mar 22   |
 | Google Calendar Styling        | US 3.04         | Yevhen Kaznovskyi | Mar 23   |
+| Admin Download Email List      | US 4.03         | Ruiyu Yuan        | Mar 23   |
 | Sprint 4 Testing UI/Stories    | NON-US TASK     | Kenji Chiang      | Mar 23   |
 | Sprint 4 Testing API           | NON-US TASK     | Kannan Khosla     | Mar 23   |
 | Sprint 4 Testing API           | NON-US TASK     | Ruiyu Yuan        | Mar 23   |
@@ -138,12 +136,12 @@ Tasks
 | User story                          | Story points |
 |-------------------------------------|--------------|
 | US 2.02 - Create Asset Fields       | 2            |
-| US 2.07 - Recurring Bookings        | 2            |
 | US 3.01 - Approve Events            | 1            |
 | US 3.02 - Submit Events             | 1            |
 | US 3.03 - Admin Manage Events       | 2            |
 | US 3.04 - Integrate Google Calendar | 5            |
 | US 3.05 - Create Event Fields       | 1            |
+| US 4.03 - Admin Download Email List | 1            |
 | US 7.02 - Admin Manage Links        | 1            | 
 
 
@@ -152,21 +150,41 @@ Sprint 5
 Due: April 8, 2024
 Estimated Sprint Velocity: 13
 
+Tasks
+| Task                           | Related US      | Assigned To       | Due Date |
+|--------------------------------|-----------------|-------------------|----------|
+| Admin Analytics Tab UI         | US 4.01         | Jonathan Lo       | Apr 1    |
+| Admin Analytics Download       | US 4.02         | Kannan Khosla     | Apr 1    |
+| Admin Analytics Download       | US 4.02         | Ruiyu Yuan        | Apr 1    |
+| Admin Email Notifications      | US 5.02         | Yevhen Kaznovskyi | Apr 3    |
+| Admin Email Notifications      | US 5.02         | Saahil Rachh      | Apr 3    |
+| Admin Manage Links             | US 7.02         | Yevhen Kaznovskyi | Apr 3    |
+| Mobile Responsive              | US 7.02         | Yevhen Kaznovskyi | Apr 5    |
+| App Image Issues               | NON-US TASK     | Jonathan Lo       | Apr 5    |
+| Selenium & Manual Testing      | NON-US TASK     | Kenji Chiang      | Apr 6    |
+| Proxy Server Alternative       | NON-US TASK     | Saahil Rachh      | Apr 6    |
+| Deployment                     | NON-US TASK     | Saahil Rachh      | Apr 7    |
+| Events and Bookings Debugging  | NON-US TASK     | Jonathan Lo       | Apr 7    |
+| Documentationg                 | NON-US TASK     | Entire Team       | Apr 7    |
+
+
+
 | User story                          | Story points |
 |-------------------------------------|--------------|
 | US 4.01 - Analytics Tab             | 5            |
 | US 4.02 - Admin Download Analytics  | 2            |
-| US 4.03 - Admin Download Email List | 1            |
 | US 5.02 - Send Email Notifications  | 5            |
-| US 5.03 - Optional Notification     | 1            |
+| US 7.02 - Admin Manage Links        | 1            | 
 
 
 Won't Do List
-Estimated Sprint Velocity: 24
+Estimated Sprint Velocity: 27
 
 | User story                          | Story points |
 |-------------------------------------|--------------|
+| US 2.07 - Recurring Bookings        | 2            |
 | US 5.01 - Web Notifications         | 5            |
+| US 5.03 - Optional Notification     | 1            |
 | US 5.04 - Toggle Notifications      | 3            |
 | US 8.01 - Submit Opportunities      | 5            |
 | US 8.02 - Manage Opportunities      | 1            |

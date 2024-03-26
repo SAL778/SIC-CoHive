@@ -39,7 +39,7 @@ Run the frontend development server:
 Install the dependencies:
 
 ```bash
-npm install
+npm install --legacy-peer-deps or npm install --force
 ```
 
 Followed by running the server:
@@ -51,6 +51,10 @@ npm run dev
 The frontend environment should be up and running now. By default, the frontend uses port 5173.
 
 You can start editing a page and watch it auto-updates as you edit the file.
+
+## For grading:
+Contact us about the credentials required for access to the Google Drive
+This will need to be placed in the backend/google_drive_integration folder.
 
 ## Link to the Figma Hi-Fi
 

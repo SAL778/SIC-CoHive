@@ -1,10 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 
 function CommunityCard({ userID, firstName, lastName, imageUrl }) {
 	const defaultImage = "./src/assets/community-person.jpg";
 
 	return (
-		<a href={`/users/${userID}`} className="community-card bg-white rounded-lg">
+		<Link to={`/users/${userID}`} className="community-card bg-white rounded-lg">
 			<img
 				className="w-full shadow-custom"
 				src={imageUrl || defaultImage}
@@ -18,7 +20,7 @@ function CommunityCard({ userID, firstName, lastName, imageUrl }) {
 					{lastName}
 				</p>
 			</div>
-		</a>
+		</Link>
 	);
 }
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import Filter from "../components/Filter.jsx";
 import { HostContext, UserContext } from "../App.jsx";
 import { Loader, isOptionsGroup } from "@mantine/core";
 import { httpRequest } from "../utils.js";
+import { BookingListComponent } from "./BookingListComponent.jsx";
+import BookingPopover from "./BookingPopover.jsx";
 
 /**
  * A component that returns the render of a list view.
@@ -15,162 +16,92 @@ function BookingListView({
 	assetType,
 	filters,
 	selectedDates,
-	selectedRooms,
+	selectedAssets,
+	bookingFilter, // all bookings or my bookings
+	isUpdated, //Re-render
 }) {
-	//const dateHeaders = getUniqueDateHeaders(displayAssets.map(asset => asset.start_time))
 	const { host } = useContext(HostContext);
+	const { currentUser } = useContext(UserContext); // Current logged-in user
 	const [isLoading, setIsLoading] = useState(true);
-	const [assets, setAssets] = useState([]); //An array of assets from the backend
-	const [dateHeaders, setDateHeaders] = useState([]); //An array of unique dates to be displayed as a header.
+	const [assets, setAssets] = useState([]);
 
 	useEffect(() => {
+		let endpoint = `${host}/bookings/filter?`;
 		const queryParams = new URLSearchParams();
-		if (selectedDates[0]) queryParams.append("start_time", selectedDates[0]);
-		if (selectedDates[1]) queryParams.append("end_time", selectedDates[1]);
-		selectedRooms.forEach((room) => queryParams.append("room", room));
-		console.log(queryParams.toString());
+
+		if (bookingFilter === "My Bookings" && currentUser) {
+			// Fetch only the current user's bookings
+			endpoint = `${host}/bookings/user/${currentUser.id}/`;
+		} else {
+			// Fetch all bookings, with date and room filters
+			if (selectedDates[0]) queryParams.append("start_time", selectedDates[0]);
+			if (selectedDates[1]) queryParams.append("end_time", selectedDates[1]);
+			selectedAssets.forEach((asset) => queryParams.append("resource", asset));
+		}
 
 		httpRequest({
-			endpoint: `${host}/bookings/filter?${queryParams.toString()}`,
+			endpoint: endpoint + queryParams.toString(),
 			onSuccess: (data) => {
-				console.log(data);
 				let sterilized = data.map((asset) => convertToISO(asset));
 				setAssets(sterilized);
-				setDateHeaders(
-					getUniqueDateHeaders(sterilized.map((asset) => asset.start_time))
-				);
 				setIsLoading(false);
 			},
 		});
-	}, [assetType, selectedDates, selectedRooms]);
+	}, [
+		host,
+		currentUser,
+		bookingFilter,
+		selectedDates,
+		selectedAssets,
+		isUpdated,
+	]);
+
+	//Filters based on types
+	const filteredAssets =
+		selectedAssets.length > 0
+			? assets.filter(
+					(asset) =>
+						selectedAssets.includes(asset.resources_name) &&
+						asset.resource_type == assetType
+			  )
+			: assets.filter((asset) => asset.resource_type == assetType);
+
+	const dateHeaders = getUniqueDateHeaders(
+		filteredAssets.map((asset) => asset.start_time)
+	);
 
 	return isLoading ? (
 		<Loader size={50} color="orange" />
 	) : (
-		//Listview
-		<ul className="flex flex-col gap-8 px-[10px] py-8 flex-grow">
+		<ul className="bounding-box-white flex flex-col flex-grow overflow-hidden gap-8 mx-[10px] my-[30px] px-[20px] py-[30px] rounded-[12px] shadow-custom">
 			{dateHeaders.map((dateHeader) => (
-				<li key={dateHeader}>
+				<li key={dateHeader.toISOString()}>
 					<DateHeaderComponent date={dateHeader} />
 					<ul className="day-list flex flex-col gap-4">
-						{assets
+						{console.dir(filteredAssets)}
+						{filteredAssets
 							.filter(
-								(asset) => asset.start_time.getDay() === dateHeader.getDay()
-							) //Apply more filters here
+								(asset) =>
+									asset.start_time.toDateString() === dateHeader.toDateString()
+							)
 							.map((asset) => (
-								<AssetComponent
-									key={asset.id}
-									asset={asset}
-									onItemClick={onItemClick}
-								/>
+								<BookingPopover
+									assetImage={asset.image}
+									assetDescription={asset.resource_description}
+									assetCode={asset.resource_room_code}
+									assetPermissions={asset.resource_access_type}
+								>
+									<BookingListComponent
+										key={asset.id}
+										asset={asset}
+										onItemClick={onItemClick}
+									/>
+								</BookingPopover>
 							))}
 					</ul>
 				</li>
 			))}
 		</ul>
-	);
-}
-
-/**
- * A component that returns the render of a list item to be displayed.
- * @param {Object} asset - The object representation of an asset (room or equipment)
- */
-function AssetComponent({ asset, onItemClick }) {
-	const { currentUser } = useContext(UserContext);
-
-	const greyOut = !asset.visibility && currentUser?.id != asset?.booker?.id;
-
-	//Convert AM/PM date
-	const formatTime = (date) => {
-		let hours = date.getHours();
-		let minutes = date.getMinutes();
-
-		//Convert to 24 Hour format
-		const ampm = hours >= 12 ? "PM" : "AM";
-		hours = hours % 12;
-		hours = hours ? hours : 12; //Handle midnight
-
-		//Pad minutes with zeroes if needed
-		minutes = minutes >= 10 ? minutes : "0" + minutes;
-
-		//Formatted Time
-		return `${hours}:${minutes} ${ampm}`;
-	};
-
-	return (
-		//TODO: On private, grey everything out
-		<div
-			className={`flex items-center py-4 px-6 rounded-md cursor-pointer gap-10 ${
-				greyOut ? "private-booking" : "shadow-custom"
-			}`}
-			onClick={() => onItemClick(asset)}
-		>
-			<div className="colA basis-2 flex-col flex-grow text-neutral-800">
-				<h3
-					className="text-2xl font-semibold capitalize leading-[1]"
-					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-				>
-					{asset?.resources_name}
-				</h3>
-				<p
-					className="text-base font-regular"
-					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-				>
-					{greyOut ? "Booking" : asset?.title}
-				</p>
-			</div>
-
-			{asset?.type == "room" && (
-				<div className="colB basis-1 flex flex-grow text-2xl gap-4">
-					<i className="fa fa-location-dot" aria-hidden="true" />
-					<p
-						className="font-light"
-						style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-					>
-						{asset?.location}
-					</p>
-				</div>
-			)}
-
-			<div className="colC basis-1 flex flex-row flex-grow items-center ">
-				<i
-					className="fa fa-calendar mr-3 text-2xl text-neutral-800"
-					style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-				/>
-				<div className="timeSlot">
-					<p
-						className="text-base font-medium text-orange-600"
-						style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-					>
-						{formatTime(asset.start_time)} - {formatTime(asset.end_time)}
-					</p>
-					<p
-						className="text-base font-medium flex gap-1"
-						style={{ color: greyOut ? "#ABABAB" : "inherit" }}
-					>
-						<span>
-							{asset.start_time.toLocaleString("en-us", { weekday: "long" })}
-						</span>
-						<span>
-							{asset.start_time.toLocaleString("en-us", { month: "short" })}
-						</span>
-						<span>{asset.start_time.getDate()}</span>
-					</p>
-				</div>
-			</div>
-
-			<div className="colD basis-1 flex-grow">
-				{!greyOut && (
-					<>
-						{/* Booker not present on private posts */}
-						<p className="text-base text-orange-600">
-							{asset.user?.first_name}
-						</p>
-						<p className="text-neutral-800">{asset.user?.email}</p>
-					</>
-				)}
-			</div>
-		</div>
 	);
 }
 
@@ -182,7 +113,7 @@ function DateHeaderComponent({ date }) {
 	return (
 		<div className="dateHeader mb-2 flex items-center">
 			<div className="date flex gap-4 items-stretch mr-3">
-				<h2 className="text-4xl font-bold text-orange-600 uppercase">
+				<h2 className="text-large-desktop font-bold text-orange-600 uppercase">
 					{date.toLocaleString("en-us", { weekday: "long" })}
 				</h2>
 				<div className="flex flex-col justify-between">

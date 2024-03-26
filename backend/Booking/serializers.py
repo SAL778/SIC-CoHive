@@ -7,26 +7,36 @@ from rest_framework import serializers
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
-    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M")
+    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.now())
+    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.now())
     user = serializers.SerializerMethodField("get_user")
     resources_name = serializers.CharField(source="resources.name", read_only=True)
     resource_type=serializers.CharField(source="resources.type", read_only=True)
+    resource_room_code=serializers.CharField(source="resources.room_code", read_only=True)
+    resource_description=serializers.CharField(source="resources.description", read_only=True)
+    resource_access_type=serializers.StringRelatedField(source="resources.access_type", read_only=True,many=True)
 
     class Meta:
         model = Booking
-        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name','resource_type', 'user', 'title', 'visibility']
-        read_only_fields = ["id", "user", "resources_name","resource_type"]
+        fields = ['id', 'start_time', 'end_time', 'resources', 'resources_name','resource_type', 'user', 'title', 'visibility','resource_room_code','resource_description','resource_access_type']
+        read_only_fields = ["id", "user", "resources_name","resource_type","resource_room_code","resource_description","resource_access_type"]
 
     def validate(self, data):
 
-        print(data['start_time'])
+        print("date: ",data['start_time'])
+        print("time: ",timezone.localtime(timezone.now()))
 
         if data['start_time'] > data['end_time']:
             raise serializers.ValidationError("End time must be after start time.")
 
         if data['start_time'].minute % 15 != 0 or data['end_time'].minute % 15 != 0:
             raise serializers.ValidationError("Time must be in 15-minute intervals.")
+
+        if data['start_time'] < timezone.localtime(timezone.now()):
+            raise serializers.ValidationError("Start time must be in the future.")
+
+        if data['end_time'] < timezone.localtime(timezone.now()):
+            raise serializers.ValidationError("End time must be in the future.")
 
         # get booking objects that is in the same day and has the same resources
         overlapping_bookings = Booking.objects.filter(
@@ -62,20 +72,7 @@ class BookingSerializer(serializers.ModelSerializer):
             return user_info
         return {}
     
-    # # Removed for now, can add back if we have description
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     request = self.context.get("request")
-    #     user = None
-    #     try:
-    #         access_token = request.META['HTTP_AUTHORIZATION']
-    #         token_obj = Token.objects.get(key=access_token)
-    #         user = token_obj.user
-    #     except:
-    #         pass
-    #     if not instance.visibility and (user is None or not user.is_authenticated):
-    #         representation['description'] = None
-    #     return representation
+    
 
 
 class ResourcesSerializer(serializers.ModelSerializer):
@@ -85,9 +82,10 @@ class ResourcesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resources
-        fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings', 'access_type']
+        fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings', 'access_type', 'image','room_code']
+        read_only_fields = ['id', 'bookings', 'access_type','room_code']
 
-    def get_bookings(self, obj):    
+    def get_bookings(self, obj):
         request = self.context.get("request")
         date = request.query_params.get('date')
         filter_date = None
@@ -97,4 +95,44 @@ class ResourcesSerializer(serializers.ModelSerializer):
             filter_date = timezone.make_aware(
                 datetime.datetime.strptime(date, "%Y-%m-%d").replace(hour=0, minute=0, second=0, microsecond=0))
         bookings = Booking.objects.filter(resources=obj, start_time__date=filter_date)
-        return BookingSerializer(bookings, many=True).data
+        return BookingSerializer(bookings, many=True,context={'request':request}).data
+
+
+
+
+class BookingStatisticsSerializer(serializers.Serializer):
+    scope = serializers.ChoiceField(choices=['all', 'week', 'month', 'year'], required=False, default='all')
+    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
+    month = serializers.IntegerField(required=False, min_value=1, max_value=12,default=timezone.now().month)
+    week = serializers.IntegerField(required=False, min_value=1, max_value=53)
+    
+    
+class BookingFrequencyFilterSerializer(serializers.Serializer):
+    scope=serializers.ChoiceField(choices=['all','week','month','year'],required=False,default='all')
+    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
+    month = serializers.IntegerField(required=False, min_value=1, max_value=12)
+    week = serializers.IntegerField(required=False, min_value=1, max_value=53)
+    
+    
+class AverageBookingDurationSerializer(serializers.Serializer):
+    scope=serializers.ChoiceField(choices=['all','week','month','year'],required=False,default='all')
+    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
+    month = serializers.IntegerField(required=False, min_value=1, max_value=12)
+    week = serializers.IntegerField(required=False, min_value=1, max_value=53)
+    resource_booking_count = serializers.SerializerMethodField()
+   
+    def get_resource_booking_count(self, obj):
+        return Booking.objects.filter(resources=obj.resources).count()
+        
+        
+        
+# not using foe now
+class AverageBookingDurationqSerializer(serializers.Serializer):
+    scope=serializers.ChoiceField(choices=['all','week','month','year'],required=False,default='all')
+    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
+    month = serializers.IntegerField(required=False, min_value=1, max_value=12)
+    week = serializers.IntegerField(required=False, min_value=1, max_value=53)
+    resource_booking_count = serializers.SerializerMethodField()
+   
+    def get_resource_booking_count(self, obj):
+        return Booking.objects.filter(resources=obj.resources).count()

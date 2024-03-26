@@ -8,14 +8,15 @@ from django.contrib.auth import get_user_model
 from .serializers import BookingSerializer, ResourcesSerializer
 from django.shortcuts import get_object_or_404
 from .models import Resources, Booking
-from .serializers import ResourcesSerializer, BookingSerializer
+from .serializers import ResourcesSerializer, BookingSerializer, BookingStatisticsSerializer, BookingFrequencyFilterSerializer, AverageBookingDurationSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 from User.views import get_user_from_token
 from rest_framework.views import APIView
 from django.http import Http404
 from drf_yasg.utils import swagger_auto_schema
-
+from urllib.parse import unquote
+from datetime import timedelta
 # Create your views here.
 User = get_user_model()
 
@@ -72,18 +73,18 @@ class FilterBookingsView(generics.ListAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
 
-    def get_queryset(self):
+    def get_queryset(self, start_time=None, end_time=None):
         queryset = super().get_queryset()
-        start_time = self.request.query_params.get('start_time')
-        end_time = self.request.query_params.get('end_time')
-        rooms = self.request.query_params.getlist('room')
-
+        # start_time = self.request.query_params.get('start_time')
+        # end_time = self.request.query_params.get('end_time')
+        resources = self.request.query_params.getlist('resource')
         if start_time:
             queryset = queryset.filter(start_time__gte=start_time)
         if end_time:
             queryset = queryset.filter(end_time__lte=end_time)
-        if rooms:
-            queryset = queryset.filter(resources_name__in=rooms)
+        if resources:
+            decoded_resources = [unquote(resource) for resource in resources]
+            queryset = queryset.filter(resources__name__in=decoded_resources)
 
         return queryset
 
@@ -109,9 +110,8 @@ class FilterBookingsView(generics.ListAPIView):
                 datetime.datetime.strptime(end_time, "%Y-%m-%d").replace(hour=23, minute=59, second=59,
                                                                          microsecond=999999))
 
-        print(start_time, end_time)
-        return Response(self.get_serializer(Booking.objects.filter(start_time__gte=start_time, end_time__lte=end_time),
-                                            many=True).data)
+        get_filter = self.get_queryset(start_time, end_time)
+        return Response(self.get_serializer(get_filter, many=True).data)
 
 
 class UserBookingView(generics.ListCreateAPIView):
@@ -239,7 +239,95 @@ class ResourceListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        names = queryset.values_list('name', flat=True)
-        return Response(names)
+        names_and_ids = queryset.values('id', 'name')
+        return Response(list(names_and_ids))
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     names = queryset.values_list('name', flat=True)
+    #     return Response(list(names))
     
     
+
+class AverageBookingView(APIView):
+    '''
+    get:
+    Get the average booking duration for a given scope and time period.
+    '''
+
+    def get(self, request, format=None):
+        serializer = AverageBookingDurationSerializer(data=request.query_params)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            scope = data.get('scope', 'all')
+            year = data.get('year', timezone.now().year)
+            month = data.get('month')
+            week = data.get('week')
+            stats = Booking.average_booking_duration(scope=scope, year=year, month=month, week=week)
+            print(stats)
+            total_minutes = round(stats['avg_duration'].total_seconds() / 60)
+            return Response({"average_duration": f"{total_minutes} minutes"})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class BookingDaysView(APIView):
+    '''
+    get:
+    Get the number of bookings for each day of the week.
+    '''
+    def get(self, request, *args, **kwargs):
+        serializer = BookingStatisticsSerializer(data=request.query_params)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            scope = data.get('scope', 'all')
+            year = data.get('year', timezone.now().year)  # Default to current year if not specified
+            month = data.get('month')
+            week = data.get('week')
+            stats = Booking.get_bookings_by_day_of_week(scope=scope, year=year, month=month, week=week)
+            
+            return Response(stats)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+class BookingFrequenciesView(APIView):
+    '''
+    get:
+    Get the number of bookings for each resource.
+    '''
+    def get(self, request, *args, **kwargs):
+        serializer = BookingFrequencyFilterSerializer(data=request.query_params)
+        if serializer.is_valid():
+            data=serializer.validated_data
+            scope=data.get('scope','all')
+            year = serializer.validated_data.get('year', timezone.now().year)
+            month = serializer.validated_data.get('month')
+            week = serializer.validated_data.get('week')
+            
+            frequencies = Booking.booking_frequencies_by_resource(scope=scope,year=year, month=month, week=week)
+            print(year)
+            return Response(frequencies)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+        
+class PeakBookingHours(APIView):
+    '''
+    get:
+    Get the peak booking times for a given scope and time period.
+    '''
+    def get(self, request, *args, **kwargs):
+        serializer = BookingFrequencyFilterSerializer(data=request.query_params)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            scope = data.get('scope', 'all')
+            year = data.get('year', timezone.now().year)
+            month = data.get('month')
+            week = data.get('week')
+            
+            peak_times = Booking.peak_booking_times(scope=scope,year=year, month=month, week=week)
+            return Response(peak_times)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,0 +1,57 @@
+@import "../App.css";
+
+.mantine-RichTextEditor-root {
+   border: none;
+   background: white;
+   border-radius: var(--border-radius);
+   box-shadow: 0px 2px 6px #00000029;
+}
+
+.editor-header {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    border-bottom: 3px solid var(--primary-orange);
+    margin: 0 8px;
+}
+
+.mantine-RichTextEditor-controlsGroup {
+    border: none;
+}
+
+.mantine-RichTextEditor-control {
+    border: none;
+}
+
+.mantine-RichTextEditor-control[data-active] {
+    color: var(--primary-orange)
+}
+
+.mantine-RichTextEditor-content {
+    margin: 0 8px;
+    min-height: 512px;
+    caret-color: var(--primary-orange);
+    padding-bottom: 64px; /*This is so the text won't get overlapped by button*/
+    color: var(--charcoal);
+}
+
+@media (min-width: 580px) {
+    .editor-header {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+    }
+
+    .editor-header,
+    .mantine-RichTextEditor-content {
+        margin: 0 32px;
+    }
+}
+
+@media (min-width: 820px) {
+    .editor-header {
+        display: flex;
+    }
+
+    .editor-header .controls {
+        margin-left: auto;
+    }
+}
