@@ -5,8 +5,10 @@ import "../components/Forms/form.css";
 
 function Filter({ onFilterChange, assetType }) {
 	const [selectedFilters, setSelectedFilters] = useState({});
-	const [fromDate, setFromDate] = useState(null);
-	const [toDate, setToDate] = useState(null);
+	// const [fromDate, setFromDate] = useState(null);
+	// const [toDate, setToDate] = useState(null);
+	const [fromDate, setFromDate] = useState(new Date()); // initial date is today
+	const [toDate, setToDate] = useState(new Date()); // initial date is today
 	const [selectedAssets, setselectedAssets] = useState([]);
 	const [bookingFilter, setBookingFilter] = useState("All Bookings");
 	const [isFilterExpanded, setIsFilterExpanded] = useState(true);
@@ -63,16 +65,19 @@ function Filter({ onFilterChange, assetType }) {
 	};
 
 	// Handler to toggle filter container
-    const toggleFilterContainer = () => {
-        setIsFilterExpanded(!isFilterExpanded);
-    };
+	const toggleFilterContainer = () => {
+		setIsFilterExpanded(!isFilterExpanded);
+	};
 
 	return (
 		<div className="px-[10px] py-[30px]">
 			<div className="filter-container">
 				<div className="filter-section">
-					<Tooltip label = "Click to toggle expanding the filters.">
-						<div className="filter-bar-text cursor-pointer" onClick={toggleFilterContainer}>
+					<Tooltip label="Click to toggle expanding the filters.">
+						<div
+							className="filter-bar-text cursor-pointer"
+							onClick={toggleFilterContainer}
+						>
 							<i
 								className="fa-solid fa-filter"
 								style={{
@@ -87,79 +92,97 @@ function Filter({ onFilterChange, assetType }) {
 						</div>
 					</Tooltip>
 					{isFilterExpanded && (
-					<>
-					<div className="bookings-filter">
-						<p style={{ marginBottom: "8px" }}><strong>Bookings:</strong></p>
-						<div className="filter-item">
-							<div
-								className={`radio-button ${
-									bookingFilter === "All Bookings" ? "selected" : ""
-								}`}
-								onClick={() => handleBookingFilterChange("All Bookings")}
-							></div>
-							<span onClick={() => handleBookingFilterChange("All Bookings")}>
-								All Bookings
-							</span>
-						</div>
-						<div className="filter-item">
-							<div
-								className={`radio-button ${
-									bookingFilter === "My Bookings" ? "selected" : ""
-								}`}
-								onClick={() => handleBookingFilterChange("My Bookings")}
-							></div>
-							<span onClick={() => handleBookingFilterChange("My Bookings")}>
-								My Bookings
-							</span>
-						</div>
-					</div>
-					<div style={{ margin: "0 0 5px 0px" }}>
-						<p><strong>From Date:</strong></p>
-					</div>
+						<>
+							<div className="bookings-filter">
+								<p style={{ marginBottom: "8px" }}>
+									<strong>Bookings:</strong>
+								</p>
+								<div className="filter-item">
+									<div
+										className={`radio-button ${
+											bookingFilter === "All Bookings" ? "selected" : ""
+										}`}
+										onClick={() => handleBookingFilterChange("All Bookings")}
+									></div>
+									<span
+										onClick={() => handleBookingFilterChange("All Bookings")}
+									>
+										All Bookings
+									</span>
+								</div>
+								<div className="filter-item">
+									<div
+										className={`radio-button ${
+											bookingFilter === "My Bookings" ? "selected" : ""
+										}`}
+										onClick={() => handleBookingFilterChange("My Bookings")}
+									></div>
+									<span
+										onClick={() => handleBookingFilterChange("My Bookings")}
+									>
+										My Bookings
+									</span>
+								</div>
+							</div>
+							<div style={{ margin: "0 0 5px 0px" }}>
+								<p>
+									<strong>From Date:</strong>
+								</p>
+							</div>
 
-					<DatePickerInput
-						label="Select a from date"
-						value={fromDate}
-						onChange={(value) => {
-							const parsedDate = new Date(value).toISOString().split("T")[0];
-							console.log(parsedDate);
-							setFromDate(value);
-						}}
-					/>
+							<DatePickerInput
+								label="Select a from date"
+								value={fromDate}
+								onChange={(value) => {
+									const parsedDate = new Date(value)
+										.toISOString()
+										.split("T")[0];
+									console.log(parsedDate);
+									setFromDate(value);
+								}}
+							/>
 
-					<div style={{ margin: "20px 0 5px 0px" }}>
-						<p><strong>To Date:</strong></p>
-					</div>
+							<div style={{ margin: "20px 0 5px 0px" }}>
+								<p>
+									<strong>To Date:</strong>
+								</p>
+							</div>
 
-					<DatePickerInput
-						label="Select a to date"
-						value={toDate}
-						onChange={(value) => {
-							const parsedDate = new Date(value).toISOString().split("T")[0];
-							console.log(parsedDate);
-							setToDate(value);
-						}}
-					/>
+							<DatePickerInput
+								label="Select a to date"
+								value={toDate}
+								onChange={(value) => {
+									const parsedDate = new Date(value)
+										.toISOString()
+										.split("T")[0];
+									console.log(parsedDate);
+									setToDate(value);
+								}}
+							/>
 
-					<div style={{ margin: "10px 0 5px 0px" }}>
-						<p><strong>{assetType == "room" ? "Rooms" : "Equipment"}</strong></p>
-					</div>
-					<div className="filters">
-						{Object.entries(selectedFilters).map(
-							([filter, isSelected], index) => (
-								<React.Fragment key={filter}>
-									<div className="filter-item">
-										<div
-											className={`checkbox ${isSelected ? "selected" : ""}`}
-											onClick={() => toggleFilter(filter)}
-										></div>
-										<span onClick={() => toggleFilter(filter)}>{filter}</span>
-									</div>
-								</React.Fragment>
-							)
-						)}
-					</div>
-					</>
+							<div style={{ margin: "10px 0 5px 0px" }}>
+								<p>
+									<strong>{assetType == "room" ? "Rooms" : "Equipment"}</strong>
+								</p>
+							</div>
+							<div className="filters">
+								{Object.entries(selectedFilters).map(
+									([filter, isSelected], index) => (
+										<React.Fragment key={filter}>
+											<div className="filter-item">
+												<div
+													className={`checkbox ${isSelected ? "selected" : ""}`}
+													onClick={() => toggleFilter(filter)}
+												></div>
+												<span onClick={() => toggleFilter(filter)}>
+													{filter}
+												</span>
+											</div>
+										</React.Fragment>
+									)
+								)}
+							</div>
+						</>
 					)}
 				</div>
 			</div>

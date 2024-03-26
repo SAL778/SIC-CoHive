@@ -30,7 +30,7 @@ export function BookingListComponent({ asset, onItemClick }) {
 	return (
 		//TODO: On private, grey everything out
 		<div
-			className={`list-booking-item flex overflow-hidden py-4 px-[30px] rounded-md cursor-pointer ${ 
+			className={`list-booking-item flex overflow-hidden py-4 px-[30px] rounded-md cursor-pointer ${
 				greyOut ? "private-booking" : "shadow-custom"
 			}`}
 			onClick={() => onItemClick(asset)}
@@ -72,7 +72,8 @@ export function BookingListComponent({ asset, onItemClick }) {
 						className="text-for-mobile font-medium text-orange-600"
 						style={{ color: greyOut ? "#ABABAB" : "inherit" }}
 					>
-						{formatTime(asset.start_time)} - {formatTime(asset.end_time)}&nbsp;&nbsp;
+						{formatTime(asset.start_time)} - {formatTime(asset.end_time)}
+						&nbsp;&nbsp;
 					</p>
 					<p
 						className="text-for-mobile font-medium flex gap-1"
@@ -96,7 +97,9 @@ export function BookingListComponent({ asset, onItemClick }) {
 						<p className="text-overflow-ellipsis text-for-mobile text-orange-600">
 							{asset.user?.first_name}
 						</p>
-						<p className="text-overflow-ellipsis text-neutral-800">{asset.user?.email}</p>
+						<p className="text-overflow-ellipsis text-neutral-800">
+							{asset.user?.email}
+						</p>
 					</>
 				)}
 			</div>
