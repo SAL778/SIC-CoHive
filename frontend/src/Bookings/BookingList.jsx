@@ -3,6 +3,7 @@ import { HostContext, UserContext } from "../App.jsx";
 import { Loader, isOptionsGroup } from "@mantine/core";
 import { httpRequest } from "../utils.js";
 import { BookingListComponent } from "./BookingListComponent.jsx";
+import BookingPopover from "./BookingPopover.jsx";
 
 /**
  * A component that returns the render of a list view.
@@ -37,8 +38,6 @@ function BookingListView({
 			if (selectedDates[1]) queryParams.append("end_time", selectedDates[1]);
 			selectedAssets.forEach((asset) => queryParams.append("resource", asset));
 		}
-
-		console.log(endpoint + queryParams.toString());
 
 		httpRequest({
 			endpoint: endpoint + queryParams.toString(),
@@ -79,17 +78,25 @@ function BookingListView({
 				<li key={dateHeader.toISOString()}>
 					<DateHeaderComponent date={dateHeader} />
 					<ul className="day-list flex flex-col gap-4">
+						{console.dir(filteredAssets)}
 						{filteredAssets
 							.filter(
 								(asset) =>
 									asset.start_time.toDateString() === dateHeader.toDateString()
 							)
 							.map((asset) => (
-								<BookingListComponent
-									key={asset.id}
-									asset={asset}
-									onItemClick={onItemClick}
-								/>
+								<BookingPopover
+									assetImage = {asset.image}
+									assetDescription = {asset.resource_description}
+									assetCode = {asset.resource_room_code}
+									assetPermissions = {asset.resource_access_type}
+								>
+									<BookingListComponent
+										key={asset.id}
+										asset={asset}
+										onItemClick={onItemClick}
+									/>
+								</BookingPopover>
 							))}
 					</ul>
 				</li>
