@@ -73,7 +73,7 @@ function BookingListView({
 	return isLoading ? (
 		<Loader size={50} color="orange" />
 	) : (
-		<ul className="bounding-box-white flex flex-col flex-grow overflow-hidden gap-8 mx-[10px] my-[30px] px-[20px] py-[30px] rounded-[12px] shadow-custom">	
+		<ul className="bounding-box-white flex flex-col flex-grow overflow-hidden gap-8 mx-[10px] my-[30px] px-[20px] py-[30px] rounded-[12px] shadow-custom">
 			{dateHeaders.map((dateHeader) => (
 				<li key={dateHeader.toISOString()}>
 					<DateHeaderComponent date={dateHeader} />
@@ -86,10 +86,10 @@ function BookingListView({
 							)
 							.map((asset) => (
 								<BookingPopover
-									assetImage = {asset.image}
-									assetDescription = {asset.resource_description}
-									assetCode = {asset.resource_room_code}
-									assetPermissions = {asset.resource_access_type}
+									assetImage={asset.image}
+									assetDescription={asset.resource_description}
+									assetCode={asset.resource_room_code}
+									assetPermissions={asset.resource_access_type}
 								>
 									<BookingListComponent
 										key={asset.id}
