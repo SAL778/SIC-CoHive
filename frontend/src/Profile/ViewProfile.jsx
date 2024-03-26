@@ -44,7 +44,7 @@ export default function ViewProfile() {
         isLoading ? (
             <Loader />
         ) : (
-            <div className="flex flex-col gap-8 w-full my-[30px] max-w-[1600px] mx-auto">
+            <div className="content-container flex flex-col gap-8 w-full my-[30px] max-w-[1600px] mx-auto">
                 <ProfileHeader profileUser={profileUser} />
 
                 <div className="px-[10px]">

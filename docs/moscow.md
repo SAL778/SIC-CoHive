@@ -24,10 +24,8 @@
 ## Should Do
 - US 1.05 As a user, I want to look up other users by using the search bar, so that I can find information about my friends, organizations, and admins.
 - US 2.04 As an admin, I want to restrict certain assets to users with special AccessType Labels, so that important assets are protected.
-- US 2.07 As a user, I want to book a room at reoccurring times (daily, weekly, monthly, yearly), so that I can ensure I always has a consistent schedule.
 - US 3.04 As an admin, I want to integrate Google Calendar with Events Calendar, so that both calendars can be synced.
 - US 4.02 As an admin, I want to download Analytics from the "Insights" tab as a CSV/XLS file so that I can optimize the center's operations more effectively.
-- US 5.03 As an admin, I want to have the option to check whether they want to notify users on an update, so that some updates do not send a notification.
 - US 7.01 As a user, I want to sign up/in using my Gmail account, so that accessing SIC does not require extra credentials.
 
 ## Could Do
@@ -36,7 +34,9 @@
 - US 4.03 As an admin, I want to download the Email list of all users, so that I can view and find all users with a specific Gmail domain.
 
 ## Won't Do
+- US 2.07 As a user, I want to book a room at reoccurring times (daily, weekly, monthly, yearly), so that I can ensure I always has a consistent schedule.
 - US 5.01 As an admin, I want to send notifications on the website to the mailbox of all users, so that they can be notified not only through Email.
+- US 5.03 As an admin, I want to have the option to check whether they want to notify users on an update, so that some updates do not send a notification.
 - US 5.04 As a user, I want to have the option to toggle which types of notifications I receive, so that I get the information important to me.
 - US 8.01 As a user, I want to submit entrepreneurial thinking placements, so that other users can view the opportunities available.
 - US 8.02 As an admin, I want to be able to manage the application/job portal placements, so that I can approve which placements are appropriate.
