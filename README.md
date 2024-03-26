@@ -52,6 +52,10 @@ The frontend environment should be up and running now. By default, the frontend 
 
 You can start editing a page and watch it auto-updates as you edit the file.
 
+## For grading:
+Contact us about the credentials required for access to the Google Drive
+This will need to be placed in the backend/google_drive_integration folder.
+
 ## Link to the Figma Hi-Fi
 
 https://www.figma.com/file/xd69ad9wL9y19qJo52C69T/HiFi(ve)?type=design&node-id=0%3A1&mode=design&t=o6K4PRNmJd6W9lRp-1
