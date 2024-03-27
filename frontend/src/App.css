@@ -890,6 +890,30 @@ div .mantine-RichTextEditor-content {
 	flex-direction: column;
 }
 
+.upperSection {
+	display: flex;
+	flex-direction: column;
+	align-items: center
+}
+
+.lowerSection {
+	display: flex;
+	flex-direction: column;
+}
+
+.booking-image {
+	width: 100%;
+}
+
+.booking-modal-options {
+	width: 100%;
+}
+
+.eventDetails {
+	--event-columns: 1;
+	grid-template-columns: repeat(var(--event-columns), minmax(0, 1fr));
+}
+
 @media (min-width: 500px) {
 	.desktop-hidden {
 		display: none;
@@ -910,6 +934,25 @@ div .mantine-RichTextEditor-content {
 	.timeSlot {
 		flex-direction: row;
 	}	
+}
+
+@media (min-width: 610px) {
+
+	.upperSection,
+	.lowerSection {
+		display: flex;
+		flex-direction: row;
+	}
+	
+	.booking-image {
+		width: 50%;
+		max-width: 325px;
+		height: 325px;
+	}
+
+	.booking-modal-options {
+		width: 300px;
+	}
 }
 
 @media (min-width: 650px) {
@@ -1012,6 +1055,12 @@ div .mantine-RichTextEditor-content {
 
 	#community-container {
 		--number-of-columns: 2;
+	}
+}
+
+@media (min-width: 1150px) {
+	.eventDetails {
+		--event-columns: 2;
 	}
 }
 

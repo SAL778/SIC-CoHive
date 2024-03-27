@@ -212,7 +212,7 @@ function Events() {
 							}}>
 								{clickedEvent?.title}
 							</h2>
-							<section className="eventDetails grid grid-cols-2 gap-4 text-[16px]">
+							<section className="eventDetails grid gap-4 text-[16px]">
 								<p className="location"><i className="fa text-center w-[20px] mr-3 fa-location-dot"/>{clickedEvent?.location}</p>
 								<p className="date"><i className="fa text-center w-[20px] mr-3 fa-calendar-day"/>{clickedEvent?.date}</p>
 								<p className="organizer"><i className="fa text-center w-[20px] mr-3 fa-user-group"/>{clickedEvent?.email}</p>
