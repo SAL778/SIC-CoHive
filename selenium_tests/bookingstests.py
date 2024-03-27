@@ -34,30 +34,31 @@ class TestBookings(unittest.TestCase) :
     def setUp(self):
         self.global_driver = global_driver
 
-    # def test_a_user_can_view_room_bookings(self):
-    #     """Verifies that a user can successfully view column room bookings"""
-    #     global_driver.get("http://localhost:5173/bookings")
-    #     time.sleep(3)
-    #     room_column = global_driver.find_element(By.XPATH, "//p[text()='MEETING ROOM1']")
-    #     time.sleep(3)
-    #     self.assertTrue(room_column, "MEETING ROOM1 not found")
+    def test_a_user_can_view_room_bookings(self):
+        """Verifies that a user can successfully view column room bookings"""
+        global_driver.get("http://localhost:5173/bookings")
+        time.sleep(3)
+        room_column = global_driver.find_element(By.XPATH, "//p[text()='MEETING ROOM1']")
+        time.sleep(3)
+        self.assertTrue(room_column, "MEETING ROOM1 not found")
         
-    # def test_b_user_can_view_equipment_bookings(self):
-    #     """Verifies that a user can successfully view column equipment bookings"""
-    #     global_driver.get("http://localhost:5173/bookings")
-    #     global_driver.set_window_size(1727, 1630)
-    #     equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
-    #     equipment_toggle.click()
-    #     time.sleep(2)
-    #     equipment_column = global_driver.find_element(By.XPATH, "//p[text()='Laptop']")
-    #     time.sleep(3)
-    #     self.assertTrue(equipment_column, "Laptop not found")
+    def test_b_user_can_view_equipment_bookings(self):
+        """Verifies that a user can successfully view column equipment bookings"""
+        global_driver.get("http://localhost:5173/bookings")
+        global_driver.set_window_size(1727, 1630)
+        equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
+        equipment_toggle.click()
+        time.sleep(2)
+        equipment_column = global_driver.find_element(By.XPATH, "//p[text()='Laptop']")
+        time.sleep(3)
+        self.assertTrue(equipment_column, "Laptop not found")
 
     def test_c_user_can_book_room(self):
         """Verifies that a user can successfully book a room they are permitted using the (New Booking) button"""
         global_driver.get("http://localhost:5173/bookings")
         book_button = global_driver.find_element(By.XPATH, "//button[text()='New Booking']")
         book_button.click()
+        time.sleep(3)
         title_field = global_driver.find_element(By.XPATH, '//input[@placeholder="Give your booking a title"]')
         title_field.send_keys("Automated Test Booking")
         time.sleep(3)
@@ -68,7 +69,7 @@ class TestBookings(unittest.TestCase) :
         pick_asset.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='March 25, 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='March 27, 2024']"))
         )
         calendar_field.click()
         # Change date if wanted
@@ -87,18 +88,23 @@ class TestBookings(unittest.TestCase) :
         to_field.send_keys("8:00 AM")
         find_and_click_text(global_driver, "8:00 AM")
         submit_button = global_driver.find_element(By.XPATH, "//button[@type='submit'][contains(text(), 'Submit')]")
+        time.sleep(2)
         submit_button.click()
         confirm_notif = WebDriverWait(global_driver, 1).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
         )
-        time.sleep(3)
+        # confirm_notif = global_driver.find_element(By.CLASS_NAME, 'mantine-Notification-title')
+        
+        # time.sleep(3)
         self.assertIn("Booking added", confirm_notif.text)
+        time.sleep(3)
 
-    def test_d_user_can_edit_room_booking(self):
-        """Verifies that a user can successfully edit their own room booking"""
+    def test_d_user_can_view_room_booking_list(self):
+        """Verifies that a user can successfully view their own room booking in list view"""
         global_driver.get("http://localhost:5173/bookings")
+        time.sleep(3)
         ## CHANGE TO AN UPDATED DATE
-        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 25']")
+        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
         big_date.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
@@ -107,8 +113,38 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
         calendar_field.click()
         back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        time.sleep(2)
+        back_to_big_date.click()
+        time.sleep(3)   
+        icon = WebDriverWait(global_driver, 3).until(
+            EC.element_to_be_clickable((By.CLASS_NAME, "fa-th-list"))
+        )
+        icon.click()
+        time.sleep(3)
+        find_and_click_text(global_driver, "My Bookings")
+        time.sleep(3)
+        booked_title = global_driver.find_element(By.XPATH, "//p[@class='text-for-mobile font-regular' and text()='Automated Test Booking']")
+        time.sleep(3)
+        self.assertTrue(booked_title, "Booking is present in list view")
+
+    def test_e_user_can_edit_room_booking(self):
+        """Verifies that a user can successfully edit their own room booking"""
+        global_driver.get("http://localhost:5173/bookings")
+        time.sleep(3)
+        ## CHANGE TO AN UPDATED DATE
+        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        big_date.click()
+        calendar_field = WebDriverWait(global_driver, 3).until(
+            # UPDATE TO TODAYS DATE TO WORK
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+        )
+        time.sleep(3)
+        calendar_field.click()
+        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        time.sleep(2)
         back_to_big_date.click()
         booked_title = global_driver.find_element(By.XPATH, "//p[@class='font-bold' and text()='Automated Test Booking']")
+        time.sleep(3)
         booked_title.click()
         time.sleep(3)
         title_field = global_driver.find_element(By.XPATH, '//input[@placeholder="Give your booking a title"]')
@@ -122,11 +158,11 @@ class TestBookings(unittest.TestCase) :
         )
         self.assertIn("Booking modified", confirm_notif.text)
 
-    def test_e_user_can_delete_room_booking(self):
+    def test_f_user_can_delete_room_booking(self):
         """Verifies that a user can successfully delete their own room booking"""
         global_driver.get("http://localhost:5173/bookings")
         ## CHANGE TO AN UPDATED DATE
-        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 25']")
+        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
         big_date.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
@@ -141,117 +177,158 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
         delete_button = global_driver.find_element(By.XPATH, "//button[contains(@class, 'button-orange modal-button') and text()='Delete']")
         delete_button.click()
+        # time.sleep(3)
+        # self.assertTrue(delete_button, "Delete button not found")
+        confirm_notif = WebDriverWait(global_driver, 1).until(
+            EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
+        )
+        self.assertIn("Booking deleted", confirm_notif.text)
         time.sleep(3)
-        self.assertTrue(delete_button, "Delete button not found")
 
-    # def test_f_user_can_book_equipment(self):
-    #     """Verifies that a user can successfully book a equipment they are permitted using the (Book) button"""
-    #     global_driver.get("http://localhost:5173/bookings")
-    #     time.sleep(2)
-    #     equipment_toggle = global_driver.find_element(By.XPATH, "//button[text()='Equipment']")
-    #     equipment_toggle.click()
-    #     book_button = global_driver.find_element(By.XPATH, "//button[text()='New Booking']")
-    #     time.sleep(3)
-    #     book_button.click()
-    #     title_field = global_driver.find_element(By.XPATH, '//input[@placeholder="Give your booking a title"]')
-    #     title_field.send_keys("Automated Test Booking")
-    #     time.sleep(3)
-    #     asset_field = global_driver.find_element(By.XPATH, '//input[@placeholder="Pick an asset"]')
-    #     asset_field.click()
-    #     time.sleep(3)
-    #     pick_asset = global_driver.find_element(By.XPATH, "//div[@role='option' and .//span[text()='Laptop']]")
-    #     pick_asset.click()
-    #     calendar_field = WebDriverWait(global_driver, 3).until(
-    #         # UPDATE TO TODAYS DATE TO WORK
-    #         EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='March 25, 2024']"))
-    #     )
-    #     calendar_field.click()
-    #     # Change date if wanted
-    #     date_picker = WebDriverWait(global_driver, 3).until(
-    #         EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
-    #     )
-    #     date_picker.click()
-    #     from_field = global_driver.find_element(By.XPATH, '//input[@placeholder="from"]')
-    #     from_field.click()
-    #     pick_from = global_driver.find_element(By.XPATH, "//div[@role='option' and .//span[text()='7:00 AM']]")
-    #     time.sleep(3)
-    #     pick_from.click()
-    #     to_field = global_driver.find_element(By.XPATH, '//input[@placeholder="to"]')
-    #     to_field.click()
-    #     to_field.send_keys("8:00 AM")
-    #     find_and_click_text(global_driver, "8:00 AM")
+    def test_g_user_can_book_equipment(self):
+        """Verifies that a user can successfully book a equipment they are permitted using the (Book) button"""
+        global_driver.get("http://localhost:5173/bookings")
+        time.sleep(2)
+        equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
+        equipment_toggle.click()
+        book_button = global_driver.find_element(By.XPATH, "//button[text()='New Booking']")
+        time.sleep(3)
+        book_button.click()
+        title_field = global_driver.find_element(By.XPATH, '//input[@placeholder="Give your booking a title"]')
+        title_field.send_keys("Automated Test Booking")
+        time.sleep(3)
+        asset_field = global_driver.find_element(By.XPATH, '//input[@placeholder="Pick an asset"]')
+        asset_field.click()
+        time.sleep(3)
+        pick_asset = global_driver.find_element(By.XPATH, "//div[@role='option' and .//span[text()='Laptop']]")
+        pick_asset.click()
+        calendar_field = WebDriverWait(global_driver, 3).until(
+            # UPDATE TO TODAYS DATE TO WORK
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='March 27, 2024']"))
+        )
+        calendar_field.click()
+        # Change date if wanted
+        date_picker = WebDriverWait(global_driver, 3).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+        )
+        date_picker.click()
+        from_field = global_driver.find_element(By.XPATH, '//input[@placeholder="from"]')
+        from_field.click()
+        pick_from = global_driver.find_element(By.XPATH, "//div[@role='option' and .//span[text()='7:00 AM']]")
+        time.sleep(3)
+        pick_from.click()
+        to_field = global_driver.find_element(By.XPATH, '//input[@placeholder="to"]')
+        to_field.click()
+        to_field.send_keys("8:00 AM")
+        find_and_click_text(global_driver, "8:00 AM")
 
-    #     submit_button = global_driver.find_element(By.XPATH, "//button[@type='submit'][contains(text(), 'Submit')]")
-    #     time.sleep(2)
-    #     submit_button.click()
-    #     time.sleep(3)
-    #     confirm_notif = WebDriverWait(global_driver, 1).until(
-    #         EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
-    #     )
-    #     self.assertIn("Booking added", confirm_notif.text)
-
-    # def test_g_user_can_edit_equipment_booking(self):
-    #     """Verifies that a user can successfully edit their own equipment booking"""
-    #     global_driver.get("http://localhost:5173/bookings")
-    #     global_driver.set_window_size(1727, 1630)
-    #     equipment_toggle = global_driver.find_element(By.XPATH, "//button[text()='Equipment']")
-    #     equipment_toggle.click()
-    #     time.sleep(3)
-    #     ## CHANGE TO AN UPDATED DATE
-    #     big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 25']")
-    #     time.sleep(3)
-    #     big_date.click()
-    #     calendar_field = WebDriverWait(global_driver, 3).until(
-    #         # UPDATE TO TODAYS DATE TO WORK
-    #         EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
-    #     )
-    #     time.sleep(2)
-    #     calendar_field.click()
-    #     back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
-    #     back_to_big_date.click()
-    #     booked_title = global_driver.find_element(By.XPATH, "//p[@class='font-bold' and text()='Automated Test Booking']")
-    #     time.sleep(3)
-    #     booked_title.click()
-    #     title_field = global_driver.find_element(By.XPATH, '//input[@placeholder="Give your booking a title"]')
-    #     time.sleep(3)
-    #     title_field.send_keys(" Updated")
-    #     edit_button = global_driver.find_element(By.XPATH, "//button[contains(@class, 'button-orange modal-button') and text()='Edit']")
-    #     time.sleep(3)
-    #     edit_button.click()
-    #     confirm_notif = WebDriverWait(global_driver, 2).until(
-    #         EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
-    #     )
-    #     self.assertIn("Booking modified", confirm_notif.text)
-
-    # def test_h_user_can_delete_equipment_booking(self):
-    #     """Verifies that a user can successfully delete their own equipment booking"""
-    #     global_driver.get("http://localhost:5173/bookings")
-    #     global_driver.set_window_size(1727, 1630)
-    #     equipment_toggle = global_driver.find_element(By.XPATH, "//button[text()='Equipment']")
-    #     time.sleep(3)
-    #     equipment_toggle.click()
-    #     ## CHANGE TO AN UPDATED DATE
-    #     big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 25']")
-    #     big_date.click()
-    #     calendar_field = WebDriverWait(global_driver, 3).until(
-    #         # UPDATE TO TODAYS DATE TO WORK
-    #         EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
-    #     )
-    #     time.sleep(2)
-    #     calendar_field.click()
-    #     back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
-    #     time.sleep(3)
-    #     back_to_big_date.click()
-    #     booked_title = global_driver.find_element(By.XPATH, "//p[@class='font-bold' and text()='Automated Test Booking Updated']")
-    #     booked_title.click()
-    #     time.sleep(3)
-    #     delete_button = global_driver.find_element(By.XPATH, "//button[contains(@class, 'button-orange modal-button') and text()='Delete']")
-    #     delete_button.click()
-    #     confirm_notif = WebDriverWait(global_driver, 1).until(
-    #         EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
-    #     )
-    #     self.assertIn("Booking deleted", confirm_notif.text)
+        submit_button = global_driver.find_element(By.XPATH, "//button[@type='submit'][contains(text(), 'Submit')]")
+        time.sleep(2)
+        submit_button.click()
         
+        confirm_notif = WebDriverWait(global_driver, 1).until(
+            EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
+        )
+        self.assertIn("Booking added", confirm_notif.text)
+        time.sleep(3)
+
+    def test_h_user_can_view_equipment_booking_list(self):
+        """Verifies that a user can successfully view their own equipment booking in list view"""
+        global_driver.get("http://localhost:5173/bookings")
+        time.sleep(2)
+        equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
+        equipment_toggle.click()
+        time.sleep(2)
+        ## CHANGE TO AN UPDATED DATE
+        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        big_date.click()
+        time.sleep(2)
+        calendar_field = WebDriverWait(global_driver, 3).until(
+            # UPDATE TO TODAYS DATE TO WORK
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+        )
+        time.sleep(3)
+        calendar_field.click()
+        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        back_to_big_date.click()
+        time.sleep(3)   
+        icon = WebDriverWait(global_driver, 3).until(
+            EC.element_to_be_clickable((By.CLASS_NAME, "fa-th-list"))
+        )
+        icon.click()
+        time.sleep(3)
+        find_and_click_text(global_driver, "My Bookings")
+        time.sleep(3)
+        booked_title = global_driver.find_element(By.XPATH, "//p[@class='text-for-mobile font-regular' and text()='Automated Test Booking']")
+        time.sleep(3)
+        self.assertTrue(booked_title, "Booking is present in list view")
+
+    def test_i_user_can_edit_equipment_booking(self):
+        """Verifies that a user can successfully edit their own equipment booking"""
+        global_driver.get("http://localhost:5173/bookings")
+        global_driver.set_window_size(1727, 1630)
+        time.sleep(2)
+        equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
+        equipment_toggle.click()
+        time.sleep(3)
+        ## CHANGE TO AN UPDATED DATE
+        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        time.sleep(3)
+        big_date.click()
+        calendar_field = WebDriverWait(global_driver, 3).until(
+            # UPDATE TO TODAYS DATE TO WORK
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+        )
+        time.sleep(2)
+        calendar_field.click()
+        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        time.sleep(2)
+        back_to_big_date.click()
+        booked_title = global_driver.find_element(By.XPATH, "//p[@class='font-bold' and text()='Automated Test Booking']")
+        time.sleep(3)
+        booked_title.click()
+        title_field = global_driver.find_element(By.XPATH, '//input[@placeholder="Give your booking a title"]')
+        time.sleep(3)
+        title_field.send_keys(" Updated")
+        edit_button = global_driver.find_element(By.XPATH, "//button[contains(@class, 'button-orange modal-button') and text()='Edit']")
+        time.sleep(3)
+        edit_button.click()
+        confirm_notif = WebDriverWait(global_driver, 1).until(
+            EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
+        )
+        self.assertIn("Booking modified", confirm_notif.text)
+        time.sleep(3)
+        
+    def test_j_user_can_delete_equipment_booking(self):
+        """Verifies that a user can successfully delete their own equipment booking"""
+        global_driver.get("http://localhost:5173/bookings")
+        global_driver.set_window_size(1727, 1630)
+        equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
+        time.sleep(3)
+        equipment_toggle.click()
+        ## CHANGE TO AN UPDATED DATE
+        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        big_date.click()
+        calendar_field = WebDriverWait(global_driver, 3).until(
+            # UPDATE TO TODAYS DATE TO WORK
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+        )
+        time.sleep(2)
+        calendar_field.click()
+        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        time.sleep(3)
+        back_to_big_date.click()
+        booked_title = global_driver.find_element(By.XPATH, "//p[@class='font-bold' and text()='Automated Test Booking Updated']")
+        booked_title.click()
+        time.sleep(3)
+        delete_button = global_driver.find_element(By.XPATH, "//button[contains(@class, 'button-orange modal-button') and text()='Delete']")
+        delete_button.click()
+        confirm_notif = WebDriverWait(global_driver, 1).until(
+            EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
+        )
+        self.assertIn("Booking deleted", confirm_notif.text)
+        time.sleep(3)
+
 def run():
     print("\nBookings Tests:")
     test = unittest.TestLoader().loadTestsFromTestCase(TestBookings)

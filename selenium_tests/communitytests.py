@@ -71,6 +71,10 @@ class TestRouting(unittest.TestCase) :
     def test_c_user_sic_filter(self):
         """Verifies that a user can successfully be found by using partial User Type or SIC Role filters applicable for the user"""
         global_driver.get("http://localhost:5173/community")
+        icon_element = WebDriverWait(global_driver, 3).until(
+            EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
+        )
+        icon_element.click()
         org_box = global_driver.find_element(By.XPATH, "//div[@class='filter-item' and .//span[text()='Organization']]")
         org_box.click()
         find_and_click_text(global_driver, "SIC Alumni")
@@ -96,6 +100,10 @@ class TestRouting(unittest.TestCase) :
     def test_d_user_not_found(self):
         """Verifies that a user is not found by using User Type or SIC Role filters "NOT" applicable for the user"""
         global_driver.get("http://localhost:5173/community")
+        icon_element = WebDriverWait(global_driver, 3).until(
+            EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
+        )
+        icon_element.click()
         find_and_click_text(global_driver, "Engineer")
         time.sleep(3)
         user_info_elements = global_driver.find_elements(By.CSS_SELECTOR, ".card-info")
@@ -115,6 +123,10 @@ class TestRouting(unittest.TestCase) :
     def test_e_click_profile(self):
         """Verifies that when an account is clicked, it redirects successfully to its profile"""
         global_driver.get("http://localhost:5173/community")
+        icon_element = WebDriverWait(global_driver, 3).until(
+            EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
+        )
+        icon_element.click()
         
         search_bar = global_driver.find_element(By.CLASS_NAME, "search-input")
         search_bar.send_keys("k")

@@ -12,6 +12,22 @@ from selenium.common.exceptions import ElementClickInterceptedException, Timeout
 """
 Tests inputs and renders related to the profile page
 """
+def find_and_click_text(global_driver, text):
+    # Find all elements that contain the text "8:00 AM"
+    elements = global_driver.find_elements(By.XPATH, f"//*[contains(text(), '{text}')]")
+    
+    for element in elements:
+        try:
+            # Try clicking each element until one works
+            WebDriverWait(global_driver, 2).until(EC.element_to_be_clickable(element))
+            element.click()
+            # print(f"Clicked on element with text: {text}")
+            return True
+        except (ElementClickInterceptedException, TimeoutException):
+            # If element is not clickable or not found within timeout, skip to the next
+            continue
+    print(f"No clickable element with text: {text} found.")
+    return False
 
 class TestProfile(unittest.TestCase) :
     def setUp(self):
@@ -125,7 +141,26 @@ class TestProfile(unittest.TestCase) :
         textarea = global_driver.find_element(By.XPATH, "//div[@class='tiptap ProseMirror' and .//p[text()='Automated Sample Description']]")
         self.assertTrue(textarea, "Profile description not found")
         time.sleep(2)
-        
+
+    def test_h_bio_can_deleted(self):
+        """Verifies that a user can delete the profile description"""
+        global_driver.get("http://localhost:5173/profile")
+        global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
+        time.sleep(2)
+        textarea = global_driver.find_element(By.CLASS_NAME, "ProseMirror")
+        textarea.click()
+        time.sleep(3)
+        textarea.clear()
+        time.sleep(2)
+        save_button = global_driver.find_element(By.XPATH, "//button[contains(@class, 'button-orange') and text()='Save Content']")
+        time.sleep(2)
+        save_button.click()
+        confirm_notif = WebDriverWait(global_driver, 1).until(
+            EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
+        )
+        self.assertIn("Saved", confirm_notif.text)
+        time.sleep(2)
+           
 def run():
     print("\nProfile Tests:")
     test = unittest.TestLoader().loadTestsFromTestCase(TestProfile)

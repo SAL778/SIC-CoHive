@@ -47,7 +47,10 @@ class TestRouting(unittest.TestCase) :
         """Verifies that the events in Google Calendar shows live updates when accessed from the webpage."""
         global_driver.get("http://localhost:5173/events")
         time.sleep(2)
-        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 25']")
+        global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
+        time.sleep(1)
+        global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
+        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
         big_date.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
@@ -59,8 +62,8 @@ class TestRouting(unittest.TestCase) :
         time.sleep(3)
         back_to_big_date.click()
         
-        live_det = WebDriverWait(global_driver, 4).until(
-            EC.presence_of_element_located((By.XPATH, "//h3[contains(@class, 'text-2xl font-semibold capitalize') and contains(text(), 'meet again test')]"))
+        live_det = WebDriverWait(global_driver, 2).until(
+            EC.presence_of_element_located((By.XPATH, "//h3[contains(@class, 'large-text-mobile font-semibold capitalize leading-[1]') and contains(text(), 'meet again test')]"))
         )
         self.assertTrue(live_det, "Live update not working")
         time.sleep(2)
@@ -75,7 +78,46 @@ class TestRouting(unittest.TestCase) :
         # print(title.text)
         self.assertTrue(title, "Events carousel not showing up")
         time.sleep(3)
+
+    def test_e_events_carousel(self):
+        """Verifies that the events carousel can be accessed and viewed for further details."""
+        global_driver.get("http://localhost:5173/events")
+        time.sleep(2)
+        title = WebDriverWait(global_driver, 3).until(
+            EC.presence_of_element_located((By.XPATH, "//h2[contains(@class, 'title') and contains(text(), 'SIC Birthday!')]"))
+        )
+        title.click()
+        details = WebDriverWait(global_driver, 3).until(
+            EC.presence_of_element_located((By.XPATH, "//p[contains(@class, 'mt-10') and contains(text(), 'test')]"))
+        )
         
+        self.assertTrue(details, "Events carousel not accessible")
+        time.sleep(3)
+
+    def test_f_events_carousel(self):
+        """Verifies that the submit an event form can be accessed."""
+        global_driver.get("http://localhost:5173/events")
+        time.sleep(2)
+        original_window = global_driver.current_window_handle
+        submit = WebDriverWait(global_driver, 3).until(
+            EC.presence_of_element_located((By.XPATH, "//button[text()='Submit an Event']"))
+        )
+        submit.click()
+        time.sleep(5)
+        WebDriverWait(global_driver, 10).until(EC.number_of_windows_to_be(2))
+
+        for window_handle in global_driver.window_handles:
+            if window_handle != original_window:
+                global_driver.switch_to.window(window_handle)
+                break
+
+        form_title = WebDriverWait(global_driver, 2).until(
+            EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Event Submission Form')]"))
+        )
+        
+        self.assertTrue(form_title, "Event Form unaccessible")
+        time.sleep(3)
+
 def run():
     print("\nEvents Tests:")
     test = unittest.TestLoader().loadTestsFromTestCase(TestRouting)
