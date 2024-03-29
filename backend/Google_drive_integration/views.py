@@ -36,6 +36,8 @@ def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:
     firstRowAsKeyValues (boolean): Whether or not to provide key values to the values in the spreadsheet.
     '''
     GOOGLE_DATE_FORMAT = "%m/%d/%Y"
+    #Max events to return
+    K_TO_RETURN = 7
 
     values = google_response["values"]
     today = datetime.date.today()
@@ -56,8 +58,9 @@ def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:
             date_as_date = datetime.datetime.strptime(date_str, GOOGLE_DATE_FORMAT).date()
             if row_values.get("approved") == 'TRUE' and date_as_date >= today :
                 keyed_values.append(row_values)         #Only return the approved events and those that come after today
+                keyed_values = sorted(keyed_values, key = lambda x: x.get("date", ""))
                 
-        return keyed_values
+        return keyed_values[:K_TO_RETURN] #Only the closest K events
     else:
         return values[1:]
 
