@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from .google_drive_api import initialize_drive_client
 from .google_sheets_api import initialize_sheets_client
+import datetime
 
 # Create your views here.
 
@@ -23,8 +24,6 @@ def fetch_drive_files(request):
  
     return JsonResponse({'files': files_list})
 
-
-
 def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:list = None):
     '''
     Parse a spreadsheet and return a list of rows, represented as a dictionary mapping header value to cell value.
@@ -36,8 +35,13 @@ def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:
             -- e.g) ["title", "date", "start_time", "end_time", "location"]
     firstRowAsKeyValues (boolean): Whether or not to provide key values to the values in the spreadsheet.
     '''
+    GOOGLE_DATE_FORMAT = "%m/%d/%Y"
+    #Max events to return
+    K_TO_RETURN = 7
 
     values = google_response["values"]
+    today = datetime.date.today()
+    
     headers = values[0] if firstRowAsKeyValues else scheme
 
     if headers:
@@ -49,10 +53,14 @@ def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:
         for row in values[1:]:
             # keyed_values.append({header_value: row_value for header_value, row_value in zip(headers, row)})
             row_values = {header_value: row_value for header_value, row_value in zip(headers, row)}
-            if row_values.get("approved") == 'TRUE' :
-                keyed_values.append(row_values)         #Only return the approved events
+
+            date_str = row_values.get("date", "")
+            date_as_date = datetime.datetime.strptime(date_str, GOOGLE_DATE_FORMAT).date()
+            if row_values.get("approved") == 'TRUE' and date_as_date >= today :
+                keyed_values.append(row_values)         #Only return the approved events and those that come after today
+                keyed_values = sorted(keyed_values, key = lambda x: x.get("date", ""))
                 
-        return keyed_values
+        return keyed_values[:K_TO_RETURN] #Only the closest K events
     else:
         return values[1:]
 

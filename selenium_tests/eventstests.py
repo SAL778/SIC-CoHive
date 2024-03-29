@@ -8,6 +8,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from config import confTestRunner, global_driver
 from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException
+from datetime import date, timedelta
+#### DO NOT CHANGE
+today = date.today()
+month_day_year = today.strftime('%B %d, %Y') #  March 29, 2024
+month_day = today.strftime('%B %d').lstrip("0")  # March 29
 """
 Tests inputs and renders related to the events page
 """
@@ -50,7 +55,7 @@ class TestRouting(unittest.TestCase) :
         global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
         time.sleep(1)
         global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
-        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
         big_date.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK

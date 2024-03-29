@@ -152,9 +152,9 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
             <div className = "upperSection flex justify-between gap-4">
                 <img 
                 src = {currentBooking?.image ?? fallbackAssetImage}
-                className = "rounded-md w-[325px] h-[325px] object-cover"
+                className = "booking-image rounded-md object-cover"
                 />
-                <div className = "w-[300px] flex flex-col space-between justify-between">
+                <div className = "booking-modal-options flex flex-col space-between justify-between">
                     <div className= "roomInfo"> 
                         <h1 className="capitalize text-xl font-bold">{currentBooking?.resources_name || "Book an Asset"}</h1>
 
@@ -203,7 +203,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                         className="mt-4"
                     />
 
-                    <div className = "timeSelector flex gap-3">
+                    <div className = "timeSelector flex justify-between gap-3">
                         <Select
                             label="From"
                             disabled = {!currentUserMatchesBooking()}
@@ -259,7 +259,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                     </>
                 }
                 </div>
-                <div className ="flex gap-3 pt-3">
+                <div className ="flex gap-3 pt-3 justify-end">
                     <button type="button" className = "button-grey-hover modal-button" onClick = {onClose}>Close</button>
                     
                     { currentBooking?.user?.id == currentUser?.id && // Booking belongs to the current user
