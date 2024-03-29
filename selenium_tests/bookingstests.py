@@ -8,10 +8,30 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from config import confTestRunner, global_driver
 from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException
+from datetime import date, timedelta
+#### DO NOT CHANGE
+today = date.today()
+month_day_year = today.strftime('%B %d, %Y') #  March 29, 2024
+month_day = today.strftime('%B %d').lstrip("0")  # March 29
 
 """
 Tests inputs and renders related to the Bookings page
 """
+#### COMMENT THIS OUT IF YOU WANT TO USE YOUR OWN DATE
+#### THIS LINES OF CODE CORRESPONDS TO THE TOMORROW'S DATE
+tomorrow = today + timedelta(days=1)
+target_day_month_year = tomorrow.strftime('%d %B %Y') #  e.g. 29 March 2024
+target_month_day = tomorrow.strftime('%B %d').lstrip("0")  # e.g. March 29
+#### CHANGE TO DESIRED BOOKING DATE, DIRECTLY CORRESPONDS TO THE DATE PICKER,
+#### SO IF DATE ENTERED IS OUTSIDE THE CURRENT MONTH, THEN IT WILL GIVE YOU AN ERROR THAT IT CANNOT FIND THE ELEMENT
+#### SINCE YOU HAVE TO CLICK SOMETHING TO GO TO THE NEXT MONTH/S IN THE DATE PICKER, WHICH I DID NOT INCLUDE IN THIS TEST.
+#### e.g. IF CURRENTLY ITS THE MONTH OF MARCH, AND YOU ENTER A DATE IN APRIL, IT WILL NOT WORK.
+#### IF NO BOOKING DATE DESIRED THEN YOU CAN TRY TO USE THE TOMORROW VARIABLES ABOVE
+#### COMMENT THIS OUT IF YOU WANT TO USE TOMORROW'S DATE
+# target_day_month_year = "29 March 2024"
+# target_month_day = "March 29"
+
+
 
 def find_and_click_text(global_driver, text):
     # Find all elements that contain the text "8:00 AM"
@@ -68,13 +88,14 @@ class TestBookings(unittest.TestCase) :
         pick_asset = global_driver.find_element(By.XPATH, "//div[@role='option' and .//span[text()='MEETING ROOM1']]")
         pick_asset.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
+            
             # UPDATE TO TODAYS DATE TO WORK
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='March 27, 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{month_day_year}']"))
         )
         calendar_field.click()
         # Change date if wanted
         date_picker = WebDriverWait(global_driver, 3).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, F"button[aria-label='{target_day_month_year}']"))
         )
         time.sleep(3)
         date_picker.click()
@@ -94,8 +115,6 @@ class TestBookings(unittest.TestCase) :
             EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
         )
         # confirm_notif = global_driver.find_element(By.CLASS_NAME, 'mantine-Notification-title')
-        
-        # time.sleep(3)
         self.assertIn("Booking added", confirm_notif.text)
         time.sleep(3)
 
@@ -104,15 +123,15 @@ class TestBookings(unittest.TestCase) :
         global_driver.get("http://localhost:5173/bookings")
         time.sleep(3)
         ## CHANGE TO AN UPDATED DATE
-        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
         big_date.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{target_day_month_year}']"))
         )
         time.sleep(3)
         calendar_field.click()
-        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        back_to_big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{target_month_day}']")
         time.sleep(2)
         back_to_big_date.click()
         time.sleep(3)   
@@ -132,15 +151,15 @@ class TestBookings(unittest.TestCase) :
         global_driver.get("http://localhost:5173/bookings")
         time.sleep(3)
         ## CHANGE TO AN UPDATED DATE
-        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
         big_date.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{target_day_month_year}']"))
         )
         time.sleep(3)
         calendar_field.click()
-        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        back_to_big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{target_month_day}']")
         time.sleep(2)
         back_to_big_date.click()
         booked_title = global_driver.find_element(By.XPATH, "//p[@class='font-bold' and text()='Automated Test Booking']")
@@ -162,15 +181,15 @@ class TestBookings(unittest.TestCase) :
         """Verifies that a user can successfully delete their own room booking"""
         global_driver.get("http://localhost:5173/bookings")
         ## CHANGE TO AN UPDATED DATE
-        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
         big_date.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{target_day_month_year}']"))
         )
         time.sleep(3)
         calendar_field.click()
-        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        back_to_big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{target_month_day}']")
         back_to_big_date.click()
         booked_title = global_driver.find_element(By.XPATH, "//p[@class='font-bold' and text()='Automated Test Booking Updated']")
         booked_title.click()
@@ -204,12 +223,12 @@ class TestBookings(unittest.TestCase) :
         pick_asset.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='March 27, 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{month_day_year}']"))
         )
         calendar_field.click()
         # Change date if wanted
         date_picker = WebDriverWait(global_driver, 3).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{target_day_month_year}']"))
         )
         date_picker.click()
         from_field = global_driver.find_element(By.XPATH, '//input[@placeholder="from"]')
@@ -240,16 +259,16 @@ class TestBookings(unittest.TestCase) :
         equipment_toggle.click()
         time.sleep(2)
         ## CHANGE TO AN UPDATED DATE
-        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
         big_date.click()
         time.sleep(2)
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{target_day_month_year}']"))
         )
         time.sleep(3)
         calendar_field.click()
-        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        back_to_big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{target_month_day}']")
         back_to_big_date.click()
         time.sleep(3)   
         icon = WebDriverWait(global_driver, 3).until(
@@ -272,16 +291,16 @@ class TestBookings(unittest.TestCase) :
         equipment_toggle.click()
         time.sleep(3)
         ## CHANGE TO AN UPDATED DATE
-        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
         time.sleep(3)
         big_date.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{target_day_month_year}']"))
         )
         time.sleep(2)
         calendar_field.click()
-        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        back_to_big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{target_month_day}']")
         time.sleep(2)
         back_to_big_date.click()
         booked_title = global_driver.find_element(By.XPATH, "//p[@class='font-bold' and text()='Automated Test Booking']")
@@ -307,15 +326,15 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
         equipment_toggle.click()
         ## CHANGE TO AN UPDATED DATE
-        big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 27']")
+        big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
         big_date.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
             # UPDATE TO TODAYS DATE TO WORK
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='29 March 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{target_day_month_year}']"))
         )
         time.sleep(2)
         calendar_field.click()
-        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 29']")
+        back_to_big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{target_month_day}']")
         time.sleep(3)
         back_to_big_date.click()
         booked_title = global_driver.find_element(By.XPATH, "//p[@class='font-bold' and text()='Automated Test Booking Updated']")
