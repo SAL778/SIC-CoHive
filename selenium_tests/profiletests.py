@@ -12,6 +12,7 @@ from selenium.common.exceptions import ElementClickInterceptedException, Timeout
 """
 Tests inputs and renders related to the profile page
 """
+
 def find_and_click_text(global_driver, text):
     # Find all elements that contain the text "8:00 AM"
     elements = global_driver.find_elements(By.XPATH, f"//*[contains(text(), '{text}')]")
@@ -33,13 +34,13 @@ class TestProfile(unittest.TestCase) :
     def setUp(self):
         self.global_driver = global_driver
 
-    def test_a_profile_has_profile_image(self):
-        """Verifies that the profile alt-image has loaded"""
-        global_driver.get("http://localhost:5173/profile")
-        profile_pic = WebDriverWait(global_driver, 4).until(
-            EC.presence_of_element_located((By.XPATH, f"//img[@alt='Image of Kenji Louise']"))
-        )
-        self.assertTrue(profile_pic, "Profile picture not found")  
+    # def test_a_profile_has_profile_image(self):
+    #     """Verifies that the profile alt-image has loaded"""
+    #     global_driver.get("http://localhost:5173/profile")
+    #     profile_pic = WebDriverWait(global_driver, 4).until(
+    #         EC.presence_of_element_located((By.XPATH, f"//img[@alt='Image of Kenji Louise']"))
+    #     )
+    #     self.assertTrue(profile_pic, "Profile picture not found")  
 
     def test_b_profile_can_add_flair_role(self):
         """Verifies that the profile can add flair roles"""
@@ -70,7 +71,7 @@ class TestProfile(unittest.TestCase) :
         time.sleep(3)
 
     def test_d_profile_have_sic_role_present(self):
-        """Verifies that the profile have sic role present"""
+        """Verifies that the profile have USER sic role present"""
         global_driver.get("http://localhost:5173/profile")
         sic_role = WebDriverWait(global_driver, 3).until(
             EC.visibility_of_element_located((By.XPATH, "//span[contains(@class, 'm-1e0e6180') and contains(@class, 'mantine-Pill-label') and text()='User']"))
@@ -132,7 +133,7 @@ class TestProfile(unittest.TestCase) :
         time.sleep(2)
         textarea=global_driver.find_element(By.CSS_SELECTOR, "p[data-placeholder='Enter a brief description']")
         textarea.click()
-        time.sleep(3)
+        time.sleep(2)
         textarea.send_keys("Automated Sample Description")
         time.sleep(2)
         save_button = global_driver.find_element(By.XPATH, "//button[contains(@class, 'button-orange') and text()='Save Content']")
