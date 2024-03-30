@@ -59,5 +59,5 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(Flair_Roles)
-
+admin.site.register(AccessType)
 admin.site.register(AppLink)
