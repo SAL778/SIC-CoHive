@@ -81,17 +81,23 @@ def fetch_spreadsheet_events(request):
 
 def fetch_calendar_events(request):
     print("Fetching calendar events")
+    date_str = request.GET.get('date', None) 
+    if date_str:
+        selected_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+    else:
+        selected_date = datetime.date.today()
     ical_url = "https://calendar.google.com/calendar/ical/6d3dcedc29c2a223c343cce8ec9ed5f309fd197f0805cb7f4bd79852d304d57c%40group.calendar.google.com/public/basic.ics"
     
-    # Extract the calendar ID and decode it
-    calendar_id_encoded = ical_url.split("/ical/")[1].split("/public")[0]
+    calendar_id_encoded = ical_url.split("/ical/")[1].split("/public")[0]    # Extract the calendar ID and decode it
     calendar_id = urllib.parse.unquote(calendar_id_encoded)
 
     client = initialize_calendar_client()
 
-    # fetch events for the next 30 days
-    time_min = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-    time_max = (datetime.datetime.utcnow() + datetime.timedelta(days=30)).isoformat() + 'Z'
+    print("Selected Date:", selected_date)
+
+    # Adjust time_min and time_max to cover the whole selected day
+    time_min = datetime.datetime.combine(selected_date, datetime.time.min).isoformat() + 'Z'
+    time_max = datetime.datetime.combine(selected_date, datetime.time.max).isoformat() + 'Z'
 
     events_result = client.events().list(calendarId=calendar_id, timeMin=time_min, timeMax=time_max,
                                          singleEvents=True, orderBy='startTime').execute()
@@ -113,3 +119,4 @@ def fetch_calendar_events(request):
     print("Processed:", processed_events)
 
     return JsonResponse({'events': processed_events})
+
