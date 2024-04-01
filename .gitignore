@@ -208,3 +208,5 @@ cython_debug/
 # Database
 backend/db.sqlite3
 *.sqlite3
+
+backend/static
