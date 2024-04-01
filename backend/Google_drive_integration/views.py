@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from .google_drive_api import initialize_drive_client
 from .google_sheets_api import initialize_sheets_client
+from .google_calendar_api import initialize_calendar_client
 import datetime
 
 # Create your views here.
@@ -75,3 +76,41 @@ def fetch_spreadsheet_events(request):
     parsed_events = parse_spreadsheet(event_entries, scheme=scheme)
 
     return JsonResponse({'events': parsed_events})
+
+
+import urllib.parse  # Import urllib.parse to decode the calendar ID
+
+def fetch_calendar_events(request):
+    print("Fetching calendar events")
+    ical_url = "https://calendar.google.com/calendar/ical/6d3dcedc29c2a223c343cce8ec9ed5f309fd197f0805cb7f4bd79852d304d57c%40group.calendar.google.com/public/basic.ics"
+    
+    # Extract the calendar ID and decode it
+    calendar_id_encoded = ical_url.split("/ical/")[1].split("/public")[0]
+    calendar_id = urllib.parse.unquote(calendar_id_encoded)
+
+    client = initialize_calendar_client()
+
+    # fetch events for the next 30 days
+    time_min = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+    time_max = (datetime.datetime.utcnow() + datetime.timedelta(days=30)).isoformat() + 'Z'
+
+    events_result = client.events().list(calendarId=calendar_id, timeMin=time_min, timeMax=time_max,
+                                         singleEvents=True, orderBy='startTime').execute()
+    print("Events Result:", events_result) 
+    events = events_result.get('items', [])
+
+    processed_events = []  # as needed by the frontend
+    for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        end = event['end'].get('dateTime', event['end'].get('date'))
+        processed_events.append({
+            'summary': event.get('summary'),
+            'location': event.get('location', ''),
+            'description': event.get('description', ''),
+            'start': start,
+            'end': end
+        })
+
+    print("Processed:", processed_events)
+
+    return JsonResponse({'events': processed_events})
