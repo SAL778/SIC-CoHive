@@ -118,5 +118,7 @@ def fetch_calendar_events(request):
 
     print("Processed:", processed_events)
 
+    print("Number of events fetched:", len(events))
+
     return JsonResponse({'events': processed_events})
 

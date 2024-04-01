@@ -3,8 +3,8 @@ import os
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
-# SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-SCOPES = ['https://www.googleapis.com/auth/calendar']
+SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+# SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 SERVICE_ACCOUNT = os.path.join(current_dir, 'credentials', 'service_credentials.json')
