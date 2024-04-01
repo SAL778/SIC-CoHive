@@ -46,91 +46,115 @@ function Events() {
 	// 	}
 	// };
 
+	// const fetchEvents = async (selectedDate) => {
+	// 	try {
+	// 		const response = await fetch(
+	// 			"http://localhost:8000/google_drive_integration/calendar-events"
+	// 		);
+	// 		const data = await response.text();
+
+	// 		const events = parseICalData(data);
+	// 		const filteredEvents = events.filter((event) =>
+	// 			isSameDay(new Date(event.start), selectedDate)
+	// 		);
+	// 		setEventsData(filteredEvents);
+
+	// 		console.log("Events data:", events);
+	// 		console.log("Filtered events data:", filteredEvents);
+	// 	} catch (error) {
+	// 		console.error("Failed to fetch events:", error);
+	// 	}
+	// };
+
 	const fetchEvents = async (selectedDate) => {
 		try {
+			// Adjust the endpoint URL to match your backend route
 			const response = await fetch(
 				"http://localhost:8000/google_drive_integration/calendar-events"
 			);
-			const data = await response.text();
+			const jsonResponse = await response.json(); // Directly parse the JSON response
 
-			const events = parseICalData(data);
-			const filteredEvents = events.filter((event) =>
-				isSameDay(new Date(event.start), selectedDate)
-			);
-			setEventsData(filteredEvents);
+			const eventsData = jsonResponse.events; // Assuming your backend structure includes an 'events' array
+			// Filter events for the selected date
+			const filteredEvents = eventsData.filter((event) => {
+				const eventStartDate = new Date(event.start);
+				return isSameDay(eventStartDate, selectedDate);
+			});
 
-			console.log("Events data:", events);
-			console.log("Filtered events data:", filteredEvents);
+			setEventsData(eventsData); // Use the filtered events directly
+			// console.log("Events data:", events);
+			// console.log("Filtered events data:", filteredEvents);
+			console.log(eventsData);
 		} catch (error) {
 			console.error("Failed to fetch events:", error);
 		}
 	};
 
-	const parseICalData = (data) => {
-		const eventRegex = /BEGIN:VEVENT(.+?)END:VEVENT/gs;
-		// const detailRegex = /(SUMMARY|DTSTART|DTEND|LOCATION):(.+)/g;
-		const detailRegex =
-			/(SUMMARY|DTSTART|DTEND|LOCATION):([\s\S]*?)(?=(?:\r?\n[A-Z]+:|\r?\n$))/g;
-		const events = [];
+	// const parseICalData = (data) => {
+	// 	const eventRegex = /BEGIN:VEVENT(.+?)END:VEVENT/gs;
+	// 	// const detailRegex = /(SUMMARY|DTSTART|DTEND|LOCATION):(.+)/g;
+	// 	const detailRegex =
+	// 		/(SUMMARY|DTSTART|DTEND|LOCATION):([\s\S]*?)(?=(?:\r?\n[A-Z]+:|\r?\n$))/g;
+	// 	const events = [];
 
-		let eventMatch;
-		while ((eventMatch = eventRegex.exec(data)) !== null) {
-			const eventDetails = {};
-			let detailMatch;
-			while ((detailMatch = detailRegex.exec(eventMatch[1])) !== null) {
-				eventDetails[detailMatch[1]] = detailMatch[2];
-			}
-			events.push(eventDetails);
-		}
+	// 	let eventMatch;
+	// 	while ((eventMatch = eventRegex.exec(data)) !== null) {
+	// 		const eventDetails = {};
+	// 		let detailMatch;
+	// 		while ((detailMatch = detailRegex.exec(eventMatch[1])) !== null) {
+	// 			eventDetails[detailMatch[1]] = detailMatch[2];
+	// 		}
+	// 		events.push(eventDetails);
+	// 	}
 
-		return events.map((event) => ({
-			title: event.SUMMARY,
-			location: event.LOCATION ? event.LOCATION.split(",")[0] : null, // only the building name or null. Building name is before the first comma
-			start: parseDateTime(event.DTSTART),
-			end: parseDateTime(event.DTEND),
-			date: parseDayDate(event.DTSTART),
-		}));
-	};
+	// 	return events.map((event) => ({
+	// 		title: event.SUMMARY,
+	// 		location: event.LOCATION ? event.LOCATION.split(",")[0] : null, // only the building name or null. Building name is before the first comma
+	// 		start: parseDateTime(event.DTSTART),
+	// 		end: parseDateTime(event.DTEND),
+	// 		date: parseDayDate(event.DTSTART),
+	// 	}));
+	// };
 
-	const parseDateTime = (icalDate) => {
-		// format: 20240320T220000Z
-		const date = new Date(
-			icalDate.substring(0, 4) +
-				"-" +
-				icalDate.substring(4, 6) +
-				"-" +
-				icalDate.substring(6, 11) +
-				":" +
-				icalDate.substring(11, 13) +
-				":" +
-				icalDate.substring(13, 15) +
-				"Z"
-		);
-		// return date.toISOString();
-		return date.toLocaleString("en-US", { timeZone: "America/Edmonton" });
-	};
+	// const parseDateTime = (icalDate) => {
+	// 	// format: 20240320T220000Z
+	// 	const date = new Date(
+	// 		icalDate.substring(0, 4) +
+	// 			"-" +
+	// 			icalDate.substring(4, 6) +
+	// 			"-" +
+	// 			icalDate.substring(6, 11) +
+	// 			":" +
+	// 			icalDate.substring(11, 13) +
+	// 			":" +
+	// 			icalDate.substring(13, 15) +
+	// 			"Z"
+	// 	);
+	// 	// return date.toISOString();
+	// 	return date.toLocaleString("en-US", { timeZone: "America/Edmonton" });
+	// };
 
-	const parseDayDate = (icalDate) => {
-		const date = new Date(
-			icalDate.substring(0, 4) +
-				"-" +
-				icalDate.substring(4, 6) +
-				"-" +
-				icalDate.substring(6, 11) +
-				":" +
-				icalDate.substring(11, 13) +
-				":" +
-				icalDate.substring(13, 15) +
-				"Z"
-		);
-		return date.toLocaleDateString("en-US", {
-			timeZone: "America/Edmonton",
-			weekday: "long",
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-		});
-	};
+	// const parseDayDate = (icalDate) => {
+	// 	const date = new Date(
+	// 		icalDate.substring(0, 4) +
+	// 			"-" +
+	// 			icalDate.substring(4, 6) +
+	// 			"-" +
+	// 			icalDate.substring(6, 11) +
+	// 			":" +
+	// 			icalDate.substring(11, 13) +
+	// 			":" +
+	// 			icalDate.substring(13, 15) +
+	// 			"Z"
+	// 	);
+	// 	return date.toLocaleDateString("en-US", {
+	// 		timeZone: "America/Edmonton",
+	// 		weekday: "long",
+	// 		year: "numeric",
+	// 		month: "long",
+	// 		day: "numeric",
+	// 	});
+	// };
 
 	const isSameDay = (date1, date2) => {
 		return (
@@ -198,6 +222,7 @@ function Events() {
 				<DateSelector onSetDate={handleDateChange} currentDate={currentDate} />
 			</div>
 			<div className="flex flex-col gap-4 event-list mt-[14px]">
+				{/* {eventsData.map((event, index) => ( */}
 				{eventsData.map((event, index) => (
 					<EventsList key={index} event={event} />
 				))}
