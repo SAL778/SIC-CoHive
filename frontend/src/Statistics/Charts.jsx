@@ -3,7 +3,8 @@ import ReactApexChart from "react-apexcharts"
 import { Select } from "@mantine/core";
 import { httpRequest } from "../utils";
 import { HostContext } from "../App";
-import { getPeakTimes } from "./mockEndpoints";
+import { getPeakTimes, getResourcePopularity } from "./mockEndpoints";
+import './chart.css'
 
 export function PeakTimesChart({timeScope, assetType}) {
     const { host } = useContext(HostContext)
@@ -28,7 +29,7 @@ export function PeakTimesChart({timeScope, assetType}) {
     useEffect(() =>  {
         //console.log(assetType)
         httpRequest({
-			endpoint: `${host}/bookings/resources/filter?type=${assetType}`,
+			endpoint: `${host}/bookings/resources/filter?type=${assetType.value}`,
 			onSuccess: (data) => {
                 console.table(data)
 				setDropdownContent(data.map(datum => datum.name));
@@ -55,21 +56,15 @@ export function PeakTimesChart({timeScope, assetType}) {
 
     }, [selectedAsset, selectedDays, timeScope])
 
-    //Get the data for the room popularity (pie chart)
-    useEffect(() => {
-
-    })
-
-
     return (
         <>
             <h2 className="text-3xl font-bold text-blue-950">Peak Room Booking Times</h2>
-            <h3 className="text-neutral-500 text-lg capitalize mb-4">{timeScope}</h3>
+            <h3 className="text-neutral-500 text-lg capitalize mb-4">{timeScope.label || timeScope}</h3>
             <Select
                 data={dropdownContent}
                 allowDeselect={false}
-                defaultValue={selectedAsset} //Default asset
-                placeholder={`Select a${assetType == "equipment" ? "n equipment" : " room"}`}
+                //defaultValue={selectedAsset} //Default asset
+                placeholder={`Select a${assetType.value == "equipment" ? "n equipment" : " room"}`}
                 onChange={(value) => setSelectedAsset(value)}
                 rightSection = {<i className="fa fa-caret-down text-orange-600"/>}
                 comboboxProps={{ transitionProps: { transition: 'skew-up', duration: 200 } }}
@@ -80,9 +75,9 @@ export function PeakTimesChart({timeScope, assetType}) {
                 series= {[{
                     name: "Bookings",
                     data: graphData,
-                    color: "red",
                 }]}
                 options= {{
+                    colors: ["#EA580C"],
                     chart: {
                         type: 'bar',
                         toolbar: {
@@ -106,10 +101,86 @@ export function PeakTimesChart({timeScope, assetType}) {
                         verticalAlign: 'middle'
                     },
                     xaxis: {
+                        labels: {
+                            formatter: (value) => {
+                                const twelveFormat = (value == 12) ? value : value % 12
+                                const timeOfDay = value >= 12 ? "PM" : "AM"
+
+                                return `${twelveFormat} ${timeOfDay}`
+                             }
+                        },
                         categories: graphLabels
                     },
+                    states: {
+                        active: {
+                          filter: {
+                            type: 'none' //Disables shading on click
+                          }
+                        }
+                      }
                 }}            
             />
         </>
     )
+}
+
+export function ResourcePopularityChart({timeScope, assetType}) {
+        const { host } = useContext(HostContext)
+
+        const [graphData, setGraphData] = useState([])     //Data points
+        const [graphLabels, setGraphLabels] = useState([]) //X axis
+        //const [total, ]
+
+        //Get the data for the room popularity (pie chart)
+        useEffect(() => {
+            // httpRequest({
+            //     // endpoint: `${host}/statistics/popularity?asset=${queryParams.asset}&${queryParams.days | ""}`,
+            //     // onSuccess: (statData) => {
+            //     //     setGraphLabels(Object.keys(statData.bookings)) //Hour slots
+            //     //     setGraphData(Object.values(statData.bookings)) //Times booked
+            // })
+            const res = getResourcePopularity(assetType, timeScope)
+
+            setGraphLabels(res.popularity.map(resource => resource.name))
+            setGraphData(res.popularity.map(resource => resource.hours))
+        }, [timeScope, assetType])
+
+        return (
+            <>
+                <ReactApexChart
+                    type="donut"
+                    series= {graphData}
+                    width = "100%"
+                    height = "100%"
+                    options = {{
+                        labels: graphLabels,
+                        legend: {
+                            show: true,
+                            position: 'bottom',
+                            showForZeroSeries: true,
+                            horizontalAlign: 'left',
+                            floating: false,
+                        },
+                        plotOptions: {
+                            pie: {
+                                donut: {
+                                    size: '70%',
+                                    labels: {
+                                        show: true,
+                                        name: {
+                                            show: true,
+                                        }
+                                    }
+                                },
+                                expandOnClick: false,
+                            }
+                        },
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }}
+
+                />
+            </>
+        )
 }

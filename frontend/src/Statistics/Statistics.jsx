@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import { PeakTimesChart } from "./Charts";
+import { PeakTimesChart, ResourcePopularityChart } from "./Charts";
 import { httpRequest } from "../utils";
 import { HostContext } from "../App";
 import { ButtonGroup } from "./Button";
@@ -52,10 +52,16 @@ function Statistics() {
 			</section>
 				
 			<section className = "grid gap-4 grid-cols-3 grid-rows-4">
-				<div className = "bg-white rounded-md p-6 row-span-2 col-span-2">
+				<div className = "bg-white rounded-md p-6 row-span-2 col-span-2 shadow-custom">
 					<PeakTimesChart
-						timeScope = {selectedTimeScope.label}
-						assetType = {selectedAssetType.label}
+						timeScope = {selectedTimeScope}
+						assetType = {selectedAssetType}
+					/>
+				</div>
+				<div className = "bg-white rounded-md p-6 row-span-3 col-span-1 shadow-custom">
+					<ResourcePopularityChart
+						timeScope = {selectedTimeScope}
+						assetType = {selectedAssetType}
 					/>
 				</div>
 				

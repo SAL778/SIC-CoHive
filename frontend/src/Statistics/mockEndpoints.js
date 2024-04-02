@@ -21,3 +21,50 @@ export function getPeakTimes(day, room) {
         }
     )
 }
+
+export function getResourcePopularity() {
+    return (
+        { popularity:[
+            {
+                name: "Podcast Room",
+                hours: 21
+            },
+            {
+                name: "Meeting Room",
+                hours: 16
+            },
+            {
+                name: "Loop",
+                hours: 8
+            },
+            {
+                name: "Art Station A",
+                hours: 13
+            },
+            {
+                name: "Art Station B",
+                hours: 18
+            },
+            {
+                name: "Localhost:5173",
+                hours: 59
+            },
+            {
+                name: "Conference Room A",
+                hours: 18
+            },
+            {
+                name: "Conference Room B",
+                hours: 12
+            },
+            {
+                name: "Quad Loop", 
+                hours: 0
+            },
+            {
+                name: "Camera Studio",
+                hours: 25
+            }
+        ]}
+    )
+}
