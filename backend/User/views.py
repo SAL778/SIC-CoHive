@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from django.contrib.auth import logout
 from google.auth.transport import requests
 from google.oauth2 import id_token
-
+from django.http import Http404
 @api_view(['POST'])
 def verify_google_jwt(request):
     '''
@@ -58,16 +58,16 @@ def verify_google_jwt(request):
     except ValueError as e:
         return JsonResponse({'error': f'JWT verification failed: {str(e)}'}, status=401)
 
+
+
 def get_user_from_token(request):
     try:
-        # print("request.META['HTTP_AUTHORIZATION']")
         access_token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
-        # print("access" ,access_token)
         token_obj = Token.objects.get(key=access_token)
         user = token_obj.user
         return user
     except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+        raise Http404('Failed to get user from token: ' + str(e))
 
 @swagger_auto_schema(method='post', operation_description="Sign out the authenticated user.", responses={200: 'Logged out'})
 @api_view(['POST'])
