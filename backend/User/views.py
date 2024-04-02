@@ -132,6 +132,7 @@ def user_profile(request):
 
     user = get_user_from_token(request)
     # Serialize the user data using your CustomUserSerializer
+    
     serializer = CustomUserSerializer(user)
     return Response(serializer.data)
     # except Exception as e:
