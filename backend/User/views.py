@@ -49,7 +49,7 @@ def verify_google_jwt(request):
 
         token, created = Token.objects.get_or_create(user=user)
         access_token = str(token.key)
-        # print("access_token",access_token)
+        print("access_token",access_token)
         response = HttpResponse('Authentication successful')
         response.set_cookie('access_token', access_token)
         response.status_code = 200
