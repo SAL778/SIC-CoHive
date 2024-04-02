@@ -7,26 +7,26 @@ class AppLinkSerializer(serializers.ModelSerializer):
         model = AppLink
         fields = ['feedback_form_link', 'google_drive_link', 'google_calendar_link']
 
-
+class FlairRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flair_Roles
+        fields = ['id','role_name']
+        read_only_fields = ["id"]
         
 class AccessTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccessType
         fields = ['name']
         
-class FlairRoleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Flair_Roles
-        fields = ['id', 'role_name']
-        read_only_fields = ['id']
-
 class CustomUserSerializer(serializers.ModelSerializer):
-    flair_roles = FlairRoleSerializer(many=True, read_only=True)
-
+    accessType = AccessTypeSerializer(read_only=True, many=True)
+    flair_roles = FlairRoleSerializer(many=True)
+    
     class Meta:
         model = CustomUser
         fields = ["id", "first_name", "last_name", "email", "is_staff", "portfolioVisibility", "profileImage", "portfolio", "accessType", "flair_roles", "education"]
-        read_only_fields = ["id", "is_staff", "portfolio", "email", "accessType", "flair_roles"]
+        read_only_fields = ["id", "is_staff", "portfolio", "email", "accessType"]
+
         
     def create(self, validated_data):
         # Handle user creation without roles
@@ -66,7 +66,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
                     instance.flair_roles.remove(role)
                     role.delete()
 
-        return instance  # Add this return statement
+        return instance
 
     def delete(self, instance):
         # Delete all flair_roles associated with the user
