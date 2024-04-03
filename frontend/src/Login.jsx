@@ -12,8 +12,8 @@ import { httpRequest } from "./utils.js";
 export default function Login({}) {
 	const { setShowNavigation } = useContext(NavigationContext); // Access the context
 
-    // const { user, setUser } = useContext(UserContext);
-    const { host } = useContext(HostContext)
+	// const { user, setUser } = useContext(UserContext);
+	const { host } = useContext(HostContext);
 
 	const handleGoogleLogin = async (credentialResponse) => {
 		try {
@@ -21,7 +21,8 @@ export default function Login({}) {
 
 			// Make an HTTP request to the Django view
 			const response = await axios.post(
-				"http://localhost:8000/api/verify_google_jwt/",
+				// "http://localhost:8000/api/verify_google_jwt/",
+				`${host}/api/verify_google_jwt/`,
 				{ jwt_token },
 				{
 					headers: {
@@ -31,21 +32,23 @@ export default function Login({}) {
 				}
 			);
 
-            // Redirect to /bookings if the request is successful
-            if (response.status === 302 || response.status === 200) {
-                httpRequest({
-                    endpoint: `${host}/users/profile/`, //Add the current user to localStorage
-                    onSuccess: (userData) => {
-                        localStorage.setItem("currentUser", JSON.stringify(userData));
-                        window.location.href = '/bookings';
-                    }
-                })
-            }
-            // Continue with other actions or state updates as needed
-        } catch (error) {
-            console.error('Error making Django request:', error);
-        }
-    };
+			// Redirect to /bookings if the request is successful
+			if (response.status === 302 || response.status === 200) {
+				// window.location.href = "/bookings";
+				httpRequest({
+					endpoint: `${host}/users/profile/`, //Add the current user to localStorage
+					onSuccess: (userData) => {
+						localStorage.setItem("currentUser", JSON.stringify(userData));
+						window.location.href = "/bookings";
+						console.log("User data:", userData);
+					},
+				});
+			}
+			// Continue with other actions or state updates as needed
+		} catch (error) {
+			console.error("Error making Django request:", error);
+		}
+	};
 
 	useEffect(() => {
 		setShowNavigation(location.pathname !== "/");

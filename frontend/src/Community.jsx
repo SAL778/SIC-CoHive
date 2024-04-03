@@ -3,9 +3,12 @@ import CommunityCard from "./components/CommunityCard";
 import image from "./assets/community-person.jpg";
 import Filter from "./components/Filter";
 // import { checkUserLoggedIn } from "./utils.js";
+import { HostContext } from "./App";
+import { useContext } from "react";
 
 function Community() {
 	// checkUserLoggedIn();
+	const { host } = useContext(HostContext);
 
 	const [users, setUsers] = useState([]);
 	const [searchText, setSearchText] = useState("");
@@ -22,7 +25,8 @@ function Community() {
 	const fetchData = () => {
 		const filterQuery =
 			selectedFilters.length > 0 ? `&filter=${selectedFilters.join(",")}` : "";
-		fetch(`http://127.0.0.1:8000/users/?search=${searchText}${filterQuery}`)
+		// fetch(`http://127.0.0.1:8000/users/?search=${searchText}${filterQuery}`)
+		fetch(`${host}/users/?search=${searchText}${filterQuery}`)
 			.then((res) => res.json())
 			.then((data) => {
 				setUsers(data);
