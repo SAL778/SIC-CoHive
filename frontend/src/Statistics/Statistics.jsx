@@ -58,7 +58,7 @@ function Statistics() {
 						assetType = {selectedAssetType}
 					/>
 				</div>
-				<div className = "bg-white rounded-md p-6 row-span-3 col-span-1 shadow-custom">
+				<div className = "bg-white rounded-md p-6 row-span-2 col-span-1 shadow-custom">
 					<ResourcePopularityChart
 						timeScope = {selectedTimeScope}
 						assetType = {selectedAssetType}

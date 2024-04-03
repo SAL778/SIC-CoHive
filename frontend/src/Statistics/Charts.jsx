@@ -58,7 +58,7 @@ export function PeakTimesChart({timeScope, assetType}) {
 
     return (
         <>
-            <h2 className="text-3xl font-bold text-blue-950">Peak Room Booking Times</h2>
+            <h2 className="text-3xl font-bold text-blue-950 capitalize">Peak {assetType.label || assetType} Booking Times</h2>
             <h3 className="text-neutral-500 text-lg capitalize mb-4">{timeScope.label || timeScope}</h3>
             <Select
                 data={dropdownContent}
@@ -129,7 +129,7 @@ export function ResourcePopularityChart({timeScope, assetType}) {
 
         const [graphData, setGraphData] = useState([])     //Data points
         const [graphLabels, setGraphLabels] = useState([]) //X axis
-        //const [total, ]
+        const [exportSettings, setExportSettings] = useState({}) //How the charts will be named when downloaded 
 
         //Get the data for the room popularity (pie chart)
         useEffect(() => {
@@ -146,29 +146,68 @@ export function ResourcePopularityChart({timeScope, assetType}) {
         }, [timeScope, assetType])
 
         return (
-            <>
+            <>  
+                <h2 className="text-3xl font-bold text-blue-950 capitalize">{assetType.label || assetType} Popularity</h2>
+                <h3 className="text-neutral-500 text-lg capitalize mb-4">{timeScope.label || timeScope}</h3>
+
                 <ReactApexChart
                     type="donut"
                     series= {graphData}
-                    width = "100%"
+                    width = "100%"  //Won't display properly w/o height/width set
                     height = "100%"
                     options = {{
                         labels: graphLabels,
+                        chart: {
+                            toolbar: {
+                                show: true,
+                                tools: {
+                                    download: true
+                                }
+                            }
+                        },
                         legend: {
                             show: true,
+                            fontFamily: "Roboto, sans-serif",
+                            fontSize: "20em",
                             position: 'bottom',
                             showForZeroSeries: true,
                             horizontalAlign: 'left',
                             floating: false,
+                            onItemClick: {
+                                toggleDataSeries: false
+                            },
                         },
                         plotOptions: {
                             pie: {
+                                dataLabels: {
+                                    offset: 0,
+                                    minAngleToShowLabel: 10, //Degrees
+                                },
+                                expandOnClick: false,
                                 donut: {
                                     size: '70%',
                                     labels: {
                                         show: true,
                                         name: {
+                                            show: true,     //Inside the circle
+                                        },
+                                        value: {
                                             show: true,
+                                            formatter: (value) => (
+                                                `${value} hours`
+                                            )
+                                        },
+                                        total: {
+                                            fontWeight: "bold",
+                                            fontSize: "1.4em",
+                                            show: true,
+                                            color: "#EA580C",
+                                            showAlways: false,
+                                            formatter: (w) => {
+                                                console.table(w)
+                                                const sum = w.globals.series.reduce((accumulator, v) => accumulator + v)
+                                                return `${sum} hours`
+                                            }
                                         }
                                     }
                                 },
@@ -176,10 +215,10 @@ export function ResourcePopularityChart({timeScope, assetType}) {
                             }
                         },
                         dataLabels: {
-                            enabled: true
+                            enabled: true,
+                            dropShadow: false,
                         }
                     }}
-
                 />
             </>
         )

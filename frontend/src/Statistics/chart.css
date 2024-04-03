@@ -1,0 +1,15 @@
+.apexcharts-legend {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0px;   
+    /* No gaps between touch target. */
+}
+
+.apexcharts-legend-series {
+    padding: 8px;
+}
+
+.apexcharts-legend-text {
+    font-size: 10rem;
+}
