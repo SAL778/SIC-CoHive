@@ -5,19 +5,20 @@ import { httpRequest } from "../utils";
 import { HostContext } from "../App";
 import { getPeakTimes, getResourcePopularity } from "./mockEndpoints";
 import './chart.css'
+import { ButtonGroup } from "./Button";
+
+const DAYS = [
+    {value: 1, label: "Mo"},
+    {value: 2, label: "Tu"},
+    {value: 3, label: "We"},
+    {value: 4, label: "Th"},
+    {value: 5, label: "Fr"}
+]
 
 export function PeakTimesChart({timeScope, assetType}) {
     const { host } = useContext(HostContext)
-    
-    const days = [
-        {value: 1, label: "Mo"},
-        {value: 2, label: "Tu"},
-        {value: 3, label: "We"},
-        {value: 4, label: "Th"},
-        {value: 5, label: "Fr"}
-    ]
 
-    const [selectedDays, setSelectedDays] = useState([])
+    const [selectedDay, setSelectedDay] = useState([])
 
     const [dropdownContent, setDropdownContent] = useState([])
     const [selectedAsset, setSelectedAsset] = useState("")
@@ -50,27 +51,36 @@ export function PeakTimesChart({timeScope, assetType}) {
         //         setGraphData(Object.values(statData.bookings)) //Times booked
         //     }
         // })
-        const res = getPeakTimes(selectedDays, selectedAsset)
+        const res = getPeakTimes(selectedDay, selectedAsset)
         setGraphLabels(Object.keys(res.bookings))
         setGraphData(Object.values(res.bookings))
 
-    }, [selectedAsset, selectedDays, timeScope])
+    }, [selectedAsset, selectedDay, timeScope])
 
     return (
         <>
             <h2 className="text-3xl font-bold text-blue-950 capitalize">Peak {assetType.label || assetType} Booking Times</h2>
             <h3 className="text-neutral-500 text-lg capitalize mb-4">{timeScope.label || timeScope}</h3>
-            <Select
-                className="mb-6"
-                data={dropdownContent}
-                allowDeselect={false}
-                //defaultValue={selectedAsset} //Default asset
-                placeholder={`Select a${assetType.value == "equipment" ? "n equipment" : " room"}`}
-                onChange={(value) => setSelectedAsset(value)}
-                rightSection = {<i className="fa fa-caret-down text-orange-600"/>}
-                comboboxProps={{ transitionProps: { transition: 'skew-up', duration: 200 } }}
-            />
-            
+            <div className = "chartToggles mb-6 flex center-items gap-3">
+                <Select
+                    className="flex-1 font-medium"
+                    data={dropdownContent}
+                    allowDeselect={false}
+                    checkIconPosition="right"
+                    //defaultValue={selectedAsset} //Default asset
+                    placeholder={`Select a${assetType.value == "equipment" ? "n equipment" : " room"}`}
+                    onChange={(value) => setSelectedAsset(value)}
+                    rightSection = {<i className="fa fa-caret-down text-orange-600"/>}
+                    comboboxProps={{ transitionProps: { transition: 'skew-up', duration: 200 } }}
+                />
+                <ButtonGroup
+                    className="flex-1"
+                    options = {DAYS}
+                    onButtonClick= {setSelectedDay}
+                />
+
+            </div>
+        
             <ReactApexChart
                 type="bar"
                 series= {[{
@@ -126,6 +136,7 @@ export function PeakTimesChart({timeScope, assetType}) {
 }
 
 export function ResourcePopularityChart({timeScope, assetType}) {
+        const [selectedDay, setSelectedDay] = useState([])
         const { host } = useContext(HostContext)
 
         const [graphData, setGraphData] = useState([])     //Data points
@@ -150,6 +161,13 @@ export function ResourcePopularityChart({timeScope, assetType}) {
             <>  
                 <h2 className="text-3xl font-bold text-blue-950 capitalize">{assetType.label || assetType} Popularity</h2>
                 <h3 className="text-neutral-500 text-lg capitalize mb-4">{timeScope.label || timeScope}</h3>
+                <div className="mb-5">
+                    <ButtonGroup
+                        className="flex-1"
+                        options = {DAYS}
+                        onButtonClick= {setSelectedDay}
+                    />
+                </div>
 
                 <ReactApexChart
                     type="donut"

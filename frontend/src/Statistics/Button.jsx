@@ -23,7 +23,7 @@ export function ButtonGroup({options, onButtonClick}) {
                 <button
                     type="button"
                     className={
-                        `py-3 px-6 rounded-md
+                        `py-3 px-6 rounded-md text-medium
                         ${isSelected(index) ? "text-white bg-orange-600" : "text-orange-600"}
                         whitespace-nowrap capitalize
                         ${isSelected(index) ? "hover:bg-orange-700" : "hover:bg-neutral-200"}
