@@ -61,6 +61,7 @@ export function PeakTimesChart({timeScope, assetType}) {
             <h2 className="text-3xl font-bold text-blue-950 capitalize">Peak {assetType.label || assetType} Booking Times</h2>
             <h3 className="text-neutral-500 text-lg capitalize mb-4">{timeScope.label || timeScope}</h3>
             <Select
+                className="mb-6"
                 data={dropdownContent}
                 allowDeselect={false}
                 //defaultValue={selectedAsset} //Default asset
@@ -82,7 +83,7 @@ export function PeakTimesChart({timeScope, assetType}) {
                         type: 'bar',
                         toolbar: {
                             tools: {
-                                download: '<i className="fa fa-download text-orange-600 w-16 h-16"/>',
+                                download: true,
                             }
                         }
                     },

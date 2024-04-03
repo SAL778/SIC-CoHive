@@ -68,3 +68,11 @@ export function getResourcePopularity() {
         ]}
     )
 }
+
+export function getMiscStats() {
+    return {
+        totalUsers: 421,
+        totalBookings: 123,
+        averageBookingDuration: 32
+    }
+}
