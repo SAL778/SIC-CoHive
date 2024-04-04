@@ -32,7 +32,6 @@ export function PeakTimesChart({timeScope, assetType}) {
         httpRequest({
 			endpoint: `${host}/bookings/resources/filter?type=${assetType.value}`,
 			onSuccess: (data) => {
-                console.table(data)
 				setDropdownContent(data.map(datum => datum.name));
                 setSelectedAsset(data[0]);
 			},
@@ -223,7 +222,6 @@ export function ResourcePopularityChart({timeScope, assetType}) {
                                             color: "#EA580C",
                                             showAlways: false,
                                             formatter: (w) => {
-                                                console.table(w)
                                                 const sum = w.globals.series.reduce((accumulator, v) => accumulator + v)
                                                 return `${sum} hours`
                                             }

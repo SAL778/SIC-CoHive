@@ -4,7 +4,6 @@ import React, {useState} from 'react';
 export function ButtonGroup({options, onButtonClick}) {
     
     const [selectedIndex, setSelectedIndex] = useState(0) //Local (Used to calculate slider)
-    console.table(options)
 
     const optionChange = (index) => {
         if (index !== selectedIndex) {

@@ -4,6 +4,9 @@ import { httpRequest } from "../utils";
 import { HostContext } from "../App";
 import { ButtonGroup } from "./Button";
 import { getMiscStats } from "./mockEndpoints";
+import { MonthPickerInput, YearPickerInput } from '@mantine/dates'
+
+//import '../components/Forms/form.css'
 
 function Statistics() {
 
@@ -57,6 +60,20 @@ function Statistics() {
 	//Endpoint Params
 	const [selectedAssetType, setSelectedAssetType] = useState(assetTypes[0]);
 	const [selectedTimeScope, setSelectedTimeScope] = useState(timeScopes[0]);
+	const [selectedYear, setSelectedYear] = useState(null); //Years since 1900
+	const [selectedMonth, setSelectedMonth] = useState(null);
+
+	//Props shared between the month and year pickers
+	//Defined as function so the disabled prop is computed when prop is updated
+	const commonTimePickerProps = () => (
+		{
+			disabled: selectedTimeScope.value == 'all',
+			placeholder: (selectedTimeScope.value == 'all') ? "Showing all time" : "Pick a date",
+			//Default to no value if either isn't supplied
+			//Month zero indexed
+			value: (!!selectedYear && !!selectedMonth && selectedTimeScope.value !== 'all') ? new Date(selectedYear + 1900, selectedMonth - 1, 1) : null
+		}
+	)
 
 	const [isLoading, setIsLoading] = useState(false); //Only have to wait during the initial render
 
@@ -69,11 +86,32 @@ function Statistics() {
 				</div>
 
 				<div className="toggles flex gap-8">
-					<ButtonGroup
-						className = "timeToggles"
-						options = {timeScopes}
-						onButtonClick = {setSelectedTimeScope}
-					/>
+					<div className="timePicker">
+						<ButtonGroup
+							//Preserve the existing month/year between swaps; don't reset the time values.
+							className = "timeRangeToggles"
+							options = {timeScopes}
+							onButtonClick = {setSelectedTimeScope}
+						/>
+						{ (selectedTimeScope.value == 'month')
+							? <MonthPickerInput
+								{...commonTimePickerProps()}
+								onChange={(value) => {
+									//console.log(value)
+									setSelectedYear(value.getYear())
+									setSelectedMonth(value.getMonth())
+								}}
+								maxLevel = "year"
+							/>
+							: <YearPickerInput
+								{...commonTimePickerProps()}
+								onChange={(value) => {
+									setSelectedYear(value.getYear())
+								}}
+								maxLevel = "decade"
+							/>
+						}
+					</div>
 
 					<ButtonGroup
 						className= "assetToggles"
