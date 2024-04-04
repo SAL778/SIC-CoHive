@@ -186,12 +186,14 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             searchable
                             withScrollArea={false}
                             styles={{ dropdown: { maxHeight: 140, overflowY: 'auto' } }}
+                            comboboxProps={{ transitionProps: { transition: 'skew-up', duration: 200 } }}
                             {...form.getInputProps('resources_name')}
                         />
                     }
                     <DatePickerInput
                         label={isToday(form.values.date) ? "Today" : null}
                         hideOutsideDates
+                        maxLevel="year"
                         disabled={!currentUserMatchesBooking()}
                         pointer="default"
                         allowSingleDateInRange
@@ -214,6 +216,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
+                            comboboxProps={{ transitionProps: { transition: 'skew-up', duration: 200 } }}
                             {...form.getInputProps('start_time')}
                         />
 
@@ -227,6 +230,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                             searchable
                             withAsterisk
                             maxDropdownHeight={140}
+                            comboboxProps={{ transitionProps: { transition: 'skew-up', duration: 200 } }}
                             {...form.getInputProps('end_time')}
                         />
                     </div>
