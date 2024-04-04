@@ -16,7 +16,7 @@ export default function ViewProfile() {
 	const [profileUser, setProfileUser] = useState({})								//Current user's profile
     const [isLoading, setLoading] = useState(true)		
 	const { host } = useContext(HostContext);
-    const [portfolio, setPortfolio] = useState([])
+    const [portfolio, setPortfolio] = useState(null)
 
     //Get the user data 
 	useEffect(() => {
@@ -28,7 +28,7 @@ export default function ViewProfile() {
                     httpRequest({
                         endpoint: `${host}/users/${userData.id}/portfolio/`,
                         onSuccess: (portfolioData) => {
-                            setPortfolio(portfolioData); // Expected: List
+                            setPortfolio(portfolioData);
                             setLoading(false);
                         }
                     });
@@ -56,9 +56,16 @@ export default function ViewProfile() {
                         </h2>
                     <FlairList flairs = {profileUser.accessType.map(type => type.name)} isEditable={false} isAccessRoles/>
                 </div>
-
-                <Portfolio portfolioItems={portfolio.items} isEditable={false} />
-                <TextEditor initialValue={portfolio.description} readOnly={true}/>
+                
+                {!! portfolio
+                ? (
+                <>
+                    <Portfolio portfolioItems={portfolio.items} isEditable={false} />
+                    <TextEditor initialValue={portfolio.description} readOnly={true}/>
+                </>
+                ) : (
+                    <p>Sorry, this page is private. Nothing to see here!</p>
+                )}
             </div>
         )
     );
