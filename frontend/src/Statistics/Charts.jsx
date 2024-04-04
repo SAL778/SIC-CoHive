@@ -15,7 +15,7 @@ const DAYS = [
     {value: 5, label: "Fr"}
 ]
 
-export function PeakTimesChart({timeScope, assetType}) {
+export function PeakTimesChart({timeScope, selectedMonth, selectedYear, assetType}) {
     const { host } = useContext(HostContext)
 
     const [selectedDay, setSelectedDay] = useState([])
@@ -54,7 +54,7 @@ export function PeakTimesChart({timeScope, assetType}) {
         setGraphLabels(Object.keys(res.bookings))
         setGraphData(Object.values(res.bookings))
 
-    }, [selectedAsset, selectedDay, timeScope])
+    }, [selectedDay, selectedMonth, selectedYear, selectedAsset, assetType, timeScope])
 
     return (
         <>
@@ -134,7 +134,7 @@ export function PeakTimesChart({timeScope, assetType}) {
     )
 }
 
-export function ResourcePopularityChart({timeScope, assetType}) {
+export function ResourcePopularityChart({timeScope, selectedMonth, selectedYear, assetType}) {
         const [selectedDay, setSelectedDay] = useState([])
         const { host } = useContext(HostContext)
 
@@ -154,7 +154,7 @@ export function ResourcePopularityChart({timeScope, assetType}) {
 
             setGraphLabels(res.popularity.map(resource => resource.name))
             setGraphData(res.popularity.map(resource => resource.hours))
-        }, [timeScope, assetType])
+        }, [selectedDay, selectedMonth, selectedYear, assetType, timeScope])
 
         return (
             <>  
@@ -228,7 +228,6 @@ export function ResourcePopularityChart({timeScope, assetType}) {
                                         }
                                     }
                                 },
-                                expandOnClick: false,
                             }
                         },
                         dataLabels: {

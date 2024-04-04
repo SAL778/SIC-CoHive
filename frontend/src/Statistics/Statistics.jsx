@@ -6,7 +6,7 @@ import { ButtonGroup } from "./Button";
 import { getMiscStats } from "./mockEndpoints";
 import { MonthPickerInput, YearPickerInput } from '@mantine/dates'
 
-//import '../components/Forms/form.css'
+import '../components/Forms/form.css'
 
 function Statistics() {
 
@@ -60,8 +60,8 @@ function Statistics() {
 	//Endpoint Params
 	const [selectedAssetType, setSelectedAssetType] = useState(assetTypes[0]);
 	const [selectedTimeScope, setSelectedTimeScope] = useState(timeScopes[0]);
-	const [selectedYear, setSelectedYear] = useState(null); //Years since 1900
-	const [selectedMonth, setSelectedMonth] = useState(null);
+	const [selectedYear, setSelectedYear] = useState(new Date().getYear()); //Years since 1900, default to this year
+	const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()); //Default to this month
 
 	//Props shared between the month and year pickers
 	//Defined as function so the disabled prop is computed when prop is updated
@@ -71,7 +71,7 @@ function Statistics() {
 			placeholder: (selectedTimeScope.value == 'all') ? "Showing all time" : "Pick a date",
 			//Default to no value if either isn't supplied
 			//Month zero indexed
-			value: (!!selectedYear && !!selectedMonth && selectedTimeScope.value !== 'all') ? new Date(selectedYear + 1900, selectedMonth - 1, 1) : null
+			value: (!!selectedYear && !!selectedMonth && selectedTimeScope.value !== 'all') ? new Date(selectedYear + 1900, selectedMonth, 1) : null,
 		}
 	)
 
@@ -96,6 +96,7 @@ function Statistics() {
 						{ (selectedTimeScope.value == 'month')
 							? <MonthPickerInput
 								{...commonTimePickerProps()}
+								className="bg-white"
 								onChange={(value) => {
 									//console.log(value)
 									setSelectedYear(value.getYear())
@@ -105,6 +106,7 @@ function Statistics() {
 							/>
 							: <YearPickerInput
 								{...commonTimePickerProps()}
+								className="bg-white"
 								onChange={(value) => {
 									setSelectedYear(value.getYear())
 								}}
@@ -126,12 +128,16 @@ function Statistics() {
 					<PeakTimesChart
 						timeScope = {selectedTimeScope}
 						assetType = {selectedAssetType}
+						selectedYear = {selectedYear}
+						selectedMonth = {selectedMonth}
 					/>
 				</div>
 				<div className = "bg-white rounded-md p-6 row-span-4 col-span-1 shadow-custom">
 					<ResourcePopularityChart
 						timeScope = {selectedTimeScope}
 						assetType = {selectedAssetType}
+						selectedYear = {selectedYear}
+						selectedMonth = {selectedMonth}
 					/>
 				</div>
 				<div className = "row-span-1 col-span-3 flex flex-row gap-4">
