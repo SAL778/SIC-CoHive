@@ -26,11 +26,16 @@ function Events() {
 		}, 200);
 	};
 
+	// const response = await fetch(`${host}/users/profile/`, {
+	// 	method: "GET",
+	// });
+
 	const fetchEvents = async (selectedDate) => {
 		try {
 			const formattedDate = selectedDate.toISOString().split("T")[0];
 			const response = await fetch(
-				`http://localhost:8000/google_drive_integration/calendar-events?date=${formattedDate}`
+				// `http://localhost:8000/google_drive_integration/calendar-events?date=${formattedDate}`
+				`${host}/google_drive_integration/calendar-events?date=${formattedDate}`
 			);
 			const jsonResponse = await response.json();
 
