@@ -22,7 +22,9 @@ function EventsCarousel({events, onItemClick}) {
 
 //The JSX Render of an event
 function EventCard({event, onClick}) {
-
+    
+    const fallback = "https://png.pngtree.com/png-vector/20191126/ourmid/pngtree-image-of-cute-radish-vector-or-color-illustration-png-image_2040180.jpg"
+    
     const formatDate = (dateString) => {
         // Parse the date string
         const [monthStr, day, year] = dateString.split('/');
@@ -47,7 +49,7 @@ function EventCard({event, onClick}) {
             className="event-card relative group overflow-hidden p-5 rounded-[12px] h-72 w-56 flex flex-col place-content-between ease-out duration-200 shadow-custom hover:cursor-pointer"
             >
                 <img 
-                src = {properImageSource(event.imgSrc)}
+                src = {properImageSource(event.imgSrc) || fallback}
                 // Placeholder image for testing and broke image issue
                 // src = "https://png.pngtree.com/png-vector/20191126/ourmid/pngtree-image-of-cute-radish-vector-or-color-illustration-png-image_2040180.jpg"
                 alt = {event.title}

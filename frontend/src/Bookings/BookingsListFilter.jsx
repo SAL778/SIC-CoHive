@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { DatePickerInput } from "@mantine/dates";
 import { Tooltip } from "@mantine/core";
 import "../components/Forms/form.css";
+import { HostContext } from "../App";
 
 function Filter({ onFilterChange, assetType }) {
+	const { host } = useContext(HostContext);
 	const [selectedFilters, setSelectedFilters] = useState({});
 	const [fromDate, setFromDate] = useState(null);
 	const [toDate, setToDate] = useState(null);
@@ -15,7 +17,8 @@ function Filter({ onFilterChange, assetType }) {
 
 	// Fetch all the rooms and initialize the filters from the database
 	useEffect(() => {
-		fetch(`http://127.0.0.1:8000/bookings/resources/filter?type=${assetType}`)
+		// fetch(`http://127.0.0.1:8000/bookings/resources/filter?type=${assetType}`)
+		fetch(`${host}/bookings/resources/filter?type=${assetType}`)
 			.then((response) => response.json())
 			.then((data) => {
 				// Initialize all filters to false

@@ -6,4 +6,5 @@ from . import views
 urlpatterns = [
     path('files', views.fetch_drive_files, name='google-drive-get-files'),
     path('events', views.fetch_spreadsheet_events, name='google-get-events'),
+     path('calendar-events', views.fetch_calendar_events, name='google-calendar-events'),
 ]

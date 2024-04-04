@@ -4,8 +4,8 @@ import "./output.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
-import '@mantine/tiptap/styles.css';
-import '@mantine/carousel/styles.css';
+import "@mantine/tiptap/styles.css";
+import "@mantine/carousel/styles.css";
 import Navigation from "./components/Navbar.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Bookings from "./Bookings.jsx";
@@ -36,6 +36,11 @@ const sicTheme = createTheme({
 function App() {
 	Modal.setAppElement("#root");
 	const [host] = useState("http://localhost:8000"); //Replace host here
+	// http://[2605:fd00:4:1001:f816:3eff:fe3e:a382]
+	// const [host] = useState("http://[2605:fd00:4:1001:f816:3eff:fe3e:a382]"); //Replace host here
+	// const [host] = useState(
+	// "https://c75f-2605-fd00-4-1001-f816-3eff-fe3e-a382.ngrok-free.app/"
+	// ); //Replace host here
 	const [currentUser, setCurrentUser] = useState(null); //User gets added to context on login
 	const [showNavigation, setShowNavigation] = useState(true);
 	const [mobileNav, setMobileNav] = useState(false);
@@ -54,7 +59,7 @@ function App() {
 									className={`app-container flex min-h-screen h-full w-[100%] flex-row body-white py-0 gap-[40px] ${
 										showNavigation ? "app-container-pages" : ""
 									}`}
-								>	
+								>
 									<button
 										id="mobile-nav"
 										className="button-orange"
@@ -65,7 +70,12 @@ function App() {
 									>
 										<i className="fa fa-bars"></i> Menu
 									</button>
-									{showNavigation && <Navigation mobileNav={mobileNav} setMobileNav={setMobileNav} />}
+									{showNavigation && (
+										<Navigation
+											mobileNav={mobileNav}
+											setMobileNav={setMobileNav}
+										/>
+									)}
 									<Routes>
 										<Route path="/" element={<Login />} />
 										<Route path="/bookings" element={<Bookings />} />
@@ -75,7 +85,10 @@ function App() {
 										<Route path="/profile" element={<EditProfile />} />
 										<Route path="/feedback" element={<Feedback />} />
 										<Route path="/signout" element={<Signout />} />
-										<Route path="/users/:profileUserId" element={<ViewProfile />} />
+										<Route
+											path="/users/:profileUserId"
+											element={<ViewProfile />}
+										/>
 										<Route path="*" element={<FOF />} />
 									</Routes>
 								</div>
