@@ -12,7 +12,7 @@ export default function ProfileHeader({profileUser}) {
                     <h2 className = "text-large-desktop text-neutral-800 font-bold">{profileUser.first_name + ' ' + profileUser.last_name}</h2>
                     <h3 className = "text-neutral-600 text-for-mobile">{profileUser.email}</h3>
                 </div>
-                {!profileUser.isStaff && 
+                {!!profileUser.is_staff && 
                     <span className="text-orange-600 font-semibold">
                         <i className="fa fa-shield mr-2"/>
                         SIC Admin
