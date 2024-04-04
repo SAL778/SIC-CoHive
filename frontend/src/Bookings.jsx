@@ -56,7 +56,7 @@ function Bookings() {
 		const fetchUserData = async () => {
 			try {
 				const accessToken = getCookieValue("access_token");
-				const response = await fetch("http://localhost:8000/users/profile/", {
+				const response = await fetch(`${host}/users/profile/`, {
 					method: "GET",
 					credentials: "include",
 					headers: {
