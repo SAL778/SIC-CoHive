@@ -62,6 +62,7 @@ export default function Login({}) {
 						src={placeholder}
 						className="logo object-contain max-w-[300px]"
 						alt="Student Inovation Center"
+						referrerpolicy="no-referrer"
 					/>
 					<div className="flex flex-col gap-40 items-center">
 						<div className="flex flex-col gap-6 items-center">

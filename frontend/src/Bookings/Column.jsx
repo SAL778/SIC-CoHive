@@ -271,14 +271,14 @@ const Column = ({ column, onBookingEdit }) => {
 			className={`booking-column h-full flex flex-col relative ${
 				selectedSlot ? "currentlyBooking" : ""
 			} ${hasPermission ? "" : "no-permission-column"}`}
-		>	
+		>
 			{console.dir(column)}
-			<BookingPopover 
-				assetImage = {column.image} 
-				assetDescription = {column.description}
-				assetPermissions = {column.access_type} //List
-				assetCode = {column.room_code}
-				assetName = {column.name}
+			<BookingPopover
+				assetImage={column.image}
+				assetDescription={column.description}
+				assetPermissions={column.access_type} //List
+				assetCode={column.room_code}
+				assetName={column.name}
 			>
 				<div className="flex justify-center items-center min-h-[80px] h-[80px] mb-[20px] rounded-[12px] shadow-custom w-[100] py-2 px-4 bg-white">
 					<p className="text-lg font-bold capitalize text-center">
@@ -291,6 +291,7 @@ const Column = ({ column, onBookingEdit }) => {
 							}`}
 							alt="Resource Image"
 							className="w-[50px] h-[50px] ml-4"
+							referrerpolicy="no-referrer"
 						/>
 					)} */}
 				</div>
