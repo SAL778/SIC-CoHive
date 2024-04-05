@@ -108,12 +108,14 @@ def fetch_calendar_events(request):
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
         end = event['end'].get('dateTime', event['end'].get('date'))
+        email = event.get('creator', {}).get('email', '')
         processed_events.append({
             'summary': event.get('summary'),
             'location': event.get('location', ''),
             'description': event.get('description', ''),
             'start': start,
-            'end': end
+            'end': end,
+            'email': email,
         })
 
     print("Processed:", processed_events)

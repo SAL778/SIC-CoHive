@@ -14,7 +14,7 @@ function EventsCarousel({events, onItemClick}) {
     return (
         <MantineCarousel>
             {events.map((event, index) => (
-                <EventCard key = {index} event = {event} onClick = {onItemClick}/>
+                <EventCard key = {index} event = {event} onClick = {() => onItemClick(event)}/>
             ))}
         </MantineCarousel>
     )
