@@ -149,7 +149,6 @@ class UserBookingView(generics.ListCreateAPIView):
         
         if access:
             request.data['resources'] = resource.id
-            
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():   
                 serializer.save(user=user)
@@ -324,10 +323,12 @@ class PeakBookingHours(APIView):
             data = serializer.validated_data
             scope = data.get('scope', 'all')
             year = data.get('year', timezone.now().year)
-            month = data.get('month')
-            week = data.get('week')
+            month = data.get('month', timezone.now().month)
+            day = data.get('day', timezone.now().weekday() + 1)
+            resource = data.get('resource')
             
-            peak_times = Booking.peak_booking_times(scope=scope,year=year, month=month, week=week)
+            peak_times = Booking.peak_booking_times(scope=scope,year=year, month=month, day=day, resource=resource)
+            print(peak_times)
             return Response(peak_times)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

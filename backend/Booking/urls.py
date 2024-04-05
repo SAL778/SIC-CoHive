@@ -15,6 +15,6 @@ urlpatterns = [
     path('statistics/AverageBooking/', views.AverageBookingView.as_view(), name='booking-analytics'),
     path('statistics/BookingDays/', views.BookingDaysView.as_view(), name='booking-statistics'),
     path('statistics/BookingFrequencies/', views.BookingFrequenciesView.as_view(), name='booking-frequencies'),
-    path('statistics/peaktimes/', views.PeakBookingHours.as_view(), name='peak-booking-times'),
+    path('statistics/peak', views.PeakBookingHours.as_view(), name='peak-booking-times'),
 ]
 
