@@ -182,9 +182,9 @@ function BookingFormComponent({
 		>
 			<div className="upperSection flex justify-between gap-4">
 				<img
-					src={currentBooking?.image ?? fallbackAssetImage}
+					src={resourceImageSrc || currentBooking?.image || fallbackAssetImage}
 					className="booking-image rounded-md object-cover"
-					referrerpolicy="no-referrer"
+					referrerPolicy="no-referrer"
 				/>
 				<div className="booking-modal-options flex flex-col space-between justify-between">
 					<div className="roomInfo">
