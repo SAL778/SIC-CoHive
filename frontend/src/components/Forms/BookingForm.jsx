@@ -297,7 +297,7 @@ function BookingFormComponent({
 							<img
 								src={form.values?.user?.profileImage ?? fallbackProfileImage}
 								className="rounded-md w-16 h-16 object-cover"
-								referrerpolicy="no-referrer"
+								referrerPolicy="no-referrer"
 							/>
 							<div className="max-w-[180px] overflow-hidden">
 								<p className="text-neutral-700 text-sm truncate">

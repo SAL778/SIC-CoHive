@@ -48,7 +48,7 @@ def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:
 
     if headers:
         if len(headers) != len(values[1]):
-            print(headers)
+            # print(headers)
             raise ValueError(f"Scheme doesn't match the length of the data. Got {len(headers)}. Required {len(values[1])}")
     
         keyed_values = []
@@ -80,7 +80,7 @@ def fetch_spreadsheet_events(request):
 
 
 def fetch_calendar_events(request):
-    print("Fetching calendar events")
+    # print("Fetching calendar events")
     date_str = request.GET.get('date', None) 
     if date_str:
         selected_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
@@ -93,7 +93,7 @@ def fetch_calendar_events(request):
 
     client = initialize_calendar_client()
 
-    print("Selected Date:", selected_date)
+    # print("Selected Date:", selected_date)
 
     # Adjust time_min and time_max to cover the whole selected day
     time_min = datetime.datetime.combine(selected_date, datetime.time.min).isoformat() + 'Z'
@@ -101,7 +101,7 @@ def fetch_calendar_events(request):
 
     events_result = client.events().list(calendarId=calendar_id, timeMin=time_min, timeMax=time_max,
                                          singleEvents=True, orderBy='startTime').execute()
-    print("Events Result:", events_result) 
+    # print("Events Result:", events_result) 
     events = events_result.get('items', [])
 
     processed_events = []  # as needed by the frontend
@@ -118,9 +118,9 @@ def fetch_calendar_events(request):
             'email': email,
         })
 
-    print("Processed:", processed_events)
+    # print("Processed:", processed_events)
 
-    print("Number of events fetched:", len(events))
+    # print("Number of events fetched:", len(events))
 
     return JsonResponse({'events': processed_events})
 

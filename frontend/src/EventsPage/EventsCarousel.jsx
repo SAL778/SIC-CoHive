@@ -68,7 +68,7 @@ function EventCard({ event, onClick }) {
 				// src = "https://png.pngtree.com/png-vector/20191126/ourmid/pngtree-image-of-cute-radish-vector-or-color-illustration-png-image_2040180.jpg"
 				alt={event.title}
 				className="absolute inset-0 w-full h-full transition object-cover duration-500 ease-in-out group-hover:scale-110 z-0"
-				referrerpolicy="no-referrer"
+				referrerPolicy="no-referrer"
 			/>
 
 			<div className="cardContent relative flex flex-col h-full justify-between z-10 text-white">
