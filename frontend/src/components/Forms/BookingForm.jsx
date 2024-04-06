@@ -40,6 +40,7 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
     const [availableTimeSlots, setAvailableTimeSlots] = useState(allTimeSlots)
     //Store booked slots for faster validation
     const [disabledTimeSlots, setDisabledTimeSlots] = useState([])
+    const [resourceImageSrc, setResourceImageSrc] = useState(null)
 
     //TODO: Change the resources ID from 1 to something else later.
     const form = useForm({
@@ -118,6 +119,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
                 endpoint: `${host}/bookings/columns/${selectedAsset.id}/?date=${backendRepresentationOfDate(currentDate)}`,
                 onSuccess: (data) => {            //Unique 15 min intervals
                     if (data.bookings)  {
+                        //Update the booking image
+                        setResourceImageSrc(data.image)
                         const todaysBookings = data.bookings.filter((booking) => (currentDate.getDay() === new Date(booking.start_time).getDay()));
                         const bookedTimeSlots = []
                         for (const booking of todaysBookings) {
@@ -151,7 +154,8 @@ function BookingFormComponent({currentBooking = null, availableAssets, onClose, 
         <form onSubmit = {form.onSubmit((values) => {onSubmit(values)})}> 
             <div className = "upperSection flex justify-between gap-4">
                 <img 
-                src = {currentBooking?.image ?? fallbackAssetImage}
+                src = {currentBooking.image || resourceImageSrc || fallbackAssetImage}
+                referrerPolicy="no-referrer"
                 className = "booking-image rounded-md object-cover"
                 />
                 <div className = "booking-modal-options flex flex-col space-between justify-between">
