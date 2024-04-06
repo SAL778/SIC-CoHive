@@ -10,7 +10,7 @@ import '../components/Forms/form.css'
 
 function Statistics() {
 
-	const { host } = useState(HostContext)
+	const { host } = useContext(HostContext)
 	const loadingMessage = "Compiling data, hold on tight"
 
 	const timeScopes = [
@@ -29,32 +29,28 @@ function Statistics() {
 
 	//Load the static card data (not affected by toggles)
 	useEffect(() => {
-		//TODO: Connect
-		// httpRequest({
-		// 	endpoint: `${host}/statistics/misc`,
-		// 	onSuccess: (miscStatData) => {
-		// 		console.table(miscStatData)
-		// 		setCardData(res)
-		// 	}
-		// })
-
-		const res = getMiscStats()
-		setCardData([
-			{
-				icon: "fa fa-user-graduate",
-				label: "Students Innovating", 
-				value: res.totalUsers
-			},
-			{	
-				icon: "fa fa-calendar",
-				label: "Total Bookings",
-				value: res.totalBookings
-			},
-			{	
-				icon: "fa fa-clock",
-				label: "Average Booking Time",
-				value: `${res.averageBookingDuration} minutes`
-			}])
+		httpRequest({
+			endpoint: `${host}/bookings/statistics/misc/`,
+			onSuccess: (miscStatData) => {
+				console.table(miscStatData)
+				setCardData([
+					{
+						icon: "fa fa-user-graduate",
+						label: "Students Innovating", 
+						value: miscStatData.TotalUsers
+					},
+					{	
+						icon: "fa fa-calendar",
+						label: "Total Bookings",
+						value: miscStatData.TotalRoomBookings + miscStatData.TotalEquipmentBookings
+					},
+					{	
+						icon: "fa fa-clock",
+						label: "Average Booking Time",
+						value: `${Math.round(miscStatData.averagEbookingDurationHour)} minutes`
+					}])
+			}
+		})
 	}, [])
 
 	//Endpoint Params

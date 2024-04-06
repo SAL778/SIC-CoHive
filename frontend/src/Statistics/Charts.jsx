@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts"
 import { Select } from "@mantine/core";
-import { httpRequest } from "../utils";
+import { httpRequest, toQueryString } from "../utils";
 import { HostContext } from "../App";
 import { getPeakTimes, getResourcePopularity } from "./mockEndpoints";
 import './chart.css'
@@ -41,20 +41,16 @@ export function PeakTimesChart({timeScope, selectedMonth, selectedYear, assetTyp
 
     //Get the data for the peak times (bar chart)
     useEffect(() => {
-        //TODO: Connect
-        // const queryParams = {asset: selectedAsset, days: "".join(selectedDays)}
-        // httpRequest({
-        //     endpoint: `${host}/statistics/peak?asset=${queryParams.asset}&${queryParams.days | ""}`,
-        //     onSuccess: (statData) => {
-        //         setGraphLabels(Object.keys(statData.bookings)) //Hour slots
-        //         setGraphData(Object.values(statData.bookings)) //Times booked
-        //     }
-        // })
-        const res = getPeakTimes(selectedDay, selectedAsset)
-        setGraphLabels(Object.keys(res.bookings))
-        setGraphData(Object.values(res.bookings))
+        const queryParams = {resource: selectedAsset, day: selectedDay.value, scope: timeScope.value, month: selectedMonth, year: selectedYear + 1900}
+        httpRequest({
+            endpoint: `${host}/bookings/statistics/peak?${toQueryString(queryParams)}`,
+            onSuccess: (statData) => {
+                setGraphLabels(Object.keys(statData.bookings)) //Hour slots
+                setGraphData(Object.values(statData.bookings)) //Times booked
+            }
+        })
 
-    }, [selectedDay, selectedMonth, selectedYear, selectedAsset, assetType, timeScope])
+    }, [selectedDay, selectedMonth, selectedYear, selectedAsset, timeScope])
 
     return (
         <>
@@ -66,7 +62,7 @@ export function PeakTimesChart({timeScope, selectedMonth, selectedYear, assetTyp
                     data={dropdownContent}
                     allowDeselect={false}
                     checkIconPosition="right"
-                    //defaultValue={selectedAsset} //Default asset
+                    defaultValue={selectedAsset} //Default asset
                     placeholder={`Select a${assetType.value == "equipment" ? "n equipment" : " room"}`}
                     onChange={(value) => setSelectedAsset(value)}
                     rightSection = {<i className="fa fa-caret-down text-orange-600"/>}
@@ -106,7 +102,7 @@ export function PeakTimesChart({timeScope, selectedMonth, selectedYear, assetTyp
                         }
                     },
                     noData: {
-                        text: 'Loading data',
+                        text: 'No bookings for this specified time range',
                         align: 'center',
                         verticalAlign: 'middle'
                     },
@@ -144,16 +140,17 @@ export function ResourcePopularityChart({timeScope, selectedMonth, selectedYear,
 
         //Get the data for the room popularity (pie chart)
         useEffect(() => {
-            // httpRequest({
-            //     // endpoint: `${host}/statistics/popularity?asset=${queryParams.asset}&${queryParams.days | ""}`,
-            //     // onSuccess: (statData) => {
-            //     //     setGraphLabels(Object.keys(statData.bookings)) //Hour slots
-            //     //     setGraphData(Object.values(statData.bookings)) //Times booked
-            // })
-            const res = getResourcePopularity(assetType, timeScope)
-
-            setGraphLabels(res.popularity.map(resource => resource.name))
-            setGraphData(res.popularity.map(resource => resource.hours))
+            const queryParams = {type: assetType.value, day: selectedDay.value, scope: timeScope.value, month: selectedMonth, year: selectedYear + 1900}
+            httpRequest({
+                endpoint: `${host}/bookings/statistics/usage?${toQueryString(queryParams)}`,
+                onSuccess: (statData) => {
+                    console.table(statData) 
+                    setGraphLabels(statData.map(statData => statData.name)) //Hour slots
+                    setGraphData(statData.map(statData => statData.total_duration)) //Times booked
+                }
+            })
+            // setGraphLabels(res.popularity.map(resource => resource.name))
+            // setGraphData(res.popularity.map(resource => resource.hours))
         }, [selectedDay, selectedMonth, selectedYear, assetType, timeScope])
 
         return (
@@ -175,6 +172,10 @@ export function ResourcePopularityChart({timeScope, selectedMonth, selectedYear,
                     height = "100%"
                     options = {{
                         labels: graphLabels,
+                        noData: {
+                            text: "No bookings for this specified time range",
+                            align: 'center',
+                        },
                         chart: {
                             toolbar: {
                                 show: true,
