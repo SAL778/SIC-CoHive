@@ -22,7 +22,7 @@ export default function Login({}) {
 			// Make an HTTP request to the Django view
 			const response = await axios.post(
 				// "http://localhost:8000/api/verify_google_jwt/",
-				`${host}/api/verify_google_jwt/`,
+				`${host}/verify_google_jwt/`,
 				{ jwt_token },
 				{
 					headers: {
