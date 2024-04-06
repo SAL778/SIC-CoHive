@@ -401,12 +401,18 @@ const deserializeTime = (timestring) => {
  * @param {number} endHour - A positive number that represents the start time in 24 hour format (e.g 15.5 = 3:30 PM)
  * @see dateToHoursFloat - A helper function that can be used for date conversion.
  *
+ *
  * @returns - An array of intervals, bookended by the start hour and end hour inclusive.
  */
 
 const getTimePeriods = (interval, startHour, endHour) => {
 	const periods = [];
 
+	// Loop through each interval
+	for (let i = startHour * 60; i <= endHour * 60; i += interval) {
+		// Convert current interval to hours and minutes
+		let hours = Math.floor(i / 60);
+		const minutes = i % 60 === 0 ? "00" : i % 60; // Adjusted for 15-minute intervals
 	// Loop through each interval
 	for (let i = startHour * 60; i <= endHour * 60; i += interval) {
 		// Convert current interval to hours and minutes
@@ -432,6 +438,7 @@ const getTimePeriods = (interval, startHour, endHour) => {
  *  @param {string} date - a string representing the date convertable to a date object
  *  @param {[hours, minutes]} date - An array representing the times as an hour minute array.
  *  @see getTimePeriods - The function that consumes time periods as arguments.
+ *
  *
  *  @returns hours, minutes
  */
