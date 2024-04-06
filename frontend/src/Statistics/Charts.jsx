@@ -3,7 +3,6 @@ import ReactApexChart from "react-apexcharts"
 import { Select } from "@mantine/core";
 import { httpRequest, toQueryString } from "../utils";
 import { HostContext } from "../App";
-import { getPeakTimes, getResourcePopularity } from "./mockEndpoints";
 import './chart.css'
 import { ButtonGroup } from "./Button";
 
@@ -92,7 +91,7 @@ export function PeakTimesChart({timeScope, selectedMonth, selectedYear, assetTyp
                         type: 'bar',
                         toolbar: {
                             tools: {
-                                download: true,
+                                download: "<i class='fa fa-download text-orange-600 text-2xl'/>",
                             }
                         }
                     },
@@ -181,7 +180,7 @@ export function ResourcePopularityChart({timeScope, selectedMonth, selectedYear,
                             toolbar: {
                                 show: true,
                                 tools: {
-                                    download: true
+                                    download: "<i class='fa fa-download text-orange-600 text-2xl'/>",
                                 }
                             }
                         },

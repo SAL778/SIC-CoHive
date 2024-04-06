@@ -3,7 +3,6 @@ import { PeakTimesChart, ResourcePopularityChart } from "./Charts";
 import { httpRequest } from "../utils";
 import { HostContext } from "../App";
 import { ButtonGroup } from "./Button";
-import { getMiscStats } from "./mockEndpoints";
 import { MonthPickerInput, YearPickerInput } from '@mantine/dates'
 
 import '../components/Forms/form.css'
