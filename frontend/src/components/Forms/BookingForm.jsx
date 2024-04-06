@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { TextInput, Textarea, Checkbox, Select, Text } from "@mantine/core";
 import { TimeInput, DatePickerInput } from "@mantine/dates";
 import "./form.css";
-import { httpRequest } from "../../utils.js";
+import { httpRequest, toProperImageURL } from "../../utils.js";
 
 export default BookingFormComponent;
 
@@ -182,7 +182,7 @@ function BookingFormComponent({
 		>
 			<div className="upperSection flex justify-between gap-4">
 				<img
-					src={resourceImageSrc || currentBooking?.image || fallbackAssetImage}
+					src={toProperImageURL(resourceImageSrc) || currentBooking?.image || fallbackAssetImage}
 					className="booking-image rounded-md object-cover"
 					referrerPolicy="no-referrer"
 				/>
