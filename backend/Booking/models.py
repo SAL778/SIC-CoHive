@@ -5,9 +5,8 @@ from User.models import CustomUser
 from datetime import datetime
 from django.utils import timezone
 from User.models import AccessType
-from django.db.models import Count, Avg, ExpressionWrapper, F, fields
+from django.db.models import Count, Avg, ExpressionWrapper, F, fields, Sum
 from django.db.models.functions import TruncDay, ExtractHour, ExtractMinute
-
 from django.db.models.functions import ExtractWeekDay
 from django.utils import timezone
 from django.db.models.functions import ExtractWeek, ExtractMonth
@@ -18,6 +17,9 @@ from collections import Counter
 import heapq
 from django.core.serializers.json import DjangoJSONEncoder
 import json
+import pytz
+from django.core.cache import cache
+
 
 # Create your models here.
 class Resources(models.Model):
@@ -54,119 +56,87 @@ class Booking(models.Model):
 
     # description = models.TextField(help_text="Description of the schedule")
 
-    def get_week_of_month_range(year, month, week_number, week_start=0):
-        """
-        Calculate the start and end date of the nth week of a specific month.
-        
-        :param year: The year
-        :param month: The month
-        :param week_number: The week number within the month (1-based)
-        :param week_start: The day the week starts on, where 0 is Monday and 6 is Sunday (default: 0)
-        :return: A tuple of (start_date, end_date)
-        """
-
-        first_day = datetime(year, month, 1)
-
-        days_ahead = (week_start - first_day.weekday()) % 7
-        start_of_first_week = first_day + timedelta(days=days_ahead)
-
-        if week_number == 1 and days_ahead > 0:
-            start_of_week = start_of_first_week - timedelta(days=7)
-        else:
-            start_of_week = start_of_first_week + timedelta(days=(week_number - 1) * 7)
-
-        end_of_week = start_of_week + timedelta(days=6)
-
-        return start_of_week, end_of_week
-
-    def get_bookings_by_day_of_week(scope='all', year=None, month=None, week=None):
+    def get_bookingset_by_time_and_resource(scope="all", year=None, month=None, day=None, resource=None):
         bookings = Booking.objects.all()
 
-        if year:
-            bookings = bookings.filter(start_time__year=year)
-        if month:
-            bookings = bookings.filter(start_time__month=month)
-
-        if scope == 'week' and week:
-            start_of_week, end_of_week = Booking.get_week_of_month_range(int(year), int(month), int(week))
-            bookings = bookings.filter(start_time__date__range=(start_of_week, end_of_week))
-
-        bookings_by_day = bookings.annotate(
-            day_of_week=ExtractWeekDay('start_time')
-        ).values('day_of_week').annotate(
-            total=Count('id')
-        ).order_by('day_of_week')
-
-        day_names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-        readable_bookings = {day_names[day['day_of_week'] - 1]: day['total'] for day in bookings_by_day}
-
-        return readable_bookings
-
-    def booking_frequencies_by_resource(scope="all", year=None, month=None, week=None):
-        bookings = Booking.objects.all()
-
-        if year:
-            bookings = bookings.filter(start_time__year=year)
-            print(bookings)
-        if month:
-            bookings = bookings.filter(start_time__month=month)
-
-        if week:
-            # Assuming you have a similar method to `get_week_of_month_range` for calculating the week range
-            start_of_week, end_of_week = Booking.get_week_of_month_range(int(year), int(month), int(week))
-            bookings = bookings.filter(start_time__date__range=(start_of_week, end_of_week))
-
-        frequencies = bookings.values('resources__name').annotate(count=Count('id')).order_by('-count')
-        print(frequencies)
-        return frequencies
-
-
-
-    def peak_booking_times(scope="all", year=None, month=None, day=None, resource=None):
-        bookings = Booking.objects.all()
-        print(bookings)
-        if year:
-            bookings = bookings.filter(start_time__year=year)
-        if month:
-            bookings = bookings.filter(start_time__month=month)
-        print(bookings)
-        bookings = bookings.annotate(day_of_week=ExtractWeekDay('start_time'))
-        bookings_per_day = bookings.values('day_of_week').annotate(count=Count('id')).order_by('day_of_week')
-        print(bookings_per_day)
-        # Get the first booking in the queryset
-        booking = bookings.first()
-
-        # Print the start and end times of the booking
-        print(f"Start Time: {booking.start_time}")
-
-
-        if day:
-            bookings = bookings.filter(start_time__week_day=day)
-
-
-
+        if scope != "all":
+            if year:
+                bookings = bookings.filter(start_time__year=year)
+            if month:
+                bookings = bookings.filter(start_time__month=month)
+        # bookings = bookings.annotate(day_of_week=ExtractWeekDay('start_time'))
+        # bookings_per_day = bookings.values('day_of_week').annotate(count=Count('id')).order_by('day_of_week')
+        # print(bookings_per_day)
+        # # Get the first booking in the queryset
+        # booking = bookings.first()
+        #
+        # # Print the start and end times of the booking
+        # print(f"Start Time: {booking.start_time}")
+        # print(ExtractWeekDay(booking.start_time))
+        #
+        # print(day,timezone.localtime(timezone.now()).weekday())
+        #
+        # if day:
+        #     # Filter the bookings based on the day of the week
+        #     bookings = bookings.annotate(weekday=ExtractWeekDay('start_time')).filter(weekday=day)
+        # print(bookings)
+        resource_item = None
         if resource:
             resource_item = Resources.objects.get(name=unquote(resource))
             bookings = bookings.filter(resources=resource_item)
-        print(bookings,year,month,day,resource)
+        print(bookings, year, month, day, resource)
+        return bookings, resource_item
 
-        bookings = bookings.annotate(start_hour=ExtractHour('start_time'), start_minute=ExtractMinute('start_time'),
-                                     end_hour=ExtractHour('end_time'), end_minute=ExtractMinute('end_time'))
+    def resource_usage_hour(scope="all", year=None, month=None, day=None,type = None):
+        bookings = Booking.objects.all()
 
+        bookings, _ = Booking.get_bookingset_by_time_and_resource(scope, year, month, day)
+
+        if type:
+            bookings = bookings.filter(resources__type=type)
+
+        bookings = bookings.annotate(duration=F('end_time') - F('start_time'))
+        resource_usage = bookings.values('resources__name').annotate(total_duration=Sum('duration')).order_by('resources__name')
+
+        result = []
+        for item in resource_usage:
+            result.append({
+                "name": item['resources__name'],
+                "total_duration": item['total_duration'] / timedelta(hours=1)
+            })
+        return result
+
+
+    def peak_booking_times(scope="all", year=None, month=None, day=None, resource=None):
+        cache_key = f"peak_booking_times_{scope}_{year}_{month}_{day}_{resource}"
+        result = cache.get(cache_key)
+        if result:
+            return result
+
+        bookings, resource_item = Booking.get_bookingset_by_time_and_resource(scope, year, month, day, resource)
         # Initialize a dictionary with keys as hours from 8 am to 8 pm and values as 0
-        hourly_bookings = {hour: 0 for hour in range(8, 21)}
+        hourly_bookings = {hour: 0 for hour in range(7, 22)}
 
         for booking in bookings:
-            start_hour = booking.start_hour
-            # If the start hour is between 8 and 20 (8 pm), increment the count for that hour
-            if 8 <= start_hour < 21:
-                hourly_bookings[start_hour] += 1
+            local_start_time = booking.start_time.astimezone(pytz.timezone('America/Edmonton'))
+            local_end_time = booking.end_time.astimezone(pytz.timezone('America/Edmonton'))
+            print(local_start_time.year, local_start_time.month, local_start_time.weekday())
+            print(local_end_time.year, local_end_time.month, local_end_time.weekday())
+            if local_start_time.weekday() + 1 == day:
+                start_hour = local_start_time.hour
+                end_hour = local_end_time.hour
+                print(start_hour, end_hour)
+                # If the start hour is between 8 and 20 (8 pm), increment the count for that hour
+                for hour in range(start_hour, end_hour + 1):
+                    hourly_bookings[hour] += 1
 
         # Convert the dictionary to a JSON object
         result = {
             "name": resource_item.name,
             "bookings": hourly_bookings
         }
+        # store the result in the cache for 5 minutes
+        cache.set(cache_key, result, 60 * 5)
         return result
 
     def average_booking_duration(scope="all", year=None, month=None, week=None):
