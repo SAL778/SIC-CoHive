@@ -87,7 +87,9 @@ function Statistics() {
 							//Preserve the existing month/year between swaps; don't reset the time values.
 							className = "timeRangeToggles"
 							options = {timeScopes}
-							onButtonClick = {setSelectedTimeScope}
+							onButtonClick = {(selection) => {
+								setSelectedTimeScope(selection)
+							}}
 						/>
 						{ (selectedTimeScope.value == 'month')
 							? <MonthPickerInput

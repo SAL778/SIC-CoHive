@@ -28,12 +28,11 @@ export function PeakTimesChart({timeScope, selectedMonth, selectedYear, assetTyp
 
     //Get the data for the dropdown
     useEffect(() =>  {
-        //console.log(assetType)
         httpRequest({
 			endpoint: `${host}/bookings/resources/filter?type=${assetType.value}`,
 			onSuccess: (data) => {
 				setDropdownContent(data.map(datum => datum.name));
-                setSelectedAsset(data[0]);
+                setSelectedAsset(data[0].name);
 			},
 		})
     }
@@ -41,7 +40,12 @@ export function PeakTimesChart({timeScope, selectedMonth, selectedYear, assetTyp
 
     //Get the data for the peak times (bar chart)
     useEffect(() => {
-        const queryParams = {resource: selectedAsset, day: selectedDay.value, scope: timeScope.value, month: selectedMonth, year: selectedYear + 1900}
+        const queryParams = {
+            resource: selectedAsset, 
+            scope: timeScope.value,
+            day: selectedDay.value,  
+            month: selectedMonth + 1, 
+            year: selectedYear + 1900}
         httpRequest({
             endpoint: `${host}/bookings/statistics/peak?${toQueryString(queryParams)}`,
             onSuccess: (statData) => {
@@ -62,8 +66,8 @@ export function PeakTimesChart({timeScope, selectedMonth, selectedYear, assetTyp
                     data={dropdownContent}
                     allowDeselect={false}
                     checkIconPosition="right"
-                    defaultValue={selectedAsset} //Default asset
-                    placeholder={`Select a${assetType.value == "equipment" ? "n equipment" : " room"}`}
+                    value={selectedAsset}
+                    //placeholder={`Select a${assetType.value == "equipment" ? "n equipment" : " room"}`}
                     onChange={(value) => setSelectedAsset(value)}
                     rightSection = {<i className="fa fa-caret-down text-orange-600"/>}
                     comboboxProps={{ transitionProps: { transition: 'skew-up', duration: 200 } }}
@@ -140,17 +144,14 @@ export function ResourcePopularityChart({timeScope, selectedMonth, selectedYear,
 
         //Get the data for the room popularity (pie chart)
         useEffect(() => {
-            const queryParams = {type: assetType.value, day: selectedDay.value, scope: timeScope.value, month: selectedMonth, year: selectedYear + 1900}
+            const queryParams = {type: assetType.value, day: selectedDay.value, scope: timeScope.value, month: selectedMonth + 1, year: selectedYear + 1900}
             httpRequest({
                 endpoint: `${host}/bookings/statistics/usage?${toQueryString(queryParams)}`,
                 onSuccess: (statData) => {
-                    console.table(statData) 
                     setGraphLabels(statData.map(statData => statData.name)) //Hour slots
                     setGraphData(statData.map(statData => statData.total_duration)) //Times booked
                 }
             })
-            // setGraphLabels(res.popularity.map(resource => resource.name))
-            // setGraphData(res.popularity.map(resource => resource.hours))
         }, [selectedDay, selectedMonth, selectedYear, assetType, timeScope])
 
         return (
