@@ -22,7 +22,7 @@ export default function EditProfile() {
 	const [isLoading, setLoading] = useState(true)
 
 	const onTextSubmit = (value) => {
-		console.log(value)
+		// console.log(value)
 		httpRequest({
 			endpoint: `${host}/users/${profileUser.id}/portfolio/`,
 			method: "PATCH",
