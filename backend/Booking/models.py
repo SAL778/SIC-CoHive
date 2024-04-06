@@ -88,6 +88,11 @@ class Booking(models.Model):
         return bookings, resource_item
 
     def resource_usage_hour(scope="all", year=None, month=None, day=None,type = None):
+        cache_key = f"resource_usage_hour_{scope}_{year}_{month}_{day}_{type}"
+        result = cache.get(cache_key)
+        if result:
+            return result
+
         bookings = Booking.objects.all()
 
         bookings, _ = Booking.get_bookingset_by_time_and_resource(scope, year, month, day)
@@ -104,6 +109,8 @@ class Booking(models.Model):
                 "name": item['resources__name'],
                 "total_duration": item['total_duration'] / timedelta(hours=1)
             })
+        # store the result in the cache for 5 minutes
+        cache.set(cache_key, result, 60 * 5)
         return result
 
 
