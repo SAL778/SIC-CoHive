@@ -35,7 +35,7 @@ const sicTheme = createTheme({
 
 function App() {
 	Modal.setAppElement("#root");
-	const [host] = useState("http://localhost:8000"); //Replace host here
+	const [host] = useState("http://localhost:8000/api"); //Replace host here
 	// http://[2605:fd00:4:1001:f816:3eff:fe3e:a382]
 	// const [host] = useState("http://[2605:fd00:4:1001:f816:3eff:fe3e:a382]"); //Replace host here
 	// const [host] = useState(
