@@ -23,7 +23,6 @@ const DraggableSlot = ({
 	const slotHeight = 24;
 
 	const maxSlot = selectedSlot.lastAvailableSlot - selectedSlot.index + 1;
-	console.log(maxSlot);
 
 	// Function to handle the end of dragging/resizing
 	const handleMouseUp = () => {

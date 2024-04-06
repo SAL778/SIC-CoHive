@@ -5,7 +5,7 @@ export default function ProfileHeader({ profileUser }) {
 				src={profileUser.profileImage}
 				alt={`Image of ${profileUser.first_name}`}
 				className={"rounded-lg mr-6 h-[96px] w-[96px] object-cover"}
-				referrerpolicy="no-referrer"
+				referrerPolicy="no-referrer"
 			/>
 			<div className="flex flex-col justify-between">
 				<div className="flex flex-col">

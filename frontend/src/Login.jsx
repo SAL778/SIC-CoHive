@@ -22,7 +22,7 @@ export default function Login({}) {
 			// Make an HTTP request to the Django view
 			const response = await axios.post(
 				// "http://localhost:8000/api/verify_google_jwt/",
-				`${host}/api/verify_google_jwt/`,
+				`${host}/verify_google_jwt/`,
 				{ jwt_token },
 				{
 					headers: {
@@ -39,8 +39,15 @@ export default function Login({}) {
 					endpoint: `${host}/users/profile/`, //Add the current user to localStorage
 					onSuccess: (userData) => {
 						localStorage.setItem("currentUser", JSON.stringify(userData));
-						window.location.href = "/bookings";
-						console.log("User data:", userData);
+
+						// Get the app links and store them in localStorage for dynamic links to forms/calendar
+						httpRequest({
+							endpoint: `${host}/applinks/`,
+							onSuccess: (linkData) => {
+								localStorage.setItem("appLinks", JSON.stringify(linkData));
+								window.location.href = "/bookings";
+							},
+						});
 					},
 				});
 			}
@@ -62,7 +69,7 @@ export default function Login({}) {
 						src={placeholder}
 						className="logo object-contain max-w-[300px]"
 						alt="Student Inovation Center"
-						referrerpolicy="no-referrer"
+						referrerPolicy="no-referrer"
 					/>
 					<div className="flex flex-col gap-40 items-center">
 						<div className="flex flex-col gap-6 items-center">
@@ -88,21 +95,3 @@ export default function Login({}) {
 		</>
 	);
 }
-
-const googleSignInClick = () => {
-	axiousInstance
-		.post(`/auth/token`, {
-			grant_type: "password",
-			// username: formData.email,
-			// password: formData.password,
-			username: "admin@sic.ca",
-			password: "123",
-			client_id: "I3yNEPHBZQ2NgZbvHGglMvkpSTYHaaKau8GamJkm",
-			client_secret:
-				"1kqWXBrFkxTHpECThcZkC3PcaxZmfibrQ4QzSSAynXXGChVQqMb0QLPg58TkZaUKTMuiU9zzihG9qSThHFz7IXYSBu5YoM2p2QhydT0uQak9IA2V2gQFrT4dmlaX094y",
-		})
-		.then((res) => {
-			localStorage.setItem("access_token", res.data.access_token);
-			localStorage.setItem("refresh_token", res.data.refresh_token);
-		});
-};

@@ -127,12 +127,12 @@ function Navigation({ mobileNav, setMobileNav }) {
 							alt="SIC logo"
 							width={250}
 							height={40}
-							referrerpolicy="no-referrer"
+							referrerPolicy="no-referrer"
 						/>
 					</a>
 					<div className="flex grow justify-between flex-col">
 						{/* NOTE: commented out until the positioning is fixed */}
-						{/* <img src={Underlay} className="nav-underlay" referrerpolicy="no-referrer"/> */}
+						{/* <img src={Underlay} className="nav-underlay" referrerPolicy="no-referrer"/> */}
 						<div className="nav-container">
 							{objects.map((object, index) => (
 								<React.Fragment key={object.content}>

@@ -7,8 +7,8 @@ from rest_framework import serializers
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.now())
-    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.now())
+    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.localtime(timezone.now()))
+    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.localtime(timezone.now()))
     user = serializers.SerializerMethodField("get_user")
     resources_name = serializers.CharField(source="resources.name", read_only=True)
     resource_type=serializers.CharField(source="resources.type", read_only=True)
@@ -124,15 +124,23 @@ class BookingStatisticsSerializer(serializers.Serializer):
     year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
     month = serializers.IntegerField(required=False, min_value=1, max_value=12,default=timezone.now().month)
     week = serializers.IntegerField(required=False, min_value=1, max_value=53)
-    
+
     
 class BookingFrequencyFilterSerializer(serializers.Serializer):
-    scope=serializers.ChoiceField(choices=['all','week','month','year'],required=False,default='all')
-    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
-    month = serializers.IntegerField(required=False, min_value=1, max_value=12)
-    week = serializers.IntegerField(required=False, min_value=1, max_value=53)
-    
-    
+    resource = serializers.CharField(required=True)
+    scope = serializers.ChoiceField(choices=['all', 'day', 'month', 'year'], required=False, default='all')
+    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.localtime(timezone.now()).year)
+    month = serializers.IntegerField(required=False, min_value=1, max_value=12, default=timezone.localtime(timezone.now()).month)
+    day = serializers.IntegerField(required=False, min_value=1, max_value=7, default=timezone.localtime(timezone.now()).weekday() + 1)
+
+class ResourceUsageHourSerializer(serializers.Serializer):
+    type = serializers.CharField(required=True)
+    scope = serializers.ChoiceField(choices=['all', 'day', 'month', 'year'], required=False, default='month')
+    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.localtime(timezone.now()).year)
+    month = serializers.IntegerField(required=False, min_value=1, max_value=12, default=timezone.localtime(timezone.now()).month)
+    day = serializers.IntegerField(required=False, min_value=1, max_value=7, default=timezone.localtime(timezone.now()).weekday() + 1)
+
+
 class AverageBookingDurationSerializer(serializers.Serializer):
     scope=serializers.ChoiceField(choices=['all','week','month','year'],required=False,default='all')
     year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)

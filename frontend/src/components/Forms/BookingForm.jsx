@@ -203,7 +203,7 @@ function BookingFormComponent({
 				<img
 					src={currentBooking?.image ?? fallbackAssetImage}
 					className="booking-image rounded-md object-cover"
-					referrerpolicy="no-referrer"
+					referrerPolicy="no-referrer"
 				/>
 				<div className="booking-modal-options flex flex-col space-between justify-between">
 					<div className="roomInfo">
@@ -316,7 +316,7 @@ function BookingFormComponent({
 							<img
 								src={form.values?.user?.profileImage ?? fallbackProfileImage}
 								className="rounded-md w-16 h-16 object-cover"
-								referrerpolicy="no-referrer"
+								referrerPolicy="no-referrer"
 							/>
 							<div className="max-w-[180px] overflow-hidden">
 								<p className="text-neutral-700 text-sm truncate">
