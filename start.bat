@@ -1,4 +1,5 @@
 @REM WINDOWS BATCH FILE
+@REM run the start.bat file to start the servers for the project
 
 @echo off
 REM Setup Backend
