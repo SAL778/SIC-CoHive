@@ -413,11 +413,6 @@ const getTimePeriods = (interval, startHour, endHour) => {
 		// Convert current interval to hours and minutes
 		let hours = Math.floor(i / 60);
 		const minutes = i % 60 === 0 ? "00" : i % 60; // Adjusted for 15-minute intervals
-	// Loop through each interval
-	for (let i = startHour * 60; i <= endHour * 60; i += interval) {
-		// Convert current interval to hours and minutes
-		let hours = Math.floor(i / 60);
-		const minutes = i % 60 === 0 ? "00" : i % 60; // Adjusted for 15-minute intervals
 
 		// Determine AM/PM
 		const ampm = hours >= 12 ? "PM" : "AM";
