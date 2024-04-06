@@ -13,7 +13,7 @@ function CommunityCard({ userID, firstName, lastName, imageUrl }) {
 				className="w-full shadow-custom"
 				src={imageUrl || defaultImage}
 				alt={`${firstName} ${lastName}`}
-				referrerpolicy="no-referrer"
+				referrerPolicy="no-referrer"
 			/>
 			<div className="card-info">
 				<p className="info-first text-navy-blue text-lg font-semibold">
