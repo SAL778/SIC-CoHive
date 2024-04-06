@@ -53,9 +53,14 @@ export async function httpRequest({
             onSuccess()
         }
         else if (res.ok) {
-            res.json().then(data => {
-                onSuccess(data)
-            });
+            try {
+                res.json().then(data => {
+                    onSuccess(data)
+                });
+            }
+            catch(e) {
+                console.log(e)
+            }
         }
         else {
             onFailure(res)
@@ -64,6 +69,19 @@ export async function httpRequest({
     catch (e) {
         onError(e)
     } 
+}
+
+/**
+ * 
+ * @param {Object} queryParams 
+ */
+export function toQueryString(queryParams){
+    const queryString = Object.entries(queryParams)
+    .filter(([key, value]) => value !== null && value !== undefined && value !== '') // Filtering out null, undefined, and empty string values
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+    .join('&');
+
+    return queryString
 }
 
 

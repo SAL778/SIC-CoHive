@@ -1,22 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { httpRequest } from "./utils.js";
-import { HostContext } from "./App.jsx";
 
 function Feedback() {
-	const { host } = useContext(HostContext);
-	const [feedbackLink, setFeedbackLink] = useState("");
 	const [iframeWidth, setIframeWidth] = useState(1000);
 	const [iframeHeight, setIframeHeight] = useState(window.innerHeight - 60);
 
-	useEffect(() => {
-		httpRequest({
-			endpoint: `${host}/applinks/`,
-			onSuccess: (data) => {
-				const feedbackLink = data[0]?.feedback_form_link || "";
-				setFeedbackLink(feedbackLink);
-			},
-		});
-	}, []);
+	const feedbackLink = JSON.parse(localStorage.getItem("appLinks"))[0].feedback_form_link;
 
 	useEffect(() => {
 		const handleResize = () => {

@@ -231,9 +231,6 @@ const Column = ({ column, onBookingEdit }) => {
 		const startTime = parseTimeRange(timeSlot.display_time)[0];
 
 		// Loop through the timeslots and find the index_number of the selected slot until we hit a booking which will not have this
-		console.log(timeSlot);
-		console.log(timeslots);
-
 		const indexOfNextBooking = timeslots.findIndex((slot) => {
 			const slotStartTime = parseTimeRange(slot.display_time)[0];
 			return (
@@ -291,7 +288,7 @@ const Column = ({ column, onBookingEdit }) => {
 							}`}
 							alt="Resource Image"
 							className="w-[50px] h-[50px] ml-4"
-							referrerpolicy="no-referrer"
+							referrerPolicy="no-referrer"
 						/>
 					)} */}
 				</div>

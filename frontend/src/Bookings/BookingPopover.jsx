@@ -47,7 +47,7 @@ export default function BookingPopover({
 						className="w-24 h-24 rounded-md"
 						src={properURL(assetImage) || imageFallback}
 						alt={assetName}
-						referrerpolicy="no-referrer"
+						referrerPolicy="no-referrer"
 					/>
 					<p className="text-lg font-medium">{assetDescription}</p>
 

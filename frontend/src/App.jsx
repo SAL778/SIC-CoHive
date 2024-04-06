@@ -10,7 +10,7 @@ import Navigation from "./components/Navbar.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Bookings from "./Bookings.jsx";
 import Events from "./Events.jsx";
-import Statistics from "./Statistics.jsx";
+import Statistics from "./Statistics/Statistics.jsx";
 import EditProfile from "./Profile/EditProfile.jsx";
 import ViewProfile from "./Profile/ViewProfile.jsx";
 import Signout from "./Signout.jsx";

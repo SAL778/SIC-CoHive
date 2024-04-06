@@ -11,6 +11,9 @@ function Events() {
 	const fallbackImage =
 		"https://www.ualberta.ca/science/media-library/news/2018/sep/student-innovation-centre-launch.jpg";
 
+	const googleCalendar = JSON.parse(localStorage.getItem("appLinks"))[0].google_calendar_link;
+	const eventFormLink = JSON.parse(localStorage.getItem("appLinks"))[0].event_form_link;
+
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [eventsData, setEventsData] = useState([]);
 	const [events, setEvents] = useState([]); //Populates carousel
@@ -26,9 +29,6 @@ function Events() {
 		}, 200);
 	};
 
-	// const response = await fetch(`${host}/users/profile/`, {
-	// 	method: "GET",
-	// });
 
 	const fetchEvents = async (selectedDate) => {
 		try {
@@ -98,7 +98,7 @@ function Events() {
 				type="button"
 				onClick={() => {
 					window.open(
-						"https://docs.google.com/forms/d/e/1FAIpQLScYKmCIZ-luPldziOwUIxCbeQUbyROSl0MAlRXcFQW1ZJOMPQ/viewform?usp=sharing",
+						`${eventFormLink}`,
 						"_blank"
 					);
 				}}
@@ -108,7 +108,7 @@ function Events() {
 			</button>
 			<div className="calendarContainer">
 				<iframe
-					src="https://embed.styledcalendar.com/#QsoYY1jHXbqoa6iOHxZi"
+					src={googleCalendar}
 					title="Styled Calendar"
 					className="calendarFrame styled-calendar-container"
 					style={{ width: "100%", height: "675px", border: "none" }}
@@ -151,7 +151,7 @@ function Events() {
 								// Placeholder image for testing and broke image issue
 								// src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjDD0mkEw4XGHCeOLfDy4X-w3M_12FIJJ9x1fNsYzZBD5vAC_Nppn4uPAWtHNNHMvno6aRYMrq8PAiq95D0WXNXNA6t_T5z2sFaeo7BHxdE-L44QACEDNOQ5jDO7_tP1QthkF_hVvX9gact/s400/Makemake+moon+-+Hubble+NASA.jpg"
 								className="object-cover w-full h-full"
-								referrerpolicy="no-referrer"
+								referrerPolicy="no-referrer"
 							/>
 						</div>
 					</div>
