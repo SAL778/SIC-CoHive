@@ -31,15 +31,18 @@
 
 .right-col {
     display: flex;
-    font-size: 1
-    rem;
+    font-size: 1rem;
     align-items: flex-start;
     flex-direction: column;
-    justify-content: space-between; /* Aligns content to top and button to bottom */
+    justify-content: space-between; 
 }
 
+.right-col-buttons{
+    display: flex;
+    white-space: nowrap;
+}
 .contact-button {
     color: #EA580C;
-    align-self: flex-end; /* Aligns the button to the right (end) of the column */
-    padding: 10px 20px; /* Adjust button padding as needed */
+    align-self: flex-end;
+    padding: 10px 20px; 
 }
