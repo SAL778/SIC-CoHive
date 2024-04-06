@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { NavigationContext } from "./App.jsx";
 import "./404.css";
 
-function FOF({}) {
+function FOF() {
     const navigate = useNavigate();
     const { showNavigation, setShowNavigation } = useContext(NavigationContext);
     const handleBackClick = () => {
