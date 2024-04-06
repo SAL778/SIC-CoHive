@@ -26,7 +26,7 @@ urlpatterns = [
     path("api/bookings/", include("Booking.urls")),
     # path('accounts/', include('allauth.urls')),
     path('api/accounts/profile/', custom_login_redirect, name='custom-login-redirect'),
-    re_path(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    re_path(r'^api/docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path("api/applinks/", AppLinkList.as_view(), name="app-link-list"),
 
     #gdrive
