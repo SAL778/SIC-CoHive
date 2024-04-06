@@ -21,16 +21,18 @@
     padding: 20px;
     background-color: #f7f7f7;
     border-radius: 12px;
+    gap: 30px;
 }
 
-.left-col{
+.left-col h1{
     color: #EA580C;
-    font-size: 12rem;
+    font-size: 10rem;
 }
 
 .right-col {
     display: flex;
-    font-size: 1.2rem;
+    font-size: 1
+    rem;
     align-items: flex-start;
     flex-direction: column;
     justify-content: space-between; /* Aligns content to top and button to bottom */

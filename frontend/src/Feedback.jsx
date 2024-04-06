@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
 import { httpRequest } from "./utils.js";
-import { HostContext } from "./App.jsx";
+import { NavigationContext, HostContext } from "./App.jsx";
 
 function Feedback() {
 	const { host } = useContext(HostContext);
 	const [feedbackLink, setFeedbackLink] = useState("");
 	const [iframeWidth, setIframeWidth] = useState(1000);
 	const [iframeHeight, setIframeHeight] = useState(window.innerHeight - 60);
+
+	const { setShowNavigation } = useContext(NavigationContext);
+
+    useEffect(() => {
+        setShowNavigation(true);
+    }, []);
 
 	useEffect(() => {
 		httpRequest({
