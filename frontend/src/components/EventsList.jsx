@@ -1,11 +1,14 @@
 import React from "react";
 
-export default function EventList({ event }) {
+export default function EventList({ event, onItemClick }) {
 	const buildingName = event.location
 		? event.location.split(",")[0]
 		: "No location";
 	return (
-		<div className="list-booking-item flex items-center py-4 px-[30px] rounded-md cursor-pointer shadow-custom">
+		<div 
+			className="list-booking-item flex items-center py-4 px-[30px] rounded-md cursor-pointer shadow-custom"
+			onClick = {() => onItemClick(event)}
+		>
 			<div className="desktop-1-3 text-neutral-800">
 				<h3
 					className="large-text-mobile font-semibold capitalize leading-[1]"
