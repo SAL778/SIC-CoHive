@@ -85,6 +85,12 @@ export function toQueryString(queryParams){
 }
 
 
+export const toProperImageURL = (sharedImageLink) =>
+		`https://drive.google.com/thumbnail?id=${
+			sharedImageLink?.split("/d/")[1]?.split("/view")[0]
+		}` || null;
+
+
 /**
  * PRNG Color Generator based on a string
  */
