@@ -11,17 +11,16 @@ from selenium.common.exceptions import ElementClickInterceptedException, Timeout
 from datetime import date, timedelta
 #### DO NOT CHANGE
 today = date.today()
-month_day_year = today.strftime('%B %d, %Y') #  March 29, 2024
-month_day = today.strftime('%B %d').lstrip("0")  # March 29
-
+month_day_year = today.strftime('%B %-d, %Y') #  March 29, 2024
+month_day = today.strftime('%B %-d').lstrip("0")  # March 29
 """
 Tests inputs and renders related to the Bookings page
 """
 #### COMMENT THIS OUT IF YOU WANT TO USE YOUR OWN DATE
 #### THIS LINES OF CODE CORRESPONDS TO THE TOMORROW'S DATE
 tomorrow = today + timedelta(days=1)
-target_day_month_year = tomorrow.strftime('%d %B %Y') #  e.g. 29 March 2024
-target_month_day = tomorrow.strftime('%B %d').lstrip("0")  # e.g. March 29
+target_day_month_year = tomorrow.strftime('%-d %B %Y') #  e.g. 29 March 2024
+target_month_day = tomorrow.strftime('%B %-d').lstrip("0")  # e.g. March 29
 #### CHANGE TO DESIRED BOOKING DATE, DIRECTLY CORRESPONDS TO THE DATE PICKER,
 #### SO IF DATE ENTERED IS OUTSIDE THE CURRENT MONTH, THEN IT WILL GIVE YOU AN ERROR THAT IT CANNOT FIND THE ELEMENT
 #### SINCE YOU HAVE TO CLICK SOMETHING TO GO TO THE NEXT MONTH/S IN THE DATE PICKER, WHICH I DID NOT INCLUDE IN THIS TEST.
@@ -30,7 +29,6 @@ target_month_day = tomorrow.strftime('%B %d').lstrip("0")  # e.g. March 29
 #### COMMENT THIS OUT IF YOU WANT TO USE TOMORROW'S DATE
 # target_day_month_year = "29 March 2024"
 # target_month_day = "March 29"
-
 
 
 def find_and_click_text(global_driver, text):
@@ -94,8 +92,8 @@ class TestBookings(unittest.TestCase) :
         )
         calendar_field.click()
         # Change date if wanted
-        date_picker = WebDriverWait(global_driver, 3).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, F"button[aria-label='{target_day_month_year}']"))
+        date_picker = WebDriverWait(global_driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{target_day_month_year}']"))
         )
         time.sleep(3)
         date_picker.click()

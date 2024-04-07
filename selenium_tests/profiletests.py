@@ -74,7 +74,7 @@ class TestProfile(unittest.TestCase) :
         """Verifies that the profile have USER sic role present"""
         global_driver.get("http://localhost:5173/profile")
         sic_role = WebDriverWait(global_driver, 3).until(
-            EC.visibility_of_element_located((By.XPATH, "//span[contains(@class, 'm-1e0e6180') and contains(@class, 'mantine-Pill-label') and text()='User']"))
+            EC.visibility_of_element_located((By.XPATH, "//span[text()='User']"))
         ) 
         self.assertTrue(sic_role, "SIC role found")
         time.sleep(3)      

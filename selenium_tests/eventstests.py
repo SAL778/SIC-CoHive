@@ -11,8 +11,8 @@ from selenium.common.exceptions import ElementClickInterceptedException, Timeout
 from datetime import date, timedelta
 #### DO NOT CHANGE
 today = date.today()
-month_day_year = today.strftime('%B %d, %Y') #  March 29, 2024
-month_day = today.strftime('%B %d').lstrip("0")  # March 29
+month_day_year = today.strftime('%B %-d, %Y') #  March 29, 2024
+month_day = today.strftime('%B %-d').lstrip("0")  # March 29
 """
 Tests inputs and renders related to the events page
 """
@@ -37,6 +37,13 @@ class TestRouting(unittest.TestCase) :
         global_driver.get("http://localhost:5173/events")
         time.sleep(1)
         global_driver.switch_to.frame(global_driver.find_element(By.TAG_NAME, "iframe"))
+        # <button type="button" title="Previous" aria-pressed="false" class="fc-prev-button fc-button fc-button-primary"><span class="fc-icon fc-icon-chevron-left"></span></button>
+        prev_button = global_driver.find_element(By.XPATH, "//button[contains(@class, 'fc-prev-button')]")
+        prev_button.click()
+        time.sleep(2)
+        global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
+        time.sleep(1)
+        global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
         event_link = global_driver.find_element(By.XPATH, "//a[contains(@class, 'fc-daygrid-event') and .//div[@class='fc-event-time' and text()='1p'] and .//div[@class='fc-event-title' and text()='meet again test']]")
         time.sleep(3)
         event_link.click()
@@ -58,17 +65,16 @@ class TestRouting(unittest.TestCase) :
         big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
         big_date.click()
         calendar_field = WebDriverWait(global_driver, 3).until(
-            # UPDATE TO TODAYS DATE TO WORK
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='21 March 2024']"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='4 April 2024']")) # CHECKS THE EVENT IN APRIL 4TH 2024
         )
         time.sleep(3)
         calendar_field.click()
-        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='March 21']")
+        back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='April 4']") # CHECKS THE EVENT IN APRIL 4TH 2024
         time.sleep(3)
         back_to_big_date.click()
         
         live_det = WebDriverWait(global_driver, 2).until(
-            EC.presence_of_element_located((By.XPATH, "//h3[contains(@class, 'large-text-mobile font-semibold capitalize leading-[1]') and contains(text(), 'meet again test')]"))
+            EC.presence_of_element_located((By.XPATH, "//h3[contains(@class, 'large-text-mobile font-semibold capitalize leading-[1]') and contains(text(), 'another event')]")) # CHECKS THE EVENT IN APRIL 4TH 2024
         )
         self.assertTrue(live_det, "Live update not working")
         time.sleep(2)
@@ -78,7 +84,7 @@ class TestRouting(unittest.TestCase) :
         global_driver.get("http://localhost:5173/events")
         time.sleep(2)
         title = WebDriverWait(global_driver, 3).until(
-            EC.presence_of_element_located((By.XPATH, "//h2[contains(@class, 'title') and contains(text(), 'SIC Birthday!')]"))
+            EC.presence_of_element_located((By.XPATH, "//h2[contains(@class, 'title') and contains(text(), 'SIC Links')]"))
         )
         # print(title.text)
         self.assertTrue(title, "Events carousel not showing up")
@@ -89,11 +95,11 @@ class TestRouting(unittest.TestCase) :
         global_driver.get("http://localhost:5173/events")
         time.sleep(2)
         title = WebDriverWait(global_driver, 3).until(
-            EC.presence_of_element_located((By.XPATH, "//h2[contains(@class, 'title') and contains(text(), 'SIC Birthday!')]"))
+            EC.presence_of_element_located((By.XPATH, "//h2[contains(@class, 'title') and contains(text(), 'SIC Links')]"))  # CHECKS THE UPCOMING EVENT
         )
         title.click()
         details = WebDriverWait(global_driver, 3).until(
-            EC.presence_of_element_located((By.XPATH, "//p[contains(@class, 'mt-10') and contains(text(), 'test')]"))
+            EC.presence_of_element_located((By.XPATH, "//p[contains(@class, 'mt-10') and contains(text(), 'Testing Out SIC Links')]")) # CHECKS THE UPCOMING EVENT
         )
         
         self.assertTrue(details, "Events carousel not accessible")
