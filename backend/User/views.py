@@ -14,6 +14,9 @@ from rest_framework.views import APIView
 from django.contrib.auth import logout
 from google.auth.transport import requests
 from google.oauth2 import id_token
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 @api_view(['POST'])
 def verify_google_jwt(request):
@@ -21,7 +24,8 @@ def verify_google_jwt(request):
     This function verifies the JWT token provided by Google and creates a new user if it doesn't exist.
     '''
     # Replace 'your-client-id-from-google-console' with your actual Google client ID
-    client_id = '738911792381-du1hc1l4go32tj2iunbnufo6qf9h0u7v.apps.googleusercontent.com'
+    # client_id = '738911792381-du1hc1l4go32tj2iunbnufo6qf9h0u7v.apps.googleusercontent.com'
+    client_id = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
     
     # Get the JWT token from the request (e.g., from the Authorization header)
     jwt_token = request.data.get('jwt_token')
