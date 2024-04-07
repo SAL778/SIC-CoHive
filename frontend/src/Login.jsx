@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import placeholder from "./assets/placeholder-logo.png";
+import placeholder from "./assets/sic_logo.png";
 import "./Login.css";
 import { NavigationContext } from "./App.jsx";
 import axiousInstance from "./axios.js";
