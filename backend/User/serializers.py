@@ -5,7 +5,7 @@ from django.db import transaction
 class AppLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppLink
-        fields = ['feedback_form_link', 'event_form_link', 'google_drive_link', 'google_calendar_link']
+        fields = ['feedback_form_link', 'event_submission_form_link', 'google_drive_link', 'google_calendar_link']
 
 class FlairRoleSerializer(serializers.ModelSerializer):
     class Meta:
