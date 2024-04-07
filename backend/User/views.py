@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import json
 from django.shortcuts import get_object_or_404, HttpResponse
 from rest_framework.decorators import api_view
@@ -23,8 +24,6 @@ def verify_google_jwt(request):
     '''
     This function verifies the JWT token provided by Google and creates a new user if it doesn't exist.
     '''
-    # Replace 'your-client-id-from-google-console' with your actual Google client ID
-    # client_id = '738911792381-du1hc1l4go32tj2iunbnufo6qf9h0u7v.apps.googleusercontent.com'
     client_id = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
     
     # Get the JWT token from the request (e.g., from the Authorization header)
@@ -41,7 +40,6 @@ def verify_google_jwt(request):
         user = CustomUser.objects.filter(email=id_info['email']).first()
 
         if not user:
-
             # Create a new user if it doesn't exist
             user = CustomUser.objects.create(
                 username=id_info['email'],
@@ -52,21 +50,35 @@ def verify_google_jwt(request):
             )
 
         token, created = Token.objects.get_or_create(user=user)
+
+        # Reset the token if it already exists to hand out a new one
+        if not created:
+            token.delete()
+            token = Token.objects.create(user=user)
+
         access_token = str(token.key)
-        # print("access_token",access_token)
+        print("access_token",access_token)
         response = HttpResponse('Authentication successful')
-        response.set_cookie('access_token', access_token)
+        # Set the access token as a cookie with a max age of 86400 seconds which is 24 hours
+        response.set_cookie('access_token', access_token, max_age=86400)
         response.status_code = 200
         return response
 
     except ValueError as e:
         return JsonResponse({'error': f'JWT verification failed: {str(e)}'}, status=401)
 
+@swagger_auto_schema(method='get', operation_description="Verify the expiry of the access token.", responses={200: 'Token is valid', 401: 'Invalid token'})
+@api_view(['GET'])    
+def verify_token_expiry(request):
+    user = get_user_from_token(request)
+    if user:
+        return Response({'message': 'Token is valid'})
+    else:
+        return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+
 def get_user_from_token(request):
     try:
-        # print("request.META['HTTP_AUTHORIZATION']")
         access_token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
-        # print("access" ,access_token)
         token_obj = Token.objects.get(key=access_token)
         user = token_obj.user
         return user
@@ -95,28 +107,6 @@ def signout_view(request):
 
     return response
 
-
-def custom_login_redirect(request):
-    user = request.user  # Assuming the user is already authenticated
-
-    if user.is_authenticated:
-        token, created = Token.objects.get_or_create(user=user)
-        access_token = str(token.key)
-        
-        response = HttpResponse('Authentication successful')
-        response.set_cookie(
-            'access_token',
-            access_token,
-            # httponly=True,  # Makes the cookie HTTPOnly
-            # secure=True,  # Ensure you're using HTTPS
-            max_age=3600  # Cookie expiration time (in seconds)
-        )
-        response['Location'] = 'http://localhost:5173/bookings'
-        response.status_code = 302  # Redirect status code
-        return response
-    else:
-        return HttpResponseBadRequest('User is not authenticated.')
-
 @swagger_auto_schema(method='get', operation_description="Get the profile of the authenticated user.", responses={200: CustomUserSerializer})
 @api_view(['GET'])
 def user_profile(request):
@@ -129,17 +119,14 @@ def user_profile(request):
     Returns:
     - A Response object with serialized data of the authenticated user if the access token is valid, otherwise a Response object with an error message.
     """
-    # try:
-    #     access_token = request.META['HTTP_AUTHORIZATION']
-    #     token_obj = Token.objects.get(key=access_token)
-    #     user = token_obj.user
 
     user = get_user_from_token(request)
+    if isinstance(user, Response):
+        return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+    
     # Serialize the user data using your CustomUserSerializer
     serializer = CustomUserSerializer(user)
     return Response(serializer.data)
-    # except Exception as e:
-    #     return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])
@@ -314,22 +301,6 @@ class PortfolioItemList(generics.ListCreateAPIView):
                 serializer.save(portfolio=portfolio)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    # def patch(self, request, *args, **kwargs):
-    #     user_id = self.kwargs['user_id']
-    #     user = get_object_or_404(CustomUser, pk=user_id)
-    #     user1=get_user_from_token(request)
-    #     if user != user1:
-    #         return Response({'error': 'You do not have permission to update a portfolio item.'}, status=status.HTTP_401_UNAUTHORIZED)
-    #     else:
-    #         portfolio = self.get_object()
-    #         serializer = self.get_serializer(portfolio, data=request.data, partial=True)
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             return Response(serializer.data)
-    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    
 
 
 class PortfolioItemDetail(APIView):
@@ -343,6 +314,10 @@ class PortfolioItemDetail(APIView):
     def put(self, request, pk):
         obj = get_object_or_404(PortfolioItem, pk=pk)
         user = get_user_from_token(request)
+
+        if isinstance(user, Response):
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+
         if obj.portfolio.user != user:
             return Response({'error': 'You do not have permission to update this portfolio item.'}, status=status.HTTP_401_UNAUTHORIZED)
         serializer = PortfolioItemSerializer(obj, data=request.data)
@@ -355,6 +330,10 @@ class PortfolioItemDetail(APIView):
     def patch(self, request, pk):
         obj = get_object_or_404(PortfolioItem, pk=pk)
         user = get_user_from_token(request)
+
+        if isinstance(user, Response):
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+
         if obj.portfolio.user != user:
             return Response({'error': 'You do not have permission to partially update this portfolio item.'}, status=status.HTTP_401_UNAUTHORIZED)
         serializer = PortfolioItemSerializer(obj, data=request.data, partial=True)
@@ -367,6 +346,10 @@ class PortfolioItemDetail(APIView):
     def delete(self, request, pk):
         obj = get_object_or_404(PortfolioItem, pk=pk)
         user = get_user_from_token(request)
+
+        if isinstance(user, Response):
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+
         if obj.portfolio.user != user:
             return Response({'error': 'You do not have permission to delete this portfolio item.'}, status=status.HTTP_401_UNAUTHORIZED)
         obj.delete()
@@ -391,6 +374,10 @@ class FlairList(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         user = get_user_from_token(request)
+
+        if isinstance(user, Response):
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+
         if user.is_staff:
             return super().post(request, *args, **kwargs)
         else:
