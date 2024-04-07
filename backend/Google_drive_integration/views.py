@@ -5,6 +5,9 @@ from .google_sheets_api import initialize_sheets_client
 from .google_calendar_api import initialize_calendar_client
 import datetime
 import urllib.parse
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # Create your views here.
 
@@ -86,7 +89,7 @@ def fetch_calendar_events(request):
         selected_date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
     else:
         selected_date = datetime.date.today()
-    ical_url = "https://calendar.google.com/calendar/ical/6d3dcedc29c2a223c343cce8ec9ed5f309fd197f0805cb7f4bd79852d304d57c%40group.calendar.google.com/public/basic.ics"
+    ical_url = os.getenv("CALENDAR_ICAL_URL")
     
     calendar_id_encoded = ical_url.split("/ical/")[1].split("/public")[0]    # Extract the calendar ID and decode it
     calendar_id = urllib.parse.unquote(calendar_id_encoded)
