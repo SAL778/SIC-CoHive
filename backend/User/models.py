@@ -89,6 +89,9 @@ class AppLink(models.Model):
     event_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the events form")
     google_drive_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Google Drive")
     google_calendar_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Google Calendar")
+    event_image_folder_id = models.CharField(max_length=200, blank=True, null=True, help_text="The folder ID of the event images in Google Drive")
+    spreadsheet_id = models.CharField(max_length=200, blank=True, null=True, help_text="The ID of the spreadsheet in Google Sheets")
+    google_calendar_events_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Google Calendar events")
 
     def __str__(self):
         return "App Link"
