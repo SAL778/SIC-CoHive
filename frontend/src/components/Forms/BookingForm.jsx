@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { TextInput, Textarea, Checkbox, Select, Text } from "@mantine/core";
 import { TimeInput, DatePickerInput } from "@mantine/dates";
 import "./form.css";
-import { httpRequest } from "../../utils.js";
+import { httpRequest, toProperImageURL } from "../../utils.js";
 
 export default BookingFormComponent;
 
@@ -45,11 +45,12 @@ function BookingFormComponent({
 	const interval = 15;
 	const timeRange = [7, 20]; //Opening times are between 7AM and 8PM
 
-	const allTimeSlots = getTimePeriods(interval, ...timeRange);
-	//Initial booking time slots
-	const [availableTimeSlots, setAvailableTimeSlots] = useState(allTimeSlots);
-	//Store booked slots for faster validation
-	const [disabledTimeSlots, setDisabledTimeSlots] = useState([]);
+    const allTimeSlots = getTimePeriods(interval, ...timeRange)
+    //Initial booking time slots
+    const [availableTimeSlots, setAvailableTimeSlots] = useState(allTimeSlots)
+    //Store booked slots for faster validation
+    const [disabledTimeSlots, setDisabledTimeSlots] = useState([])
+    const [resourceImageSrc, setResourceImageSrc] = useState(null)
 
 	//TODO: Change the resources ID from 1 to something else later.
 	const form = useForm({
@@ -138,59 +139,39 @@ function BookingFormComponent({
 				(asset) => asset.name === form.values.resources_name
 			);
 
-			httpRequest({
-				endpoint: `${host}/bookings/columns/${
-					selectedAsset.id
-				}/?date=${backendRepresentationOfDate(currentDate)}`,
-				onSuccess: (data) => {
-					//Unique 15 min intervals
-					if (data.bookings) {
-						const todaysBookings = data.bookings.filter(
-							(booking) =>
-								currentDate.getDay() === new Date(booking.start_time).getDay()
-						);
-						const bookedTimeSlots = [];
-						for (const booking of todaysBookings) {
-							let bookedTimes = getTimePeriods(
-								interval,
-								dateToTimePeriod(booking.start_time),
-								dateToTimePeriod(booking.end_time)
-							); //Booked 15 min intervals
-							console.log(booking.start_time);
-							if (
-								selectedAsset.name == booking.resources_name &&
-								currentBooking
-							) {
-								const validBookingTimes = new Set(
-									getTimePeriods(
-										interval,
-										dateToTimePeriod(
-											"T" + serializeTime(currentBooking.start_time)
-										),
-										dateToTimePeriod(
-											"T" + serializeTime(currentBooking.end_time)
-										)
-									)
-								); //Timeslots taken by the item being edited.
-								bookedTimes = bookedTimes.filter(
-									(timeSlot) => !validBookingTimes.has(timeSlot)
-								);
-							}
-							bookedTimeSlots.push(...bookedTimes);
-						}
-						setDisabledTimeSlots(bookedTimeSlots); //Store for future validation
-						setAvailableTimeSlots(
-							allTimeSlots.map((timeSlot) =>
-								bookedTimeSlots.includes(timeSlot)
-									? { value: timeSlot, label: timeSlot, disabled: true }
-									: { value: timeSlot, label: timeSlot, disabled: false }
-							)
-						);
-					}
-				},
-			});
-		}
-	}, [form.values.resources_name]);
+            httpRequest({
+                endpoint: `${host}/bookings/columns/${selectedAsset.id}/?date=${backendRepresentationOfDate(currentDate)}`,
+                onSuccess: (data) => {            //Unique 15 min intervals
+                    if (data.bookings)  {
+                        //Update the booking image
+                        setResourceImageSrc(data.image)
+                        const todaysBookings = data.bookings.filter((booking) => (currentDate.getDay() === new Date(booking.start_time).getDay()));
+                        const bookedTimeSlots = []
+                        for (const booking of todaysBookings) {
+                            let bookedTimes = getTimePeriods(interval, dateToTimePeriod(booking.start_time), dateToTimePeriod(booking.end_time));  //Booked 15 min intervals
+                            console.log(booking.start_time)
+                            if (selectedAsset.name == booking.resources_name && currentBooking) {
+                                const validBookingTimes = new Set(
+                                    getTimePeriods(interval, 
+                                        dateToTimePeriod('T' + serializeTime(currentBooking.start_time)), 
+                                        dateToTimePeriod('T' + serializeTime(currentBooking.end_time)))) //Timeslots taken by the item being edited.
+                                bookedTimes = bookedTimes.filter(timeSlot => !validBookingTimes.has(timeSlot))
+                            }
+                            bookedTimeSlots.push(...bookedTimes)
+                        }
+                        setDisabledTimeSlots(bookedTimeSlots)           //Store for future validation
+                        setAvailableTimeSlots(allTimeSlots.map((timeSlot) => (
+                            bookedTimeSlots.includes(timeSlot) 
+                            ? {value: timeSlot, label: timeSlot, disabled: true}
+                            : {value: timeSlot, label: timeSlot, disabled: false}
+                            )
+                        )
+                    );
+                }
+                }
+            })
+        }   
+    }, [form.values.resources_name])
 
 	return (
 		// values represents the booking object
@@ -201,9 +182,9 @@ function BookingFormComponent({
 		>
 			<div className="upperSection flex justify-between gap-4">
 				<img
-					src={currentBooking?.image ?? fallbackAssetImage}
+					src={toProperImageURL(resourceImageSrc) || currentBooking?.image || fallbackAssetImage}
 					className="booking-image rounded-md object-cover"
-					referrerpolicy="no-referrer"
+					referrerPolicy="no-referrer"
 				/>
 				<div className="booking-modal-options flex flex-col space-between justify-between">
 					<div className="roomInfo">
@@ -316,7 +297,7 @@ function BookingFormComponent({
 							<img
 								src={form.values?.user?.profileImage ?? fallbackProfileImage}
 								className="rounded-md w-16 h-16 object-cover"
-								referrerpolicy="no-referrer"
+								referrerPolicy="no-referrer"
 							/>
 							<div className="max-w-[180px] overflow-hidden">
 								<p className="text-neutral-700 text-sm truncate">
@@ -420,6 +401,7 @@ const deserializeTime = (timestring) => {
  * @param {number} endHour - A positive number that represents the start time in 24 hour format (e.g 15.5 = 3:30 PM)
  * @see dateToHoursFloat - A helper function that can be used for date conversion.
  *
+ *
  * @returns - An array of intervals, bookended by the start hour and end hour inclusive.
  */
 
@@ -451,6 +433,7 @@ const getTimePeriods = (interval, startHour, endHour) => {
  *  @param {string} date - a string representing the date convertable to a date object
  *  @param {[hours, minutes]} date - An array representing the times as an hour minute array.
  *  @see getTimePeriods - The function that consumes time periods as arguments.
+ *
  *
  *  @returns hours, minutes
  */

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { DatePickerInput } from "@mantine/dates";
 import { Tooltip } from "@mantine/core";
 import "../components/Forms/form.css";
@@ -140,7 +140,7 @@ function Filter({ onFilterChange, assetType }) {
 									const parsedDate = new Date(value)
 										.toISOString()
 										.split("T")[0];
-									console.log(parsedDate);
+									// console.log(parsedDate);
 									setFromDate(value);
 								}}
 							/>
@@ -158,7 +158,7 @@ function Filter({ onFilterChange, assetType }) {
 									const parsedDate = new Date(value)
 										.toISOString()
 										.split("T")[0];
-									console.log(parsedDate);
+									// console.log(parsedDate);
 									setToDate(value);
 								}}
 							/>

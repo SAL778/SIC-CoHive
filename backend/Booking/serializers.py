@@ -7,8 +7,8 @@ from rest_framework import serializers
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.now())
-    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.now())
+    start_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.localtime(timezone.now()))
+    end_time = serializers.DateTimeField(format="%Y-%m-%dT%H:%M",default=timezone.localtime(timezone.now()))
     user = serializers.SerializerMethodField("get_user")
     resources_name = serializers.CharField(source="resources.name", read_only=True)
     resource_type=serializers.CharField(source="resources.type", read_only=True)
@@ -85,6 +85,15 @@ class ResourcesSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'room_number', 'type', 'bookings', 'access_type', 'image','room_code']
         read_only_fields = ['id', 'bookings', 'access_type','room_code']
 
+    def parse_date_with_formats(self, date_str, formats):
+        for formatd in formats:
+            try:
+                return datetime.datetime.strptime(date_str, formatd)
+            except ValueError:
+                continue  # Try the next format
+        # If no format matched
+        raise ValueError("No valid date format found for input: {}".format(date_str))
+
     def get_bookings(self, obj):
         request = self.context.get("request")
         date = request.query_params.get('date')
@@ -92,10 +101,20 @@ class ResourcesSerializer(serializers.ModelSerializer):
         if date is None:
             filter_date = timezone.localtime(timezone.now()).date()
         else:
-            filter_date = timezone.make_aware(
-                datetime.datetime.strptime(date, "%Y-%m-%d").replace(hour=0, minute=0, second=0, microsecond=0))
+            # List of expected date formats
+            expected_formats = ["%Y-%m-%d", "%m/%d/%Y"]  # Adjust formats as needed
+
+            # Print the date for debugging
+            print("date: ", date)
+
+            # Attempt to parse the date using the expected formats
+            parsed_date = self.parse_date_with_formats(date, expected_formats)
+
+            # Make the parsed datetime timezone aware and set time to beginning of the day
+            filter_date = timezone.make_aware(parsed_date.replace(hour=0, minute=0, second=0, microsecond=0))
+
         bookings = Booking.objects.filter(resources=obj, start_time__date=filter_date)
-        return BookingSerializer(bookings, many=True,context={'request':request}).data
+        return BookingSerializer(bookings, many=True, context={'request': request}).data
 
 
 
@@ -105,15 +124,23 @@ class BookingStatisticsSerializer(serializers.Serializer):
     year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
     month = serializers.IntegerField(required=False, min_value=1, max_value=12,default=timezone.now().month)
     week = serializers.IntegerField(required=False, min_value=1, max_value=53)
-    
+
     
 class BookingFrequencyFilterSerializer(serializers.Serializer):
-    scope=serializers.ChoiceField(choices=['all','week','month','year'],required=False,default='all')
-    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
-    month = serializers.IntegerField(required=False, min_value=1, max_value=12)
-    week = serializers.IntegerField(required=False, min_value=1, max_value=53)
-    
-    
+    resource = serializers.CharField(required=True)
+    scope = serializers.ChoiceField(choices=['all', 'day', 'month', 'year'], required=False, default='all')
+    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.localtime(timezone.now()).year)
+    month = serializers.IntegerField(required=False, min_value=1, max_value=12, default=timezone.localtime(timezone.now()).month)
+    day = serializers.IntegerField(required=False, min_value=1, max_value=7, default=timezone.localtime(timezone.now()).weekday() + 1)
+
+class ResourceUsageHourSerializer(serializers.Serializer):
+    type = serializers.CharField(required=True)
+    scope = serializers.ChoiceField(choices=['all', 'day', 'month', 'year'], required=False, default='month')
+    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.localtime(timezone.now()).year)
+    month = serializers.IntegerField(required=False, min_value=1, max_value=12, default=timezone.localtime(timezone.now()).month)
+    day = serializers.IntegerField(required=False, min_value=1, max_value=7, default=timezone.localtime(timezone.now()).weekday() + 1)
+
+
 class AverageBookingDurationSerializer(serializers.Serializer):
     scope=serializers.ChoiceField(choices=['all','week','month','year'],required=False,default='all')
     year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)

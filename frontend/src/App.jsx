@@ -10,7 +10,7 @@ import Navigation from "./components/Navbar.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Bookings from "./Bookings.jsx";
 import Events from "./Events.jsx";
-import Statistics from "./Statistics.jsx";
+import Statistics from "./Statistics/Statistics.jsx";
 import EditProfile from "./Profile/EditProfile.jsx";
 import ViewProfile from "./Profile/ViewProfile.jsx";
 import Signout from "./Signout.jsx";
@@ -35,7 +35,7 @@ const sicTheme = createTheme({
 
 function App() {
 	Modal.setAppElement("#root");
-	const [host] = useState("http://localhost:8000"); //Replace host here
+	const [host] = useState("http://localhost:8000/api"); //Replace host here
 	// http://[2605:fd00:4:1001:f816:3eff:fe3e:a382]
 	// const [host] = useState("http://[2605:fd00:4:1001:f816:3eff:fe3e:a382]"); //Replace host here
 	// const [host] = useState(
