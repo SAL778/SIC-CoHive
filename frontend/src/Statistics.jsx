@@ -1,7 +1,6 @@
 import React from "react";
 
 function Statistics() {
-
 	return (
 		<div>
 			<h1 style={{ color: "black", fontFamily: "Arial, sans-serif" }}>
