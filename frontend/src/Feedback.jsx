@@ -10,9 +10,9 @@ function Feedback() {
 
 	const { setShowNavigation } = useContext(NavigationContext);
 
-    useEffect(() => {
-        setShowNavigation(true);
-    }, []);
+	useEffect(() => {
+		setShowNavigation(true);
+	}, []);
 
 	useEffect(() => {
 		httpRequest({
@@ -41,7 +41,6 @@ function Feedback() {
 			} else {
 				setIframeHeight(screenHeight - 130);
 			}
-			
 		};
 
 		window.addEventListener("resize", handleResize);
@@ -52,7 +51,10 @@ function Feedback() {
 	}, []);
 
 	return (
-		<div id="feedback-form" className="content-container flex justify-center my-[30px] mx-auto rounded-[12px] overflow-auto">
+		<div
+			id="feedback-form"
+			className="content-container flex justify-center my-[30px] mx-auto rounded-[12px] overflow-auto"
+		>
 			{feedbackLink && (
 				<iframe src={feedbackLink} width={iframeWidth} height={iframeHeight}>
 					Loading...
