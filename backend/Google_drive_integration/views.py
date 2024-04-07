@@ -6,6 +6,9 @@ from .google_calendar_api import initialize_calendar_client
 from User.models import AppLink
 import datetime
 import urllib.parse
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # Create your views here.
 
@@ -72,8 +75,9 @@ def fetch_calendar_events(request):
     else:
         selected_date = datetime.date.today()
 
+    ical_url = os.getenv("CALENDAR_ICAL_URL")
+
     app_links = AppLink.objects.first()
-    ical_url = app_links.google_calendar_events_link
     
     calendar_id_encoded = ical_url.split("/ical/")[1].split("/public")[0]    # Extract the calendar ID and decode it
     calendar_id = urllib.parse.unquote(calendar_id_encoded)

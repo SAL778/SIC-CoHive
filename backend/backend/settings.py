@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -103,8 +106,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Google configuration
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '738911792381-du1hc1l4go32tj2iunbnufo6qf9h0u7v.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '738911792381-du1hc1l4go32tj2iunbnufo6qf9h0u7v.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

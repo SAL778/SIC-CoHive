@@ -85,13 +85,11 @@ class CustomUser(AbstractUser):
 # AppLinks model allows the admin to add links to the app from the admin panel and maintain them
 # Stores the feedback form link, the google drive link, and the google calendar link
 class AppLink(models.Model):
-    feedback_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the feedback form")
-    event_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the events form")
-    google_drive_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Google Drive")
-    google_calendar_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Google Calendar")
-    event_image_folder_id = models.CharField(max_length=200, blank=True, null=True, help_text="The folder ID of the event images in Google Drive")
-    spreadsheet_id = models.CharField(max_length=200, blank=True, null=True, help_text="The ID of the spreadsheet in Google Sheets")
-    google_calendar_events_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Google Calendar events")
+
+    feedback_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Contact Us / Feedback form")
+    event_submission_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Event Submission form")
+    google_calendar_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the embedded SIC Google Calendar")
+
 
     def __str__(self):
         return "App Link"
