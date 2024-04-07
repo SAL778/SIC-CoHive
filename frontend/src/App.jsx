@@ -46,7 +46,7 @@ function App() {
 	const [mobileNav, setMobileNav] = useState(false);
 
 	return (
-		<GoogleOAuthProvider clientId="738911792381-du1hc1l4go32tj2iunbnufo6qf9h0u7v.apps.googleusercontent.com">
+		<GoogleOAuthProvider clientId="43159362872-7th78o4sg6jld67f3of32j9g1ceq74rb.apps.googleusercontent.com">
 			<HostContext.Provider value={{ host }}>
 				<UserContext.Provider value={{ currentUser, setCurrentUser }}>
 					<NavigationContext.Provider

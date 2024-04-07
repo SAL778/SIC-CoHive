@@ -29,7 +29,14 @@ export async function httpRequest({
     method = "GET", 
     onSuccess, 
     body = null,
-    onFailure = ((res) => console.log(res.statusText)), 
+    onFailure = ((res) => {
+        console.log(res)
+        if (res.status === 401) {
+            if (window.location.pathname !== "/") {
+                window.location.href = "/";
+            }
+        }
+    }),
     onError = ((e) => console.log("error", e))
     }) {
     try {
