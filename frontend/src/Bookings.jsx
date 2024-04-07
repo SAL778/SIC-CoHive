@@ -58,29 +58,12 @@ function Bookings() {
 	// Fetch user data to set the current user context to fill user's data on the bookings page
 	// Need to fetch user data to get the user's ID, image, and other details to display on the page
 	useEffect(() => {
-		const fetchUserData = async () => {
-			try {
-				const accessToken = getCookieValue("access_token");
-				const response = await fetch(`${host}/users/profile/`, {
-					method: "GET",
-					credentials: "include",
-					headers: {
-						Authorization: `Token ${accessToken}`,
-					},
-				});
-
-				if (response.ok) {
-					const user = await response.json();
-					setCurrentUser(user);
-				} else {
-					console.error("Failed to fetch user data:", response.statusText);
-				}
-			} catch (error) {
-				console.error("Unexpected error:", error);
-			}
-		};
-
-		fetchUserData();
+		httpRequest({
+			endpoint: `${host}/users/profile/`,
+			onSuccess: (data) => {
+				setCurrentUser(data);
+			},
+		});
 	}, []);
 
 	useEffect(() => {
