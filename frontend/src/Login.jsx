@@ -9,7 +9,7 @@ import axios from "axios";
 import { HostContext, UserContext } from "./App.jsx";
 import { httpRequest } from "./utils.js";
 
-export default function Login({}) {
+export default function Login() {
 	const { setShowNavigation } = useContext(NavigationContext); // Access the context
 
 	// const { user, setUser } = useContext(UserContext);

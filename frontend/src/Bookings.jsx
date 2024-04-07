@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
-import { HostContext, UserContext } from "./App.jsx";
+import { NavigationContext, HostContext, UserContext } from "./App.jsx";
 import BookingListView from "./Bookings/BookingList.jsx";
 import BookingFormComponent from "./components/Forms/BookingForm";
 import {
@@ -50,6 +50,11 @@ function Bookings() {
 		setBookingFilter(updatedBookingFilter);
 	};
 
+	const { setShowNavigation } = useContext(NavigationContext);
+	useEffect(() => {
+        setShowNavigation(true);
+    }, []);
+	
 	// Fetch user data to set the current user context to fill user's data on the bookings page
 	// Need to fetch user data to get the user's ID, image, and other details to display on the page
 	useEffect(() => {
