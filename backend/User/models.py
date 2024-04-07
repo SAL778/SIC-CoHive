@@ -86,9 +86,7 @@ class CustomUser(AbstractUser):
 # Stores the feedback form link, the google drive link, and the google calendar link
 class AppLink(models.Model):
     feedback_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Contact Us / Feedback form")
-    # event_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Events Submission form")
     event_submission_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Event Submission form")
-    google_drive_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the main Google Drive Folder")
     google_calendar_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the embedded SIC Google Calendar")
 
     def __str__(self):
