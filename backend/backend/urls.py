@@ -3,7 +3,7 @@ from django.urls import path, include, re_path
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-from User.views import custom_login_redirect, verify_google_jwt, AppLinkList
+from User.views import verify_token_expiry, verify_google_jwt, AppLinkList
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -20,12 +20,12 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('api/verify_google_jwt/', verify_google_jwt, name='verify_google_jwt'),
+    path('api/verify_token_expiry/', verify_token_expiry, name='verify_token_expiry'),
     # Project URLs 
     path("api/admin/", admin.site.urls),
     path("api/users/", include("User.urls")),
     path("api/bookings/", include("Booking.urls")),
     # path('accounts/', include('allauth.urls')),
-    path('api/accounts/profile/', custom_login_redirect, name='custom-login-redirect'),
     re_path(r'^api/docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path("api/applinks/", AppLinkList.as_view(), name="app-link-list"),
 

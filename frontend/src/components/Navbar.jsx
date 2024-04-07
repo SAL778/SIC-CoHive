@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import logo from "../assets/sic.png";
+import logo from "../assets/sic_logo.png";
 import Underlay from "../assets/Underlay.svg";
 import { Link, NavLink } from "react-router-dom";
 import { showNotification } from "@mantine/notifications";

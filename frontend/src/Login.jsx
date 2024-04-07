@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import placeholder from "./assets/placeholder-logo.png";
+import placeholder from "./assets/sic_logo.png";
 import "./Login.css";
 import { NavigationContext } from "./App.jsx";
 import axiousInstance from "./axios.js";
@@ -14,6 +14,29 @@ export default function Login() {
 
 	// const { user, setUser } = useContext(UserContext);
 	const { host } = useContext(HostContext);
+
+	useEffect(() => {
+		httpRequest({
+			endpoint: `${host}/verify_token_expiry/`,
+			onSuccess: (data) => {
+				httpRequest({
+					endpoint: `${host}/users/profile/`, //Add the current user to localStorage
+					onSuccess: (userData) => {
+						localStorage.setItem("currentUser", JSON.stringify(userData));
+
+						// Get the app links and store them in localStorage for dynamic links to forms/calendar
+						httpRequest({
+							endpoint: `${host}/applinks/`,
+							onSuccess: (linkData) => {
+								localStorage.setItem("appLinks", JSON.stringify(linkData));
+								window.location.href = "/bookings";
+							},
+						});
+					},
+				});
+			},
+		});
+	}, []);
 
 	const handleGoogleLogin = async (credentialResponse) => {
 		try {
