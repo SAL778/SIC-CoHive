@@ -56,7 +56,7 @@ def fetch_spreadsheet_events(request):
     client = initialize_sheets_client()
 
     app_links = AppLink.objects.first()
-    spreadsheet_id = app_links.spreadsheet_id
+    spreadsheet_id = app_links.spreadsheet_id.split('/d/')[1].split('/')[0]
 
     spreadsheet_range = "Events!A1:Z" #Rows 2 onwards (Row 1 is headers), from columns A-Z. Empty columns will not be included, even if specified in range.
     scheme = ["timestamp", "title", "date", "startTime", "endTime", "imgSrc", "description", "email", "location", "approved"] #Camelcasing to follow google convention
@@ -75,9 +75,8 @@ def fetch_calendar_events(request):
     else:
         selected_date = datetime.date.today()
 
-    ical_url = os.getenv("CALENDAR_ICAL_URL")
-
     app_links = AppLink.objects.first()
+    ical_url = app_links.google_calendar_events_link
     
     calendar_id_encoded = ical_url.split("/ical/")[1].split("/public")[0]    # Extract the calendar ID and decode it
     calendar_id = urllib.parse.unquote(calendar_id_encoded)
