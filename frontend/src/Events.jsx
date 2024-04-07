@@ -11,8 +11,10 @@ function Events() {
 	const fallbackImage =
 		"https://www.ualberta.ca/science/media-library/news/2018/sep/student-innovation-centre-launch.jpg";
 
-	const googleCalendar = JSON.parse(localStorage.getItem("appLinks"))[0].google_calendar_link;
-	const eventFormLink = JSON.parse(localStorage.getItem("appLinks"))[0].event_form_link;
+	const googleCalendar = JSON.parse(localStorage.getItem("appLinks"))[0]
+		.google_calendar_link;
+	const eventFormLink = JSON.parse(localStorage.getItem("appLinks"))[0]
+		.event_submission_form_link;
 
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [eventsData, setEventsData] = useState([]);
@@ -28,7 +30,6 @@ function Events() {
 			setClickedEvent(null);
 		}, 200);
 	};
-
 
 	const fetchEvents = async (selectedDate) => {
 		try {
@@ -97,10 +98,7 @@ function Events() {
 			<button
 				type="button"
 				onClick={() => {
-					window.open(
-						`${eventFormLink}`,
-						"_blank"
-					);
+					window.open(`${eventFormLink}`, "_blank");
 				}}
 				className="button-orange button-wide mt-[30px] h-[64px]"
 			>
