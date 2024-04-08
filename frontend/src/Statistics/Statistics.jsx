@@ -73,15 +73,15 @@ function Statistics() {
 	const [isLoading, setIsLoading] = useState(false); //Only have to wait during the initial render
 
 	return (
-		<div className="w-full">	
-			<section className="heading flex min-h-0 gap-auto my-8 justify-between">
+		<div className="parent-container-stats content-container w-full max-w-[1600px] mx-auto px-[10px] pb-[10px] overflow-hidden">	
+			<section className="heading-stats flex gap-8 mb-8 justify-between">
 				<div>
 					<h1 className="text-orange-600 text-5xl font-bold capitalize">{selectedTimeScope.label}</h1>
-					<h2 className="text-neutral-400 text-2xl font-medium capitalize">Statistics</h2>
+					<h2 className="text-2xl font-medium capitalize">Statistics</h2>
 				</div>
 
-				<div className="toggles flex gap-8">
-					<div className="timePicker">
+				<div className="togglesWrap flex gap-4">
+					<div className="timePicker bg-none">
 						<ButtonGroup
 							//Preserve the existing month/year between swaps; don't reset the time values.
 							className = "timeRangeToggles"
@@ -93,7 +93,7 @@ function Statistics() {
 						{ (selectedTimeScope.value == 'month')
 							? <MonthPickerInput
 								{...commonTimePickerProps()}
-								className="bg-white"
+								className="bg-white shadow-custom"
 								onChange={(value) => {
 									//console.log(value)
 									setSelectedYear(value.getYear())
@@ -103,7 +103,7 @@ function Statistics() {
 							/>
 							: <YearPickerInput
 								{...commonTimePickerProps()}
-								className="bg-white"
+								className="bg-white shadow-custom"
 								onChange={(value) => {
 									setSelectedYear(value.getYear())
 								}}
@@ -120,27 +120,29 @@ function Statistics() {
 				</div>
 			</section>
 				
-			<section className = "grid gap-4 grid-cols-3 grid-rows-9">
-				<div className = "bg-white rounded-md p-6 row-span-4 col-span-2 shadow-custom">
-					<PeakTimesChart
-						timeScope = {selectedTimeScope}
-						assetType = {selectedAssetType}
-						selectedYear = {selectedYear}
-						selectedMonth = {selectedMonth}
-					/>
+			<section className = "flex gap-4 flex-col">
+				<div className="stats-top-section grid">
+					<div className = "peak-times h-fit">
+						<PeakTimesChart
+							timeScope = {selectedTimeScope}
+							assetType = {selectedAssetType}
+							selectedYear = {selectedYear}
+							selectedMonth = {selectedMonth}
+						/>
+					</div>
+					<div className = "resource-popularity h-auto">
+						<ResourcePopularityChart
+							timeScope = {selectedTimeScope}
+							assetType = {selectedAssetType}
+							selectedYear = {selectedYear}
+							selectedMonth = {selectedMonth}
+						/>
+					</div>
 				</div>
-				<div className = "bg-white rounded-md p-6 row-span-4 col-span-1 shadow-custom">
-					<ResourcePopularityChart
-						timeScope = {selectedTimeScope}
-						assetType = {selectedAssetType}
-						selectedYear = {selectedYear}
-						selectedMonth = {selectedMonth}
-					/>
-				</div>
-				<div className = "row-span-1 col-span-3 flex flex-row gap-4">
+				<div className = "card-stats grid gap-4">
 					{cardData.map(datum => (
 						<StatCard
-						className = "flex-1 bg-white rounded-md"
+						className = "flex-1 bg-white rounded-[12px]"
 						title = {datum.label} 
 						content = {datum.value} 
 						icon={datum.icon}
@@ -160,14 +162,15 @@ function Statistics() {
  * @returns 
  */
 function StatCard({title, content, icon = null, className}) {
-	//TODO: Style this
 	return (
-		<div className = {`${className} relative overflow-hidden shadow-custom p-6`}>
-			<h2 className = "text-xl text-neutral-600 font-regular z-10 mb-6">{title}</h2>
-			<p className = "text-5xl text-orange-600 font-extrabold z-10">{content}</p>
+		<div className = {`${className} flex flex-row justify-between items-start gap-6 relative overflow-hidden shadow-custom p-6`}>
 			{icon && 
-				<i className = {`${icon} text-[#ededed] text-[128px] absolute -translate-x-12`}/>
+				<i className = {`${icon}`}/>
 			}
+			<div className="w-full">
+				<h2 className = "card-stats-title font-medium text-blue-950">{title}</h2>
+				<p className = "text-large-desktop text-orange-600 font-extrabold">{content}</p>
+			</div>
 		</div>
 	)
 }

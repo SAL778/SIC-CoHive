@@ -133,6 +133,10 @@ class UserBookingView(generics.ListCreateAPIView):
         user_id = kwargs.get('user_id')
         user1 = get_object_or_404(User, id=user_id)
         user = get_user_from_token(request)
+        
+        if isinstance(user, Response):
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+
         if user != user1:
             return Response({"error": "You don't have permission to add a booking for another user."},
                             status=status.HTTP_403_FORBIDDEN)
@@ -189,6 +193,10 @@ class ViewBookingView(APIView):
 
         booking = self.get_object(pk)
         user = get_user_from_token(request)
+
+        if isinstance(user, Response):
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+
         if user != booking.user:
             return Response({"error": "You don't have permission to update this booking."},
                             status=status.HTTP_403_FORBIDDEN)
@@ -209,13 +217,14 @@ class ViewBookingView(APIView):
         """
         Delete a specific booking.
         """
-        print("deleting booking")
+
         booking = self.get_object(pk)
         user = get_user_from_token(request)
-        print("hello")
+        
+        if isinstance(user, Response):
+            return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
 
         if user != booking.user:
-            print("user")
             return Response({"error": "You don't have permission to delete this booking."},
                             status=status.HTTP_403_FORBIDDEN)
 

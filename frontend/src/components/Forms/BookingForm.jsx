@@ -4,7 +4,9 @@ import { useForm } from "@mantine/form";
 import { TextInput, Textarea, Checkbox, Select, Text } from "@mantine/core";
 import { TimeInput, DatePickerInput } from "@mantine/dates";
 import "./form.css";
-import { httpRequest } from "../../utils.js";
+import { httpRequest, toProperImageURL } from "../../utils.js";
+
+import fallbackAssetImage from "../../assets/sic.jpg";
 
 export default BookingFormComponent;
 
@@ -27,8 +29,6 @@ function BookingFormComponent({
 }) {
 	const fallbackProfileImage =
 		"https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?q=80&w=1828&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-	const fallbackAssetImage =
-		"https://images.unsplash.com/photo-1633633292416-1bb8e7b2832b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
 	const { currentUser } = useContext(UserContext);
 	const { host } = useContext(HostContext);
@@ -50,6 +50,7 @@ function BookingFormComponent({
 	const [availableTimeSlots, setAvailableTimeSlots] = useState(allTimeSlots);
 	//Store booked slots for faster validation
 	const [disabledTimeSlots, setDisabledTimeSlots] = useState([]);
+	const [resourceImageSrc, setResourceImageSrc] = useState(null);
 
 	//TODO: Change the resources ID from 1 to something else later.
 	const form = useForm({
@@ -145,6 +146,8 @@ function BookingFormComponent({
 				onSuccess: (data) => {
 					//Unique 15 min intervals
 					if (data.bookings) {
+						//Update the booking image
+						setResourceImageSrc(data.image);
 						const todaysBookings = data.bookings.filter(
 							(booking) =>
 								currentDate.getDay() === new Date(booking.start_time).getDay()
@@ -201,8 +204,12 @@ function BookingFormComponent({
 		>
 			<div className="upperSection flex justify-between gap-4">
 				<img
-					src={currentBooking?.image ?? fallbackAssetImage}
-					className="booking-image rounded-md object-cover"
+					src={
+						toProperImageURL(resourceImageSrc) ||
+						currentBooking?.image ||
+						fallbackAssetImage
+					}
+					className="booking-image rounded-md object-cover aspect-square"
 					referrerPolicy="no-referrer"
 				/>
 				<div className="booking-modal-options flex flex-col space-between justify-between">
@@ -420,6 +427,7 @@ const deserializeTime = (timestring) => {
  * @param {number} endHour - A positive number that represents the start time in 24 hour format (e.g 15.5 = 3:30 PM)
  * @see dateToHoursFloat - A helper function that can be used for date conversion.
  *
+ *
  * @returns - An array of intervals, bookended by the start hour and end hour inclusive.
  */
 
@@ -451,6 +459,7 @@ const getTimePeriods = (interval, startHour, endHour) => {
  *  @param {string} date - a string representing the date convertable to a date object
  *  @param {[hours, minutes]} date - An array representing the times as an hour minute array.
  *  @see getTimePeriods - The function that consumes time periods as arguments.
+ *
  *
  *  @returns hours, minutes
  */

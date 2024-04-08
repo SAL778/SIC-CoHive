@@ -44,7 +44,7 @@ export default function BookingPopover({
 			<Popover.Dropdown>
 				<div>
 					<img
-						className="w-24 h-24 rounded-md"
+						className="w-24 h-24 rounded-[12px]"
 						src={properURL(assetImage) || imageFallback}
 						alt={assetName}
 						referrerPolicy="no-referrer"

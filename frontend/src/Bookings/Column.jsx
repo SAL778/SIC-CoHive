@@ -165,7 +165,7 @@ const Column = ({ column, onBookingEdit }) => {
 		});
 
 		return (
-			<div className="shadow-lg rounded-[12px]">
+			<div className="shadow-lg rounded-[12px] overflow-hidden">
 				{timeslots.map((slot) => {
 					// Calculate the height of the slot based on the time range (in 15-minute increments) * 24px per slot
 					const slotHeight =
@@ -182,7 +182,7 @@ const Column = ({ column, onBookingEdit }) => {
 					// TODO: Make the bookings that belong to the user have a different color by adding a class to the div
 
 					return (
-						<div key={slot.display_time}>
+						<div key={slot.display_time} className="slot-div">
 							{slot.booking ? (
 								<div
 									className={`column-booking-card ${
@@ -201,12 +201,12 @@ const Column = ({ column, onBookingEdit }) => {
 								</div>
 							) : (
 								<div
-									className="open-booking-slot cursor-pointer overflow-hidden px-4 py-2 text-sm"
+									className="open-booking-slot flex justify-center items-center cursor-pointer overflow-hidden px-4 py-2 text-sm"
 									key={slot}
 									style={{ height: `${slotHeight}px` }}
 									onClick={() => hasPermission && onSlotClick(slot, timeslots)}
 								>
-									{/* <p>{slot.display_time}</p> */}
+									<p className="slot-time">{slot.display_time}</p>
 								</div>
 							)}
 						</div>

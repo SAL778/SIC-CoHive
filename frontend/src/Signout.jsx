@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { NavigationContext } from "./App.jsx";
-import { getCookieValue } from "./utils.js";
+import { getCookieValue, httpRequest } from "./utils.js";
 import { Modal } from "@mantine/core";
 import { HostContext } from "./App";
 
@@ -16,7 +16,6 @@ const Signout = ({ opened, onClose }) => {
 		try {
 			const accessToken = getCookieValue("access_token");
 
-			// const response = await fetch("http://localhost:8000/users/signout/", {
 			const response = await fetch(`${host}/users/signout/`, {
 				method: "POST",
 				credentials: "include",

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { NavigationContext } from "./App.jsx";
 import "./404.css";
 
-function FOF({}) {
+function FOF() {
     const navigate = useNavigate();
     const { showNavigation, setShowNavigation } = useContext(NavigationContext);
     const handleBackClick = () => {
@@ -14,6 +14,10 @@ function FOF({}) {
         setShowNavigation(false);
     }, [showNavigation]);
 
+    const handleGoBack = () => {
+        navigate('/bookings');
+    };
+
     return (
         <div className="background">
             <div className="container">
@@ -22,9 +26,14 @@ function FOF({}) {
                 </div>
                 <div className="right-col">
                     <p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
-                    <button className="contact-button orange-button" onClick={handleBackClick} style={{ marginTop: '20px' }}>
-                        Contact Us
-                    </button>
+                    <div className="right-col-buttons">
+                        <button className="contact-button orange-button" style={{marginTop: '20px', justifyContent: 'flex-start', alignItems: 'center'}} onClick={handleBackClick}>
+                            Contact Us
+                        </button>
+                        <button className="contact-button orange-button" onClick={handleGoBack}>
+                            Go Back
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
