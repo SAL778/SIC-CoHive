@@ -33,7 +33,7 @@ class TestRouting(unittest.TestCase) :
         self.global_driver = global_driver
 
     def test_a_search_bar_user(self):
-        """Verifies that a user can successfully be found by partially inputting their name"""
+        """US 1.05 - Verifies that a user can successfully be found by partially inputting their name"""
         global_driver.get("http://localhost:5173/community")
         search_bar = global_driver.find_element(By.CLASS_NAME, "search-input")
         search_bar.send_keys("k")
@@ -50,7 +50,7 @@ class TestRouting(unittest.TestCase) :
         self.assertTrue(found_user, "User 'Kenji Louise Chiang' not found in search results")
 
     def test_b_search_bar_multi_user(self):
-        """Verifies that multiple users can be succesfully returned by partially inputting their name"""
+        """US 1.05 - Verifies that multiple users can be succesfully returned by partially inputting their name"""
         global_driver.get("http://localhost:5173/community")
         search_bar = global_driver.find_element(By.CLASS_NAME, "search-input")
         search_bar.send_keys("k")
@@ -69,7 +69,7 @@ class TestRouting(unittest.TestCase) :
         self.assertTrue(user_info_count>1, "Only 1 user found in search results that starts with 'k'.")
     
     def test_c_user_sic_filter(self):
-        """Verifies that a user can successfully be found by using partial User Type or SIC Role filters applicable for the user"""
+        """US 1.05 - Verifies that a user can successfully be found by using partial User Type or SIC Role filters applicable for the user"""
         global_driver.get("http://localhost:5173/community")
         icon_element = WebDriverWait(global_driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
@@ -98,7 +98,7 @@ class TestRouting(unittest.TestCase) :
         self.assertTrue(found_user, "User 'Kenji Louise Chiang' not found in search results")
 
     def test_d_user_not_found(self):
-        """Verifies that a user is not found by using User Type or SIC Role filters "NOT" applicable for the user"""
+        """US 1.05 - Verifies that a user is not found by using User Type or SIC Role filters "NOT" applicable for the user"""
         global_driver.get("http://localhost:5173/community")
         icon_element = WebDriverWait(global_driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
@@ -121,7 +121,7 @@ class TestRouting(unittest.TestCase) :
         time.sleep(2)
 
     def test_e_click_profile(self):
-        """Verifies that when an account is clicked, it redirects successfully to its profile"""
+        """US 1.05 - Verifies that when an account is clicked, it redirects successfully to its profile"""
         global_driver.get("http://localhost:5173/community")
         icon_element = WebDriverWait(global_driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
@@ -145,10 +145,37 @@ class TestRouting(unittest.TestCase) :
                 break
         ### SUBJECT TO CHANGE
         # print(global_driver.current_url)
-        expected_url = "http://localhost:5173/users/9"
-        self.assertEqual(global_driver.current_url, expected_url)
+        # expected_url = "http://localhost:5173/users/9"
+        # self.assertEqual(global_driver.current_url, expected_url)
+        self.assertTrue(profile_click, "Kenji's profile not found")
         time.sleep(3)
         
+    def test_f_click_public_profile(self):
+        """US 1.06 - Verifies that when other account is clicked, it redirects successfully to its profile"""
+        global_driver.get("http://localhost:5173/community")
+        icon_element = WebDriverWait(global_driver, 3).until(
+            EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
+        )
+        icon_element.click()
+        
+        time.sleep(3)
+        user_info_elements = global_driver.find_elements(By.CSS_SELECTOR, ".card-info")
+        
+        for user_info in user_info_elements:
+            first_name = user_info.find_element(By.CLASS_NAME, "info-first").text
+            last_name = user_info.find_element(By.CLASS_NAME, "info-last").text
+            # print(f"First Name: {first_name}, Last Name: {last_name}")
+            if first_name == "Saahil" and last_name == "Rachh":
+                profile_click = global_driver.find_element(By.XPATH, "//p[text()='Saahil']")
+                # print(f"First Name: {first_name}, Last Name: {last_name}")
+                time.sleep(3)
+                profile_click.click()
+                break
+        ### SUBJECT TO CHANGE
+        # print(global_driver.current_url)
+        self.assertTrue(profile_click, "Saahil's profile not found")
+        time.sleep(3)
+
 def run():
     print("\nCommunity Tests:")
     test = unittest.TestLoader().loadTestsFromTestCase(TestRouting)

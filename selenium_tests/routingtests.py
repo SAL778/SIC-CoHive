@@ -49,7 +49,7 @@ class TestRouting(unittest.TestCase):
         time.sleep(3)
         self.assertEqual(global_driver.current_url, "http://localhost:5173/statistics")
 
-    def test_d_statistics_tab_sidebar(self):
+    def test_d_profile_tab_sidebar(self):
         """Verifies that the profile page can be navigated to succesfully using the sidebar"""
         global_driver.get("http://localhost:5173/bookings")
         time.sleep(3)
@@ -58,7 +58,7 @@ class TestRouting(unittest.TestCase):
         time.sleep(3)
         self.assertEqual(global_driver.current_url, "http://localhost:5173/profile")
 
-    def test_e_statistics_tab_sidebar(self):
+    def test_e_contact_tab_sidebar(self):
         """Verifies that the feedback page can be navigated to succesfully using the sidebar"""
         global_driver.get("http://localhost:5173/bookings")
         time.sleep(3)

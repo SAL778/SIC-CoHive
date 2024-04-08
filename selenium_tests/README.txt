@@ -17,13 +17,9 @@ Lastly, if anything fails, it will be most probably because of the difference in
 or that it is looking for elements specifically my details, such as ("Kenji ...") or etc.
 
 You need both backend and frontend running before running scripts
--> get proxy:   https://cors-anywhere.herokuapp.com/corsdemo
-
--> frontend:    npm install --legacy-peer-deps
+-> frontend:    npm install
                 npm run dev
 
 -> backend:     python3 manage.py runserver 
-
-(if needed):    pip3 install -r requirements.txt (in the right directory)
 
 Run all tests via runtests.py
