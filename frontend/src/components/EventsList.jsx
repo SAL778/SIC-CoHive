@@ -4,10 +4,11 @@ export default function EventList({ event, onItemClick }) {
 	const buildingName = event.location
 		? event.location.split(",")[0]
 		: "No location";
+
 	return (
-		<div 
+		<div
 			className="list-booking-item flex items-center py-4 px-[30px] rounded-md cursor-pointer shadow-custom"
-			onClick = {() => onItemClick(event)}
+			onClick={() => onItemClick(event)}
 		>
 			<div className="desktop-1-3 text-neutral-800">
 				<h3
@@ -61,8 +62,7 @@ export default function EventList({ event, onItemClick }) {
 			<div className="desktop-1-3 flex large-text-mobile items-center">
 				<i className="fa fa-location-dot mr-3" aria-hidden="true" />
 				<p className="font-light" style={{ color: "inherit" }}>
-					{/* {event.location || "No location"} */}
-					{buildingName}
+					{event.location.startsWith("https") ? "REMOTE" : buildingName}
 				</p>
 			</div>
 		</div>

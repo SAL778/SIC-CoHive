@@ -1,18 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
 import EventsList from "./components/EventsList";
 import DateSelector from "./components/DateSelector";
-import EventsCarousel from "./EventsPage/EventsCarousel.jsx";
+import EventsCarousel from "./components/EventsCarousel.jsx";
 import { Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { HostContext } from "./App";
 import { httpRequest } from "./utils";
+import { convert } from "html-to-text";
+
+import fallbackImage from "./assets/event_background.jpg";
 
 function Events() {
-	const fallbackImage =
-		"https://www.ualberta.ca/science/media-library/news/2018/sep/student-innovation-centre-launch.jpg";
+	// const fallbackImage =
+	// "https://www.ualberta.ca/science/media-library/news/2018/sep/student-innovation-centre-launch.jpg";
 
-	const googleCalendar = JSON.parse(localStorage.getItem("appLinks"))[0].google_calendar_link;
-	const eventFormLink = JSON.parse(localStorage.getItem("appLinks"))[0].event_form_link;
+	const googleCalendar = JSON.parse(localStorage.getItem("appLinks"))[0]
+		.google_calendar_link;
+	const eventFormLink = JSON.parse(localStorage.getItem("appLinks"))[0]
+		.event_submission_form_link;
 
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [eventsData, setEventsData] = useState([]);
@@ -29,12 +34,10 @@ function Events() {
 		}, 200);
 	};
 
-
 	const fetchEvents = async (selectedDate) => {
 		try {
 			const formattedDate = selectedDate.toISOString().split("T")[0];
 			const response = await fetch(
-				// `http://localhost:8000/google_drive_integration/calendar-events?date=${formattedDate}`
 				`${host}/google_drive_integration/calendar-events?date=${formattedDate}`
 			);
 			const jsonResponse = await response.json();
@@ -62,6 +65,26 @@ function Events() {
 		);
 	};
 
+	// // Get the time without seconds for the modal
+	// const removeSeconds = (timeString) => {
+	// 	if (timeString) {
+	// 		const [hours, minutes, seconds_period] = timeString.split(":");
+	// 		const period = seconds_period.split(" ")[1];
+	// 		return `${hours}:${minutes} ${period}`;
+	// 	}
+	// 	return "";
+	// };
+
+	const removeSeconds = (dateTimeString) => {
+		if (dateTimeString) {
+			const date = new Date(dateTimeString);
+			const hours = date.getHours().toString().padStart(2, "0");
+			const minutes = date.getMinutes().toString().padStart(2, "0");
+			return `${hours}:${minutes}`;
+		}
+		return "";
+	};
+
 	const handleDateChange = (selectedDate) => {
 		setCurrentDate(selectedDate);
 		fetchEvents(selectedDate);
@@ -72,6 +95,7 @@ function Events() {
 		httpRequest({
 			endpoint: `${host}/google_drive_integration/events`,
 			onSuccess: (eventData) => {
+				console.log("Event data:", eventData);
 				setEvents(eventData.events);
 				setIsLoading(false);
 			},
@@ -83,7 +107,7 @@ function Events() {
 			<h1 className="text-orange-600 text-3xl font-bold mb-2">
 				Upcoming Events
 			</h1>
-			{!(isLoading && events) ? (
+			{!isLoading && events.length ? (
 				<EventsCarousel
 					events={events}
 					onItemClick={(event) => {
@@ -92,15 +116,12 @@ function Events() {
 					}}
 				/>
 			) : (
-				<p> Nothing booked yet! Check back soon</p>
+				<p> No Upcoming Events in the next 2 weeks! Check back soon</p>
 			)}
 			<button
 				type="button"
 				onClick={() => {
-					window.open(
-						`${eventFormLink}`,
-						"_blank"
-					);
+					window.open(`${eventFormLink}`, "_blank");
 				}}
 				className="button-orange button-wide mt-[30px] h-[64px]"
 			>
@@ -111,7 +132,7 @@ function Events() {
 					src={googleCalendar}
 					title="Styled Calendar"
 					className="calendarFrame styled-calendar-container"
-					style={{ width: "100%", height: "675px", border: "none" }}
+					style={{ width: "100%", height: "695px", border: "none" }}
 					data-cy="calendar-embed-iframe"
 				></iframe>
 			</div>
@@ -136,7 +157,7 @@ function Events() {
 				opened={opened}
 				onClose={modalClose}
 				centered
-				size="1200px"
+				size="1000px"
 				transitionProps={{
 					transition: "slide-up",
 					duration: 200,
@@ -145,18 +166,16 @@ function Events() {
 			>
 				<div className="eventModal modalContent h-full min-h-[40vh] w-full flex">
 					<div className="leftSide basis-1/2">
-						<div className="image-overlay absolute top-0 left-0 w-1/2 h-full">
+						<div className="image-overlay relative w-full h-full rounded-md overflow-hidden">
 							<img
 								src={properImageSource(clickedEvent?.imgSrc) || fallbackImage}
-								// Placeholder image for testing and broke image issue
-								// src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjDD0mkEw4XGHCeOLfDy4X-w3M_12FIJJ9x1fNsYzZBD5vAC_Nppn4uPAWtHNNHMvno6aRYMrq8PAiq95D0WXNXNA6t_T5z2sFaeo7BHxdE-L44QACEDNOQ5jDO7_tP1QthkF_hVvX9gact/s400/Makemake+moon+-+Hubble+NASA.jpg"
-								className="object-cover w-full h-full"
+								className="w-full h-full rounded-md object-cover"
 								referrerPolicy="no-referrer"
 							/>
 						</div>
 					</div>
 
-					<div className="rightSide basis-1/2 pl-4 flex flex-col justify-between">
+					<div className="rightSide basis-1/2 flex flex-col justify-between gap-8">
 						<div className="textContent">
 							<h2
 								style={{
@@ -170,22 +189,33 @@ function Events() {
 							<section className="eventDetails grid gap-4 text-[16px]">
 								<p className="location">
 									<i className="fa text-center w-[20px] mr-3 fa-location-dot" />
-									{clickedEvent?.location}
+									{clickedEvent?.location.startsWith("https") ? (
+										<a
+											href={clickedEvent?.location}
+											className="underline text-blue-400"
+											target="_blank"
+										>
+											{clickedEvent?.location}
+										</a>
+									) : (
+										clickedEvent?.location
+									)}
 								</p>
 								<p className="date">
 									<i className="fa text-center w-[20px] mr-3 fa-calendar-day" />
-									{clickedEvent?.date}
+									{clickedEvent?.start.dateTime.split("T")[0]}
 								</p>
 								<p className="organizer">
 									<i className="fa text-center w-[20px] mr-3 fa-user-group" />
-									{clickedEvent?.email}
+									{clickedEvent?.creator.email}
 								</p>
 								<p className="time">
 									<i className="fa text-center w-[20px] mr-3 fa-clock" />
-									{clickedEvent?.startTime} - {clickedEvent?.endTime}
+									{removeSeconds(clickedEvent?.start.dateTime)} -{" "}
+									{removeSeconds(clickedEvent?.end.dateTime)}
 								</p>
 							</section>
-							<p className="mt-10">{clickedEvent?.description}</p>
+							<p className="mt-10">{convert(clickedEvent?.description)}</p>
 						</div>
 						<div className="buttonFooter ml-auto">
 							<button
@@ -222,11 +252,22 @@ function convertCalendarEvent(event) {
 		title: event.summary !== "" ? event.summary : fallbackValue,
 		location: event.location !== "" ? event.location : fallbackValue,
 		description:
-			event.description !== "" ? event.description : "No description",
-		email: event.email !== "" ? event.email : fallbackValue,
-		date: parseDate(event.start, "date"),
-		startTime: parseDate(event.start, "time"),
-		endTime: parseDate(event.end, "time"),
+			event.description !== "" ? event.description : "No event description",
+		creator: {
+			email: event.email,
+		},
+		// date: parseDate(event.start, "date"),
+		// startTime: parseDate(event.start, "time"),
+		// endTime: parseDate(event.end, "time"),
+		// date: event.start.split("T")[0],
+		// startTime: event.start.split("T")[0],
+		// endTime: event.end.split("T")[0],
+		start: {
+			dateTime: event.start,
+		},
+		end: {
+			dateTime: event.end,
+		},
 	};
 }
 
@@ -240,6 +281,9 @@ function convertCalendarEvent(event) {
 const parseDate = (dateStr, output = "date") => {
 	//The date string provided by iCal isn't a valid Date constructor, so I have to use regex to pull out the times
 	//Parsing dates makes me so depressed man we should've just used a library like moment if only we knew earlier :(
+
+	//start:"2024-05-02T13:00:00-06:00"
+	//end: "2024-05-02T6:00"
 
 	//Break the string apart
 	const rePattern = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/;

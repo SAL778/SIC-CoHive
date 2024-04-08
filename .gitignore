@@ -28,6 +28,7 @@ dist-ssr
 
 # local env files
 .env*.local
+service_credentials.json
 
 
 #credentials

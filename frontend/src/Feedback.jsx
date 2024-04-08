@@ -1,10 +1,28 @@
 import React, { useState, useEffect, useContext } from "react";
+import { httpRequest } from "./utils.js";
+import { NavigationContext, HostContext } from "./App.jsx";
 
 function Feedback() {
+	const { host } = useContext(HostContext);
+	const [feedbackLink, setFeedbackLink] = useState("");
 	const [iframeWidth, setIframeWidth] = useState(1000);
 	const [iframeHeight, setIframeHeight] = useState(window.innerHeight - 60);
 
-	const feedbackLink = JSON.parse(localStorage.getItem("appLinks"))[0].feedback_form_link;
+	const { setShowNavigation } = useContext(NavigationContext);
+
+	useEffect(() => {
+		setShowNavigation(true);
+	}, []);
+
+	useEffect(() => {
+		httpRequest({
+			endpoint: `${host}/applinks/`,
+			onSuccess: (data) => {
+				const feedbackLink = data[0]?.feedback_form_link || "";
+				setFeedbackLink(feedbackLink);
+			},
+		});
+	}, []);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -23,7 +41,6 @@ function Feedback() {
 			} else {
 				setIframeHeight(screenHeight - 130);
 			}
-			
 		};
 
 		window.addEventListener("resize", handleResize);
@@ -34,7 +51,10 @@ function Feedback() {
 	}, []);
 
 	return (
-		<div id="feedback-form" className="content-container flex justify-center my-[30px] mx-auto rounded-[12px] overflow-auto">
+		<div
+			id="feedback-form"
+			className="content-container flex justify-center my-[30px] mx-auto rounded-[12px] overflow-auto"
+		>
 			{feedbackLink && (
 				<iframe src={feedbackLink} width={iframeWidth} height={iframeHeight}>
 					Loading...

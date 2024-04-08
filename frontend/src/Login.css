@@ -1,37 +1,37 @@
 .background-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1;
-    padding: 0 20px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 1;
+	padding: 0 20px;
 }
 
 .access-info {
-    max-width: 500px;
-    color: #262626;
+	max-width: 500px;
+	color: #262626;
 }
 
 .sign-in-column {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    padding: 62px 0;
-    width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	height: 100%;
+	padding: 62px 0;
+	width: 100%;
 }
 
 @media (min-width: 1200px) {
-    .background-container {
-        background: url("./assets/background.png") no-repeat center center fixed;
-        background-size: cover;
-        padding: 0 100px;
-    }
+	.background-container {
+		background: url("./assets/background.png") no-repeat center center fixed;
+		background-size: cover;
+		padding: 0 100px;
+	}
 
-    .sign-in-column {
-        padding: 94px 0;
-        width: 30%;
-    }
+	.sign-in-column {
+		padding: 94px 0;
+		width: 30%;
+	}
 }
