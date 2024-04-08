@@ -48,9 +48,11 @@ function BookingFormComponent({
 	const allTimeSlots = getTimePeriods(interval, ...timeRange);
 	//Initial booking time slots
 	const [availableTimeSlots, setAvailableTimeSlots] = useState(allTimeSlots);
-	//Store booked slots for faster validation
-	const [disabledTimeSlots, setDisabledTimeSlots] = useState([]);
-	const [resourceImageSrc, setResourceImageSrc] = useState(null);
+	//Changed when different resource is selected
+    const [disabledTimeSlots, setDisabledTimeSlots] = useState([])
+    const [resourceImageSrc, setResourceImageSrc] = useState(null)
+	const [resourceTitle, setResourceTitle] = useState(null)
+	const [resourceDesc, setResourceDesc] = useState(null)
 
 	//TODO: Change the resources ID from 1 to something else later.
 	const form = useForm({
@@ -139,61 +141,42 @@ function BookingFormComponent({
 				(asset) => asset.name === form.values.resources_name
 			);
 
-			httpRequest({
-				endpoint: `${host}/bookings/columns/${
-					selectedAsset.id
-				}/?date=${backendRepresentationOfDate(currentDate)}`,
-				onSuccess: (data) => {
-					//Unique 15 min intervals
-					if (data.bookings) {
-						//Update the booking image
-						setResourceImageSrc(data.image);
-						const todaysBookings = data.bookings.filter(
-							(booking) =>
-								currentDate.getDay() === new Date(booking.start_time).getDay()
-						);
-						const bookedTimeSlots = [];
-						for (const booking of todaysBookings) {
-							let bookedTimes = getTimePeriods(
-								interval,
-								dateToTimePeriod(booking.start_time),
-								dateToTimePeriod(booking.end_time)
-							); //Booked 15 min intervals
-							console.log(booking.start_time);
-							if (
-								selectedAsset.name == booking.resources_name &&
-								currentBooking
-							) {
-								const validBookingTimes = new Set(
-									getTimePeriods(
-										interval,
-										dateToTimePeriod(
-											"T" + serializeTime(currentBooking.start_time)
-										),
-										dateToTimePeriod(
-											"T" + serializeTime(currentBooking.end_time)
-										)
-									)
-								); //Timeslots taken by the item being edited.
-								bookedTimes = bookedTimes.filter(
-									(timeSlot) => !validBookingTimes.has(timeSlot)
-								);
-							}
-							bookedTimeSlots.push(...bookedTimes);
-						}
-						setDisabledTimeSlots(bookedTimeSlots); //Store for future validation
-						setAvailableTimeSlots(
-							allTimeSlots.map((timeSlot) =>
-								bookedTimeSlots.includes(timeSlot)
-									? { value: timeSlot, label: timeSlot, disabled: true }
-									: { value: timeSlot, label: timeSlot, disabled: false }
-							)
-						);
-					}
-				},
-			});
-		}
-	}, [form.values.resources_name]);
+            httpRequest({
+                endpoint: `${host}/bookings/columns/${selectedAsset.id}/?date=${backendRepresentationOfDate(currentDate)}`,
+                onSuccess: (data) => {            //Unique 15 min intervals
+                    if (data.bookings)  {
+                        //Update the booking image
+						console.table(data)
+						setResourceTitle(data.name)
+                        setResourceImageSrc(data.image)
+						setResourceDesc(data.description)
+                        const todaysBookings = data.bookings.filter((booking) => (currentDate.getDay() === new Date(booking.start_time).getDay()));
+                        const bookedTimeSlots = []
+                        for (const booking of todaysBookings) {
+                            let bookedTimes = getTimePeriods(interval, dateToTimePeriod(booking.start_time), dateToTimePeriod(booking.end_time));  //Booked 15 min intervals
+                            console.log(booking.start_time)
+                            if (selectedAsset.name == booking.resources_name && currentBooking) {
+                                const validBookingTimes = new Set(
+                                    getTimePeriods(interval, 
+                                        dateToTimePeriod('T' + serializeTime(currentBooking.start_time)), 
+                                        dateToTimePeriod('T' + serializeTime(currentBooking.end_time)))) //Timeslots taken by the item being edited.
+                                bookedTimes = bookedTimes.filter(timeSlot => !validBookingTimes.has(timeSlot))
+                            }
+                            bookedTimeSlots.push(...bookedTimes)
+                        }
+                        setDisabledTimeSlots(bookedTimeSlots)           //Store for future validation
+                        setAvailableTimeSlots(allTimeSlots.map((timeSlot) => (
+                            bookedTimeSlots.includes(timeSlot) 
+                            ? {value: timeSlot, label: timeSlot, disabled: true}
+                            : {value: timeSlot, label: timeSlot, disabled: false}
+                            )
+                        )
+                    );
+                }
+                }
+            })
+        }   
+    }, [form.values.resources_name])
 
 	return (
 		// values represents the booking object
@@ -215,8 +198,11 @@ function BookingFormComponent({
 				<div className="booking-modal-options flex flex-col space-between justify-between">
 					<div className="roomInfo">
 						<h1 className="capitalize text-xl font-bold">
-							{currentBooking?.resources_name || "Book an Asset"}
+							{resourceTitle || currentBooking?.resources_name || "Book an Asset"}
 						</h1>
+						<p>
+							{ resourceDesc || currentBooking?.description || "No description"}
+						</p>
 
 						{/* If currentBooking is private, description will not be present. */}
 						{isShowDetails() && ( //Booking is visible
