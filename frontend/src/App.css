@@ -1252,10 +1252,3 @@ div .mantine-RichTextEditor-content {
     	line-height: 1.5rem;
 	}
 }
-
-@media (min-width: 1940px) {
-	#community-container {
-		--number-of-columns: 6;
-	}
-}
-

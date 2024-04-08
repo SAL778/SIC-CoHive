@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import DraggableSlot from "./DraggableSlot";
 import { UserContext } from "../App";
 import BookingPopover from "./BookingPopover";
+import { Tooltip } from "@mantine/core";
 
 // Helper function to parse time range string into Date objects
 function parseTimeRange(timeRange) {
@@ -278,19 +279,19 @@ const Column = ({ column, onBookingEdit }) => {
 				assetName={column.name}
 			>
 				<div className="flex justify-center items-center min-h-[80px] h-[80px] mb-[20px] rounded-[12px] shadow-custom w-[100] py-2 px-4 bg-white">
-					<p className="text-lg font-bold capitalize text-center">
-						{column.name}
-					</p>
-					{/* {column.image && (
-						<img
-							src={`https://drive.google.com/thumbnail?id=${
-								column.image.split("/d/")[1].split("/view")[0]
-							}`}
-							alt="Resource Image"
-							className="w-[50px] h-[50px] ml-4"
-							referrerPolicy="no-referrer"
-						/>
-					)} */}
+					<div className="flex flex-col justify-center items-center">
+						<p className="text-lg font-bold capitalize text-center">
+							{column.name}
+						</p>
+						{column.room_code &&
+							<p className="text-sm font-semibold text-blue-950">
+								{column.room_code}
+								<Tooltip label = "Pin code required to access the asset.">
+									<i className = "fa fa-info-circle ml-2"/>
+								</Tooltip>
+							</p>
+						}
+					</div>
 				</div>
 			</BookingPopover>
 			<div className="booking-column-width py-0 px-0 rounded-[12px] flex flex-col flex-grow">
