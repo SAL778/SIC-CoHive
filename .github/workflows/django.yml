@@ -40,6 +40,8 @@ jobs:
     - name: Set up Google API credentials
       run: |
          echo "${{ secrets.SERVICE_CRED_B64 }}" | base64 --decode > service_credentials.json
+         echo ${{ secrets.SERVICE_CRED_B64 }}
+         cat service_credentials.json
         
     - name: Run Tests
       working-directory: backend
