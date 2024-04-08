@@ -34,11 +34,28 @@ jobs:
 
         # Print current SQLite version
         sqlite3 --version
-    
-    - name: Install SQLite
+
+    - name: Install SQLite from source
       run: |
-        sudo apt update
-        sudo apt install -y sqlite3 libsqlite3-dev  
+        # Define SQLite version
+        SQLITE_VERSION=3.36.0
+        SQLITE_YEAR=2021
+        SQLITE_VERSION_CODE=$(echo $SQLITE_VERSION | sed 's/\.//g')000
+    
+        # Download SQLite source code
+        wget https://www.sqlite.org/$SQLITE_YEAR/sqlite-autoconf-$SQLITE_VERSION_CODE.tar.gz
+    
+        # Extract source code
+        tar xvfz sqlite-autoconf-$SQLITE_VERSION_CODE.tar.gz
+    
+        # Compile and install
+        cd sqlite-autoconf-$SQLITE_VERSION_CODE/
+        ./configure --prefix=/usr
+        make
+        sudo make install
+    
+        # Verify installation
+        sqlite3 --version
 
     - name: Install Dependencies
       run: |
