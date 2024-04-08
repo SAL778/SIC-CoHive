@@ -35,6 +35,10 @@ jobs:
         # Print current SQLite version
         sqlite3 --version
 
+    - name: Install build essentials
+      run: sudo apt update && sudo apt install -y build-essential wget
+
+
     - name: Install SQLite from source
       run: |
         # Define SQLite version
