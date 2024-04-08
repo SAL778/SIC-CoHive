@@ -70,6 +70,11 @@ jobs:
     - name: Set up Google API credentials
       run: |
         echo "${{ secrets.SERVICE_CREDENTIALS }}" > service_credentials.json
+
+    - name: Set LD_PRELOAD
+      run: |
+        echo "LD_PRELOAD=$(find /usr -name libsqlite3.so | head -n 1)" >> $GITHUB_ENV
+
         
     - name: Run Tests
       working-directory: backend
