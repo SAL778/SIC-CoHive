@@ -53,7 +53,7 @@ class TestBookings(unittest.TestCase) :
         self.global_driver = global_driver
 
     def test_a_user_can_view_room_bookings(self):
-        """Verifies that a user can successfully view column room bookings"""
+        """US 2.01 2.02 - Verifies that a user can successfully view column room bookings"""
         global_driver.get("http://localhost:5173/bookings")
         time.sleep(3)
         room_column = global_driver.find_element(By.XPATH, "//p[text()='MEETING ROOM1']")
@@ -61,7 +61,7 @@ class TestBookings(unittest.TestCase) :
         self.assertTrue(room_column, "MEETING ROOM1 not found")
         
     def test_b_user_can_view_equipment_bookings(self):
-        """Verifies that a user can successfully view column equipment bookings"""
+        """US 2.01 2.02 2.06 - Verifies that a user can successfully view column equipment bookings"""
         global_driver.get("http://localhost:5173/bookings")
         global_driver.set_window_size(1727, 1630)
         equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
@@ -72,7 +72,7 @@ class TestBookings(unittest.TestCase) :
         self.assertTrue(equipment_column, "Laptop not found")
 
     def test_c_user_can_book_room(self):
-        """Verifies that a user can successfully book a room they are permitted using the (New Booking) button"""
+        """US 2.06 - Verifies that a user can successfully book a room they are permitted using the (New Booking) button"""
         global_driver.get("http://localhost:5173/bookings")
         book_button = global_driver.find_element(By.XPATH, "//button[text()='New Booking']")
         book_button.click()
@@ -117,7 +117,7 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
 
     def test_d_user_can_view_room_booking_list(self):
-        """Verifies that a user can successfully view their own room booking in list view"""
+        """US 2.01 - Verifies that a user can successfully view their own room booking in list view"""
         global_driver.get("http://localhost:5173/bookings")
         time.sleep(3)
         ## CHANGE TO AN UPDATED DATE
@@ -145,7 +145,7 @@ class TestBookings(unittest.TestCase) :
         self.assertTrue(booked_title, "Booking is present in list view")
 
     def test_e_user_can_edit_room_booking(self):
-        """Verifies that a user can successfully edit their own room booking"""
+        """US 2.06 - Verifies that a user can successfully edit their own room booking"""
         global_driver.get("http://localhost:5173/bookings")
         time.sleep(3)
         ## CHANGE TO AN UPDATED DATE
@@ -176,7 +176,7 @@ class TestBookings(unittest.TestCase) :
         self.assertIn("Booking modified", confirm_notif.text)
 
     def test_f_user_can_delete_room_booking(self):
-        """Verifies that a user can successfully delete their own room booking"""
+        """US 2.01 - Verifies that a user can successfully delete their own room booking"""
         global_driver.get("http://localhost:5173/bookings")
         ## CHANGE TO AN UPDATED DATE
         big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
@@ -203,7 +203,7 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
 
     def test_g_user_can_book_equipment(self):
-        """Verifies that a user can successfully book a equipment they are permitted using the (Book) button"""
+        """US 2.06 - Verifies that a user can successfully book a equipment they are permitted using the (Book) button"""
         global_driver.get("http://localhost:5173/bookings")
         time.sleep(2)
         equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
@@ -250,7 +250,7 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
 
     def test_h_user_can_view_equipment_booking_list(self):
-        """Verifies that a user can successfully view their own equipment booking in list view"""
+        """US 2.01 - Verifies that a user can successfully view their own equipment booking in list view"""
         global_driver.get("http://localhost:5173/bookings")
         time.sleep(2)
         equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
@@ -281,7 +281,7 @@ class TestBookings(unittest.TestCase) :
         self.assertTrue(booked_title, "Booking is present in list view")
 
     def test_i_user_can_edit_equipment_booking(self):
-        """Verifies that a user can successfully edit their own equipment booking"""
+        """US 2.06 - Verifies that a user can successfully edit their own equipment booking"""
         global_driver.get("http://localhost:5173/bookings")
         global_driver.set_window_size(1727, 1630)
         time.sleep(2)
@@ -317,7 +317,7 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
         
     def test_j_user_can_delete_equipment_booking(self):
-        """Verifies that a user can successfully delete their own equipment booking"""
+        """US 2.01 - Verifies that a user can successfully delete their own equipment booking"""
         global_driver.get("http://localhost:5173/bookings")
         global_driver.set_window_size(1727, 1630)
         equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")

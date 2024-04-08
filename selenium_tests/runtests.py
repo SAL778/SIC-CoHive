@@ -15,7 +15,7 @@ def runAll():
     run_bookings_tests()
     run_events_tests()
     run_community_tests()
-    run_statistics_tests()
+    run_statistics_tests() 
     run_profile_tests()
     run_contact_tests()
     run_signout_tests()

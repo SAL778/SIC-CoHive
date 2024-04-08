@@ -22,10 +22,10 @@ class TestRouting(unittest.TestCase) :
         self.global_driver = global_driver
 
     def test_a_google_calendar(self):
-        """Verifies that the Google Calendar for events renders in an iframe correctly when accessed from the webpage."""
+        """US 3.04 - Verifies that the Google Calendar for events renders in an iframe correctly when accessed from the webpage."""
         global_driver.get("http://localhost:5173/events")
         time.sleep(2)
-        google_form_link = "https://embed.styledcalendar.com/#QsoYY1jHXbqoa6iOHxZi" 
+        google_form_link = "https://embed.styledcalendar.com/#UlxRQUxvELGPXWaJT3oL" 
         iframe = self.global_driver.find_element(By.TAG_NAME,'iframe')
         iframe_src = iframe.get_attribute("src")
         stripped_url = iframe_src.replace("``d=true", "")
@@ -33,30 +33,26 @@ class TestRouting(unittest.TestCase) :
         self.assertEqual(stripped_url, google_form_link)
 
     def test_b_google_calendar_details(self):
-        """Verifies that the events in Google Calendar shows the details when accessed from the webpage."""
+        """US 3.03 3.04 3.05 - Verifies that the events in Google Calendar shows the details when accessed from the webpage."""
         global_driver.get("http://localhost:5173/events")
         time.sleep(1)
         global_driver.switch_to.frame(global_driver.find_element(By.TAG_NAME, "iframe"))
-        # <button type="button" title="Previous" aria-pressed="false" class="fc-prev-button fc-button fc-button-primary"><span class="fc-icon fc-icon-chevron-left"></span></button>
-        prev_button = global_driver.find_element(By.XPATH, "//button[contains(@class, 'fc-prev-button')]")
-        prev_button.click()
         time.sleep(2)
         global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
-        time.sleep(1)
+        time.sleep(2)
         global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
-        event_link = global_driver.find_element(By.XPATH, "//a[contains(@class, 'fc-daygrid-event') and .//div[@class='fc-event-time' and text()='1p'] and .//div[@class='fc-event-title' and text()='meet again test']]")
+        event_link = global_driver.find_element(By.XPATH, "//a[contains(@class, 'fc-daygrid-event') and .//div[@class='fc-event-time' and text()='5p'] and .//div[@class='fc-event-title' and text()='NeurAlberta Tech Monthly Rec Nights']]")
         time.sleep(3)
         event_link.click()
-        # time.sleep(3)
         event_title = WebDriverWait(global_driver, 5).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-cy='event-title']"))
         )
         # CHECK IF EVENT IS PRESENT BEFORE RUNNING
-        self.assertEqual(event_title.text, "meet again test")
+        self.assertEqual(event_title.text, "NeurAlberta Tech Monthly Rec Nights")
         time.sleep(3)
 
     def test_c_google_calendar_live_update(self):
-        """Verifies that the events in Google Calendar shows live updates when accessed from the webpage."""
+        """US 3.04 3.05 - Verifies that the events in Google Calendar shows live updates when accessed from the webpage."""
         global_driver.get("http://localhost:5173/events")
         time.sleep(2)
         global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
@@ -72,26 +68,27 @@ class TestRouting(unittest.TestCase) :
         back_to_big_date = global_driver.find_element(By.XPATH, "//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='April 4']") # CHECKS THE EVENT IN APRIL 4TH 2024
         time.sleep(3)
         back_to_big_date.click()
+        time.sleep(3)
+        global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
         
         live_det = WebDriverWait(global_driver, 2).until(
-            EC.presence_of_element_located((By.XPATH, "//h3[contains(@class, 'large-text-mobile font-semibold capitalize leading-[1]') and contains(text(), 'another event')]")) # CHECKS THE EVENT IN APRIL 4TH 2024
+            EC.presence_of_element_located((By.XPATH, "//h3[contains(@class, 'large-text-mobile font-semibold capitalize leading-[1]') and contains(text(), 'NeurAlberta Tech Monthly Rec Nights')]")) # CHECKS THE EVENT IN APRIL 4TH 2024
         )
         self.assertTrue(live_det, "Live update not working")
-        time.sleep(2)
+        time.sleep(3)
 
     def test_d_events_carousel(self):
-        """Verifies that the events carousel shows up from the webpage."""
+        """US 3.03 - Verifies that the events carousel shows up from the webpage."""
         global_driver.get("http://localhost:5173/events")
         time.sleep(2)
         title = WebDriverWait(global_driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//h2[contains(@class, 'title') and contains(text(), 'SIC Links')]"))
         )
-        # print(title.text)
         self.assertTrue(title, "Events carousel not showing up")
         time.sleep(3)
 
-    def test_e_events_carousel(self):
-        """Verifies that the events carousel can be accessed and viewed for further details."""
+    def test_e_events_carousel_details(self):
+        """US 3.03 - Verifies that the events carousel can be accessed and viewed for further details."""
         global_driver.get("http://localhost:5173/events")
         time.sleep(2)
         title = WebDriverWait(global_driver, 3).until(
@@ -105,8 +102,8 @@ class TestRouting(unittest.TestCase) :
         self.assertTrue(details, "Events carousel not accessible")
         time.sleep(3)
 
-    def test_f_events_carousel(self):
-        """Verifies that the submit an event form can be accessed."""
+    def test_f_events_form(self):
+        """US 3.02 -Verifies that the submit an event form can be accessed."""
         global_driver.get("http://localhost:5173/events")
         time.sleep(2)
         original_window = global_driver.current_window_handle
