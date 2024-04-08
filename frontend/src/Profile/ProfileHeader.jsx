@@ -1,8 +1,10 @@
+import defaultImage from "../assets/community-person.jpg";
+
 export default function ProfileHeader({ profileUser }) {
 	return (
 		<div className="profileHeader flex px-[10px]">
 			<img
-				src={profileUser.profileImage}
+				src={profileUser.profileImage || defaultImage}
 				alt={`Image of ${profileUser.first_name}`}
 				className={"rounded-lg mr-6 h-[96px] w-[96px] object-cover"}
 				referrerPolicy="no-referrer"
