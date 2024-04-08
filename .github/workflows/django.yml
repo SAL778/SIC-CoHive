@@ -26,7 +26,8 @@ jobs:
 
     - name: Spin up venv
       run: |
-        python -m env venv
+        python -m venv env
+        source env/bin/activate
     
     - name: Install Dependencies
       run: |
