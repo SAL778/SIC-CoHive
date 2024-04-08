@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import EventsList from "./components/EventsList";
 import DateSelector from "./components/DateSelector";
-import EventsCarousel from "./EventsPage/EventsCarousel.jsx";
+import EventsCarousel from "./components/EventsCarousel.jsx";
 import { Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { HostContext } from "./App";
@@ -35,7 +35,6 @@ function Events() {
 		try {
 			const formattedDate = selectedDate.toISOString().split("T")[0];
 			const response = await fetch(
-				// `http://localhost:8000/google_drive_integration/calendar-events?date=${formattedDate}`
 				`${host}/google_drive_integration/calendar-events?date=${formattedDate}`
 			);
 			const jsonResponse = await response.json();
@@ -63,26 +62,38 @@ function Events() {
 		);
 	};
 
-	// Get the time without seconds for the modal
-	const removeSeconds = (timeString) => {
-		if (timeString) {
-		  const [hours, minutes, seconds_period] = timeString.split(':');
-		  const period = seconds_period.split(' ')[1];
-		  return `${hours}:${minutes} ${period}`;
+	// // Get the time without seconds for the modal
+	// const removeSeconds = (timeString) => {
+	// 	if (timeString) {
+	// 		const [hours, minutes, seconds_period] = timeString.split(":");
+	// 		const period = seconds_period.split(" ")[1];
+	// 		return `${hours}:${minutes} ${period}`;
+	// 	}
+	// 	return "";
+	// };
+
+	const removeSeconds = (dateTimeString) => {
+		if (dateTimeString) {
+			const date = new Date(dateTimeString);
+			const hours = date.getHours().toString().padStart(2, "0");
+			const minutes = date.getMinutes().toString().padStart(2, "0");
+			return `${hours}:${minutes}`;
 		}
-		return '';
-	  };
+		return "";
+	};
 
 	const handleDateChange = (selectedDate) => {
 		setCurrentDate(selectedDate);
 		fetchEvents(selectedDate);
 	};
 
+	//Current Sheets. Use GCal fetch instead. Get event data from GCal and event image from GSheets.
 	useEffect(() => {
 		fetchEvents(currentDate);
 		httpRequest({
 			endpoint: `${host}/google_drive_integration/events`,
 			onSuccess: (eventData) => {
+				console.log("Event data:", eventData);
 				setEvents(eventData.events);
 				setIsLoading(false);
 			},
@@ -180,15 +191,16 @@ function Events() {
 								</p>
 								<p className="date">
 									<i className="fa text-center w-[20px] mr-3 fa-calendar-day" />
-									{clickedEvent?.date}
+									{clickedEvent?.start.dateTime.split("T")[0]}
 								</p>
 								<p className="organizer">
 									<i className="fa text-center w-[20px] mr-3 fa-user-group" />
-									{clickedEvent?.email}
+									{clickedEvent?.creator.email}
 								</p>
 								<p className="time">
 									<i className="fa text-center w-[20px] mr-3 fa-clock" />
-									{removeSeconds(clickedEvent?.startTime)} - {removeSeconds(clickedEvent?.endTime)}
+									{removeSeconds(clickedEvent?.start.dateTime)} -{" "}
+									{removeSeconds(clickedEvent?.end.dateTime)}
 								</p>
 							</section>
 							<p className="mt-10">{clickedEvent?.description}</p>
@@ -229,10 +241,21 @@ function convertCalendarEvent(event) {
 		location: event.location !== "" ? event.location : fallbackValue,
 		description:
 			event.description !== "" ? event.description : "No description",
-		email: event.email !== "" ? event.email : fallbackValue,
-		date: parseDate(event.start, "date"),
-		startTime: parseDate(event.start, "time"),
-		endTime: parseDate(event.end, "time"),
+		creator: {
+			email: event.email,
+		},
+		// date: parseDate(event.start, "date"),
+		// startTime: parseDate(event.start, "time"),
+		// endTime: parseDate(event.end, "time"),
+		// date: event.start.split("T")[0],
+		// startTime: event.start.split("T")[0],
+		// endTime: event.end.split("T")[0],
+		start: {
+			dateTime: event.start,
+		},
+		end: {
+			dateTime: event.end,
+		},
 	};
 }
 
@@ -246,6 +269,9 @@ function convertCalendarEvent(event) {
 const parseDate = (dateStr, output = "date") => {
 	//The date string provided by iCal isn't a valid Date constructor, so I have to use regex to pull out the times
 	//Parsing dates makes me so depressed man we should've just used a library like moment if only we knew earlier :(
+
+	//start:"2024-05-02T13:00:00-06:00"
+	//end: "2024-05-02T6:00"
 
 	//Break the string apart
 	const rePattern = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/;
