@@ -1,5 +1,4 @@
 name: Django CI
-
 on:
   push:
     branches: [ "deployment" ]
@@ -8,63 +7,43 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+
+    runs-on: 
+      - self-hosted
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ['3.10', '3.11'] # This will be used for naming only in this approach.
+        python-version: ['3.10', '3.11']
 
     steps:
     - uses: actions/checkout@v3
     
-    # Install build essentials and SQLite dependencies
-    - name: Install build essentials
-      run: sudo apt update && sudo apt install -y build-essential wget libsqlite3-dev zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev curl
-    
-    # Download and install the latest SQLite from source
-    - name: Install SQLite from source
-      run: |
-        SQLITE_VERSION=3360000 # Update this with the latest version code
-        wget https://www.sqlite.org/2021/sqlite-autoconf-$SQLITE_VERSION.tar.gz
-        tar xvfz sqlite-autoconf-$SQLITE_VERSION.tar.gz
-        cd sqlite-autoconf-$SQLITE_VERSION/
-        ./configure --prefix=/usr
-        make
-        sudo make install
-    
-    # Download and compile Python with the new SQLite
-    - name: Compile Python with new SQLite
-      run: |
-        PYTHON_VERSION=3.10.4 # Example version, change as needed
-        wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz
-        tar xvf Python-$PYTHON_VERSION.tgz
-        cd Python-$PYTHON_VERSION/
-        ./configure --enable-optimizations --with-ensurepip=install
-        make -j 8
-        sudo make altinstall # Use altinstall to prevent replacing the default python binary
-    
-    # Setup virtual environment using the newly compiled Python version
-    - name: Setup virtual environment
-      run: |
-        python3.10 -m venv env # Change python3.10 to match the compiled version
-        source env/bin/activate
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
 
-    # Install dependencies
+    - name: Spin up venv
+      run: |
+        python -m venv env
+        source env/bin/activate
+    
+    - name: Install SQLite
+      run: |
+        sudo apt update
+        sudo apt install -y sqlite3 libsqlite3-dev  
+
     - name: Install Dependencies
       run: |
-        source env/bin/activate
-        pip install -r requirements.txt
+        python3 -m pip install --upgrade pip
+        pip cache purge
+        pip install -r requirements.txt --upgrade
     
-    # Set up Google API credentials
     - name: Set up Google API credentials
       run: |
         echo "${{ secrets.SERVICE_CREDENTIALS }}" > service_credentials.json
-    
-    # Run tests using the virtual environment
+        
     - name: Run Tests
       working-directory: backend
       run: |
-        source ../env/bin/activate
-        python manage.py test
+        python3 manage.py test
