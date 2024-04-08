@@ -78,7 +78,7 @@ export default function ViewProfile() {
 					<TextEditor initialValue={portfolio.description} readOnly={true} />
 				</>
 			) : (
-				<p>Sorry, this page is private. Nothing to see here!</p>
+				<p className="px-[10px]">Sorry, this portfolio is private. Nothing to see here!</p>
 			)}
 		</div>
 	);

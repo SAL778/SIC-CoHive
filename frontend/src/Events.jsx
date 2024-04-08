@@ -65,16 +65,6 @@ function Events() {
 		);
 	};
 
-	// // Get the time without seconds for the modal
-	// const removeSeconds = (timeString) => {
-	// 	if (timeString) {
-	// 		const [hours, minutes, seconds_period] = timeString.split(":");
-	// 		const period = seconds_period.split(" ")[1];
-	// 		return `${hours}:${minutes} ${period}`;
-	// 	}
-	// 	return "";
-	// };
-
 	const removeSeconds = (dateTimeString) => {
 		if (dateTimeString) {
 			const date = new Date(dateTimeString);
@@ -101,6 +91,15 @@ function Events() {
 			},
 		});
 	}, []);
+
+	const trimDescription = (description) => {
+		if (!description) return "";
+		const words = description.split(" ");
+		if (words.length > 100) {
+			return words.slice(0, 100).join(" ") + "...";
+		}
+		return description;
+	}
 
 	return (
 		<div className="parent-container-events content-container max-w-[1600px] mx-auto px-[10px] pb-[10px] overflow-hidden">
@@ -132,7 +131,7 @@ function Events() {
 					src={googleCalendar}
 					title="Styled Calendar"
 					className="calendarFrame styled-calendar-container"
-					style={{ width: "100%", height: "695px", border: "none" }}
+					style={{ width: "100%", height: "680px", border: "none", overflow: "hidden"}}
 					data-cy="calendar-embed-iframe"
 				></iframe>
 			</div>
@@ -215,7 +214,7 @@ function Events() {
 									{removeSeconds(clickedEvent?.end.dateTime)}
 								</p>
 							</section>
-							<p className="mt-10">{convert(clickedEvent?.description)}</p>
+							<p className="mt-10">{trimDescription(convert(clickedEvent?.description))}</p>
 						</div>
 						<div className="buttonFooter ml-auto">
 							<button
