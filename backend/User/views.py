@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-import json
 from django.shortcuts import get_object_or_404, HttpResponse
 from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema

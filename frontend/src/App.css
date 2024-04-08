@@ -566,6 +566,10 @@ button.button-disabled:focus,
 	background: none;
 }
 
+.open-booking-slot .slot-time {
+	opacity: 0;
+}
+
 /* Changed from box-shadow to border because box-shadow was consuming too much resources to render that many */
 .booking-column-container .embla__slide .open-booking-slot {
 	border-bottom: 1px solid rgb(228 228 228 / 70%);
@@ -579,13 +583,21 @@ button.button-disabled:focus,
 	border-radius: 0 0 12px 12px;
 }
 
-.booking-column-container .embla__slide:nth-child(2n + 1) .open-booking-slot {
+.booking-column-container .embla__slide:nth-child(2n + 1) .slot-div {
 	background: #e5e5e5;
+}
+
+.booking-column-container .embla__slide:nth-child(2n + 1) .open-booking-slot {
+	/* background: #e5e5e5; */
     border-bottom: 1px solid #adadad;
 }
 
-.booking-column-container .embla__slide:nth-child(2n) .open-booking-slot {
+.booking-column-container .embla__slide:nth-child(2n) .slot-div  {
 	background: #fff;
+}
+
+.booking-column-container .embla__slide:nth-child(2n) .no-permission-column:not(.currentlyBooking) .slot-div {
+	background: #e5e5e5;
 }
 
 .booking-column-container
@@ -617,6 +629,10 @@ button.button-disabled:focus,
 	.booking-column:not(.currentlyBooking)
 	.open-booking-slot:hover {
 	background: rgb(249, 115, 22, 70%);
+}
+
+.booking-column:not(.no-permission-column) .open-booking-slot:hover .slot-time {
+	opacity: 1;
 }
 
 .column-booking-card::after {
@@ -678,18 +694,17 @@ button.button-disabled:focus,
 	background-color: var(--hover-orange)
 }
 
-.parent-container-events {
+.parent-container-events,
+.parent-container-stats {
     flex-grow: 1;
 	margin: 30px 0;
 }
 .calendarContainer {
 	width: 100%;
-	height: 600px;
 	height: fit-content;
 	margin-top: 16px;
     margin-bottom: 30px;
     overflow: hidden;
-    border-bottom: 80px solid #f5f5f5;
     border-radius: 12px;
 	box-shadow: 0px 2px 6px #00000029;
 }
@@ -835,14 +850,15 @@ div .mantine-RichTextEditor-content {
 	background: rgba(0, 0, 0, 0.15);
 }
 
-.eventModal .leftSide img,
+/* .eventModal .leftSide img,
 .image-overlay:after {
 	clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
-}
+} */
 
 .eventModal .rightSide {
 	color: #172554;
 	font-weight: 400;
+	padding: 20px 0 0 0;
 }
 
 .parent-container-community,
@@ -864,6 +880,13 @@ div .mantine-RichTextEditor-content {
 	white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.card-stats-title {
+	font-size: 1.25rem;
+	padding-bottom: 0.5rem;
+	margin-bottom: 1rem;
+	border-bottom: 2px solid var(--primary-orange);
 }
 
 .large-text-mobile {
@@ -914,6 +937,82 @@ div .mantine-RichTextEditor-content {
 	grid-template-columns: repeat(var(--event-columns), minmax(0, 1fr));
 }
 
+.timePicker .button-group {
+	margin-bottom: 5px;
+}
+
+.timePicker .mantine-InputWrapper-root {
+	border: none;
+	overflow: hidden;
+	border-radius: 5px;
+	box-shadow: 0px 2px 6px #00000029;
+}
+
+.timePicker .mantine-Input-input {
+	border: none;
+}
+
+.button-group {
+	gap: 0.5rem;
+}
+
+.stats-top-section {
+	display: grid;
+	width: 100%;
+	grid-template-columns: repeat(1, 1fr);
+	row-gap: 1rem;
+}
+
+.stats-top-section .peak-times {
+	grid-column: span 2 / span 2;
+	background: #fff;
+	padding: 0.75rem;
+	border-radius: 12px;
+	box-shadow: 0px 2px 6px #00000029;
+}
+
+.stats-top-section .resource-popularity {
+	grid-column: span 1 / span 1;
+	background: #fff;
+	padding: 0.75rem;
+	border-radius: 12px;
+	box-shadow: 0px 2px 6px #00000029;
+}
+
+.heading-stats,
+.chartToggles {
+	display: flex;
+	flex-direction: column;
+}
+
+.togglesWrap {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.card-stats > div {
+	padding: 1rem 1.25rem;
+}
+
+.card-stats i {
+	display: flex;
+	align-items: center;
+	color: var(--primary-orange);
+	padding-top: 0.25rem;
+	width: 40px;
+	font-size: 40px;
+}
+
+.eventModal.modalContent {
+	display: flex;
+	flex-direction: column;
+}
+
+.eventModal img {
+	max-height: 280px;
+}
+
 @media (min-width: 500px) {
 	.desktop-hidden {
 		display: none;
@@ -929,6 +1028,7 @@ div .mantine-RichTextEditor-content {
 
 	.text-large-desktop {
 		font-size: 1.5rem;
+		line-height: 1.5rem;
 	}
 
 	.timeSlot {
@@ -939,9 +1039,18 @@ div .mantine-RichTextEditor-content {
 @media (min-width: 610px) {
 
 	.upperSection,
-	.lowerSection {
+	.lowerSection,
+	.eventModal.modalContent {
 		display: flex;
 		flex-direction: row;
+	}
+
+	.eventModal img {
+		max-height: none;
+	}
+
+	.eventModal .rightSide {
+		padding: 0 0 0 20px;
 	}
 	
 	.booking-image {
@@ -989,7 +1098,40 @@ div .mantine-RichTextEditor-content {
 
 	.text-large-desktop {
 		font-size: 2.25rem;
+		line-height: 2.25rem;
 	}
+
+	.chartToggles {
+		flex-direction: row;
+	}
+
+	.togglesWrap {
+		flex-direction: row;
+	}
+
+	.button-group {
+		gap: 0.75rem;
+	}
+
+	.stats-top-section .peak-times,
+	.stats-top-section .resource-popularity {
+		padding: 1.5rem;
+	}
+
+	.card-stats > div {
+		padding: 1.5rem;
+	}
+
+	.card-stats-title {
+		font-size: 1.35rem;
+		padding-bottom: 0.75rem;
+	}
+
+	.card-stats i {
+		width: 60px;
+		font-size: 60px;
+	}
+	
 }
 
 @media (min-width: 700px) {
@@ -1017,7 +1159,8 @@ div .mantine-RichTextEditor-content {
 
 	.timeSlot {
 		flex-direction: column;
-	}	
+	}
+	
 }
 
 @media (min-width: 1000px) {
@@ -1064,6 +1207,12 @@ div .mantine-RichTextEditor-content {
 	}
 }
 
+@media (min-width: 1200px) {
+	.heading-stats {
+		flex-direction: row;
+	}
+}
+
 @media (min-width: 1340px) {
 	#community-container {
 		--number-of-columns: 3;
@@ -1076,13 +1225,19 @@ div .mantine-RichTextEditor-content {
 	}
 }
 
-@media (min-width: 1540px) {
+@media (min-width: 1550px) {
 	#community-container {
 		--number-of-columns: 4;
 	}
 
 	.large-text-mobile {
 		font-size: 1.5rem;
+	}
+
+	.stats-top-section,
+	.card-stats  {
+		grid-template-columns: repeat(3, 1fr);
+		column-gap: 1rem;
 	}
 
 }

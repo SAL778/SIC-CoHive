@@ -63,6 +63,16 @@ function Events() {
 		);
 	};
 
+	// Get the time without seconds for the modal
+	const removeSeconds = (timeString) => {
+		if (timeString) {
+		  const [hours, minutes, seconds_period] = timeString.split(':');
+		  const period = seconds_period.split(' ')[1];
+		  return `${hours}:${minutes} ${period}`;
+		}
+		return '';
+	  };
+
 	const handleDateChange = (selectedDate) => {
 		setCurrentDate(selectedDate);
 		fetchEvents(selectedDate);
@@ -109,7 +119,7 @@ function Events() {
 					src={googleCalendar}
 					title="Styled Calendar"
 					className="calendarFrame styled-calendar-container"
-					style={{ width: "100%", height: "675px", border: "none" }}
+					style={{ width: "100%", height: "695px", border: "none" }}
 					data-cy="calendar-embed-iframe"
 				></iframe>
 			</div>
@@ -134,7 +144,7 @@ function Events() {
 				opened={opened}
 				onClose={modalClose}
 				centered
-				size="1200px"
+				size="1000px"
 				transitionProps={{
 					transition: "slide-up",
 					duration: 200,
@@ -143,18 +153,16 @@ function Events() {
 			>
 				<div className="eventModal modalContent h-full min-h-[40vh] w-full flex">
 					<div className="leftSide basis-1/2">
-						<div className="image-overlay absolute top-0 left-0 w-1/2 h-full">
+						<div className="image-overlay relative w-full h-full rounded-md overflow-hidden">
 							<img
 								src={properImageSource(clickedEvent?.imgSrc) || fallbackImage}
-								// Placeholder image for testing and broke image issue
-								// src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjDD0mkEw4XGHCeOLfDy4X-w3M_12FIJJ9x1fNsYzZBD5vAC_Nppn4uPAWtHNNHMvno6aRYMrq8PAiq95D0WXNXNA6t_T5z2sFaeo7BHxdE-L44QACEDNOQ5jDO7_tP1QthkF_hVvX9gact/s400/Makemake+moon+-+Hubble+NASA.jpg"
-								className="object-cover w-full h-full"
+								className="w-full h-full rounded-md object-cover"
 								referrerPolicy="no-referrer"
 							/>
 						</div>
 					</div>
 
-					<div className="rightSide basis-1/2 pl-4 flex flex-col justify-between">
+					<div className="rightSide basis-1/2 flex flex-col justify-between gap-8">
 						<div className="textContent">
 							<h2
 								style={{
@@ -180,7 +188,7 @@ function Events() {
 								</p>
 								<p className="time">
 									<i className="fa text-center w-[20px] mr-3 fa-clock" />
-									{clickedEvent?.startTime} - {clickedEvent?.endTime}
+									{removeSeconds(clickedEvent?.startTime)} - {removeSeconds(clickedEvent?.endTime)}
 								</p>
 							</section>
 							<p className="mt-10">{clickedEvent?.description}</p>
