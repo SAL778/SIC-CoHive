@@ -13,6 +13,8 @@ from selenium.common.exceptions import ElementClickInterceptedException, Timeout
 Tests inputs and renders related to the profile page
 """
 
+host = "http://localhost:5173"
+
 def find_and_click_text(global_driver, text):
     # Find all elements that contain the text "8:00 AM"
     elements = global_driver.find_elements(By.XPATH, f"//*[contains(text(), '{text}')]")
@@ -44,7 +46,7 @@ class TestProfile(unittest.TestCase) :
 
     def test_b_profile_can_add_flair_role(self):
         """US 1.02 - Verifies that the profile can add flair roles"""
-        global_driver.get("http://localhost:5173/profile")
+        global_driver.get(f"{host}/profile")
         add_flair = WebDriverWait(global_driver, 3).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, "input.mantine-Input-input"))
         )       
@@ -61,7 +63,7 @@ class TestProfile(unittest.TestCase) :
 
     def test_c_profile_can_delete_flair_role(self):
         """US 1.02 - Verifies that the profile can delete flair roles"""
-        global_driver.get("http://localhost:5173/profile")
+        global_driver.get(f"{host}/profile")
         delete_flair = WebDriverWait(global_driver, 3).until(
             EC.visibility_of_element_located((By.CLASS_NAME, "mantine-Pill-remove"))
         ) 
@@ -72,7 +74,7 @@ class TestProfile(unittest.TestCase) :
 
     def test_d_profile_have_sic_role_present(self):
         """US 1.02 - Verifies that the profile have USER sic role present"""
-        global_driver.get("http://localhost:5173/profile")
+        global_driver.get(f"{host}/profile")
         sic_role = WebDriverWait(global_driver, 3).until(
             EC.visibility_of_element_located((By.XPATH, "//span[text()='User']"))
         ) 
@@ -81,7 +83,7 @@ class TestProfile(unittest.TestCase) :
 
     def test_e_profile_can_add_item_portfolio(self):
         """US 1.04 - Verifies that a portfolio item can be added """
-        global_driver.get("http://localhost:5173/profile")
+        global_driver.get(f"{host}/profile")
         add_item = WebDriverWait(global_driver, 3).until(
             EC.element_to_be_clickable((By.XPATH, "//button[contains(@class, 'button-orange') and text()='Add Item']"))
         )
@@ -109,7 +111,7 @@ class TestProfile(unittest.TestCase) :
     
     def test_f_profile_can_delete_item_portfolio(self):
         """US 1.04 - Verifies that a portfolio item can be deleted"""
-        global_driver.get("http://localhost:5173/profile")
+        global_driver.get(f"{host}/profile")
         global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
         time.sleep(3)
         delete_button = global_driver.find_element(By.XPATH, "//button[@aria-label='Delete button']")
@@ -128,7 +130,7 @@ class TestProfile(unittest.TestCase) :
 
     def test_g_bio_can_edited(self):
         """Verifies that a user can edit the profile description"""
-        global_driver.get("http://localhost:5173/profile")
+        global_driver.get(f"{host}/profile")
         global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
         time.sleep(2)
         textarea=global_driver.find_element(By.CSS_SELECTOR, "p[data-placeholder='Enter a brief description']")
@@ -145,7 +147,7 @@ class TestProfile(unittest.TestCase) :
 
     def test_h_bio_can_deleted(self):
         """Verifies that a user can delete the profile description"""
-        global_driver.get("http://localhost:5173/profile")
+        global_driver.get(f"{host}/profile")
         global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
         time.sleep(2)
         textarea = global_driver.find_element(By.CLASS_NAME, "ProseMirror")

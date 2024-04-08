@@ -13,6 +13,7 @@ from selenium.common.exceptions import ElementClickInterceptedException, Timeout
 Tests inputs and renders related to the feedback page
 """
 
+host = "http://localhost:5173"
 
 class TestRouting(unittest.TestCase) :
     def setUp(self):
@@ -20,7 +21,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_google_form(self):
         """US 6.01 7.02 - Verifies that the Google Form for feedback renders in an iframe correctly when accessed from the webpage."""
-        global_driver.get("http://localhost:5173/feedback")
+        global_driver.get(f"{host}/feedback")
         time.sleep(5)
         iframe = global_driver.find_element(By.XPATH, "//iframe")
         self.assertTrue(iframe, "Feedback Form iframe not found")

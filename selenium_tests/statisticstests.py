@@ -14,13 +14,15 @@ from datetime import date, timedelta
 Tests inputs and renders related to the statistics page
 """
 
+host = "http://localhost:5173"
+
 class TestRouting(unittest.TestCase) :
     def setUp(self):
         self.global_driver = global_driver
 
     def test_a_bar_graph(self):
         """US 4.01 4.02 - Verifies that in the All Time section, the bars in the bar graph appear when accessed from the webpage."""
-        global_driver.get("http://localhost:5173/statistics")
+        global_driver.get(f"{host}/statistics")
         time.sleep(2)
         all_time = global_driver.find_element(By.XPATH, "//button[text()='all time']")
         all_time.click()
@@ -32,7 +34,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_b_pie_graph(self):
         """US 4.01 4.02 - Verifies that in the All Time section, the pie graph appear when accessed from the webpage."""
-        global_driver.get("http://localhost:5173/statistics")
+        global_driver.get(f"{host}/statistics")
         time.sleep(2)
         all_time = global_driver.find_element(By.XPATH, "//button[text()='all time']")
         all_time.click()
@@ -44,7 +46,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_c_student_element(self):
         """US 4.01 4.02 - Verifies that the Students Innovating Element stats show up."""
-        global_driver.get("http://localhost:5173/statistics")
+        global_driver.get(f"{host}/statistics")
         time.sleep(2)
         global_driver.execute_script("window.scrollBy(0, 750);") 
         time.sleep(2)
@@ -54,7 +56,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_d_total_bookings(self):
         """US 4.01 4.02 - Verifies that the Students Innovating Element stats show up."""
-        global_driver.get("http://localhost:5173/statistics")
+        global_driver.get(f"{host}/statistics")
         time.sleep(2)
         global_driver.execute_script("window.scrollBy(0, 750);") 
         time.sleep(2)
@@ -64,7 +66,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_e_average_booking(self):
         """US 4.01 4.02 - Verifies that the Students Innovating Element stats show up."""
-        global_driver.get("http://localhost:5173/statistics")
+        global_driver.get(f"{host}/statistics")
         time.sleep(2)
         global_driver.execute_script("window.scrollBy(0, 750);") 
         time.sleep(2)
@@ -74,7 +76,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_f_download_svg(self):
         """US 4.02 - Verifies that you can download svg of a graph."""
-        global_driver.get("http://localhost:5173/statistics")
+        global_driver.get(f"{host}/statistics")
         time.sleep(2)
         all_time = global_driver.find_element(By.XPATH, "//button[text()='all time']")
         all_time.click()
@@ -89,7 +91,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_g_download_png(self):
         """US 4.02 - Verifies that you can download png of a graph."""
-        global_driver.get("http://localhost:5173/statistics")
+        global_driver.get(f"{host}/statistics")
         time.sleep(2)
         all_time = global_driver.find_element(By.XPATH, "//button[text()='all time']")
         all_time.click()
@@ -104,7 +106,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_h_download_csv(self):
         """US 4.02 - Verifies that you can download csv of a graph."""
-        global_driver.get("http://localhost:5173/statistics")
+        global_driver.get(f"{host}/statistics")
         time.sleep(2)
         all_time = global_driver.find_element(By.XPATH, "//button[text()='all time']")
         all_time.click()

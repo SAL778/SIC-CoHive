@@ -8,9 +8,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from config import confTestRunner, global_driver
 from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException
+
 """
 Tests inputs and renders related to the community page
 """
+
+host = "http://localhost:5173"
+
 def find_and_click_text(global_driver, text):
     # Find all elements that contain the text "8:00 AM"
     elements = global_driver.find_elements(By.XPATH, f"//*[contains(text(), '{text}')]")
@@ -34,7 +38,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_a_search_bar_user(self):
         """US 1.05 - Verifies that a user can successfully be found by partially inputting their name"""
-        global_driver.get("http://localhost:5173/community")
+        global_driver.get(f"{host}/community")
         search_bar = global_driver.find_element(By.CLASS_NAME, "search-input")
         search_bar.send_keys("k")
         time.sleep(3)
@@ -51,7 +55,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_b_search_bar_multi_user(self):
         """US 1.05 - Verifies that multiple users can be succesfully returned by partially inputting their name"""
-        global_driver.get("http://localhost:5173/community")
+        global_driver.get(f"{host}/community")
         search_bar = global_driver.find_element(By.CLASS_NAME, "search-input")
         search_bar.send_keys("k")
         time.sleep(2)
@@ -70,7 +74,7 @@ class TestRouting(unittest.TestCase) :
     
     def test_c_user_sic_filter(self):
         """US 1.05 - Verifies that a user can successfully be found by using partial User Type or SIC Role filters applicable for the user"""
-        global_driver.get("http://localhost:5173/community")
+        global_driver.get(f"{host}/community")
         icon_element = WebDriverWait(global_driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
         )
@@ -99,7 +103,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_d_user_not_found(self):
         """US 1.05 - Verifies that a user is not found by using User Type or SIC Role filters "NOT" applicable for the user"""
-        global_driver.get("http://localhost:5173/community")
+        global_driver.get(f"{host}/community")
         icon_element = WebDriverWait(global_driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
         )
@@ -122,7 +126,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_e_click_profile(self):
         """US 1.05 - Verifies that when an account is clicked, it redirects successfully to its profile"""
-        global_driver.get("http://localhost:5173/community")
+        global_driver.get(f"{host}/community")
         icon_element = WebDriverWait(global_driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
         )
@@ -152,7 +156,7 @@ class TestRouting(unittest.TestCase) :
         
     def test_f_click_public_profile(self):
         """US 1.06 - Verifies that when other account is clicked, it redirects successfully to its profile"""
-        global_driver.get("http://localhost:5173/community")
+        global_driver.get(f"{host}/community")
         icon_element = WebDriverWait(global_driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//i[contains(@class, 'fa-hand-pointer') and contains(@class, 'fa-solid')]"))
         )
