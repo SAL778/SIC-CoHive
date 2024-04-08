@@ -40,7 +40,7 @@ jobs:
     - name: Set up Google API credentials
       run: |
         echo "${{ secrets.SERVICE_CREDENTIALS }}" > service_credentials.json
-        echo service_credentials.json
+        cat service_credentials.json
         
     - name: Run Tests
       working-directory: backend
