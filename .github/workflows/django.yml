@@ -28,6 +28,7 @@ jobs:
       run: |
         python -m venv env
         source env/bin/activate
+        sqlite3 --version
     
     - name: Install SQLite
       run: |
