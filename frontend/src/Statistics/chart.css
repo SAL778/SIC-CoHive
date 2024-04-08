@@ -19,12 +19,16 @@
     font-size: 2rem;
 }
 
-/* .mantine-Select-wrapper {
+.chartToggles .mantine-Select-wrapper,
+.chartToggles .mantine-Select-input {
     height: 100%;
-} */
+    font-size: 1.25rem;
+    background: #f8f8f8;
+    min-height: 64px;
+}
 
 .mantine-Select-input {
-    color: rgb(234 88 12);
+    color: #ea580c;
     border: none;
     box-sizing: border-box;
     /* height: 100%; */

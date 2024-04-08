@@ -48,12 +48,17 @@ export default function ViewProfile() {
                 <ProfileHeader profileUser={profileUser} />
 
                 <div className="px-[10px]">
+                    <h2 className = "text-lg text-neutral-800 font-medium mt-0 mb-[10px]">User Tags
+                        <Tooltip label = "These tags are set by the user to describe themselves.">
+                            <i className = "fa fa-info-circle ml-2"/>
+                        </Tooltip>
+                    </h2>
                     <FlairList flairs = {profileUser.flair_roles.map(type => type.role_name)} isEditable={false} />
-                        <h2 className = "text-lg text-neutral-800 font-medium mt-[32px] mb-[10px]">Student Innovation Centre Roles
-                            <Tooltip label = "This is what the user does at the SIC and controls room access.">
-                                <i className = "fa fa-info-circle ml-2"/>
-                            </Tooltip>
-                        </h2>
+                    <h2 className = "text-lg text-neutral-800 font-medium mt-[32px] mb-[10px]">Student Innovation Centre Roles
+                        <Tooltip label = "This is what the user does at the SIC and controls room access.">
+                            <i className = "fa fa-info-circle ml-2"/>
+                        </Tooltip>
+                    </h2>
                     <FlairList flairs = {profileUser.accessType.map(type => type.name)} isEditable={false} isAccessRoles/>
                 </div>
                 

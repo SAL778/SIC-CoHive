@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 
-export function ButtonGroup({options, onButtonClick}) {
+export function ButtonGroup({options, onButtonClick, bgGrey = false}) {
     
     const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -17,16 +17,14 @@ export function ButtonGroup({options, onButtonClick}) {
     )
 
     return (
-        <div className = {`buttonGroup p-3 gap-4 grid grid-cols-${String(options.length)} bg-white rounded-md shadow-custom`}>
+        <div className={`${bgGrey ? "bg-[#f8f8f8]" : "bg-white"} button-group flex flex-row justify-between items-center py-0 px-5 shadow-custom rounded-[5px] h-[64px]`}>
             { options.map((option, index) => (
                 <button
                     type="button"
                     className={
-                        `py-3 px-6 rounded-md text-medium
-                        ${isSelected(index) ? "text-white bg-orange-600" : "text-orange-600"}
+                        `flex items-center gap-3 p-3 button-thin
+                        ${isSelected(index) ? "button-orange" : "button-clear"}
                         whitespace-nowrap capitalize
-                        ${isSelected(index) ? "hover:bg-orange-700" : "hover:bg-neutral-200"}
-                        transition ease-in-out duration-200 
                         `}
                     onClick={() => optionChange(index)}
                 >
