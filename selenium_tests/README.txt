@@ -3,6 +3,7 @@ Selenium with Python
 To verify correct installation try to run smoketest.py. You should get "Recieved!" on correct install.
 
 Change config.py with the path to your chromedriver before beginning if needed.
+Also, double check the localhost url link as well if it matches.
 
 Make sure you included accessType roles specifically for booking MEETING ROOM1(Room) and LAPTOP(Equipment)
 Double check by going to localhost first if the said resources can be booked.

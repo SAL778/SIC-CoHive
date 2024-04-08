@@ -17,13 +17,16 @@ month_day = today.strftime('%B %-d').lstrip("0")  # March 29
 Tests inputs and renders related to the events page
 """
 
+host = "http://localhost:5173"
+# host = "http://localhost:5173/api"
+
 class TestRouting(unittest.TestCase) :
     def setUp(self):
         self.global_driver = global_driver
 
     def test_a_google_calendar(self):
         """US 3.04 - Verifies that the Google Calendar for events renders in an iframe correctly when accessed from the webpage."""
-        global_driver.get("http://localhost:5173/events")
+        global_driver.get(f"{host}/events")
         time.sleep(2)
         google_form_link = "https://embed.styledcalendar.com/#UlxRQUxvELGPXWaJT3oL" 
         iframe = self.global_driver.find_element(By.TAG_NAME,'iframe')
@@ -34,7 +37,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_b_google_calendar_details(self):
         """US 3.03 3.04 3.05 - Verifies that the events in Google Calendar shows the details when accessed from the webpage."""
-        global_driver.get("http://localhost:5173/events")
+        global_driver.get(f"{host}/events")
         time.sleep(1)
         global_driver.switch_to.frame(global_driver.find_element(By.TAG_NAME, "iframe"))
         time.sleep(2)
@@ -53,7 +56,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_c_google_calendar_live_update(self):
         """US 3.04 3.05 - Verifies that the events in Google Calendar shows live updates when accessed from the webpage."""
-        global_driver.get("http://localhost:5173/events")
+        global_driver.get(f"{host}/events")
         time.sleep(2)
         global_driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
         time.sleep(1)
@@ -79,7 +82,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_d_events_carousel(self):
         """US 3.03 - Verifies that the events carousel shows up from the webpage."""
-        global_driver.get("http://localhost:5173/events")
+        global_driver.get(f"{host}/events")
         time.sleep(2)
         title = WebDriverWait(global_driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//h2[contains(@class, 'title') and contains(text(), 'SIC Links')]"))
@@ -89,7 +92,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_e_events_carousel_details(self):
         """US 3.03 - Verifies that the events carousel can be accessed and viewed for further details."""
-        global_driver.get("http://localhost:5173/events")
+        global_driver.get(f"{host}/events")
         time.sleep(2)
         title = WebDriverWait(global_driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//h2[contains(@class, 'title') and contains(text(), 'SIC Links')]"))  # CHECKS THE UPCOMING EVENT
@@ -104,7 +107,7 @@ class TestRouting(unittest.TestCase) :
 
     def test_f_events_form(self):
         """US 3.02 -Verifies that the submit an event form can be accessed."""
-        global_driver.get("http://localhost:5173/events")
+        global_driver.get(f"{host}/events")
         time.sleep(2)
         original_window = global_driver.current_window_handle
         submit = WebDriverWait(global_driver, 3).until(
