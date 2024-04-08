@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import EventsList from "./components/EventsList";
 import DateSelector from "./components/DateSelector";
-import EventsCarousel from "./EventsPage/EventsCarousel.jsx";
+import EventsCarousel from "./components/EventsCarousel.jsx";
 import { Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { HostContext } from "./App";

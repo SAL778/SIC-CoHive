@@ -1,5 +1,5 @@
 import React from "react";
-import MantineCarousel from "../components/Carousel/MantineCarousel.jsx";
+import MantineCarousel from "./Carousel/MantineCarousel.jsx";
 import { genHexColor } from "../utils.js";
 
 export default EventsCarousel;
