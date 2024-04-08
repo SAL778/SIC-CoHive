@@ -6,10 +6,13 @@ import { Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { HostContext } from "./App";
 import { httpRequest } from "./utils";
+import { convert } from "html-to-text";
+
+import fallbackImage from "./assets/event_background.jpg";
 
 function Events() {
-	const fallbackImage =
-		"https://www.ualberta.ca/science/media-library/news/2018/sep/student-innovation-centre-launch.jpg";
+	// const fallbackImage =
+	// "https://www.ualberta.ca/science/media-library/news/2018/sep/student-innovation-centre-launch.jpg";
 
 	const googleCalendar = JSON.parse(localStorage.getItem("appLinks"))[0]
 		.google_calendar_link;
@@ -87,7 +90,6 @@ function Events() {
 		fetchEvents(selectedDate);
 	};
 
-	//Current Sheets. Use GCal fetch instead. Get event data from GCal and event image from GSheets.
 	useEffect(() => {
 		fetchEvents(currentDate);
 		httpRequest({
@@ -105,7 +107,7 @@ function Events() {
 			<h1 className="text-orange-600 text-3xl font-bold mb-2">
 				Upcoming Events
 			</h1>
-			{!(isLoading && events) ? (
+			{!isLoading && events.length ? (
 				<EventsCarousel
 					events={events}
 					onItemClick={(event) => {
@@ -114,7 +116,7 @@ function Events() {
 					}}
 				/>
 			) : (
-				<p> Nothing booked yet! Check back soon</p>
+				<p> No Upcoming Events in the next 2 weeks! Check back soon</p>
 			)}
 			<button
 				type="button"
@@ -187,7 +189,17 @@ function Events() {
 							<section className="eventDetails grid gap-4 text-[16px]">
 								<p className="location">
 									<i className="fa text-center w-[20px] mr-3 fa-location-dot" />
-									{clickedEvent?.location}
+									{clickedEvent?.location.startsWith("https") ? (
+										<a
+											href={clickedEvent?.location}
+											className="underline text-blue-400"
+											target="_blank"
+										>
+											{clickedEvent?.location}
+										</a>
+									) : (
+										clickedEvent?.location
+									)}
 								</p>
 								<p className="date">
 									<i className="fa text-center w-[20px] mr-3 fa-calendar-day" />
@@ -203,7 +215,7 @@ function Events() {
 									{removeSeconds(clickedEvent?.end.dateTime)}
 								</p>
 							</section>
-							<p className="mt-10">{clickedEvent?.description}</p>
+							<p className="mt-10">{convert(clickedEvent?.description)}</p>
 						</div>
 						<div className="buttonFooter ml-auto">
 							<button
@@ -240,7 +252,7 @@ function convertCalendarEvent(event) {
 		title: event.summary !== "" ? event.summary : fallbackValue,
 		location: event.location !== "" ? event.location : fallbackValue,
 		description:
-			event.description !== "" ? event.description : "No description",
+			event.description !== "" ? event.description : "No event description",
 		creator: {
 			email: event.email,
 		},

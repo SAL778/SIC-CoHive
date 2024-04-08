@@ -6,6 +6,8 @@ import { TimeInput, DatePickerInput } from "@mantine/dates";
 import "./form.css";
 import { httpRequest, toProperImageURL } from "../../utils.js";
 
+import fallbackAssetImage from "../../assets/sic.jpg";
+
 export default BookingFormComponent;
 
 /**
@@ -27,8 +29,6 @@ function BookingFormComponent({
 }) {
 	const fallbackProfileImage =
 		"https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?q=80&w=1828&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-	const fallbackAssetImage =
-		"https://images.unsplash.com/photo-1633633292416-1bb8e7b2832b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
 	const { currentUser } = useContext(UserContext);
 	const { host } = useContext(HostContext);
@@ -45,12 +45,12 @@ function BookingFormComponent({
 	const interval = 15;
 	const timeRange = [7, 20]; //Opening times are between 7AM and 8PM
 
-    const allTimeSlots = getTimePeriods(interval, ...timeRange)
-    //Initial booking time slots
-    const [availableTimeSlots, setAvailableTimeSlots] = useState(allTimeSlots)
-    //Store booked slots for faster validation
-    const [disabledTimeSlots, setDisabledTimeSlots] = useState([])
-    const [resourceImageSrc, setResourceImageSrc] = useState(null)
+	const allTimeSlots = getTimePeriods(interval, ...timeRange);
+	//Initial booking time slots
+	const [availableTimeSlots, setAvailableTimeSlots] = useState(allTimeSlots);
+	//Store booked slots for faster validation
+	const [disabledTimeSlots, setDisabledTimeSlots] = useState([]);
+	const [resourceImageSrc, setResourceImageSrc] = useState(null);
 
 	//TODO: Change the resources ID from 1 to something else later.
 	const form = useForm({
@@ -139,39 +139,61 @@ function BookingFormComponent({
 				(asset) => asset.name === form.values.resources_name
 			);
 
-            httpRequest({
-                endpoint: `${host}/bookings/columns/${selectedAsset.id}/?date=${backendRepresentationOfDate(currentDate)}`,
-                onSuccess: (data) => {            //Unique 15 min intervals
-                    if (data.bookings)  {
-                        //Update the booking image
-                        setResourceImageSrc(data.image)
-                        const todaysBookings = data.bookings.filter((booking) => (currentDate.getDay() === new Date(booking.start_time).getDay()));
-                        const bookedTimeSlots = []
-                        for (const booking of todaysBookings) {
-                            let bookedTimes = getTimePeriods(interval, dateToTimePeriod(booking.start_time), dateToTimePeriod(booking.end_time));  //Booked 15 min intervals
-                            console.log(booking.start_time)
-                            if (selectedAsset.name == booking.resources_name && currentBooking) {
-                                const validBookingTimes = new Set(
-                                    getTimePeriods(interval, 
-                                        dateToTimePeriod('T' + serializeTime(currentBooking.start_time)), 
-                                        dateToTimePeriod('T' + serializeTime(currentBooking.end_time)))) //Timeslots taken by the item being edited.
-                                bookedTimes = bookedTimes.filter(timeSlot => !validBookingTimes.has(timeSlot))
-                            }
-                            bookedTimeSlots.push(...bookedTimes)
-                        }
-                        setDisabledTimeSlots(bookedTimeSlots)           //Store for future validation
-                        setAvailableTimeSlots(allTimeSlots.map((timeSlot) => (
-                            bookedTimeSlots.includes(timeSlot) 
-                            ? {value: timeSlot, label: timeSlot, disabled: true}
-                            : {value: timeSlot, label: timeSlot, disabled: false}
-                            )
-                        )
-                    );
-                }
-                }
-            })
-        }   
-    }, [form.values.resources_name])
+			httpRequest({
+				endpoint: `${host}/bookings/columns/${
+					selectedAsset.id
+				}/?date=${backendRepresentationOfDate(currentDate)}`,
+				onSuccess: (data) => {
+					//Unique 15 min intervals
+					if (data.bookings) {
+						//Update the booking image
+						setResourceImageSrc(data.image);
+						const todaysBookings = data.bookings.filter(
+							(booking) =>
+								currentDate.getDay() === new Date(booking.start_time).getDay()
+						);
+						const bookedTimeSlots = [];
+						for (const booking of todaysBookings) {
+							let bookedTimes = getTimePeriods(
+								interval,
+								dateToTimePeriod(booking.start_time),
+								dateToTimePeriod(booking.end_time)
+							); //Booked 15 min intervals
+							console.log(booking.start_time);
+							if (
+								selectedAsset.name == booking.resources_name &&
+								currentBooking
+							) {
+								const validBookingTimes = new Set(
+									getTimePeriods(
+										interval,
+										dateToTimePeriod(
+											"T" + serializeTime(currentBooking.start_time)
+										),
+										dateToTimePeriod(
+											"T" + serializeTime(currentBooking.end_time)
+										)
+									)
+								); //Timeslots taken by the item being edited.
+								bookedTimes = bookedTimes.filter(
+									(timeSlot) => !validBookingTimes.has(timeSlot)
+								);
+							}
+							bookedTimeSlots.push(...bookedTimes);
+						}
+						setDisabledTimeSlots(bookedTimeSlots); //Store for future validation
+						setAvailableTimeSlots(
+							allTimeSlots.map((timeSlot) =>
+								bookedTimeSlots.includes(timeSlot)
+									? { value: timeSlot, label: timeSlot, disabled: true }
+									: { value: timeSlot, label: timeSlot, disabled: false }
+							)
+						);
+					}
+				},
+			});
+		}
+	}, [form.values.resources_name]);
 
 	return (
 		// values represents the booking object
@@ -182,8 +204,12 @@ function BookingFormComponent({
 		>
 			<div className="upperSection flex justify-between gap-4">
 				<img
-					src={toProperImageURL(resourceImageSrc) || currentBooking?.image || fallbackAssetImage}
-					className="booking-image rounded-md object-cover"
+					src={
+						toProperImageURL(resourceImageSrc) ||
+						currentBooking?.image ||
+						fallbackAssetImage
+					}
+					className="booking-image rounded-md object-cover aspect-square"
 					referrerPolicy="no-referrer"
 				/>
 				<div className="booking-modal-options flex flex-col space-between justify-between">
