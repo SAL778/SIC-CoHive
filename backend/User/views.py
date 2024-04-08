@@ -16,7 +16,7 @@ from google.oauth2 import id_token
 from dotenv import load_dotenv
 import os
 load_dotenv()
-
+from django.http import Http404
 @api_view(['POST'])
 def verify_google_jwt(request):
     '''
@@ -81,7 +81,7 @@ def get_user_from_token(request):
         user = token_obj.user
         return user
     except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+        raise Http404('Failed to get user from token: ' + str(e))
 
 @swagger_auto_schema(method='post', operation_description="Sign out the authenticated user.", responses={200: 'Logged out'})
 @api_view(['POST'])
@@ -123,6 +123,7 @@ def user_profile(request):
         return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
     
     # Serialize the user data using your CustomUserSerializer
+    
     serializer = CustomUserSerializer(user)
     return Response(serializer.data)
 
