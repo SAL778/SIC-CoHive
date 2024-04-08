@@ -8,9 +8,11 @@ import { HostContext } from "./App";
 import { httpRequest } from "./utils";
 import { convert } from "html-to-text";
 
+import fallbackImage from "./assets/event_background.jpg";
+
 function Events() {
-	const fallbackImage =
-		"https://www.ualberta.ca/science/media-library/news/2018/sep/student-innovation-centre-launch.jpg";
+	// const fallbackImage =
+	// "https://www.ualberta.ca/science/media-library/news/2018/sep/student-innovation-centre-launch.jpg";
 
 	const googleCalendar = JSON.parse(localStorage.getItem("appLinks"))[0]
 		.google_calendar_link;
