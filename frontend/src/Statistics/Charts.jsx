@@ -72,9 +72,10 @@ export function PeakTimesChart({timeScope, selectedMonth, selectedYear, assetTyp
                     comboboxProps={{ transitionProps: { transition: 'skew-up', duration: 200 } }}
                 />
                 <ButtonGroup
-                    className="flex-1"
+                    className="flex-1 bg-[#f8f8f8]"
                     options = {DAYS}
                     onButtonClick= {setSelectedDay}
+                    bgGrey={true}
                 />
 
             </div>
@@ -162,14 +163,16 @@ export function ResourcePopularityChart({timeScope, selectedMonth, selectedYear,
                         className="flex-1"
                         options = {DAYS}
                         onButtonClick= {setSelectedDay}
+                        bgGrey={true}
                     />
                 </div>
-
+                
                 <ReactApexChart
+                    className="mt-10"
                     type="donut"
                     series= {graphData}
                     width = "100%"  //Won't display properly w/o height/width set
-                    height = "100%"
+                    height = "auto"
                     options = {{
                         labels: graphLabels,
                         noData: {
