@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: "tester"
+    runs-on: [self-hosted, tester]
     strategy:
       max-parallel: 4
       matrix:
