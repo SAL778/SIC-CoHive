@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, createContext } from "react";
 import "./App.css";
 import "./output.css";
 import "@mantine/core/styles.css";
@@ -36,11 +36,6 @@ const sicTheme = createTheme({
 function App() {
 	Modal.setAppElement("#root");
 	const [host] = useState("http://localhost:8000/api"); //Replace host here
-	// http://[2605:fd00:4:1001:f816:3eff:fe3e:a382]
-	// const [host] = useState("http://[2605:fd00:4:1001:f816:3eff:fe3e:a382]"); //Replace host here
-	// const [host] = useState(
-	// "https://c75f-2605-fd00-4-1001-f816-3eff-fe3e-a382.ngrok-free.app/"
-	// ); //Replace host here
 	const [currentUser, setCurrentUser] = useState(null); //User gets added to context on login
 	const [showNavigation, setShowNavigation] = useState(true);
 	const [mobileNav, setMobileNav] = useState(false);

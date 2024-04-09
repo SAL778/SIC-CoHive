@@ -12,9 +12,6 @@ import ColumnView from "./Bookings/BookingColumnView.jsx";
 import BookingHeader from "./Bookings/BookingHeader.jsx";
 import BookingsListFilter from "./Bookings/BookingsListFilter.jsx";
 import { httpRequest } from "./utils.js";
-import { getCookieValue } from "./utils.js";
-
-// import { checkUserLoggedIn } from "./utils.js";
 
 function Bookings() {
 	// checkUserLoggedIn();
@@ -89,7 +86,7 @@ function Bookings() {
 
 	//Send the updated booking (not necessarily the one that was clicked)
 	const onModalSubmitBooking = (bookingInfo) => {
-		console.dir(bookingInfo);
+
 		// If bookingInfo has an ID, it is a PATCH (frontend doesn't assign this)
 		if (!!bookingInfo.id) {
 			httpRequest({
@@ -97,7 +94,7 @@ function Bookings() {
 				method: "PATCH",
 				body: JSON.stringify(bookingInfo),
 				onSuccess: () => {
-					console.log("Success");
+					// console.log("Success");
 					setIsUpdated(isUpdated + 1); //Trigger the re-render
 					new SuccessNotification(
 						"Booking modified",
@@ -105,7 +102,7 @@ function Bookings() {
 					).show();
 				},
 				onFailure: () => {
-					console.log("Fail");
+					// console.log("Fail");
 					console.dir(bookingInfo);
 					new ErrorNotification(
 						"Booking couldn't be modified",
@@ -121,7 +118,7 @@ function Bookings() {
 				method: "POST",
 				body: JSON.stringify(bookingInfo),
 				onSuccess: () => {
-					console.log("Success");
+					// console.log("Success");
 					setIsUpdated(isUpdated + 1); //Trigger the re-render
 					new SuccessNotification(
 						"Booking added",
@@ -129,8 +126,7 @@ function Bookings() {
 					).show();
 				},
 				onFailure: () => {
-					console.log("Fail");
-					console.dir(bookingInfo);
+					// console.log("Fail");
 					new ErrorNotification(
 						"Booking couldn't be added",
 						`${bookingInfo.resources_name} couldn't be booked`
@@ -150,7 +146,7 @@ function Bookings() {
 			endpoint: `${host}/bookings/${bookingInfo.id}/`,
 			method: "DELETE",
 			onSuccess: () => {
-				console.log("Success");
+				// console.log("Success");
 				setIsUpdated(isUpdated + 1);
 				new SuccessNotification(
 					"Booking deleted",
@@ -158,8 +154,7 @@ function Bookings() {
 				).show();
 			},
 			onFailure: () => {
-				console.log("Fail");
-				console.dir(bookingInfo);
+				// console.log("Fail");
 				new ErrorNotification(
 					"Booking couldn't be deleted",
 					`${bookingInfo.resources_name} couldn't be deleted`
@@ -190,7 +185,6 @@ function Bookings() {
 			{!isColumnView ? (
 				<div className="parent-container-booking-row flex gap-4 justify-between align-top">
 					<BookingsListFilter
-						// onSearch={handleSearch}
 						onFilterChange={handleFilterChange}
 						assetType={currentAssetViewIsRoom ? "room" : "equipment"}
 						selectedDates={selectedDates}

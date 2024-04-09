@@ -27,13 +27,13 @@ export default function FlairList({flairs, isEditable, isAccessRoles = false}) {
 
     const removeFlair = (indexToRemove) => {
         //Update list with deleted item
-        console.log(prevFlairs => prevFlairs.filter((_, index) => index !== indexToRemove))
+        // console.log(prevFlairs => prevFlairs.filter((_, index) => index !== indexToRemove))
         setRenderedFlairs(prevFlairs => prevFlairs.filter((_, index) => index !== indexToRemove))        
     }
 
     const handleAdd = (value) => {
         //Update list with added item
-        console.log([...renderedFlairs, value])
+        // console.log([...renderedFlairs, value])
         setRenderedFlairs([...renderedFlairs, value])
     }
 

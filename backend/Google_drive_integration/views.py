@@ -55,29 +55,6 @@ def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:
     else:
         return values[1:]
 
-# def fetch_carousel_events(request):
-
-
-# # fetch events from the calendar. NOTE: Calendar events do not have an image source.
-
-# # After calendar events are fetched, fetch events from the spreadsheet. NOTE: Spreadsheet events have an image source.
-# # Check if the events have the same title, day, start, and end time. If they do, get the event's image from the imgSrc column in the spreadsheet. Return to frontend as it currently does.
-# # if event details don't match, return the calendar event as it currently does. It has no image. That's okay. Frontend has a fallback image for events with no image.
-
-#     client = initialize_sheets_client()
-
-#     app_links = AppLink.objects.first()
-#     spreadsheet_id = app_links.spreadsheet_id.split('/d/')[1].split('/')[0]
-
-#     spreadsheet_range = "Events!A1:Z" #Rows 2 onwards (Row 1 is headers), from columns A-Z. Empty columns will not be included, even if specified in range.
-#     scheme = ["timestamp", "title", "date", "startTime", "endTime", "imgSrc", "description", "email", "location", "approved"] #Camelcasing to follow google convention
-
-#     event_entries = client.spreadsheets().values().get(spreadsheetId = spreadsheet_id, range=spreadsheet_range).execute()
-#     parsed_events = parse_spreadsheet(event_entries, scheme=scheme)
-
-
-
-#     return JsonResponse({'events': parsed_events})
 response_schema = {
     '200': openapi.Response(
         description='Events fetched successfully',
@@ -104,7 +81,6 @@ response_schema = {
     ),
 }
 @swagger_auto_schema(method='get', responses=response_schema)
-@api_view(['GET'])
 def fetch_carousel_events(request):
     '''
     get:
@@ -139,9 +115,6 @@ def fetch_carousel_events(request):
         for sheet_event in parsed_events:
             if (
                 calendar_event.get('summary') == sheet_event.get('title') #and
-                # calendar_event['start'].get('dateTime') == sheet_event.get('date') #and
-                # calendar_event['start'].get('dateTime', '').split('T')[1][:5] == sheet_event.get('startTime') and
-                # calendar_event['end'].get('dateTime', '').split('T')[1][:5] == sheet_event.get('endTime')
             ):
                 # Match found, add imgSrc to calendar event if available
                 calendar_event['imgSrc'] = sheet_event.get('imgSrc', '')
@@ -151,9 +124,6 @@ def fetch_carousel_events(request):
     print("Matched Events:", matched_events)
 
     return JsonResponse({'events': matched_events})
-    # return JsonResponse({'events': matched_events or []})
-    # return JsonResponse({'events': {i: event for i, event in enumerate(matched_events)}})
-
 
 
 response_schema = {
@@ -226,10 +196,6 @@ def fetch_calendar_events(request):
             'end': end,
             'email': email,
         })
-
-    # print("Processed:", processed_events)
-
-    # print("Number of events fetched:", len(events))
 
     return JsonResponse({'events': processed_events})
 

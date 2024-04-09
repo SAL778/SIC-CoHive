@@ -34,7 +34,7 @@ function PortfolioCarousel({ portfolioItems, isEditable}) {
             endpoint: `${host}/users/portfolio/items/${clickedItem.id}`,
             method: 'DELETE',
             onSuccess: () => {
-                console.log('deleted')
+                // console.log('deleted')
                 new SuccessNotification(
                     "Item deleted",
                     `${clickedItem.title} was succesfully deleted!`

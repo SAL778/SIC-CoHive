@@ -33,14 +33,15 @@ class CustomUserTestCase(APITestCase):
         Test the API endpoint for retrieving a list of all users.
         '''
         response = self.client.get(reverse('user_list'), format='json', HTTP_AUTHORIZATION=self.token.key)
-        print(response.data)
+        print("user_get",response.data)
+        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['first_name'], 'Test')
-        self.assertEqual(response.data[0]['last_name'], 'User')
-        self.assertEqual(response.data[0]['email'], 'testuser@example.com')
-        self.assertEqual(response.data[0]['portfolioVisibility'], True)
-        self.assertEqual(response.data[0]['profileImage'], "http://example.com/image.jpg")
-        self.assertEqual(response.data[0]['flair_roles'][0]['role_name'], 'Admin')
+        self.assertEqual(response.data['users'][0]['first_name'], 'Test')
+        self.assertEqual(response.data['users'][0]['last_name'], 'User')
+        self.assertEqual(response.data['users'][0]['email'], 'testuser@example.com')
+        self.assertEqual(response.data['users'][0]['portfolioVisibility'], True)
+        self.assertEqual(response.data['users'][0]['profileImage'], 'http://example.com/image.jpg')
+        self.assertEqual(response.data['users'][0]['flair_roles'][0]['role_name'], 'Admin')
 
     '''
     US 1.01 As an admin, I want to be able to assign roles to users, so that I can control their access to features.
@@ -67,7 +68,7 @@ class CustomUserTestCase(APITestCase):
            # headers={'AUTHORIZATION':self.token.key}
            HTTP_AUTHORIZATION = "Token " + self.token.key
         )
-        print(response.data)
+       
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['first_name'], 'Updated')
         self.assertEqual(response.data['last_name'], 'User')
@@ -128,7 +129,7 @@ class CustomUserTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(CustomUser.objects.count(), 0)
         self.assertEqual(Flair_Roles.objects.count(), 0)
-        print(Flair_Roles.objects.all())
+        
 
 
 class CompletePortfolioTestCase(APITestCase):
