@@ -6,7 +6,7 @@ import { Modal } from "@mantine/core";
 import { HostContext } from "./App";
 
 const Signout = ({ opened, onClose }) => {
-	// checkUserLoggedIn();
+
 	const { host } = useContext(HostContext);
 
 	const navigate = useNavigate();

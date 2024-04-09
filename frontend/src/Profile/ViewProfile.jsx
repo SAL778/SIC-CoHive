@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { HostContext, UserContext } from "../App.jsx";
+import { HostContext } from "../App.jsx";
 import { httpRequest } from "../utils.js";
-import { Routes, Route, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Loader } from "@mantine/core";
 import { TextEditor } from "./TextEditor.jsx";
 import Portfolio from "./PortfolioCarousel.jsx";
-import {
-	ErrorNotification,
-	SuccessNotification,
-} from "../components/notificationFunctions.js";
 import ProfileHeader from "./ProfileHeader.jsx";
 import FlairList from "./Flairs.jsx";
 import { Tooltip } from "@mantine/core";

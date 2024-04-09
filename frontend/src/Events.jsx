@@ -11,8 +11,6 @@ import { convert } from "html-to-text";
 import fallbackImage from "./assets/event_background.jpg";
 
 function Events() {
-	// const fallbackImage =
-	// "https://www.ualberta.ca/science/media-library/news/2018/sep/student-innovation-centre-launch.jpg";
 
 	const googleCalendar = JSON.parse(localStorage.getItem("appLinks"))[0]
 		.google_calendar_link;
@@ -50,8 +48,8 @@ function Events() {
 			});
 
 			setEventsData(filteredEvents);
-			console.log("Events data:", eventsData);
-			console.log("Filtered events:", filteredEvents);
+			// console.log("Events data:", eventsData);
+			// console.log("Filtered events:", filteredEvents);
 		} catch (error) {
 			console.error("Failed to fetch events:", error);
 		}
@@ -85,7 +83,7 @@ function Events() {
 		httpRequest({
 			endpoint: `${host}/google_drive_integration/events`,
 			onSuccess: (eventData) => {
-				console.log("Event data:", eventData);
+				// console.log("Event data:", eventData);
 				setEvents(eventData.events);
 				setIsLoading(false);
 			},
@@ -255,12 +253,6 @@ function convertCalendarEvent(event) {
 		creator: {
 			email: event.email,
 		},
-		// date: parseDate(event.start, "date"),
-		// startTime: parseDate(event.start, "time"),
-		// endTime: parseDate(event.end, "time"),
-		// date: event.start.split("T")[0],
-		// startTime: event.start.split("T")[0],
-		// endTime: event.end.split("T")[0],
 		start: {
 			dateTime: event.start,
 		},
@@ -269,34 +261,5 @@ function convertCalendarEvent(event) {
 		},
 	};
 }
-
-/** Convert the time in a calendar event to the format expected by the modal.
- *  Helper for convertCalendarEvent
- * 	@param {string} dateStr: The date string
- *  @param {str} output: Either "date" or "time"
- *  @returns string: Either the formatted date (M/D/Y) or time in 12H format if "time"
- *  @see convertCalendarEvent
- */
-const parseDate = (dateStr, output = "date") => {
-	//The date string provided by iCal isn't a valid Date constructor, so I have to use regex to pull out the times
-	//Parsing dates makes me so depressed man we should've just used a library like moment if only we knew earlier :(
-
-	//start:"2024-05-02T13:00:00-06:00"
-	//end: "2024-05-02T6:00"
-
-	//Break the string apart
-	const rePattern = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/;
-	const match = dateStr.match(rePattern);
-	const [, year, month, day, hours, minutes] = match;
-
-	if (output == "date") {
-		return `${month}/${day}/${year}`;
-	} else {
-		const isPm = parseInt(hours) >= 12;
-		const formattedHours = parseInt(hours) % 12 || 12;
-
-		return `${formattedHours}:${minutes} ${isPm ? "PM" : "AM"}`;
-	}
-};
 
 export default Events;
