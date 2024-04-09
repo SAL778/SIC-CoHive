@@ -49,6 +49,8 @@ export default function BookingPopover({
 						alt={assetName}
 						referrerPolicy="no-referrer"
 					/>
+					<p className="text-lg font-medium">{assetDescription}</p>
+					{overlapPermissions && !!assetCode && <p>Room Code: {assetCode}</p>}
 				</div>
 			</Popover.Dropdown>
 		</Popover>
