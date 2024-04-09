@@ -11,17 +11,16 @@ from selenium.common.exceptions import ElementClickInterceptedException, Timeout
 from datetime import date, timedelta
 #### DO NOT CHANGE
 today = date.today()
-month_day_year = today.strftime('%B %d, %Y') #  March 29, 2024
-month_day = today.strftime('%B %d').lstrip("0")  # March 29
-
+month_day_year = today.strftime('%B %-d, %Y') #  March 29, 2024
+month_day = today.strftime('%B %-d').lstrip("0")  # March 29
 """
 Tests inputs and renders related to the Bookings page
 """
 #### COMMENT THIS OUT IF YOU WANT TO USE YOUR OWN DATE
 #### THIS LINES OF CODE CORRESPONDS TO THE TOMORROW'S DATE
 tomorrow = today + timedelta(days=1)
-target_day_month_year = tomorrow.strftime('%d %B %Y') #  e.g. 29 March 2024
-target_month_day = tomorrow.strftime('%B %d').lstrip("0")  # e.g. March 29
+target_day_month_year = tomorrow.strftime('%-d %B %Y') #  e.g. 29 March 2024
+target_month_day = tomorrow.strftime('%B %-d').lstrip("0")  # e.g. March 29
 #### CHANGE TO DESIRED BOOKING DATE, DIRECTLY CORRESPONDS TO THE DATE PICKER,
 #### SO IF DATE ENTERED IS OUTSIDE THE CURRENT MONTH, THEN IT WILL GIVE YOU AN ERROR THAT IT CANNOT FIND THE ELEMENT
 #### SINCE YOU HAVE TO CLICK SOMETHING TO GO TO THE NEXT MONTH/S IN THE DATE PICKER, WHICH I DID NOT INCLUDE IN THIS TEST.
@@ -31,7 +30,7 @@ target_month_day = tomorrow.strftime('%B %d').lstrip("0")  # e.g. March 29
 # target_day_month_year = "29 March 2024"
 # target_month_day = "March 29"
 
-
+host = "http://localhost:5173"
 
 def find_and_click_text(global_driver, text):
     # Find all elements that contain the text "8:00 AM"
@@ -55,16 +54,16 @@ class TestBookings(unittest.TestCase) :
         self.global_driver = global_driver
 
     def test_a_user_can_view_room_bookings(self):
-        """Verifies that a user can successfully view column room bookings"""
-        global_driver.get("http://localhost:5173/bookings")
+        """US 2.01 2.02 - Verifies that a user can successfully view column room bookings"""
+        global_driver.get(f"{host}/bookings")
         time.sleep(3)
         room_column = global_driver.find_element(By.XPATH, "//p[text()='MEETING ROOM1']")
         time.sleep(3)
         self.assertTrue(room_column, "MEETING ROOM1 not found")
         
     def test_b_user_can_view_equipment_bookings(self):
-        """Verifies that a user can successfully view column equipment bookings"""
-        global_driver.get("http://localhost:5173/bookings")
+        """US 2.01 2.02 2.06 - Verifies that a user can successfully view column equipment bookings"""
+        global_driver.get(f"{host}/bookings")
         global_driver.set_window_size(1727, 1630)
         equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
         equipment_toggle.click()
@@ -74,8 +73,8 @@ class TestBookings(unittest.TestCase) :
         self.assertTrue(equipment_column, "Laptop not found")
 
     def test_c_user_can_book_room(self):
-        """Verifies that a user can successfully book a room they are permitted using the (New Booking) button"""
-        global_driver.get("http://localhost:5173/bookings")
+        """US 2.06 - Verifies that a user can successfully book a room they are permitted using the (New Booking) button"""
+        global_driver.get(f"{host}/bookings")
         book_button = global_driver.find_element(By.XPATH, "//button[text()='New Booking']")
         book_button.click()
         time.sleep(3)
@@ -94,8 +93,8 @@ class TestBookings(unittest.TestCase) :
         )
         calendar_field.click()
         # Change date if wanted
-        date_picker = WebDriverWait(global_driver, 3).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, F"button[aria-label='{target_day_month_year}']"))
+        date_picker = WebDriverWait(global_driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[aria-label='{target_day_month_year}']"))
         )
         time.sleep(3)
         date_picker.click()
@@ -119,8 +118,8 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
 
     def test_d_user_can_view_room_booking_list(self):
-        """Verifies that a user can successfully view their own room booking in list view"""
-        global_driver.get("http://localhost:5173/bookings")
+        """US 2.01 - Verifies that a user can successfully view their own room booking in list view"""
+        global_driver.get(f"{host}/bookings")
         time.sleep(3)
         ## CHANGE TO AN UPDATED DATE
         big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
@@ -147,8 +146,8 @@ class TestBookings(unittest.TestCase) :
         self.assertTrue(booked_title, "Booking is present in list view")
 
     def test_e_user_can_edit_room_booking(self):
-        """Verifies that a user can successfully edit their own room booking"""
-        global_driver.get("http://localhost:5173/bookings")
+        """US 2.06 - Verifies that a user can successfully edit their own room booking"""
+        global_driver.get(f"{host}/bookings")
         time.sleep(3)
         ## CHANGE TO AN UPDATED DATE
         big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
@@ -178,8 +177,8 @@ class TestBookings(unittest.TestCase) :
         self.assertIn("Booking modified", confirm_notif.text)
 
     def test_f_user_can_delete_room_booking(self):
-        """Verifies that a user can successfully delete their own room booking"""
-        global_driver.get("http://localhost:5173/bookings")
+        """US 2.01 - Verifies that a user can successfully delete their own room booking"""
+        global_driver.get(f"{host}/bookings")
         ## CHANGE TO AN UPDATED DATE
         big_date = global_driver.find_element(By.XPATH, f"//span[contains(@class, 'text-3xl font-bold text-orange-600 mr-2') and text()='{month_day}']")
         big_date.click()
@@ -196,8 +195,6 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
         delete_button = global_driver.find_element(By.XPATH, "//button[contains(@class, 'button-orange modal-button') and text()='Delete']")
         delete_button.click()
-        # time.sleep(3)
-        # self.assertTrue(delete_button, "Delete button not found")
         confirm_notif = WebDriverWait(global_driver, 1).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'mantine-Notification-title'))
         )
@@ -205,8 +202,8 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
 
     def test_g_user_can_book_equipment(self):
-        """Verifies that a user can successfully book a equipment they are permitted using the (Book) button"""
-        global_driver.get("http://localhost:5173/bookings")
+        """US 2.06 - Verifies that a user can successfully book a equipment they are permitted using the (Book) button"""
+        global_driver.get(f"{host}/bookings")
         time.sleep(2)
         equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
         equipment_toggle.click()
@@ -252,8 +249,8 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
 
     def test_h_user_can_view_equipment_booking_list(self):
-        """Verifies that a user can successfully view their own equipment booking in list view"""
-        global_driver.get("http://localhost:5173/bookings")
+        """US 2.01 - Verifies that a user can successfully view their own equipment booking in list view"""
+        global_driver.get(f"{host}/bookings")
         time.sleep(2)
         equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
         equipment_toggle.click()
@@ -283,8 +280,8 @@ class TestBookings(unittest.TestCase) :
         self.assertTrue(booked_title, "Booking is present in list view")
 
     def test_i_user_can_edit_equipment_booking(self):
-        """Verifies that a user can successfully edit their own equipment booking"""
-        global_driver.get("http://localhost:5173/bookings")
+        """US 2.06 - Verifies that a user can successfully edit their own equipment booking"""
+        global_driver.get(f"{host}/bookings")
         global_driver.set_window_size(1727, 1630)
         time.sleep(2)
         equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
@@ -319,8 +316,8 @@ class TestBookings(unittest.TestCase) :
         time.sleep(3)
         
     def test_j_user_can_delete_equipment_booking(self):
-        """Verifies that a user can successfully delete their own equipment booking"""
-        global_driver.get("http://localhost:5173/bookings")
+        """US 2.01 - Verifies that a user can successfully delete their own equipment booking"""
+        global_driver.get(f"{host}/bookings")
         global_driver.set_window_size(1727, 1630)
         equipment_toggle = global_driver.find_element(By.XPATH, "//button[.//p[text()='Equipment']]")
         time.sleep(3)

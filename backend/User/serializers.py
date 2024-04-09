@@ -5,7 +5,7 @@ from django.db import transaction
 class AppLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppLink
-        fields = ['feedback_form_link', 'google_drive_link', 'google_calendar_link']
+        fields = ['feedback_form_link', 'event_submission_form_link', 'google_calendar_link']
 
 class FlairRoleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,9 +24,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = CustomUser
-       # fields = '__all__'
-        fields = ["id", "first_name", "last_name", "email", "is_staff","portfolioVisibility","profileImage","portfolio","accessType","flair_roles","education"]
-        read_only_fields = ["id","is_staff","portfolio","email","accessType"]
+        fields = ["id", "first_name", "last_name", "email", "is_staff", "portfolioVisibility", "profileImage", "portfolio", "accessType", "flair_roles", "education"]
+        read_only_fields = ["id", "is_staff", "portfolio", "email", "accessType"]
+
         
     def create(self, validated_data):
         # Handle user creation without roles

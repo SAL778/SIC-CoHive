@@ -1,0 +1,44 @@
+.apexcharts-legend {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0px;   
+    /* No gaps between touch target. */
+}
+
+.apexcharts-legend-series {
+    padding: 8px;
+}
+
+.apexcharts-legend-text {
+    font-size: 10rem;
+}
+
+.mantine-Select-root {
+    height: auto;
+    font-size: 2rem;
+}
+
+.chartToggles .mantine-Select-wrapper,
+.chartToggles .mantine-Select-input {
+    height: 100%;
+    font-size: 1.25rem;
+    background: #f8f8f8;
+    min-height: 64px;
+}
+
+.mantine-Select-input {
+    color: #ea580c;
+    border: none;
+    box-sizing: border-box;
+    /* height: 100%; */
+    box-shadow: 0px 2px 6px #00000029;
+}
+
+.mantine-Select-dropdown {
+    box-shadow: 0px 2px 6px #00000029;
+}
+
+.mantine-Select-option:hover {
+    background-color: rgb(229 229 229); /* neutral 200 */
+}

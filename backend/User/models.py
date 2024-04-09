@@ -3,7 +3,6 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-# from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import Permission
 
 class Flair_Roles(models.Model):
@@ -45,23 +44,14 @@ class AccessType(models.Model):
         return self.name
 
 class CustomUser(AbstractUser):
-    # name = models.CharField(max_length=100)
-    # uid = models.CharField(max_length=100, unique=True)
-    # # You can add other fields as needed
+
     username = models.CharField(max_length=100,unique=False,help_text="The username of the user")
     email = models.EmailField(unique=True,help_text="The email of the user")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    # ROLES_CHOICES = [
-    #     ('User', 'User'),
-    #     ('Organization', 'Organization'),
-    #     ('Admin', 'Admin'),
-    # ]
-    #
-    # roles = models.CharField(max_length=100, choices=ROLES_CHOICES, default='User',help_text="The role of the user")
-    profileImage = models.URLField(max_length=100, blank=True, null=True,help_text="URL to the profile image")
+    profileImage = models.URLField(max_length=150, blank=True, null=True,help_text="URL to the profile image")
     portfolioVisibility = models.BooleanField(default=True,help_text="decides if the portfolio is visible to others")
     portfolio = models.OneToOneField(Complete_Portfolio, on_delete=models.CASCADE, blank=True, null=True,help_text="The portfolio of the user")
     accessType = models.ManyToManyField(AccessType, blank=True,related_name="accessType",help_text="The access type of the user")
@@ -85,9 +75,12 @@ class CustomUser(AbstractUser):
 # AppLinks model allows the admin to add links to the app from the admin panel and maintain them
 # Stores the feedback form link, the google drive link, and the google calendar link
 class AppLink(models.Model):
-    feedback_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the feedback form")
-    google_drive_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Google Drive")
-    google_calendar_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Google Calendar")
+
+    feedback_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Contact Us / Feedback form")
+    event_submission_form_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Event Submission form")
+    google_calendar_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the embedded styled SIC Google Calendar")
+    google_calendar_events_link = models.URLField(max_length=200, blank=True, null=True, help_text="The link to the Google Calendar Events")
+    spreadsheet_id = models.CharField(max_length=200, blank=True, null=True, help_text="The ID of the Google Spreadsheet containing the events")
 
     def __str__(self):
         return "App Link"

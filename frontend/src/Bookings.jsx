@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
-import { HostContext, UserContext } from "./App.jsx";
+import { NavigationContext, HostContext, UserContext } from "./App.jsx";
 import BookingListView from "./Bookings/BookingList.jsx";
 import BookingFormComponent from "./components/Forms/BookingForm";
 import {
@@ -12,9 +12,6 @@ import ColumnView from "./Bookings/BookingColumnView.jsx";
 import BookingHeader from "./Bookings/BookingHeader.jsx";
 import BookingsListFilter from "./Bookings/BookingsListFilter.jsx";
 import { httpRequest } from "./utils.js";
-import { getCookieValue } from "./utils.js";
-
-// import { checkUserLoggedIn } from "./utils.js";
 
 function Bookings() {
 	// checkUserLoggedIn();
@@ -50,32 +47,20 @@ function Bookings() {
 		setBookingFilter(updatedBookingFilter);
 	};
 
+	const { setShowNavigation } = useContext(NavigationContext);
+	useEffect(() => {
+        setShowNavigation(true);
+    }, []);
+	
 	// Fetch user data to set the current user context to fill user's data on the bookings page
 	// Need to fetch user data to get the user's ID, image, and other details to display on the page
 	useEffect(() => {
-		const fetchUserData = async () => {
-			try {
-				const accessToken = getCookieValue("access_token");
-				const response = await fetch("http://localhost:8000/users/profile/", {
-					method: "GET",
-					credentials: "include",
-					headers: {
-						Authorization: `Token ${accessToken}`,
-					},
-				});
-
-				if (response.ok) {
-					const user = await response.json();
-					setCurrentUser(user);
-				} else {
-					console.error("Failed to fetch user data:", response.statusText);
-				}
-			} catch (error) {
-				console.error("Unexpected error:", error);
-			}
-		};
-
-		fetchUserData();
+		httpRequest({
+			endpoint: `${host}/users/profile/`,
+			onSuccess: (data) => {
+				setCurrentUser(data);
+			},
+		});
 	}, []);
 
 	useEffect(() => {
@@ -101,7 +86,7 @@ function Bookings() {
 
 	//Send the updated booking (not necessarily the one that was clicked)
 	const onModalSubmitBooking = (bookingInfo) => {
-		console.dir(bookingInfo);
+
 		// If bookingInfo has an ID, it is a PATCH (frontend doesn't assign this)
 		if (!!bookingInfo.id) {
 			httpRequest({
@@ -109,7 +94,7 @@ function Bookings() {
 				method: "PATCH",
 				body: JSON.stringify(bookingInfo),
 				onSuccess: () => {
-					console.log("Success");
+					// console.log("Success");
 					setIsUpdated(isUpdated + 1); //Trigger the re-render
 					new SuccessNotification(
 						"Booking modified",
@@ -117,7 +102,7 @@ function Bookings() {
 					).show();
 				},
 				onFailure: () => {
-					console.log("Fail");
+					// console.log("Fail");
 					console.dir(bookingInfo);
 					new ErrorNotification(
 						"Booking couldn't be modified",
@@ -133,7 +118,7 @@ function Bookings() {
 				method: "POST",
 				body: JSON.stringify(bookingInfo),
 				onSuccess: () => {
-					console.log("Success");
+					// console.log("Success");
 					setIsUpdated(isUpdated + 1); //Trigger the re-render
 					new SuccessNotification(
 						"Booking added",
@@ -141,8 +126,7 @@ function Bookings() {
 					).show();
 				},
 				onFailure: () => {
-					console.log("Fail");
-					console.dir(bookingInfo);
+					// console.log("Fail");
 					new ErrorNotification(
 						"Booking couldn't be added",
 						`${bookingInfo.resources_name} couldn't be booked`
@@ -162,7 +146,7 @@ function Bookings() {
 			endpoint: `${host}/bookings/${bookingInfo.id}/`,
 			method: "DELETE",
 			onSuccess: () => {
-				console.log("Success");
+				// console.log("Success");
 				setIsUpdated(isUpdated + 1);
 				new SuccessNotification(
 					"Booking deleted",
@@ -170,8 +154,7 @@ function Bookings() {
 				).show();
 			},
 			onFailure: () => {
-				console.log("Fail");
-				console.dir(bookingInfo);
+				// console.log("Fail");
 				new ErrorNotification(
 					"Booking couldn't be deleted",
 					`${bookingInfo.resources_name} couldn't be deleted`
@@ -202,7 +185,6 @@ function Bookings() {
 			{!isColumnView ? (
 				<div className="parent-container-booking-row flex gap-4 justify-between align-top">
 					<BookingsListFilter
-						// onSearch={handleSearch}
 						onFilterChange={handleFilterChange}
 						assetType={currentAssetViewIsRoom ? "room" : "equipment"}
 						selectedDates={selectedDates}

@@ -2,7 +2,21 @@
 
 This is a [React](https://react.dev/) project bootstrapped with [`Vite`](https://vitejs.dev/).
 
-## Getting Started
+# Link to deployed app:
+
+https://hip-yak-solely.ngrok-free.app/
+
+# Link to deployed backend:
+
+https://hip-yak-solely.ngrok-free.app/api/admin
+
+## Link to Deployment Instructions
+https://docs.google.com/document/d/19VpgY7MIyyuSt4cQ3IzG-dTMuHzf5jBLVMUoVJkL1iY/edit?usp=sharing
+
+## Link to User/Admin Manual
+https://docs.google.com/document/d/1Oa9bQv77SvGOypLr1pbKWmgzSyRSiJgpj7VX67qGwj4/edit?usp=sharing
+
+## Getting Started with Dev
 
 First, set up the backend django server:
 
@@ -42,7 +56,7 @@ Install the dependencies:
 npm install --legacy-peer-deps or npm install --force
 ```
 
-Followed by running the server:
+Followed by running the development server:
 
 ```bash
 npm run dev
@@ -54,7 +68,7 @@ You can start editing a page and watch it auto-updates as you edit the file.
 
 ## For grading:
 Contact us about the credentials required for access to the Google Drive
-This will need to be placed in the backend/google_drive_integration folder.
+This will need to be placed in the root of the repo
 
 ## Link to the Figma Hi-Fi
 

@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import DraggableSlot from "./DraggableSlot";
 import { UserContext } from "../App";
 import BookingPopover from "./BookingPopover";
+import { Tooltip } from "@mantine/core";
 
 // Helper function to parse time range string into Date objects
 function parseTimeRange(timeRange) {
@@ -39,7 +40,7 @@ function parseTime(timeStr) {
  * @returns {JSX.Element} The rendered Column component.
  */
 const Column = ({ column, onBookingEdit }) => {
-	const { currentUser } = useContext(UserContext);
+	const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Generate all time slots for the day in 15-minute intervals (empty by default)
@@ -165,7 +166,7 @@ const Column = ({ column, onBookingEdit }) => {
 		});
 
 		return (
-			<div className="shadow-lg rounded-[12px]">
+			<div className="shadow-lg rounded-[12px] overflow-hidden">
 				{timeslots.map((slot) => {
 					// Calculate the height of the slot based on the time range (in 15-minute increments) * 24px per slot
 					const slotHeight =
@@ -182,7 +183,7 @@ const Column = ({ column, onBookingEdit }) => {
 					// TODO: Make the bookings that belong to the user have a different color by adding a class to the div
 
 					return (
-						<div key={slot.display_time}>
+						<div key={slot.display_time} className="slot-div">
 							{slot.booking ? (
 								<div
 									className={`column-booking-card ${
@@ -201,12 +202,12 @@ const Column = ({ column, onBookingEdit }) => {
 								</div>
 							) : (
 								<div
-									className="open-booking-slot cursor-pointer overflow-hidden px-4 py-2 text-sm"
+									className="open-booking-slot flex justify-center items-center cursor-pointer overflow-hidden px-4 py-2 text-sm"
 									key={slot}
 									style={{ height: `${slotHeight}px` }}
 									onClick={() => hasPermission && onSlotClick(slot, timeslots)}
 								>
-									{/* <p>{slot.display_time}</p> */}
+									<p className="slot-time">{slot.display_time}</p>
 								</div>
 							)}
 						</div>
@@ -231,9 +232,6 @@ const Column = ({ column, onBookingEdit }) => {
 		const startTime = parseTimeRange(timeSlot.display_time)[0];
 
 		// Loop through the timeslots and find the index_number of the selected slot until we hit a booking which will not have this
-		console.log(timeSlot);
-		console.log(timeslots);
-
 		const indexOfNextBooking = timeslots.findIndex((slot) => {
 			const slotStartTime = parseTimeRange(slot.display_time)[0];
 			return (
@@ -271,28 +269,29 @@ const Column = ({ column, onBookingEdit }) => {
 			className={`booking-column h-full flex flex-col relative ${
 				selectedSlot ? "currentlyBooking" : ""
 			} ${hasPermission ? "" : "no-permission-column"}`}
-		>	
+		>
 			{console.dir(column)}
-			<BookingPopover 
-				assetImage = {column.image} 
-				assetDescription = {column.description}
-				assetPermissions = {column.access_type} //List
-				assetCode = {column.room_code}
-				assetName = {column.name}
+			<BookingPopover
+				assetImage={column.image}
+				assetDescription={column.description}
+				assetPermissions={column.access_type} //List
+				assetCode={column.room_code}
+				assetName={column.name}
 			>
 				<div className="flex justify-center items-center min-h-[80px] h-[80px] mb-[20px] rounded-[12px] shadow-custom w-[100] py-2 px-4 bg-white">
-					<p className="text-lg font-bold capitalize text-center">
-						{column.name}
-					</p>
-					{/* {column.image && (
-						<img
-							src={`https://drive.google.com/thumbnail?id=${
-								column.image.split("/d/")[1].split("/view")[0]
-							}`}
-							alt="Resource Image"
-							className="w-[50px] h-[50px] ml-4"
-						/>
-					)} */}
+					<div className="flex flex-col justify-center items-center">
+						<p className="text-lg font-bold capitalize text-center">
+							{column.name}
+						</p>
+						{(column.room_code && hasPermission) &&
+							<p className="text-sm font-semibold text-blue-950">
+								{column.room_code}
+								<Tooltip label = "Pin code required to access the asset.">
+									<i className = "fa fa-info-circle ml-2"/>
+								</Tooltip>
+							</p>
+						}
+					</div>
 				</div>
 			</BookingPopover>
 			<div className="booking-column-width py-0 px-0 rounded-[12px] flex flex-col flex-grow">

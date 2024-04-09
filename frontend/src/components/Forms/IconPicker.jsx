@@ -35,7 +35,7 @@ export default function IconPicker({data, value, onChange}) {
                                     ${datum}`
                                 } 
                                 onClick={() => {
-                                    console.log(datum)
+                                    // console.log(datum)
                                     onChange(datum)
                                 }}
                             />

@@ -1,19 +1,41 @@
 import React, { useEffect, useContext } from "react";
-import placeholder from "./assets/placeholder-logo.png";
+import placeholder from "./assets/sic_logo.png";
 import "./Login.css";
 import { NavigationContext } from "./App.jsx";
-import axiousInstance from "./axios.js";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
 import { HostContext, UserContext } from "./App.jsx";
 import { httpRequest } from "./utils.js";
 
-export default function Login({}) {
+export default function Login() {
 	const { setShowNavigation } = useContext(NavigationContext); // Access the context
 
-    // const { user, setUser } = useContext(UserContext);
-    const { host } = useContext(HostContext)
+	// const { user, setUser } = useContext(UserContext);
+	const { host } = useContext(HostContext);
+
+	useEffect(() => {
+		httpRequest({
+			endpoint: `${host}/verify_token_expiry/`,
+			onSuccess: (data) => {
+				httpRequest({
+					endpoint: `${host}/users/profile/`, //Add the current user to localStorage
+					onSuccess: (userData) => {
+						localStorage.setItem("currentUser", JSON.stringify(userData));
+
+						// Get the app links and store them in localStorage for dynamic links to forms/calendar
+						httpRequest({
+							endpoint: `${host}/applinks/`,
+							onSuccess: (linkData) => {
+								localStorage.setItem("appLinks", JSON.stringify(linkData));
+								window.location.href = "/bookings";
+							},
+						});
+					},
+				});
+			},
+		});
+	}, []);
 
 	const handleGoogleLogin = async (credentialResponse) => {
 		try {
@@ -21,7 +43,7 @@ export default function Login({}) {
 
 			// Make an HTTP request to the Django view
 			const response = await axios.post(
-				"http://localhost:8000/api/verify_google_jwt/",
+				`${host}/verify_google_jwt/`,
 				{ jwt_token },
 				{
 					headers: {
@@ -31,21 +53,29 @@ export default function Login({}) {
 				}
 			);
 
-            // Redirect to /bookings if the request is successful
-            if (response.status === 302 || response.status === 200) {
-                httpRequest({
-                    endpoint: `${host}/users/profile/`, //Add the current user to localStorage
-                    onSuccess: (userData) => {
-                        localStorage.setItem("currentUser", JSON.stringify(userData));
-                        window.location.href = '/bookings';
-                    }
-                })
-            }
-            // Continue with other actions or state updates as needed
-        } catch (error) {
-            console.error('Error making Django request:', error);
-        }
-    };
+			// Redirect to /bookings if the request is successful
+			if (response.status === 302 || response.status === 200) {
+				httpRequest({
+					endpoint: `${host}/users/profile/`, //Add the current user to localStorage
+					onSuccess: (userData) => {
+						localStorage.setItem("currentUser", JSON.stringify(userData));
+
+						// Get the app links and store them in localStorage for dynamic links to forms/calendar
+						httpRequest({
+							endpoint: `${host}/applinks/`,
+							onSuccess: (linkData) => {
+								localStorage.setItem("appLinks", JSON.stringify(linkData));
+								window.location.href = "/bookings";
+							},
+						});
+					},
+				});
+			}
+			// Continue with other actions or state updates as needed
+		} catch (error) {
+			console.error("Error making Django request:", error);
+		}
+	};
 
 	useEffect(() => {
 		setShowNavigation(location.pathname !== "/");
@@ -59,6 +89,7 @@ export default function Login({}) {
 						src={placeholder}
 						className="logo object-contain max-w-[300px]"
 						alt="Student Inovation Center"
+						referrerPolicy="no-referrer"
 					/>
 					<div className="flex flex-col gap-40 items-center">
 						<div className="flex flex-col gap-6 items-center">
@@ -84,21 +115,3 @@ export default function Login({}) {
 		</>
 	);
 }
-
-const googleSignInClick = () => {
-	axiousInstance
-		.post(`/auth/token`, {
-			grant_type: "password",
-			// username: formData.email,
-			// password: formData.password,
-			username: "admin@sic.ca",
-			password: "123",
-			client_id: "I3yNEPHBZQ2NgZbvHGglMvkpSTYHaaKau8GamJkm",
-			client_secret:
-				"1kqWXBrFkxTHpECThcZkC3PcaxZmfibrQ4QzSSAynXXGChVQqMb0QLPg58TkZaUKTMuiU9zzihG9qSThHFz7IXYSBu5YoM2p2QhydT0uQak9IA2V2gQFrT4dmlaX094y",
-		})
-		.then((res) => {
-			localStorage.setItem("access_token", res.data.access_token);
-			localStorage.setItem("refresh_token", res.data.refresh_token);
-		});
-};

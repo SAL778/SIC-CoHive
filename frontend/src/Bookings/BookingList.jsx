@@ -73,7 +73,7 @@ function BookingListView({
 	return isLoading ? (
 		<Loader size={50} color="orange" />
 	) : (
-		<ul className="bounding-box-white flex flex-col flex-grow overflow-hidden gap-8 mx-[10px] my-[30px] px-[20px] py-[30px] rounded-[12px] shadow-custom">
+		<ul className="bounding-box-white h-fit flex flex-col flex-grow overflow-hidden gap-8 mx-[10px] my-[30px] px-[20px] py-[30px] rounded-[12px] shadow-custom">
 			{dateHeaders.map((dateHeader) => (
 				<li key={dateHeader.toISOString()}>
 					<DateHeaderComponent date={dateHeader} />
@@ -85,18 +85,19 @@ function BookingListView({
 									asset.start_time.toDateString() === dateHeader.toDateString()
 							)
 							.map((asset) => (
-								<BookingPopover
-									assetImage={asset.image}
-									assetDescription={asset.resource_description}
-									assetCode={asset.resource_room_code}
-									assetPermissions={asset.resource_access_type}
-								>
+								// This was the only one with breaking images + weird behaviour, alsways seeing image when trying to view the list view
+								// <BookingPopover
+								// 	assetImage={asset.image}
+								// 	assetDescription={asset.resource_description}
+								// 	assetCode={asset.resource_room_code}
+								// 	assetPermissions={asset.resource_access_type}
+								// >
 									<BookingListComponent
 										key={asset.id}
 										asset={asset}
 										onItemClick={onItemClick}
 									/>
-								</BookingPopover>
+								// </BookingPopover>
 							))}
 					</ul>
 				</li>

@@ -1,16 +1,16 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, createContext } from "react";
 import "./App.css";
 import "./output.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
-import '@mantine/tiptap/styles.css';
-import '@mantine/carousel/styles.css';
+import "@mantine/tiptap/styles.css";
+import "@mantine/carousel/styles.css";
 import Navigation from "./components/Navbar.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Bookings from "./Bookings.jsx";
 import Events from "./Events.jsx";
-import Statistics from "./Statistics.jsx";
+import Statistics from "./Statistics/Statistics.jsx";
 import EditProfile from "./Profile/EditProfile.jsx";
 import ViewProfile from "./Profile/ViewProfile.jsx";
 import Signout from "./Signout.jsx";
@@ -35,13 +35,13 @@ const sicTheme = createTheme({
 
 function App() {
 	Modal.setAppElement("#root");
-	const [host] = useState("http://localhost:8000"); //Replace host here
+	const [host] = useState("http://localhost:8000/api"); //Replace host here
 	const [currentUser, setCurrentUser] = useState(null); //User gets added to context on login
 	const [showNavigation, setShowNavigation] = useState(true);
 	const [mobileNav, setMobileNav] = useState(false);
 
 	return (
-		<GoogleOAuthProvider clientId="738911792381-du1hc1l4go32tj2iunbnufo6qf9h0u7v.apps.googleusercontent.com">
+		<GoogleOAuthProvider clientId="43159362872-7th78o4sg6jld67f3of32j9g1ceq74rb.apps.googleusercontent.com">
 			<HostContext.Provider value={{ host }}>
 				<UserContext.Provider value={{ currentUser, setCurrentUser }}>
 					<NavigationContext.Provider
@@ -51,10 +51,10 @@ function App() {
 							<Notifications />
 							<Router>
 								<div
-									className={`app-container flex min-h-screen h-full w-[100%] flex-row body-white py-0 gap-[40px] ${
+									className={`app-container flex justify-center min-h-screen h-full w-[100%] flex-row body-white py-0 gap-[40px] ${
 										showNavigation ? "app-container-pages" : ""
 									}`}
-								>	
+								>
 									<button
 										id="mobile-nav"
 										className="button-orange"
@@ -65,7 +65,12 @@ function App() {
 									>
 										<i className="fa fa-bars"></i> Menu
 									</button>
-									{showNavigation && <Navigation mobileNav={mobileNav} setMobileNav={setMobileNav} />}
+									{showNavigation && (
+										<Navigation
+											mobileNav={mobileNav}
+											setMobileNav={setMobileNav}
+										/>
+									)}
 									<Routes>
 										<Route path="/" element={<Login />} />
 										<Route path="/bookings" element={<Bookings />} />
@@ -75,7 +80,10 @@ function App() {
 										<Route path="/profile" element={<EditProfile />} />
 										<Route path="/feedback" element={<Feedback />} />
 										<Route path="/signout" element={<Signout />} />
-										<Route path="/users/:profileUserId" element={<ViewProfile />} />
+										<Route
+											path="/users/:profileUserId"
+											element={<ViewProfile />}
+										/>
 										<Route path="*" element={<FOF />} />
 									</Routes>
 								</div>

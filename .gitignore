@@ -28,6 +28,7 @@ dist-ssr
 
 # local env files
 .env*.local
+service_credentials.json
 
 
 #credentials
@@ -208,3 +209,5 @@ cython_debug/
 # Database
 backend/db.sqlite3
 *.sqlite3
+
+backend/static

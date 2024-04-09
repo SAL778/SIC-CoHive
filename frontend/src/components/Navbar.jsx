@@ -1,24 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import logo from "../assets/sic.png";
-import Underlay from "../assets/Underlay.svg";
+import logo from "../assets/sic_logo.png";
 import { Link, NavLink } from "react-router-dom";
-import { showNotification } from "@mantine/notifications";
 import Signout from "../Signout";
-
-// -----------------------------------------------------------------------------
-/**
- * Handles the click event for the Navbar component.
- * @param {DOMRect} rect - The DOMRect object of the clicked nav element.
- * @returns {void} - Nothing.
- * Changes the location of the underlay to the clicked element by setting the CSS top position.
- */
-// TODO: fix the way the underlay is positioned when the page is resized, or attach it to the active nav item better
-// function handleClick(rect) {
-// 	const yPos = rect.y;
-// 	const underlay = document.querySelector(".nav-underlay");
-// 	underlay.style.top = `${yPos}px`;
-// }
-// -----------------------------------------------------------------------------
 
 /**
  * Renders a navigation item with a link, icon, and content.
@@ -35,8 +18,6 @@ function NavItem({ content, href, icon }) {
 		<NavLink
 			to={href}
 			className="nav-item flex h-[65px] grow items-center gap-2 text-sm font-medium flex-none justify-start px-6 py-3"
-		// Styling for the active navigation item and hovers are in the css file
-		// onClick={(e) => handleClick(e.currentTarget.getBoundingClientRect())}
 		>
 			<i
 				className={`fa ${icon}`}
@@ -91,7 +72,10 @@ function Navigation({ mobileNav, setMobileNav }) {
 
 	useEffect(() => {
 		function handleClickOutside(event) {
-			if (navigationRef.current && !navigationRef.current.contains(event.target)) {
+			if (
+				navigationRef.current &&
+				!navigationRef.current.contains(event.target)
+			) {
 				setMobileNav(false);
 			}
 		}
@@ -124,11 +108,10 @@ function Navigation({ mobileNav, setMobileNav }) {
 							alt="SIC logo"
 							width={250}
 							height={40}
+							referrerPolicy="no-referrer"
 						/>
 					</a>
 					<div className="flex grow justify-between flex-col">
-						{/* NOTE: commented out until the positioning is fixed */}
-						{/* <img src={Underlay} className="nav-underlay" /> */}
 						<div className="nav-container">
 							{objects.map((object, index) => (
 								<React.Fragment key={object.content}>
@@ -158,7 +141,11 @@ function Navigation({ mobileNav, setMobileNav }) {
 							>
 								<i
 									className="fa fa-sign-out-alt"
-									style={{ fontSize: "20px", width: "30px", textAlign: "center" }}
+									style={{
+										fontSize: "20px",
+										width: "30px",
+										textAlign: "center",
+									}}
 								/>
 								Sign Out
 							</button>

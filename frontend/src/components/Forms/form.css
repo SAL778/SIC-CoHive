@@ -94,7 +94,9 @@
 	font-size: 0.9em;
 }
 
-.mantine-DatePicker-day[data-selected] {
+.mantine-DatePicker-day[data-selected],
+.mantine-YearPickerInput-yearsListControl[data-selected],
+.mantine-MonthPickerInput-monthsListControl[data-selected] {
 	background-color: var(--primary-orange);
 	color: white;
 }
@@ -105,7 +107,8 @@
 	font-size: 1em;
 }
 
-.mantine-DatePicker-calendarHeaderLevel {
+.mantine-DatePicker-calendarHeaderLevel,
+.mantine-MonthPicker-calendarHeaderLevel {
 	color: var(--navy-blue);
 	font-weight: 600;
 	font-size: 1em;
