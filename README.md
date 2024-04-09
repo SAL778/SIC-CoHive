@@ -6,6 +6,10 @@ This is a [React](https://react.dev/) project bootstrapped with [`Vite`](https:/
 
 https://hip-yak-solely.ngrok-free.app/
 
+# Link to deployed backend:
+
+https://hip-yak-solely.ngrok-free.app/api/admin
+
 ## Link to Deployment Instructions
 https://docs.google.com/document/d/19VpgY7MIyyuSt4cQ3IzG-dTMuHzf5jBLVMUoVJkL1iY/edit?usp=sharing
 
