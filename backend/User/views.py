@@ -15,8 +15,10 @@ from google.auth.transport import requests
 from google.oauth2 import id_token
 from dotenv import load_dotenv
 import os
-load_dotenv()
+from django.core.paginator import Paginator
 from django.http import Http404
+load_dotenv()
+
 @api_view(['POST'])
 def verify_google_jwt(request):
     '''
@@ -154,7 +156,9 @@ def user_list(request):
     if request.method == 'GET':
         search = request.GET.get('search', '')
         filters = request.GET.get('filter', '')
-        
+
+        page_num = request.GET.get('page', '1')
+
         queryset = CustomUser.objects.all()
 
         if search:
@@ -163,9 +167,34 @@ def user_list(request):
         if filters:
             access_types = filters.split(',')
             queryset = queryset.filter(accessType__name__in=access_types).distinct()
+        
+        queryset = queryset.order_by('first_name', 'last_name')
 
-    serializer = CustomUserSerializer(queryset, many=True)
-    return Response(serializer.data)
+        # Paginate the queryset, can be changed to any number of users per page
+        users_per_page = 20
+        paginator = Paginator(queryset, per_page=users_per_page)
+
+        # Calculate total number of pages for frontend
+        total_pages = paginator.num_pages
+
+        # Check if page number is valid, in case the Next/Previous button is clicked
+        page_num = int(page_num)
+
+        if page_num > total_pages:
+            page_num = total_pages
+        elif page_num < 1:
+            page_num = 1
+
+        page_object = paginator.get_page(page_num)
+        serializer = CustomUserSerializer(page_object, many=True)
+
+        # Return the serialized data and total number of pages
+        response_data = {
+            'users': serializer.data,
+            'total_pages': total_pages
+        }
+
+        return Response(response_data)
 
 
 
@@ -187,19 +216,9 @@ def user_detail(request, pk):
     - If the request method is PATCH, updates and returns the serialized user data.
     - If the request method is DELETE, deletes the user and returns a 204 No Content response.
     """
-    
-    # try:
-    #     access_token = request.META['HTTP_AUTHORIZATION']
-    #     print("access_token")
-    #     print(access_token)
-    #     token_obj = Token.objects.get(key=access_token)
-    #     user = token_obj.user
-        
-        # user = get_object_or_404(CustomUser, pk=pk)
 
-    # user = get_user_from_token(request)
     user = get_object_or_404(CustomUser, pk=pk)
-   # print("user",user)
+
     if request.method == 'GET':
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
@@ -213,8 +232,6 @@ def user_detail(request, pk):
         serializer = CustomUserSerializer(user)
         serializer.delete(user)
         return Response(status=204)
-    # except Exception as e:
-    #     return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
     
 
 class CompletePortfolioDetail(generics.RetrieveUpdateAPIView):

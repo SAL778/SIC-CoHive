@@ -1,6 +1,7 @@
 import datetime
 from django.utils import timezone
 from rest_framework import generics, status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Resources, Booking
@@ -17,7 +18,7 @@ from datetime import timedelta
 from django.db.models import Avg
 from django.db.models import F
 from User.models import CustomUser
-
+from drf_yasg import openapi
 # Create your views here.
 User = get_user_model()
 
@@ -257,35 +258,31 @@ class ResourceListView(generics.ListAPIView):
     
     
 
-# class AverageBookingView(APIView):
-#     '''
-#     get:
-#     Get the average booking duration for a given scope and time period.
-#     '''
-#
-#     def get(self, request, format=None):
-#         serializer = AverageBookingDurationSerializer(data=request.query_params)
-#         if serializer.is_valid():
-#             data = serializer.validated_data
-#             scope = data.get('scope', 'all')
-#             year = data.get('year', timezone.now().year)
-#             month = data.get('month')
-#             week = data.get('week')
-#             stats = Booking.average_booking_duration(scope=scope, year=year, month=month, week=week)
-#             print(stats)
-#             total_minutes = round(stats['avg_duration'].total_seconds() / 60)
-#             return Response({"average_duration": f"{total_minutes} minutes"})
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
+response_schema = {
+    '200': openapi.Response(
+        description='Booking statistics fetched successfully',
+        schema=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'TotalUsers': openapi.Schema(type=openapi.TYPE_INTEGER, description='The total number of users'),
+                'TotalRoomBookings': openapi.Schema(type=openapi.TYPE_INTEGER, description='The total number of room bookings'),
+                'TotalEquipmentBookings': openapi.Schema(type=openapi.TYPE_INTEGER, description='The total number of equipment bookings'),
+                'averagEbookingDurationHour': openapi.Schema(type=openapi.TYPE_NUMBER, description='The average booking duration in hours'),
+            },
+        ),
+    ),
+}
 
 class BookingMisc(APIView):
     '''
     get:
     Get the total number of users, room bookings, equipment bookings, and average booking duration.
     '''
+
+    @swagger_auto_schema(method='get', responses=response_schema)
+    @api_view(['GET'])
     def get(self, request, *args, **kwargs):
         total_users = CustomUser.objects.count()
         total_room_bookings = Booking.objects.filter(resources__type='room').count()
@@ -299,11 +296,30 @@ class BookingMisc(APIView):
             'averagEbookingDurationHour': average_duration['average_duration'] / timedelta(minutes=1)
         })
 
+response_schema2 = {
+    '200': openapi.Response(
+        description='Resource usage hours fetched successfully',
+        schema=openapi.Schema(
+            type=openapi.TYPE_ARRAY,
+            items=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'name': openapi.Schema(type=openapi.TYPE_STRING, description='The name of the resource'),
+                    'total_duration': openapi.Schema(type=openapi.TYPE_NUMBER, description='The total duration of bookings for the resource'),
+                },
+            ),
+        ),
+    ),
+}
+
 class ResourceUsageHour(APIView):
     '''
     get:
     Get the number of bookings for each resource.
     '''
+
+    @swagger_auto_schema(method='get', responses=response_schema2)
+    @api_view(['GET'])
     def get(self, request, *args, **kwargs):
         serializer = ResourceUsageHourSerializer(data=request.query_params)
         if serializer.is_valid():
@@ -320,13 +336,34 @@ class ResourceUsageHour(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        
+
+response_schema3 = {
+    '200': openapi.Response(
+        description='Peak booking hours fetched successfully',
+        schema=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'name': openapi.Schema(type=openapi.TYPE_STRING, description='The name of the resource'),
+                'bookings': openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    additional_properties=openapi.Schema(
+                        type=openapi.TYPE_INTEGER,
+                        description='The number of bookings for each hour',
+                    ),
+                ),
+            },
+        ),
+    ),
+}
 
 class PeakBookingHours(APIView):
     '''
     get:
     Get the peak booking times for a given scope and time period.
     '''
+
+    @swagger_auto_schema(method='get', responses=response_schema3)
+    @api_view(['GET'])
     def get(self, request, *args, **kwargs):
         serializer = BookingFrequencyFilterSerializer(data=request.query_params)
         if serializer.is_valid():

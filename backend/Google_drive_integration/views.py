@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
+
 from .google_drive_api import initialize_drive_client
 from .google_sheets_api import initialize_sheets_client
 from .google_calendar_api import initialize_calendar_client
@@ -8,6 +11,7 @@ import datetime
 from datetime import timedelta
 import urllib.parse
 from dotenv import load_dotenv
+from drf_yasg import openapi
 import os
 load_dotenv()
 
@@ -51,32 +55,38 @@ def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:
     else:
         return values[1:]
 
-# def fetch_carousel_events(request):
-
-
-# # fetch events from the calendar. NOTE: Calendar events do not have an image source.
-
-# # After calendar events are fetched, fetch events from the spreadsheet. NOTE: Spreadsheet events have an image source.
-# # Check if the events have the same title, day, start, and end time. If they do, get the event's image from the imgSrc column in the spreadsheet. Return to frontend as it currently does.
-# # if event details don't match, return the calendar event as it currently does. It has no image. That's okay. Frontend has a fallback image for events with no image.
-
-#     client = initialize_sheets_client()
-
-#     app_links = AppLink.objects.first()
-#     spreadsheet_id = app_links.spreadsheet_id.split('/d/')[1].split('/')[0]
-
-#     spreadsheet_range = "Events!A1:Z" #Rows 2 onwards (Row 1 is headers), from columns A-Z. Empty columns will not be included, even if specified in range.
-#     scheme = ["timestamp", "title", "date", "startTime", "endTime", "imgSrc", "description", "email", "location", "approved"] #Camelcasing to follow google convention
-
-#     event_entries = client.spreadsheets().values().get(spreadsheetId = spreadsheet_id, range=spreadsheet_range).execute()
-#     parsed_events = parse_spreadsheet(event_entries, scheme=scheme)
-
-
-
-#     return JsonResponse({'events': parsed_events})
-
-
+response_schema = {
+    '200': openapi.Response(
+        description='Events fetched successfully',
+        schema=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'events': openapi.Schema(
+                    type=openapi.TYPE_ARRAY,
+                    items=openapi.Schema(
+                        type=openapi.TYPE_OBJECT,
+                        properties={
+                            'summary': openapi.Schema(type=openapi.TYPE_STRING, description='The title or summary of the event'),
+                            'location': openapi.Schema(type=openapi.TYPE_STRING, description='The location of the event'),
+                            'description': openapi.Schema(type=openapi.TYPE_STRING, description='The description of the event'),
+                            'start': openapi.Schema(type=openapi.TYPE_STRING, description='The start time of the event'),
+                            'end': openapi.Schema(type=openapi.TYPE_STRING, description='The end time of the event'),
+                            'email': openapi.Schema(type=openapi.TYPE_STRING, description='The email of the creator of the event'),
+                            'imgSrc': openapi.Schema(type=openapi.TYPE_STRING, description='The image source of the event'),
+                        },
+                    ),
+                ),
+            },
+        ),
+    ),
+}
+@swagger_auto_schema(method='get', responses=response_schema)
+@api_view(['GET'])
 def fetch_carousel_events(request):
+    '''
+    get:
+    Fetches the events from the Google Calendar and the Google Sheets, and returns the matched events.
+    '''
     # Initialize clients
     sheets_client = initialize_sheets_client()
     calendar_client = initialize_calendar_client()
@@ -106,9 +116,6 @@ def fetch_carousel_events(request):
         for sheet_event in parsed_events:
             if (
                 calendar_event.get('summary') == sheet_event.get('title') #and
-                # calendar_event['start'].get('dateTime') == sheet_event.get('date') #and
-                # calendar_event['start'].get('dateTime', '').split('T')[1][:5] == sheet_event.get('startTime') and
-                # calendar_event['end'].get('dateTime', '').split('T')[1][:5] == sheet_event.get('endTime')
             ):
                 # Match found, add imgSrc to calendar event if available
                 calendar_event['imgSrc'] = sheet_event.get('imgSrc', '')
@@ -118,12 +125,39 @@ def fetch_carousel_events(request):
     print("Matched Events:", matched_events)
 
     return JsonResponse({'events': matched_events})
-    # return JsonResponse({'events': matched_events or []})
-    # return JsonResponse({'events': {i: event for i, event in enumerate(matched_events)}})
 
 
-
+response_schema = {
+    '200': openapi.Response(
+        description='Events fetched successfully',
+        schema=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'events': openapi.Schema(
+                    type=openapi.TYPE_ARRAY,
+                    items=openapi.Schema(
+                        type=openapi.TYPE_OBJECT,
+                        properties={
+                            'summary': openapi.Schema(type=openapi.TYPE_STRING, description='The title or summary of the event'),
+                            'location': openapi.Schema(type=openapi.TYPE_STRING, description='The location of the event'),
+                            'description': openapi.Schema(type=openapi.TYPE_STRING, description='The description of the event'),
+                            'start': openapi.Schema(type=openapi.TYPE_STRING, description='The start time of the event'),
+                            'end': openapi.Schema(type=openapi.TYPE_STRING, description='The end time of the event'),
+                            'email': openapi.Schema(type=openapi.TYPE_STRING, description='The email of the creator of the event'),
+                        },
+                    ),
+                ),
+            },
+        ),
+    ),
+}
+@swagger_auto_schema(method='get', responses=response_schema)
+@api_view(['GET'])
 def fetch_calendar_events(request):
+    '''
+    get:
+    Fetches the events from the Google Calendar and returns them.
+    '''
     # print("Fetching calendar events")
     date_str = request.GET.get('date', None) 
     if date_str:
@@ -163,10 +197,6 @@ def fetch_calendar_events(request):
             'end': end,
             'email': email,
         })
-
-    # print("Processed:", processed_events)
-
-    # print("Number of events fetched:", len(events))
 
     return JsonResponse({'events': processed_events})
 
