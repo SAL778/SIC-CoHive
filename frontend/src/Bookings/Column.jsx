@@ -40,7 +40,7 @@ function parseTime(timeStr) {
  * @returns {JSX.Element} The rendered Column component.
  */
 const Column = ({ column, onBookingEdit }) => {
-	const { currentUser } = useContext(UserContext);
+	const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 	// ---------------------------------------------------------------------------------------------------------------------
 	// Generate all time slots for the day in 15-minute intervals (empty by default)
@@ -283,7 +283,7 @@ const Column = ({ column, onBookingEdit }) => {
 						<p className="text-lg font-bold capitalize text-center">
 							{column.name}
 						</p>
-						{column.room_code &&
+						{(column.room_code && hasPermission) &&
 							<p className="text-sm font-semibold text-blue-950">
 								{column.room_code}
 								<Tooltip label = "Pin code required to access the asset.">
