@@ -81,6 +81,7 @@ response_schema = {
     ),
 }
 @swagger_auto_schema(method='get', responses=response_schema)
+@api_view(['GET'])
 def fetch_carousel_events(request):
     '''
     get:
