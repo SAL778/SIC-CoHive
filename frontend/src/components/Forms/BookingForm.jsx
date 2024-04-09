@@ -154,7 +154,7 @@ function BookingFormComponent({
                         const bookedTimeSlots = []
                         for (const booking of todaysBookings) {
                             let bookedTimes = getTimePeriods(interval, dateToTimePeriod(booking.start_time), dateToTimePeriod(booking.end_time));  //Booked 15 min intervals
-                            console.log(booking.start_time)
+                            // console.log(booking.start_time)
                             if (selectedAsset.name == booking.resources_name && currentBooking) {
                                 const validBookingTimes = new Set(
                                     getTimePeriods(interval, 
@@ -454,7 +454,7 @@ const dateToTimePeriod = (date) => {
 	//Convert dates to ISO strings, then isolate hours, minutes
 	if (transformed instanceof Date) {
 		transformed = date.toISOString();
-		console.log("was date" + transformed);
+		// console.log("was date" + transformed);
 	}
 	//Then convert this ISO string to an array
 	if (typeof transformed == "string") {

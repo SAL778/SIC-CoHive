@@ -30,7 +30,7 @@ export async function httpRequest({
 	onSuccess,
 	body = null,
 	onFailure = (res) => {
-		console.log(res);
+		// console.log(res);
 		if (res.status === 401) {
 			if (window.location.pathname !== "/") {
 				window.location.href = "/";

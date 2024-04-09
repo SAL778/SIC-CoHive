@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from "react";
 import placeholder from "./assets/sic_logo.png";
 import "./Login.css";
 import { NavigationContext } from "./App.jsx";
-import axiousInstance from "./axios.js";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
@@ -44,7 +43,6 @@ export default function Login() {
 
 			// Make an HTTP request to the Django view
 			const response = await axios.post(
-				// "http://localhost:8000/api/verify_google_jwt/",
 				`${host}/verify_google_jwt/`,
 				{ jwt_token },
 				{
@@ -57,7 +55,6 @@ export default function Login() {
 
 			// Redirect to /bookings if the request is successful
 			if (response.status === 302 || response.status === 200) {
-				// window.location.href = "/bookings";
 				httpRequest({
 					endpoint: `${host}/users/profile/`, //Add the current user to localStorage
 					onSuccess: (userData) => {

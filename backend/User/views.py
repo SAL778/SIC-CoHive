@@ -216,19 +216,9 @@ def user_detail(request, pk):
     - If the request method is PATCH, updates and returns the serialized user data.
     - If the request method is DELETE, deletes the user and returns a 204 No Content response.
     """
-    
-    # try:
-    #     access_token = request.META['HTTP_AUTHORIZATION']
-    #     print("access_token")
-    #     print(access_token)
-    #     token_obj = Token.objects.get(key=access_token)
-    #     user = token_obj.user
-        
-        # user = get_object_or_404(CustomUser, pk=pk)
 
-    # user = get_user_from_token(request)
     user = get_object_or_404(CustomUser, pk=pk)
-   # print("user",user)
+
     if request.method == 'GET':
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
@@ -242,8 +232,6 @@ def user_detail(request, pk):
         serializer = CustomUserSerializer(user)
         serializer.delete(user)
         return Response(status=204)
-    # except Exception as e:
-    #     return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
     
 
 class CompletePortfolioDetail(generics.RetrieveUpdateAPIView):
