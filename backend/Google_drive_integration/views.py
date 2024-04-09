@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
+
 from .google_drive_api import initialize_drive_client
 from .google_sheets_api import initialize_sheets_client
 from .google_calendar_api import initialize_calendar_client
@@ -8,6 +11,7 @@ import datetime
 from datetime import timedelta
 import urllib.parse
 from dotenv import load_dotenv
+from drf_yasg import openapi
 import os
 load_dotenv()
 
@@ -50,9 +54,38 @@ def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:
         return keyed_values[:K_TO_RETURN] #Only the closest K events
     else:
         return values[1:]
-    
 
+response_schema = {
+    '200': openapi.Response(
+        description='Events fetched successfully',
+        schema=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'events': openapi.Schema(
+                    type=openapi.TYPE_ARRAY,
+                    items=openapi.Schema(
+                        type=openapi.TYPE_OBJECT,
+                        properties={
+                            'summary': openapi.Schema(type=openapi.TYPE_STRING, description='The title or summary of the event'),
+                            'location': openapi.Schema(type=openapi.TYPE_STRING, description='The location of the event'),
+                            'description': openapi.Schema(type=openapi.TYPE_STRING, description='The description of the event'),
+                            'start': openapi.Schema(type=openapi.TYPE_STRING, description='The start time of the event'),
+                            'end': openapi.Schema(type=openapi.TYPE_STRING, description='The end time of the event'),
+                            'email': openapi.Schema(type=openapi.TYPE_STRING, description='The email of the creator of the event'),
+                            'imgSrc': openapi.Schema(type=openapi.TYPE_STRING, description='The image source of the event'),
+                        },
+                    ),
+                ),
+            },
+        ),
+    ),
+}
+@swagger_auto_schema(method='get', responses=response_schema)
 def fetch_carousel_events(request):
+    '''
+    get:
+    Fetches the events from the Google Calendar and the Google Sheets, and returns the matched events.
+    '''
     # Initialize clients
     sheets_client = initialize_sheets_client()
     calendar_client = initialize_calendar_client()
@@ -93,7 +126,37 @@ def fetch_carousel_events(request):
     return JsonResponse({'events': matched_events})
 
 
+response_schema = {
+    '200': openapi.Response(
+        description='Events fetched successfully',
+        schema=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'events': openapi.Schema(
+                    type=openapi.TYPE_ARRAY,
+                    items=openapi.Schema(
+                        type=openapi.TYPE_OBJECT,
+                        properties={
+                            'summary': openapi.Schema(type=openapi.TYPE_STRING, description='The title or summary of the event'),
+                            'location': openapi.Schema(type=openapi.TYPE_STRING, description='The location of the event'),
+                            'description': openapi.Schema(type=openapi.TYPE_STRING, description='The description of the event'),
+                            'start': openapi.Schema(type=openapi.TYPE_STRING, description='The start time of the event'),
+                            'end': openapi.Schema(type=openapi.TYPE_STRING, description='The end time of the event'),
+                            'email': openapi.Schema(type=openapi.TYPE_STRING, description='The email of the creator of the event'),
+                        },
+                    ),
+                ),
+            },
+        ),
+    ),
+}
+@swagger_auto_schema(method='get', responses=response_schema)
+@api_view(['GET'])
 def fetch_calendar_events(request):
+    '''
+    get:
+    Fetches the events from the Google Calendar and returns them.
+    '''
     # print("Fetching calendar events")
     date_str = request.GET.get('date', None) 
     if date_str:
