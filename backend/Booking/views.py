@@ -281,8 +281,8 @@ class BookingMisc(APIView):
     Get the total number of users, room bookings, equipment bookings, and average booking duration.
     '''
 
-    @swagger_auto_schema(method='get', responses=response_schema)
-    @api_view(['GET'])
+    # @swagger_auto_schema(method='get', responses=response_schema)
+    # @api_view(['GET'])
     def get(self, request, *args, **kwargs):
         total_users = CustomUser.objects.count()
         total_room_bookings = Booking.objects.filter(resources__type='room').count()
@@ -318,8 +318,8 @@ class ResourceUsageHour(APIView):
     Get the number of bookings for each resource.
     '''
 
-    @swagger_auto_schema(method='get', responses=response_schema2)
-    @api_view(['GET'])
+    # @swagger_auto_schema(method='get', responses=response_schema2)
+    # @api_view(['GET'])
     def get(self, request, *args, **kwargs):
         serializer = ResourceUsageHourSerializer(data=request.query_params)
         if serializer.is_valid():
@@ -362,9 +362,10 @@ class PeakBookingHours(APIView):
     Get the peak booking times for a given scope and time period.
     '''
 
-    @swagger_auto_schema(method='get', responses=response_schema3)
-    @api_view(['GET'])
+    # @swagger_auto_schema(method='get', responses=response_schema3)
+  #  @api_view(['GET'])
     def get(self, request, *args, **kwargs):
+        print("Here",request)
         serializer = BookingFrequencyFilterSerializer(data=request.query_params)
         if serializer.is_valid():
             data = serializer.validated_data
