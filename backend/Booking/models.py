@@ -60,9 +60,9 @@ class Booking(models.Model):
         bookings = Booking.objects.all()
 
         if scope != "all":
-            if year:
+            if (scope == "year" or scope == "month") and year:
                 bookings = bookings.filter(start_time__year=year)
-            if month:
+            if  scope == "month" and month:
                 bookings = bookings.filter(start_time__month=month)
         # bookings = bookings.annotate(day_of_week=ExtractWeekDay('start_time'))
         # bookings_per_day = bookings.values('day_of_week').annotate(count=Count('id')).order_by('day_of_week')
@@ -100,14 +100,30 @@ class Booking(models.Model):
         if type:
             bookings = bookings.filter(resources__type=type)
 
-        bookings = bookings.annotate(duration=F('end_time') - F('start_time'))
-        resource_usage = bookings.values('resources__name').annotate(total_duration=Sum('duration')).order_by('resources__name')
+        # bookings = bookings.annotate(duration=F('end_time') - F('start_time'))
+        # resource_usage = bookings.values('resources__name').annotate(total_duration=Sum('duration')).order_by('resources__name')
+        #
+        # result = []
+        # for item in resource_usage:
+        #     result.append({
+        #         "name": item['resources__name'],
+        #         "total_duration": item['total_duration'] / timedelta(hours=1)
+        #     })
+
+        resource_usage = defaultdict(int)
+
+        for booking in bookings:
+            local_start_time = booking.start_time.astimezone(pytz.timezone('America/Edmonton'))
+            local_end_time = booking.end_time.astimezone(pytz.timezone('America/Edmonton'))
+            duration = local_end_time - local_start_time
+            if local_start_time.weekday() + 1 == day:
+                resource_usage[booking.resources.name] += duration.total_seconds() / 3600
 
         result = []
-        for item in resource_usage:
+        for key in resource_usage:
             result.append({
-                "name": item['resources__name'],
-                "total_duration": item['total_duration'] / timedelta(hours=1)
+                "name": key,
+                "total_duration": resource_usage[key]
             })
         # store the result in the cache for 5 minutes
         cache.set(cache_key, result, 60 * 5)

@@ -171,7 +171,7 @@ def user_list(request):
         queryset = queryset.order_by('first_name', 'last_name')
 
         # Paginate the queryset, can be changed to any number of users per page
-        users_per_page = 20
+        users_per_page = 10
         paginator = Paginator(queryset, per_page=users_per_page)
 
         # Calculate total number of pages for frontend
