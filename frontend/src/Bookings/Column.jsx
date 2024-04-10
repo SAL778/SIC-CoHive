@@ -282,14 +282,14 @@ const Column = ({ column, onBookingEdit }) => {
 						<p className="text-lg font-bold capitalize text-center">
 							{column.name}
 						</p>
-						{(column.room_code && hasPermission) &&
+						{column.room_code && hasPermission && (
 							<p className="text-sm font-semibold text-blue-950">
 								{column.room_code}
-								<Tooltip label = "Pin code required to access the asset.">
-									<i className = "fa fa-info-circle ml-2"/>
+								<Tooltip label="Pin code required to access the asset.">
+									<i className="fa fa-info-circle ml-2" />
 								</Tooltip>
 							</p>
-						}
+						)}
 					</div>
 				</div>
 			</BookingPopover>

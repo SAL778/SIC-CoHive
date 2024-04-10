@@ -47,7 +47,8 @@ def parse_spreadsheet(google_response, firstRowAsKeyValues:bool = False, scheme:
 
             date_str = row_values.get("date", "")
             date_as_date = datetime.datetime.strptime(date_str, GOOGLE_DATE_FORMAT).date()
-            if row_values.get("approved") == 'TRUE' and date_as_date >= today :
+            # if row_values.get("approved") == 'TRUE' and date_as_date >= today :
+            if date_as_date >= today :
                 keyed_values.append(row_values)         #Only return the approved events and those that come after today
                 keyed_values = sorted(keyed_values, key = lambda x: x.get("date", ""))
                 
@@ -96,11 +97,11 @@ def fetch_carousel_events(request):
     calendar_id = urllib.parse.unquote(app_links.google_calendar_events_link.split("/ical/")[1].split("/public")[0])
 
     time_min = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-    time_max = (datetime.datetime.utcnow() + timedelta(days=30)).isoformat() + 'Z'
+    time_max = (datetime.datetime.utcnow() + timedelta(days=45)).isoformat() + 'Z'
     calendar_events_result = calendar_client.events().list(calendarId=calendar_id, timeMin=time_min, timeMax=time_max, singleEvents=True, orderBy='startTime').execute()
     calendar_events = calendar_events_result.get('items', [])
 
-    print("Calendar Events:", calendar_events, "\n")
+    # print("Calendar Events:", calendar_events, "\n")
 
     # Fetch events from the spreadsheet
     spreadsheet_range = "Events!A1:Z"
@@ -108,7 +109,7 @@ def fetch_carousel_events(request):
     #parsed_events = parse_spreadsheet(event_entries, scheme=["timestamp", "title", "date", "startTime", "endTime", "imgSrc", "description", "email", "location", "approved"])
     parsed_events = parse_spreadsheet(event_entries, scheme=["timestamp", "email", "title", "description", "location", "date", "startTime", "endTime", "imgSrc"])
 
-    print("Parsed Events:", parsed_events, "\n")
+    # print("Parsed Events:", parsed_events, "\n")
 
     # Match calendar events with spreadsheet events
     matched_events = []
@@ -122,7 +123,7 @@ def fetch_carousel_events(request):
                 break
         matched_events.append(calendar_event)
 
-    print("Matched Events:", matched_events)
+    # print("Matched Events:", matched_events)
 
     return JsonResponse({'events': matched_events})
 
