@@ -270,7 +270,6 @@ const Column = ({ column, onBookingEdit }) => {
 				selectedSlot ? "currentlyBooking" : ""
 			} ${hasPermission ? "" : "no-permission-column"}`}
 		>
-			{console.dir(column)}
 			<BookingPopover
 				assetImage={column.image}
 				assetDescription={column.description}
