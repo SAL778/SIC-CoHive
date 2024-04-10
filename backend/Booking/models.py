@@ -60,9 +60,9 @@ class Booking(models.Model):
         bookings = Booking.objects.all()
 
         if scope != "all":
-            if year:
+            if (scope == "year" or scope == "month") and year:
                 bookings = bookings.filter(start_time__year=year)
-            if month:
+            if  scope == "month" and month:
                 bookings = bookings.filter(start_time__month=month)
         # bookings = bookings.annotate(day_of_week=ExtractWeekDay('start_time'))
         # bookings_per_day = bookings.values('day_of_week').annotate(count=Count('id')).order_by('day_of_week')

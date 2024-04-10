@@ -96,7 +96,7 @@ def fetch_carousel_events(request):
     calendar_id = urllib.parse.unquote(app_links.google_calendar_events_link.split("/ical/")[1].split("/public")[0])
 
     time_min = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-    time_max = (datetime.datetime.utcnow() + timedelta(days=14)).isoformat() + 'Z'
+    time_max = (datetime.datetime.utcnow() + timedelta(days=30)).isoformat() + 'Z'
     calendar_events_result = calendar_client.events().list(calendarId=calendar_id, timeMin=time_min, timeMax=time_max, singleEvents=True, orderBy='startTime').execute()
     calendar_events = calendar_events_result.get('items', [])
 
