@@ -27,7 +27,6 @@ function EventsCarousel({ events, onItemClick }) {
 
 //The JSX Render of an event
 function EventCard({ event, onClick }) {
-
 	const formatDate = (dateString) => {
 		// Parse the date string
 		//"2024-05-02T13:00:00-06:00"

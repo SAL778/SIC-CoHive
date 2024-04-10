@@ -11,7 +11,6 @@ import { convert } from "html-to-text";
 import fallbackImage from "./assets/event_background.jpg";
 
 function Events() {
-
 	const googleCalendar = JSON.parse(localStorage.getItem("appLinks"))[0]
 		.google_calendar_link;
 	const eventFormLink = JSON.parse(localStorage.getItem("appLinks"))[0]
@@ -97,7 +96,7 @@ function Events() {
 			return words.slice(0, 100).join(" ") + "...";
 		}
 		return description;
-	}
+	};
 
 	return (
 		<div className="parent-container-events content-container max-w-[1600px] mx-auto px-[10px] pb-[10px] overflow-hidden">
@@ -129,7 +128,12 @@ function Events() {
 					src={googleCalendar}
 					title="Styled Calendar"
 					className="calendarFrame styled-calendar-container"
-					style={{ width: "100%", height: "680px", border: "none", overflow: "hidden"}}
+					style={{
+						width: "100%",
+						height: "680px",
+						border: "none",
+						overflow: "hidden",
+					}}
 					data-cy="calendar-embed-iframe"
 				></iframe>
 			</div>
@@ -212,7 +216,9 @@ function Events() {
 									{removeSeconds(clickedEvent?.end.dateTime)}
 								</p>
 							</section>
-							<p className="mt-10">{trimDescription(convert(clickedEvent?.description))}</p>
+							<p className="mt-10">
+								{trimDescription(convert(clickedEvent?.description))}
+							</p>
 						</div>
 						<div className="buttonFooter ml-auto">
 							<button
