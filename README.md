@@ -74,5 +74,6 @@ This will need to be placed in the root of the repo
 
 https://www.figma.com/file/xd69ad9wL9y19qJo52C69T/HiFi(ve)?type=design&node-id=0%3A1&mode=design&t=o6K4PRNmJd6W9lRp-1
 
-## Link to the Screencast
+## Link to the Screencast and Script
 https://drive.google.com/file/d/1ULHh3e4RVCM9jR5MbIb6eY5nG-9h2GXU/view?usp=drive_link
+https://docs.google.com/document/d/1iuRcsmhh4jJRmBwMwS3PFwnp3UMbBSTjmp2akgRQZag/edit?usp=sharing
