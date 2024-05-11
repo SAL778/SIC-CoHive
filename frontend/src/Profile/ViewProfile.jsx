@@ -74,7 +74,13 @@ export default function ViewProfile() {
 					<TextEditor initialValue={portfolio.description} readOnly={true} />
 				</>
 			) : (
-				<p className="px-[10px]">Sorry, this portfolio is private. Nothing to see here!</p>
+				// <p className="px-[10px]">Sorry, this portfolio is private. Nothing to see here!</p>
+				<h2
+					class="text-2xl font-bold text-blue-950"
+					style={{ marginLeft: "10px", marginTop: "10px" }}
+				>
+					Sorry, this portfolio is private. Nothing to see here!
+				</h2>
 			)}
 		</div>
 	);

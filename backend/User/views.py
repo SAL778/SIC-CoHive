@@ -400,10 +400,22 @@ class FlairList(generics.CreateAPIView):
             return Response({'error': 'You do not have permission to create a flair.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+# class AppLinkList(generics.ListAPIView):
+#     '''
+#     get:
+#     API view to retrieve the list of all app links.
+#     '''
+#     serializer_class = AppLinkSerializer
+#     queryset = AppLink.objects.all()
+
+from django.core.cache import cache
+
 class AppLinkList(generics.ListAPIView):
-    '''
-    get:
-    API view to retrieve the list of all app links.
-    '''
     serializer_class = AppLinkSerializer
-    queryset = AppLink.objects.all()
+
+    def get_queryset(self):
+        cached_data = cache.get('app_links')
+        if not cached_data:
+            cached_data = AppLink.objects.all()
+            cache.set('app_links', cached_data, timeout=3600)  # Cache for one hour
+        return cached_data
