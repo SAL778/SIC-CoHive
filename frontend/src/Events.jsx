@@ -89,8 +89,20 @@ function Events() {
 		});
 	}, []);
 
+	const trimZoomDescription = (description) => {
+		const passwordIndex = description.search(/(One tap mobile)/i);
+		if (passwordIndex !== -1) {
+			return description.slice(0, passwordIndex);
+		}
+		return description;
+	};
+
 	const trimDescription = (description) => {
 		if (!description) return "";
+		// Check if the description is for a Zoom event
+		if (description.includes("zoom.us/")) {
+			return trimZoomDescription(description) + "[Details trimmed...]";
+		}
 		const words = description.split(" ");
 		if (words.length > 100) {
 			return words.slice(0, 100).join(" ") + "...";
@@ -112,7 +124,11 @@ function Events() {
 					}}
 				/>
 			) : (
-				<p> No Upcoming Events in the next 2 weeks! Check back soon</p>
+				<div className="no-events-placeholder">
+					<p className="text-xl font-medium">
+						No Upcoming Events in the next 2 weeks! Check back soon
+					</p>
+				</div>
 			)}
 			<button
 				type="button"
