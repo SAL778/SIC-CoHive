@@ -89,15 +89,15 @@ h3 {
 
 #mobile-nav {
 	position: absolute;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    font-size: 20px;
-    padding: 0.5rem 1rem;
-    left: 20px;
-    top: 30px;
-    height: 48px;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	font-size: 20px;
+	padding: 0.5rem 1rem;
+	left: 20px;
+	top: 30px;
+	height: 48px;
 }
 
 .app-container-pages #mobile-nav {
@@ -493,7 +493,11 @@ button.button-disabled:focus,
 	left: 0;
 	width: 100%;
 	height: 2px;
-	background: linear-gradient(90deg, #F0EFEF 2.73%, rgba(239, 239, 239, 0) 94.81%);
+	background: linear-gradient(
+		90deg,
+		#f0efef 2.73%,
+		rgba(239, 239, 239, 0) 94.81%
+	);
 }
 
 .search-input {
@@ -589,14 +593,17 @@ button.button-disabled:focus,
 
 .booking-column-container .embla__slide:nth-child(2n + 1) .open-booking-slot {
 	/* background: #e5e5e5; */
-    border-bottom: 1px solid #adadad;
+	border-bottom: 1px solid #adadad;
 }
 
-.booking-column-container .embla__slide:nth-child(2n) .slot-div  {
+.booking-column-container .embla__slide:nth-child(2n) .slot-div {
 	background: #fff;
 }
 
-.booking-column-container .embla__slide:nth-child(2n) .no-permission-column:not(.currentlyBooking) .slot-div {
+.booking-column-container
+	.embla__slide:nth-child(2n)
+	.no-permission-column:not(.currentlyBooking)
+	.slot-div {
 	background: #e5e5e5;
 }
 
@@ -686,26 +693,26 @@ button.button-disabled:focus,
 }
 
 .radio-button.selected {
-	background-color: var(--primary-orange)
+	background-color: var(--primary-orange);
 }
 
 .radio-button:hover,
 .radio-button:focus {
-	background-color: var(--hover-orange)
+	background-color: var(--hover-orange);
 }
 
 .parent-container-events,
 .parent-container-stats {
-    flex-grow: 1;
+	flex-grow: 1;
 	margin: 30px 0;
 }
 .calendarContainer {
 	width: 100%;
 	height: fit-content;
 	margin-top: 16px;
-    margin-bottom: 30px;
-    overflow: hidden;
-    border-radius: 12px;
+	margin-bottom: 30px;
+	overflow: hidden;
+	border-radius: 12px;
 	box-shadow: 0px 2px 6px #00000029;
 }
 
@@ -750,7 +757,7 @@ button.button-disabled:focus,
 	height: 35px;
 }
 
-.user-tags .mantine-Pill-root[data-with-remove='true'] {
+.user-tags .mantine-Pill-root[data-with-remove="true"] {
 	padding-left: 1rem;
 	padding-right: 0.5rem;
 }
@@ -842,7 +849,7 @@ div .mantine-RichTextEditor-content {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: rgba(0, 0, 0, 0.70);
+	background: rgba(0, 0, 0, 0.7);
 	z-index: 1;
 }
 
@@ -873,8 +880,8 @@ div .mantine-RichTextEditor-content {
 
 .text-overflow-ellipsis {
 	white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .card-stats-title {
@@ -911,7 +918,7 @@ div .mantine-RichTextEditor-content {
 .upperSection {
 	display: flex;
 	flex-direction: column;
-	align-items: center
+	align-items: center;
 }
 
 .lowerSection {
@@ -1012,7 +1019,7 @@ div .mantine-RichTextEditor-content {
 	.desktop-hidden {
 		display: none;
 	}
-	
+
 	.mobile-hidden {
 		display: initial;
 	}
@@ -1028,11 +1035,10 @@ div .mantine-RichTextEditor-content {
 
 	.timeSlot {
 		flex-direction: row;
-	}	
+	}
 }
 
 @media (min-width: 610px) {
-
 	.upperSection,
 	.lowerSection,
 	.eventModal.modalContent {
@@ -1047,7 +1053,7 @@ div .mantine-RichTextEditor-content {
 	.eventModal .rightSide {
 		padding: 0 0 0 20px;
 	}
-	
+
 	.booking-image {
 		width: 50%;
 		max-width: 325px;
@@ -1126,7 +1132,6 @@ div .mantine-RichTextEditor-content {
 		width: 60px;
 		font-size: 60px;
 	}
-	
 }
 
 @media (min-width: 700px) {
@@ -1142,7 +1147,6 @@ div .mantine-RichTextEditor-content {
 }
 
 @media (min-width: 750px) {
-
 	.list-booking-item {
 		flex-direction: row;
 		gap: 0.75rem;
@@ -1155,7 +1159,6 @@ div .mantine-RichTextEditor-content {
 	.timeSlot {
 		flex-direction: column;
 	}
-	
 }
 
 @media (min-width: 1000px) {
@@ -1230,11 +1233,10 @@ div .mantine-RichTextEditor-content {
 	}
 
 	.stats-top-section,
-	.card-stats  {
+	.card-stats {
 		grid-template-columns: repeat(3, 1fr);
 		column-gap: 1rem;
 	}
-
 }
 
 @media (min-width: 1750px) {
@@ -1242,8 +1244,24 @@ div .mantine-RichTextEditor-content {
 		--number-of-columns: 5;
 	}
 
-	.text-for-mobile{
+	.text-for-mobile {
 		font-size: 1rem;
-    	line-height: 1.5rem;
+		line-height: 1.5rem;
 	}
+}
+
+.no-events-placeholder {
+	background-color: #f5f5f5;
+	color: #333;
+	border: 1px solid #ccc;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
+	padding: 20px;
+	margin-bottom: 16px;
+	border-radius: 8px;
+	box-shadow: 0px 2px 6px #00000029;
+	width: 100%;
+	height: 18rem;
 }
