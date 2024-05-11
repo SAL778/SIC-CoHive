@@ -3,20 +3,11 @@ import logo from "../assets/sic_logo.png";
 import { Link, NavLink } from "react-router-dom";
 import Signout from "../Signout";
 
-/**
- * Renders a navigation item with a link, icon, and content.
- *
- * @component
- * @param {Object} props - The component props.
- * @param {string} props.content - The content to display for the navigation item.
- * @param {string} props.href - The URL to navigate to when the item is clicked.
- * @param {React.Component} props.icon - The icon component to display for the navigation item.
- * @returns {JSX.Element} The rendered navigation item.
- */
-function NavItem({ content, href, icon }) {
+function NavItem({ content, href, icon, target }) {
 	return (
 		<NavLink
 			to={href}
+			target={target}
 			className="nav-item flex h-[65px] grow items-center gap-2 text-sm font-medium flex-none justify-start px-6 py-3"
 		>
 			<i
@@ -52,6 +43,11 @@ function Navigation({ mobileNav, setMobileNav }) {
 	const additionalLinks = [
 		{ content: "Profile", href: "/profile", icon: "fa-user-circle" },
 		{ content: "Contact", href: "/feedback", icon: "fa-paper-plane" },
+		{
+			content: "Discord",
+			href: "https://discord.gg/yfbf2FaFX8",
+			icon: "fa-brands fa-discord",
+		},
 	];
 
 	const signOut = {
@@ -131,6 +127,7 @@ function Navigation({ mobileNav, setMobileNav }) {
 										content={link.content}
 										href={link.href}
 										icon={link.icon}
+										target={link.content === "Discord" ? "_blank" : "_self"}
 										onClick={() => handleClick(index)}
 									/>
 								</React.Fragment>
