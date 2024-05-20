@@ -116,15 +116,6 @@ class ResourcesSerializer(serializers.ModelSerializer):
         bookings = Booking.objects.filter(resources=obj, start_time__date=filter_date)
         return BookingSerializer(bookings, many=True, context={'request': request}).data
 
-
-
-
-class BookingStatisticsSerializer(serializers.Serializer):
-    scope = serializers.ChoiceField(choices=['all', 'week', 'month', 'year'], required=False, default='all')
-    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
-    month = serializers.IntegerField(required=False, min_value=1, max_value=12,default=timezone.now().month)
-    week = serializers.IntegerField(required=False, min_value=1, max_value=53)
-
     
 class BookingFrequencyFilterSerializer(serializers.Serializer):
     resource = serializers.CharField(required=True)
@@ -139,27 +130,3 @@ class ResourceUsageHourSerializer(serializers.Serializer):
     year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.localtime(timezone.now()).year)
     month = serializers.IntegerField(required=False, min_value=1, max_value=12, default=timezone.localtime(timezone.now()).month)
     day = serializers.IntegerField(required=False, min_value=1, max_value=7, default=timezone.localtime(timezone.now()).weekday() + 1)
-
-
-class AverageBookingDurationSerializer(serializers.Serializer):
-    scope=serializers.ChoiceField(choices=['all','week','month','year'],required=False,default='all')
-    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
-    month = serializers.IntegerField(required=False, min_value=1, max_value=12)
-    week = serializers.IntegerField(required=False, min_value=1, max_value=53)
-    resource_booking_count = serializers.SerializerMethodField()
-   
-    def get_resource_booking_count(self, obj):
-        return Booking.objects.filter(resources=obj.resources).count()
-        
-        
-        
-# not using foe now
-class AverageBookingDurationqSerializer(serializers.Serializer):
-    scope=serializers.ChoiceField(choices=['all','week','month','year'],required=False,default='all')
-    year = serializers.IntegerField(required=False, min_value=2000, max_value=2100, default=timezone.now().year)
-    month = serializers.IntegerField(required=False, min_value=1, max_value=12)
-    week = serializers.IntegerField(required=False, min_value=1, max_value=53)
-    resource_booking_count = serializers.SerializerMethodField()
-   
-    def get_resource_booking_count(self, obj):
-        return Booking.objects.filter(resources=obj.resources).count()
