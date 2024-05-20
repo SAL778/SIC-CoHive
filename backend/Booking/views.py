@@ -5,8 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Resources, Booking
-from .serializers import ResourcesSerializer, BookingSerializer, BookingStatisticsSerializer, AverageBookingDurationSerializer, \
-    ResourceUsageHourSerializer, BookingFrequencyFilterSerializer
+from .serializers import ResourcesSerializer, BookingSerializer, ResourceUsageHourSerializer, BookingFrequencyFilterSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 from User.views import get_user_from_token
