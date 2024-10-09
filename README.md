@@ -18,6 +18,8 @@ https://docs.google.com/document/d/1Oa9bQv77SvGOypLr1pbKWmgzSyRSiJgpj7VX67qGwj4/
 
 ## Getting Started with Dev
 
+NOTE: If you are running the project in a dev environment, you will need to place the credentials `service_credentials.json` in the root of the repo.
+
 First, set up the backend django server:
 
 Make sure you have a `Virtual Environment` set up.  
@@ -66,7 +68,7 @@ The frontend environment should be up and running now. By default, the frontend 
 
 You can start editing a page and watch it auto-updates as you edit the file.
 
-## For grading:
+## Credentials: `service_credentials.json` 
 Contact us about the credentials required for access to the Google Drive
 This will need to be placed in the root of the repo
 
